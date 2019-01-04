@@ -1,0 +1,28 @@
+#!/bin/bash
+
+unset QSQL_JARS
+unset JARS
+
+export QSQL_HOME="$(cd "`dirname "$0"`"/..; pwd)"
+
+for jar in `find ${QSQL_HOME}/lib -maxdepth 1 -name "*.jar"`
+do
+    if [ ! -n "${QSQL_JARS}" ]
+    then
+        export QSQL_JARS="${jar}"
+    else
+        export QSQL_JARS="${QSQL_JARS}:${jar}"
+    fi
+done
+
+
+for jar in `find ${QSQL_HOME}/lib/spark -name "*.jar"`
+do
+    if [  !  -n  "${JARS}"  ]   
+    then
+        export JARS="${jar}"
+    else
+        export JARS="${JARS},${jar}"
+    fi
+done
+

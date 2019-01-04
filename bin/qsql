@@ -1,0 +1,193 @@
+#!/bin/bash
+
+
+export QSQL_HOME="$(cd "`dirname "$0"`"/..; pwd)"
+
+#import qsql related environment variables
+. "${QSQL_HOME}/bin/load-qsql-env"
+
+#parse args
+ARGS=`getopt -o "e:h" -l "runner:,master:,worker_memory:,driver_memory:,worker_num:,file:" -n "qsql" -- "$@"`
+
+eval set -- "${ARGS}"
+
+while true
+do
+    case "${1}" in
+        -e) 
+        shift;
+        if [[ -n "${1}" ]] ; then
+            SQL=${1}
+            shift;
+        fi
+
+        ;;
+        --runner)
+        shift 
+        case "${1}" in
+            "")
+            echo "no --runner selected, decide to default runner";
+            QSQL_RUNNER="${QSQL_DEFAULT_RUNNER}"
+            shift ;  
+            ;;
+            "spark")
+            QSQL_RUNNER="SPARK"
+            shift ;
+            ;;
+            "flink")
+            QSQL_RUNNER="FLINK"
+            shift ;
+            ;;
+            "jdbc")
+            QSQL_RUNNER="JDBC"
+            shift ;
+            ;;
+            "dynamic")
+            QSQL_RUNNER="DYNAMIC"
+            shift ;
+            ;;
+            *)
+            echo "--runner error! please select property runner!"
+            exit 1
+            ;;
+        esac
+        ;;
+        --master)
+        shift ;
+        case "${1}" in
+            "")
+            echo "no --master selected, decide to default master";
+            QSQL_MASTER="${QSQL_DEFAULT_MASTER}"
+            shift  
+            ;;
+            "cluster")
+            QSQL_MASTER="yarn-cluster"
+            shift;
+            ;;
+            "client")
+            QSQL_MASTER="yarn-client"
+            shift;
+            ;;
+            "yarn-cluster")
+            QSQL_MASTER="yarn-cluster"
+            shift;
+            ;;
+            "yarn-client")
+            QSQL_MASTER="yarn-client"
+            shift;
+            ;;
+            *)
+            echo "--master error! please select property master!"
+            exit 1
+            ;;
+        esac
+        ;;
+        --worker_memory)
+        shift ;
+        case "${1}" in
+            "")
+            echo "no --worker_memory selected, decide to default worker_memory";
+            QSQL_WORKER_MEMORY="${QSQL_DEFAULT_WORKER_MEMORY}"
+            shift  
+            ;;
+            *)
+            QSQL_WORKER_MEMORY="${1}"
+            shift  
+            ;;
+        esac
+        ;;
+        --driver_memory)
+        shift ;
+        case "${1}" in
+            "")
+            echo "no --driver_memory selected, decide to default driver_memory";
+            QSQL_DRIVER_MEMORY="${QSQL_DEFAULT_DRIVER_MEMORY}"
+            shift  
+            ;;
+            *)
+            QSQL_DRIVER_MEMORY="${1}"
+            shift  
+            ;;
+        esac
+        ;;
+        --worker_num)
+        shift;
+        case "${1}" in
+            "")
+            echo "no --worker_num selected, decide to default worker_num";
+            QSQL_WORKER_NUM="${QSQL_DEFAULT_WORKER_NUM}"
+            shift  
+            ;;
+            *)
+            QSQL_WORKER_NUM="${1}"
+            shift  
+            ;;
+        esac
+        ;;
+        -h|--help)
+        shift; 
+        HELP_ENABLE="true" 
+        ;;
+        --)
+        shift
+        break
+        ;;
+    esac
+done
+
+if [ ! -z "${HELP_ENABLE}" ] ; then
+    echo "Options:
+    -e SQL statements,Required.
+    --runner Specify the compute engine, including spark, jdbc or dynamic (Default: dynamic).
+    --master Specify the execution mode on cluster, including yarn-client or yarn-cluster (Default: yarn-client).
+    --worker_num Number of workers for launching (Default: 20).
+    --worker_memory Memory per worker (e.g., 500M, 2G) (Default: 1G).
+    --driver_memory Memory for driver (e.g., 500M, 2G) (Default: 3G).
+    "
+    exit 1
+fi
+
+if [ ! -z "${QSQL_RUNNER}" ] ; then
+    CONF=${CONF}"--runner=${QSQL_RUNNER} "
+else
+    CONF=${CONF}"--runner=${QSQL_DEFAULT_RUNNER} "
+fi
+
+if [ ! -z "${QSQL_MASTER}" ] ; then
+    CONF=${CONF}"--master=${QSQL_MASTER} "
+else
+    CONF=${CONF}"--master=${QSQL_DEFAULT_MASTER} "
+fi
+
+if [ ! -z "${QSQL_WORKER_MEMORY}" ] ; then
+    CONF=${CONF}"--worker_memory=${QSQL_WORKER_MEMORY} "
+else
+    CONF=${CONF}"--worker_memory=${QSQL_DEFAULT_WORKER_MEMORY} "
+fi
+
+if [ ! -z "${QSQL_DRIVER_MEMORY}" ] ; then
+    CONF=${CONF}"--driver_memory=${QSQL_DRIVER_MEMORY} "
+else
+    CONF=${CONF}"--driver_memory=${QSQL_DEFAULT_DRIVER_MEMORY} "
+fi
+
+if [ ! -z "${QSQL_WORKER_NUM}" ] ; then
+    CONF=${CONF}"--worker_num=${QSQL_WORKER_NUM} "
+else
+    CONF=${CONF}"--worker_num=${QSQL_DEFAULT_WORKER_NUM} "
+fi
+
+. "${QSQL_HOME}/bin/qsql-env"
+
+
+CONF=${CONF}" --jar_name=${QSQL_HOME}/lib/qsql-core-0.5.jar "
+CONF=${CONF}" --class_name=com.qihoo.qsql.cli.QSqlSubmit "
+CONF=${CONF}" --jar=${JARS} "
+
+
+if [ ! -z "${SQL}" ] ; then
+    SQL=`echo "${SQL}" | base64 -w 0`
+    CONF=${CONF}"--sql=${SQL}"
+    eval ${QSQL_HOME}/bin/qsql-class com.qihoo.qsql.cli.QSqlSubmit "$CONF"
+    exit $?
+fi

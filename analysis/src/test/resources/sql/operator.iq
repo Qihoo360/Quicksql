@@ -1,0 +1,168 @@
+# operator.iq - expressions involving operators
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to you under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+!use scott
+!set outputformat mysql
+
+# [CALCITE-1095] NOT precedence
+select * from "scott".emp where not sal > 1300;
++-------+--------+----------+------+------------+---------+---------+--------+
+| EMPNO | ENAME  | JOB      | MGR  | HIREDATE   | SAL     | COMM    | DEPTNO |
++-------+--------+----------+------+------------+---------+---------+--------+
+|  7369 | SMITH  | CLERK    | 7902 | 1980-12-17 |  800.00 |         |     20 |
+|  7521 | WARD   | SALESMAN | 7698 | 1981-02-22 | 1250.00 |  500.00 |     30 |
+|  7654 | MARTIN | SALESMAN | 7698 | 1981-09-28 | 1250.00 | 1400.00 |     30 |
+|  7876 | ADAMS  | CLERK    | 7788 | 1987-05-23 | 1100.00 |         |     20 |
+|  7900 | JAMES  | CLERK    | 7698 | 1981-12-03 |  950.00 |         |     30 |
+|  7934 | MILLER | CLERK    | 7782 | 1982-01-23 | 1300.00 |         |     10 |
++-------+--------+----------+------+------------+---------+---------+--------+
+(6 rows)
+
+!ok
+
+select count(*) as c from "scott".emp where not ename = 'SMITH';
++----+
+| C  |
++----+
+| 13 |
++----+
+(1 row)
+
+!ok
+
+select count(*) as c from "scott".emp where not not ename = 'SMITH';
++---+
+| C |
++---+
+| 1 |
++---+
+(1 row)
+
+!ok
+
+select * from "scott".emp where not sal > 1300 and not sal < 1200;
++-------+--------+----------+------+------------+---------+---------+--------+
+| EMPNO | ENAME  | JOB      | MGR  | HIREDATE   | SAL     | COMM    | DEPTNO |
++-------+--------+----------+------+------------+---------+---------+--------+
+|  7521 | WARD   | SALESMAN | 7698 | 1981-02-22 | 1250.00 |  500.00 |     30 |
+|  7654 | MARTIN | SALESMAN | 7698 | 1981-09-28 | 1250.00 | 1400.00 |     30 |
+|  7934 | MILLER | CLERK    | 7782 | 1982-01-23 | 1300.00 |         |     10 |
++-------+--------+----------+------+------------+---------+---------+--------+
+(3 rows)
+
+!ok
+
+# MULTISET EXCEPT
+values multiset ['a', 'c', 'a'] multiset except multiset ['a'];
++--------+
+| EXPR$0 |
++--------+
+| [c, a] |
++--------+
+(1 row)
+
+!ok
+
+# MULTISET EXCEPT ALL
+values multiset ['a', 'c', 'a'] multiset except all multiset ['a'];
++--------+
+| EXPR$0 |
++--------+
+| [c, a] |
++--------+
+(1 row)
+
+!ok
+
+# MULTISET EXCEPT DISTINCT
+values multiset ['a', 'c', 'a'] multiset except distinct multiset ['a'];
++--------+
+| EXPR$0 |
++--------+
+| [c]    |
++--------+
+(1 row)
+
+!ok
+
+# MULTISET UNION
+values multiset ['a', 'c', 'b'] multiset union multiset ['a'];
++--------------+
+| EXPR$0       |
++--------------+
+| [a, c, b, a] |
++--------------+
+(1 row)
+
+!ok
+
+# MULTISET UNION ALL
+values multiset ['a', 'c', 'b'] multiset union all multiset ['a'];
++--------------+
+| EXPR$0       |
++--------------+
+| [a, c, b, a] |
++--------------+
+(1 row)
+
+!ok
+
+# MULTISET UNION DISTINCT
+values multiset ['a', 'c', 'b'] multiset union distinct multiset ['a'];
++-----------+
+| EXPR$0    |
++-----------+
+| [a, b, c] |
++-----------+
+(1 row)
+
+!ok
+
+# MULTISET INTERSECT
+values multiset ['a', 'c', 'a', 'a'] multiset intersect multiset ['a', 'a'];
++--------+
+| EXPR$0 |
++--------+
+| [a, a] |
++--------+
+(1 row)
+
+!ok
+
+# MULTISET INTERSECT ALL
+values multiset ['a', 'c', 'a', 'a'] multiset intersect all multiset ['a', 'a'];
++--------+
+| EXPR$0 |
++--------+
+| [a, a] |
++--------+
+(1 row)
+
+!ok
+
+# MULTISET INTERSECT DISTINCT
+values multiset ['a', 'c', 'a', 'a'] multiset intersect distinct multiset ['a', 'a'];
++--------+
+| EXPR$0 |
++--------+
+| [a]    |
++--------+
+(1 row)
+
+!ok
+
+# End operator.iq

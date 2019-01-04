@@ -1,0 +1,121 @@
+package com.qihoo.qsql.env;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.io.LineProcessor;
+import com.google.common.io.Resources;
+import com.qihoo.qsql.CsvJoinWithEsExample;
+import com.qihoo.qsql.utils.PropertiesReader;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+public class RuntimeEnv {
+
+    private static final String TEST_DATA_URL = PropertiesReader.getTestDataFilePath();
+
+    private static final EmbeddedElasticsearchPolicy NODE = EmbeddedElasticsearchPolicy.create();
+
+    public static void init() throws IOException {
+        System.out.println("Elasticsearch Embedded Server is starting up, waiting....");
+        final Map<String, String> mapping = ImmutableMap.of("stu_id", "keyword", "type", "keyword",
+            "city", "keyword", "digest", "long", "province", "keyword");
+        NODE.createIndex("student-profile", mapping);
+
+        // load records from file
+        final List<ObjectNode> bulk = new ArrayList<>();
+        Resources.readLines(CsvJoinWithEsExample.class.getResource("/student.json"),
+            StandardCharsets.UTF_8, new LineProcessor<Void>() {
+                @Override public boolean processLine(String line) throws IOException {
+                    line = line.replaceAll("_id", "id");
+                    bulk.add((ObjectNode) NODE.mapper().readTree(line));
+                    return true;
+                }
+
+                @Override public Void getResult() {
+                    return null;
+                }
+            });
+
+        if (bulk.isEmpty()) {
+            throw new IllegalStateException("No records to index. Empty file ?");
+        }
+
+        NODE.insertBulk("student-profile", bulk);
+        System.out.println("Elasticsearch Embedded Server has started!! Your query is running...");
+    }
+
+    public static final String metadata = "inline:\n"
+        + "{\n"
+        + "  \"version\": \"1.0\",\n"
+        + "  \"defaultSchema\": \"QSql\",\n"
+        + "  \"schemas\": [{\n"
+        + "      \"type\": \"custom\",\n"
+        + "      \"name\": \"CUSTOM_NAME\",\n"
+        + "      \"factory\": \"org.apache.calcite.adapter.csv.CsvSchemaFactory\",\n"
+        + "      \"operand\": {\n"
+        + "        \"directory\": \"\"\n"
+        + "      },\n"
+        + "      \"tables\": [{\n"
+        + "        \"name\": \"DEPTS\",\n"
+        + "        \"type\": \"custom\",\n"
+        + "        \"factory\": \"org.apache.calcite.adapter.csv.CsvTableFactory\",\n"
+        + "        \"operand\": {\n"
+        + "          \"file\": \"" + TEST_DATA_URL + "\",\n"
+        + "          \"flavor\": \"scannable\"\n"
+        + "        },\n"
+        + "        \"columns\": [{\n"
+        + "            \"name\": \"deptno:int\"\n"
+        + "          },\n"
+        + "          {\n"
+        + "            \"name\": \"name:string\"\n"
+        + "          }\n"
+        + "        ]\n"
+        + "      }]\n"
+        + "    },\n"
+        + "    {\n"
+        + "      \"type\": \"custom\",\n"
+        + "      \"name\": \"student_profile\",\n"
+        + "      \"factory\": \"org.apache.calcite.adapter.elasticsearch.ElasticsearchCustomSchemaFactory\",\n"
+        + "      \"operand\": {\n"
+        + "        \"coordinates\": \"{'localhost': 9025}\",\n"
+        + "        \"userConfig\": \"{'bulk.flush.max.actions': 10, 'bulk.flush.max.size.mb': 1,"
+        + "'esUser':'username','esPass':'password'}\",\n"
+        + "        \"index\": \"student-profile\"\n"
+        + "      },\n"
+        + "      \"tables\": [{\n"
+        + "        \"name\": \"STUDENT\",\n"
+        + "        \"factory\": \"org.apache.calcite.adapter.elasticsearch.ElasticsearchTableFactory\",\n"
+        + "        \"operand\": {\n"
+        + "          \"dbName\": \"student_profile\",\n"
+        + "          \"tableName\": \"STUDENT\",\n"
+        + "          \"esNodes\": \"localhost\",\n"
+        + "          \"esPort\": \"9025\",\n"
+        + "          \"esUser\": \"username\",\n"
+        + "          \"esPass\": \"password\",\n"
+        + "          \"esScrollNum\": \"246\",\n"
+        + "          \"esIndex\": \"student-profile\"\n"
+        + "        },\n"
+        + "        \"columns\": [{\n"
+        + "            \"name\": \"city:string\"\n"
+        + "          },\n"
+        + "          {\n"
+        + "            \"name\": \"province:string\"\n"
+        + "          },\n"
+        + "          {\n"
+        + "            \"name\": \"digest:int\"\n"
+        + "          },\n"
+        + "          {\n"
+        + "            \"name\": \"type:string\"\n"
+        + "          },\n"
+        + "          {\n"
+        + "            \"name\": \"stu_id:string\"\n"
+        + "          }\n"
+        + "        ]\n"
+        + "      }]\n"
+        + "    }\n"
+        + "  ]\n"
+        + "}";
+}

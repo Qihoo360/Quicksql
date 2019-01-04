@@ -1,0 +1,9 @@
+Copyright (c) 2018 QSql project
+
+This product includes modules `qsql-calcite-analysis` and `qsql-calcite-elasticsearch`
+developed by the [Calcite] project.
+Please visit homepage `http://calcite.apache.org/` or
+project on GitHub `https://github.com/apache/calcite` of [Calcite] for more information.
+
+This product contains code from the `imc` Project:
+Please visit Github project `https://github.com/picadoh/imc` for more information.
