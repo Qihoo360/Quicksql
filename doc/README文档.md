@@ -6,7 +6,7 @@ S![200_200](./picture/logo.jpeg)
 
 QSQL是以SQL进行单一、混合查询的一款产品。QSQL支持标准SQL语言（SQL-2003）；QSQL支持查询关系型数据库、NoSQL式数据库、原生不支持SQL查询的存储（如ES、Druid），及借助中间计算引擎实现混合查询。QSQL最大的特点是独立于计算引擎、存储引擎本身，如此用户只需要关注于QSQL语法以及数据本身，就可完成数据计算、统计以及分析。
 
-[**English Document**](https://)
+[English](./README_doc.md)|[中文](./README文档.md)
 
 ## 架构设计
 
@@ -91,6 +91,8 @@ ln -s qsql-0.5/ qsql
 ./bin/qsql -e "select 1"
 ```
 
+详情：[English](./CLI_doc.md)|[中文](./CLI文档.md)
+
 ### 示例程序
 
 QSQL附带了示例目录中的几个示例程序。要运行其中一个，使用./run-example <class> [params]。例如：
@@ -114,6 +116,8 @@ Hive join MySQL：
 ```
 
 运行混算，请确保当前客户端存在Spark、Hive、MySQL环境。并且将Hive与MySQL的连接信息添加到元数据管理中。
+
+详情：[English](./API_doc.md)|[中文](./API文档.md)
 
 ## 参数配置
 

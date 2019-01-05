@@ -1,4 +1,4 @@
-![200_200](./picture/logo.jpeg)   
+![200_200](./picture/logo.jpeg)
 
 
 
@@ -6,7 +6,7 @@
 
 QSQL is a SQL query product which can be used for specific datastore queries or multiple datastores correlated queries.  It supports relational databases, non-relational databases and even datastore which does not support SQL (such as Elasticsearch, Druid) . In addition, a SQL query can join or union data from multiple datastores in QSQL. For example, you can perform unified SQL query on one situation that a part of data stored on Elasticsearch, but the other part of data stored on Hive. The most important is that QSQL is not dependent on any intermediate compute engine, users only need to focus on data and unified SQL grammar to finished statistics and analysis.
 
-[**English Document**](https://)
+[English](./README_doc.md)|[中文](./README文档.md)
 
 ![1540973404791](./picture/p1.png)
 
@@ -30,7 +30,7 @@ QSQL architecture consists of three layers：
 
 ### Deployment
 
-Uncompress the package qsql-0.5.tar.gz 
+Uncompress the package qsql-0.5.tar.gz
 
 ```shell
 tar -zxvf ./qsql-0.5.tar.gz
@@ -47,7 +47,7 @@ The main directory structure after decompression of the release package is：
 - bin: included all of scripts for building environment and running sql.
 - conf: included all of configures in runtime.
 - data: stored data for testing.
-- metastore: included a embedded database and create table statements scripts for managing metadata. 
+- metastore: included a embedded database and create table statements scripts for managing metadata.
 
 In directory ```$QSQL_HOME/conf```, configure the following files：
 
@@ -67,9 +67,11 @@ In directory ```$QSQL_HOME/conf```, configure the following files：
 ./bin/qsql -e "select 1"
 ```
 
+Detailed：[English](./doc/CLI_doc.md)|[中文](./doc/CLI文档.md)
+
 ### Query Example
 
-Several sample queries are included with QSQL. To run one of them, use ```./run-example <class> [params]``` 
+Several sample queries are included with QSQL. To run one of them, use ```./run-example <class> [params]```
 
 Example 1: Memory Table Query
 
@@ -86,6 +88,8 @@ Example 2: Hive Join MySQL
 **Note**:
 
 If you are running a hybrid query, make sure the current machine has deployed Spark, Hive and MySQL environment and inserted the correct connection information of Hive and MySQL into the metastore.
+
+Detailed：[English](./doc/API_doc.md)|[中文](./doc/API文档.md)
 
 ## Properties Configure
 
@@ -133,7 +137,7 @@ If you are running a hybrid query, make sure the current machine has deployed Sp
 
 ### Tables
 
-#### DBS 
+#### DBS
 
 | Fields  | Note                 | Sample           |
 | ------- | -------------------- | ---------------- |
@@ -161,7 +165,7 @@ If you are running a hybrid query, make sure the current machine has deployed Sp
 
 #### COLUMNS
 
-| 表字段      | Note          | Sample       |
+| Fields      | Note          | Sample       |
 | ----------- | ------------- | ------------ |
 | CD_ID       | Column ID     | 10101        |
 | COMMENT     | Field Comment | Student Name |
@@ -312,3 +316,9 @@ The pull request may need to be updated (after its submission) for two main reas
 2. the reviewer requested further changes;
 
 In order to update the pull request, you need to commit the changes in your branch and then push the commit(s) to GitHub. You are encouraged to use regular (non-rebased) commits on top of previously existing ones.
+
+### Talks
+
+**QQ Group: 932439028**
+
+**WeChat Group: Posted in the QQ Group** [ P.S. Incorrect QQ Group number will raise a NPE :) ]

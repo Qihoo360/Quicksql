@@ -165,7 +165,7 @@ Detailed：[English](./doc/API_doc.md)|[中文](./doc/API文档.md)
 
 #### COLUMNS
 
-| 表字段      | Note          | Sample       |
+| Fields      | Note          | Sample       |
 | ----------- | ------------- | ------------ |
 | CD_ID       | Column ID     | 10101        |
 | COMMENT     | Field Comment | Student Name |
