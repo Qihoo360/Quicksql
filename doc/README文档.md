@@ -1,4 +1,4 @@
-S![200_200](./picture/logo.jpeg)   
+![200_200](./picture/logo.jpeg)
 
 
 
