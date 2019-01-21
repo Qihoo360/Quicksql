@@ -234,7 +234,7 @@ public class MetadataClient implements AutoCloseable {
 
     private Connection createConnection() throws SQLException {
         if (! MetaConnectionUtil.isEmbeddedDatabase(properties)) {
-            MetaConnectionUtil.getExternalConnection(properties);
+            return MetaConnectionUtil.getExternalConnection(properties);
         }
 
         try {
