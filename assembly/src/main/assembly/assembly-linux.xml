@@ -78,7 +78,7 @@
                 <exclude>org.apache.hadoop:*:jar</exclude>
                 <exclude>org.apache.hive:*:jar</exclude>
                 <exclude>org.spark-project.hive:*:jar</exclude>
-                <!--<exclude>org.apache.lucene:*:jar</exclude>-->
+                <exclude>org.antlr:*:jar</exclude>
                 <exclude>org.apache.spark:*:jar</exclude>
             </excludes>
             <outputDirectory>/${qsql.release}/lib</outputDirectory>
