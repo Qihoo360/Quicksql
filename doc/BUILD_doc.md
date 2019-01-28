@@ -272,7 +272,7 @@ Sample Configuration：
 | DB_ID | PARAM_KEY    | PARAM_VALUE                                |
 | ----- | ------------ | ------------------------------------------ |
 | 25    | jdbcDriver   | com.mysql.jdbc.Driver                      |
-| 25    | jdbcUrl      | jdbc:mysql://localhost:3006/mysql_database |
+| 25    | jdbcUrl      | jdbc:mysql://localhost:3306/mysql_database |
 | 25    | jdbcUser     | root                                       |
 | 25    | jdbcPassword | root                                       |
 
