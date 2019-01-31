@@ -1,6 +1,9 @@
 package com.qihoo.qsql.plan;
 
+import com.qihoo.qsql.api.SqlRunner.Builder;
+import com.qihoo.qsql.api.SqlRunner.Builder.RunnerType;
 import com.qihoo.qsql.exception.ParseException;
+import com.qihoo.qsql.plan.func.SqlRunnerFuncTable;
 import com.qihoo.qsql.plan.proc.DataSetTransformProcedure;
 import com.qihoo.qsql.plan.proc.ExtractProcedure;
 import com.qihoo.qsql.plan.proc.LoadProcedure;
@@ -45,11 +48,25 @@ public class QueryProcedureProducer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(QueryProcedureProducer.class);
     private FrameworkConfig config = null;
+    private SqlRunnerFuncTable funcTable = SqlRunnerFuncTable.getInstance(RunnerType.DEFAULT);
+    private Builder builder;
 
     /**
      * Constructs an QueryProcedureProducer with init planner config.
      *
      * @param jsonPath The url path of the metadata
+     */
+    public QueryProcedureProducer(String jsonPath, Builder builder) {
+        this(jsonPath);
+        this.builder = builder;
+        //TODO rewrite by oo, include builder in sql runner
+        if (builder.isSpark()) {
+            this.funcTable = SqlRunnerFuncTable.getInstance(RunnerType.SPARK);
+        }
+    }
+
+    /**
+     * .
      */
     public QueryProcedureProducer(String jsonPath) {
         try {
@@ -69,13 +86,13 @@ public class QueryProcedureProducer {
         RelNode originalLogicalPlan = buildLogicalPlan(sql);
         RelNode optimizedPlan = optimizeLogicalPlan(originalLogicalPlan);
 
-        SubtreeSyncopator subtreeSyncopator = new SubtreeSyncopator(optimizedPlan);
+        SubtreeSyncopator subtreeSyncopator = new SubtreeSyncopator(optimizedPlan, funcTable, builder);
         Map<RelNode, AbstractMap.SimpleEntry<String, RelOptTable>> resultRelNode =
             subtreeSyncopator.rootNodeSchemas;
 
         LoadProcedure procedure = new MemoryLoadProcedure();
         TransformProcedure transformProcedure =
-            new DataSetTransformProcedure(procedure, optimizedPlan);
+            new DataSetTransformProcedure(procedure, subtreeSyncopator.getRoot());
 
         List<ExtractProcedure> extractProcedures = new ArrayList<>();
         for (Map.Entry<RelNode, AbstractMap.SimpleEntry<String, RelOptTable>> entry :
@@ -126,7 +143,7 @@ public class QueryProcedureProducer {
             throw new ParseException("Error When Validating: " + ev.getMessage(), ev);
         } catch (Throwable ex) {
             throw new ParseException(
-                "Unknown Parse Exception, Concrete Message is: " + ex.getMessage());
+                "Unknown Parse Exception, Concrete Message is: " + ex.getMessage(), ex);
         }
     }
 

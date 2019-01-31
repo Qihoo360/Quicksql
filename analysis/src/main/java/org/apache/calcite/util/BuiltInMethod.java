@@ -112,7 +112,17 @@ import javax.sql.DataSource;
 /**
  * Built-in methods.
  */
+//Updated by qsql-team
 public enum BuiltInMethod {
+  //qsql start
+  LENGTH(SqlFunctions.class, "length", String.class),
+  REVERSE(SqlFunctions.class, "reverse", String.class),
+  REGEXP_EXTRACT(SqlFunctions.class, "regexpExtract", String.class, String.class, int.class),
+  REGEXP_REPLACE(SqlFunctions.class, "regexpReplace", String.class, String.class, String.class),
+  IF(SqlFunctions.class, "ifOperation", Boolean.class, Object.class, Object.class),
+
+  //qsql end
+
   QUERYABLE_SELECT(Queryable.class, "select", FunctionExpression.class),
   QUERYABLE_AS_ENUMERABLE(Queryable.class, "asEnumerable"),
   QUERYABLE_TABLE_AS_QUERYABLE(QueryableTable.class, "asQueryable",

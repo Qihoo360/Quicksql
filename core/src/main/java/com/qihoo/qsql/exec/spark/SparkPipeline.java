@@ -60,7 +60,7 @@ public class SparkPipeline extends AbstractPipeline implements Compilable {
         } else {
             LOGGER.error(
                 "Initialize SparkContext failed, the reason for which is not find spark env");
-            throw new RuntimeException("No available Spark to execute. Please deploy Spark and put Spark_HOME in env");
+            throw new RuntimeException("No available Spark to execute. Please deploy Spark and put SPARK_HOME in env");
         }
 
     }

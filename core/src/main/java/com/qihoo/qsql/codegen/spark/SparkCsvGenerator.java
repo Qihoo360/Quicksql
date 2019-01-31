@@ -35,13 +35,13 @@ public class SparkCsvGenerator extends QueryGenerator {
             + "            .toDF()\n"
             + "            .createOrReplaceTempView(\"" + properties.getProperty("tableName") + "\");\n"
             + "        \n"
-            + "        Dataset<Row> " + alias + " = spark.sql(\"" + query.replaceAll("\\.", "_") + "\");";
+            + "        tmp = spark.sql(\"" + query.replaceAll("\\.", "_") + "\");";
         composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE, invoked);
     }
 
     @Override
     public void saveToTempTable() {
-        String created = alias + ".createOrReplaceTempView(\"" + tableName + "\");";
+        String created = "tmp.createOrReplaceTempView(\"" + tableName + "\");";
         composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE, created);
     }
 }

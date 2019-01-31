@@ -52,6 +52,7 @@ import org.apache.calcite.sql.type.OperandTypes;
 import org.apache.calcite.sql.type.ReturnTypes;
 import org.apache.calcite.sql.type.SqlOperandCountRanges;
 import org.apache.calcite.sql.type.SqlTypeName;
+import org.apache.calcite.sql.type.SqlTypeTransforms;
 import org.apache.calcite.sql.util.ReflectiveSqlOperatorTable;
 import org.apache.calcite.sql.validate.SqlConformance;
 import org.apache.calcite.sql.validate.SqlModality;
@@ -1270,6 +1271,44 @@ public class SqlStdOperatorTable extends ReflectiveSqlOperatorTable {
   //                   FUNCTIONS
   //-------------------------------------------------------------
 
+  //Updated by qsql-team
+  public static final SqlFunction LENGTH =
+      new SqlFunction(
+          "LENGTH",
+          SqlKind.OTHER_FUNCTION,
+          ReturnTypes.INTEGER_NULLABLE,
+          null,
+          OperandTypes.CHARACTER,
+          SqlFunctionCategory.NUMERIC);
+
+  public static final SqlFunction REVERSE =
+      new SqlFunction(
+          "REVERSE",
+          SqlKind.OTHER_FUNCTION,
+          ReturnTypes.ARG0_NULLABLE_VARYING,
+          null,
+          OperandTypes.CHARACTER,
+          SqlFunctionCategory.NUMERIC);
+
+  public static final SqlFunction REGEXP_EXTRACT = new SqlRegexpExtractFunction();
+
+  public static final SqlFunction REGEXP_REPLACE = new SqlRegexpReplaceFunction();
+
+  public static final SqlFunction IF = new SqlIfFunction();
+
+  /** The "LTRIM(string)" function. */
+  public static final SqlFunction LTRIM =
+      new SqlFunction("LTRIM", SqlKind.LTRIM,
+          ReturnTypes.cascade(ReturnTypes.ARG0, SqlTypeTransforms.TO_NULLABLE,
+              SqlTypeTransforms.TO_VARYING), null,
+          OperandTypes.STRING, SqlFunctionCategory.STRING);
+
+  /** The "RTRIM(string)" function. */
+  public static final SqlFunction RTRIM =
+      new SqlFunction("RTRIM", SqlKind.RTRIM,
+          ReturnTypes.cascade(ReturnTypes.ARG0, SqlTypeTransforms.TO_NULLABLE,
+              SqlTypeTransforms.TO_VARYING), null,
+          OperandTypes.STRING, SqlFunctionCategory.STRING);
   /**
    * The character substring function: <code>SUBSTRING(string FROM start [FOR
    * length])</code>.

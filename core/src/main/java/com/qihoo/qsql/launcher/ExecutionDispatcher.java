@@ -2,6 +2,7 @@ package com.qihoo.qsql.launcher;
 
 import com.qihoo.qsql.api.DynamicSqlRunner;
 import com.qihoo.qsql.api.SqlRunner;
+import com.qihoo.qsql.api.SqlRunner.Builder;
 import com.qihoo.qsql.api.SqlRunner.Builder.RunnerType;
 import com.qihoo.qsql.exception.EmptyMetadataException;
 import com.qihoo.qsql.exception.QsqlException;
@@ -73,13 +74,14 @@ public class ExecutionDispatcher {
             return;
         }
 
-        String schema = loadSchemaForTables(tableNames);
-        QueryProcedure procedure = new QueryProcedureProducer(schema).createQueryProcedure(sql);
-
-        SqlRunner sqlRunner = SqlRunner.builder()
+        Builder builder = SqlRunner.builder()
             .setAcceptedResultsNum(100)
-            .setTransformRunner(RunnerType.value(runner)).ok();
-        AbstractPipeline pipeline = ((DynamicSqlRunner) sqlRunner).chooseAdaptPipeline(procedure);
+            .setTransformRunner(RunnerType.value(runner));
+
+        String schema = loadSchemaForTables(tableNames);
+        QueryProcedure procedure = new QueryProcedureProducer(schema, builder).createQueryProcedure(sql);
+
+        AbstractPipeline pipeline = ((DynamicSqlRunner) builder.ok()).chooseAdaptPipeline(procedure);
         if (pipeline instanceof JdbcPipeline && isPointedToExecuteByJdbc(runner)) {
             try (Connection connection = JdbcPipeline.createSpecificConnection(
                 //TODO retrieve metadata repeatedly, should be optimized

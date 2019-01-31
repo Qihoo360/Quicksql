@@ -9,10 +9,11 @@ public class CsvJoinWithEsExample {
 
     public static void main(String[] args) throws IOException {
         RuntimeEnv.init();
-        String sql = "SELECT * FROM DEPTS "
-            + "INNER JOIN (SELECT * FROM STUDENT " +
+        String sql = "SELECT * FROM depts "
+            + "INNER JOIN (SELECT * FROM student " +
             "WHERE city in ('FRAMINGHAM', 'BROCKTON', 'CONCORD')) FILTERED " +
-            "ON DEPTS.name = FILTERED.type ";
+            "ON depts.name = FILTERED.type ";
+        System.out.println("Input: " + sql);
         SqlRunner.Builder.RunnerType runnerType = RunnerType.SPARK;
         SqlRunner runner = SqlRunner.builder()
             .setTransformRunner(runnerType)
@@ -21,6 +22,6 @@ public class CsvJoinWithEsExample {
             .setAcceptedResultsNum(100)
             .ok();
         runner.sql(sql).show().run();
-        System.exit(-1);
+        System.exit(0);
     }
 }

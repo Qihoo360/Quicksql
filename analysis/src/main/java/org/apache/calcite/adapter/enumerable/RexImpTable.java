@@ -134,6 +134,7 @@ import static org.apache.calcite.sql.fun.SqlStdOperatorTable.GREATER_THAN_OR_EQU
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.GROUPING;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.GROUPING_ID;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.GROUP_ID;
+import static org.apache.calcite.sql.fun.SqlStdOperatorTable.IF;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.INITCAP;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.IS_A_SET;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.IS_EMPTY;
@@ -149,6 +150,7 @@ import static org.apache.calcite.sql.fun.SqlStdOperatorTable.ITEM;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.LAG;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.LAST_VALUE;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.LEAD;
+import static org.apache.calcite.sql.fun.SqlStdOperatorTable.LENGTH;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.LESS_THAN;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.LESS_THAN_OR_EQUAL;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.LIKE;
@@ -189,9 +191,12 @@ import static org.apache.calcite.sql.fun.SqlStdOperatorTable.RADIANS;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.RAND;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.RAND_INTEGER;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.RANK;
+import static org.apache.calcite.sql.fun.SqlStdOperatorTable.REGEXP_EXTRACT;
+import static org.apache.calcite.sql.fun.SqlStdOperatorTable.REGEXP_REPLACE;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.REGR_COUNT;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.REINTERPRET;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.REPLACE;
+import static org.apache.calcite.sql.fun.SqlStdOperatorTable.REVERSE;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.ROUND;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.ROW;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.ROW_NUMBER;
@@ -235,7 +240,16 @@ public class RexImpTable {
   private final Map<SqlAggFunction, Supplier<? extends WinAggImplementor>> winAggMap =
       new HashMap<>();
 
+  //Updated by qsql-team
   RexImpTable() {
+    //qsql start
+    defineMethod(LENGTH, BuiltInMethod.LENGTH.method, NullPolicy.STRICT);
+    defineMethod(REVERSE, BuiltInMethod.REVERSE.method, NullPolicy.STRICT);
+    defineMethod(REGEXP_EXTRACT, BuiltInMethod.REGEXP_EXTRACT.method, NullPolicy.STRICT);
+    defineMethod(REGEXP_REPLACE, BuiltInMethod.REGEXP_REPLACE.method, NullPolicy.STRICT);
+    defineMethod(IF, BuiltInMethod.IF.method, NullPolicy.ANY);
+    //qsql end
+
     defineMethod(ROW, BuiltInMethod.ARRAY.method, NullPolicy.ANY);
     defineMethod(UPPER, BuiltInMethod.UPPER.method, NullPolicy.STRICT);
     defineMethod(LOWER, BuiltInMethod.LOWER.method, NullPolicy.STRICT);

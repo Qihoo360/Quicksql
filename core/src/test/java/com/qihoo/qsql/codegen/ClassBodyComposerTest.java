@@ -27,19 +27,18 @@ public class ClassBodyComposerTest {
                 + "import java.util.List;\n"
                 + "\n"
                 + "public class TestRequirement extends SparkRequirement { \n"
-                + "       public TestRequirement(SparkSession spark){\n"
-                + "           super(spark);\n"
-                + "       }\n"
-                + "\n"
-                + "\n"
+                + "\t\tpublic TestRequirement(SparkSession spark){\n"
+                + "\t\t\tsuper(spark);\n"
+                + "\t\t}\n"
                 + "        public int func(String a, String b) {\n"
                 + "            return (a + b).length();\n"
                 + "        }\n"
                 + "\n"
-                + "       public void execute(){\n"
+                + "\t\tpublic void execute(){\n"
+                + "\t\t\tDataset<Row> tmp;\n"
                 + "\t\t\tString str = \"Test\";\n"
                 + "\t\t\tSystem.out.println(str);\n"
-                + "       }\n"
+                + "\t\t}\n"
                 + "}\n",
             composer.getCompleteClass());
     }
@@ -59,14 +58,13 @@ public class ClassBodyComposerTest {
             "import java.util.List;\n"
                 + "\n"
                 + "public class DefaultRequirement extends SparkRequirement { \n"
-                + "       public DefaultRequirement(SparkSession spark){\n"
-                + "           super(spark);\n"
-                + "       }\n"
+                + "\t\tpublic DefaultRequirement(SparkSession spark){\n"
+                + "\t\t\tsuper(spark);\n"
+                + "\t\t}\n"
                 + "\n"
-                + "\n"
-                + "\n"
-                + "       public void execute(){\n"
-                + "       }\n"
+                + "\t\tpublic void execute(){\n"
+                + "\t\t\tDataset<Row> tmp;\n"
+                + "\t\t}\n"
                 + "}\n",
             composer.getCompleteClass());
     }
@@ -85,11 +83,9 @@ public class ClassBodyComposerTest {
 
         Assert.assertEquals("\n"
             + "public class DefaultRequirement_0 extends SparkRequirement { \n"
-            + "       public DefaultRequirement_0(SparkSession spark){\n"
-            + "           super(spark);\n"
-            + "       }\n"
-            + "\n"
-            + "\n"
+            + "\t\tpublic DefaultRequirement_0(SparkSession spark){\n"
+            + "\t\t\tsuper(spark);\n"
+            + "\t\t}\n"
             + "      static class Animal { \n"
             + "             public String name;\n"
             + "         }\n"
@@ -97,8 +93,9 @@ public class ClassBodyComposerTest {
             + "             public String color;\n"
             + "         }\n"
             + "\n"
-            + "       public void execute(){\n"
-            + "       }\n"
+            + "\t\tpublic void execute(){\n"
+            + "\t\t\tDataset<Row> tmp;\n"
+            + "\t\t}\n"
             + "}\n", composer.getCompleteClass());
     }
 

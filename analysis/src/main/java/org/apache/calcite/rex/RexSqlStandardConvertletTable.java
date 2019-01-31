@@ -39,6 +39,7 @@ public class RexSqlStandardConvertletTable
     extends RexSqlReflectiveConvertletTable {
   //~ Constructors -----------------------------------------------------------
 
+  //Updated by qsql-team
   public RexSqlStandardConvertletTable() {
     super();
 
@@ -94,6 +95,16 @@ public class RexSqlStandardConvertletTable
 
     registerEquivOp(SqlStdOperatorTable.MINUS_DATE);
     registerEquivOp(SqlStdOperatorTable.EXTRACT);
+
+    //qsql start
+    registerEquivOp(SqlStdOperatorTable.LENGTH);
+    registerEquivOp(SqlStdOperatorTable.REVERSE);
+    registerEquivOp(SqlStdOperatorTable.REGEXP_EXTRACT);
+    registerEquivOp(SqlStdOperatorTable.REGEXP_REPLACE);
+    registerEquivOp(SqlStdOperatorTable.IF);
+    registerEquivOp(SqlStdOperatorTable.LTRIM);
+    registerEquivOp(SqlStdOperatorTable.RTRIM);
+    //qsql end
 
     registerEquivOp(SqlStdOperatorTable.SUBSTRING);
     registerEquivOp(SqlStdOperatorTable.CONVERT);

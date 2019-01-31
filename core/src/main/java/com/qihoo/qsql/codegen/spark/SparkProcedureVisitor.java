@@ -1,6 +1,7 @@
 package com.qihoo.qsql.codegen.spark;
 
 import com.qihoo.qsql.codegen.ClassBodyComposer;
+import com.qihoo.qsql.codegen.ClassBodyComposer.CodeCategory;
 import com.qihoo.qsql.codegen.QueryGenerator;
 import com.qihoo.qsql.plan.proc.DirectQueryProcedure;
 import com.qihoo.qsql.plan.proc.ExtractProcedure;
@@ -18,37 +19,33 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class SparkProcedureVisitor extends ProcedureVisitor {
 
     private ClassBodyComposer composer;
-    private AtomicInteger varId;
-    private String variable;
 
     public SparkProcedureVisitor(AtomicInteger varId, ClassBodyComposer composer) {
         this.composer = composer;
-        this.varId = varId;
     }
 
     @Override
     public void visit(ExtractProcedure extractProcedure) {
-        createVariableName();
+        composer.handleComposition(CodeCategory.SENTENCE, "{");
         QueryGenerator queryBuilder = QueryGenerator.getQueryGenerator(
-            extractProcedure, composer, variable, true);
+            extractProcedure, composer, true);
         queryBuilder.execute();
         queryBuilder.saveToTempTable();
+        composer.handleComposition(CodeCategory.SENTENCE, "}");
         visitNext(extractProcedure);
     }
 
     @Override
     public void visit(TransformProcedure transformProcedure) {
-        createVariableName();
         composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE,
-            "Dataset<Row> " + variable + " = spark.sql(\"" + transformProcedure.sql() + "\");");
+            "tmp = spark.sql(\"" + transformProcedure.sql() + "\");");
         visitNext(transformProcedure);
     }
 
     @Override
     public void visit(LoadProcedure loadProcedure) {
         if (loadProcedure instanceof MemoryLoadProcedure) {
-            composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE,
-                variable + ".show();\n");
+            composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE, "tmp.show();\n");
         }
         visitNext(loadProcedure);
     }
@@ -62,9 +59,4 @@ public class SparkProcedureVisitor extends ProcedureVisitor {
     public void visit(QueryProcedure queryProcedure) {
         visitNext(queryProcedure);
     }
-
-    protected void createVariableName() {
-        this.variable = "$" + (varId.incrementAndGet());
-    }
-
 }

@@ -1,14 +1,17 @@
 package com.qihoo.qsql.plan;
 
+import com.qihoo.qsql.api.SqlRunner;
+import com.qihoo.qsql.api.SqlRunner.Builder;
+import com.qihoo.qsql.api.SqlRunner.Builder.RunnerType;
 import com.qihoo.qsql.exception.ParseException;
 import com.qihoo.qsql.exception.QsqlException;
-import com.qihoo.qsql.metadata.MetadataPostman;
 import com.qihoo.qsql.exec.JdbcPipeline;
+import com.qihoo.qsql.metadata.MetadataPostman;
+import com.qihoo.qsql.plan.func.SqlRunnerFuncTable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 import org.apache.calcite.avatica.util.Casing;
 import org.apache.calcite.avatica.util.Quoting;
 import org.apache.calcite.model.ModelHandler;
@@ -213,36 +216,37 @@ public class SubtreeSyncopatorTest {
             init();
         }
 
+        SqlRunnerFuncTable funcTable = SqlRunnerFuncTable.getInstance(RunnerType.DEFAULT);
+        Builder builder = SqlRunner.builder().setTransformRunner(RunnerType.DEFAULT);
+
         private static List<String> parseTableName(String sql) {
             TableNameCollector collector = new TableNameCollector();
             try {
-                return collector.parseTableName(sql)
-                    .stream()
-                    .collect(Collectors.toList());
+                return new ArrayList<>(collector.parseTableName(sql));
             } catch (SqlParseException ex) {
                 throw new RuntimeException(ex.getMessage());
             }
         }
 
-        public Set<RelNode> exec() {
+        Set<RelNode> exec() {
             if (this.sql == null) {
                 throw new QsqlException("Please init SQL first");
             }
 
             RelNode origin = buildLogicalPlan(this.sql);
-            SubtreeSyncopator subtreeSyncopator = new SubtreeSyncopator(origin);
+            SubtreeSyncopator subtreeSyncopator = new SubtreeSyncopator(origin, funcTable, builder);
             return subtreeSyncopator.rootNodeSchemas.keySet();
         }
 
         //for subQuery
-        public Set<RelNode> execOptimize() {
+        Set<RelNode> execOptimize() {
             if (this.sql == null) {
                 throw new QsqlException("Please init SQL first");
             }
 
             RelNode origin = buildLogicalPlan(this.sql);
             RelNode optimize = optimizeLogicalPlan(origin);
-            SubtreeSyncopator subtreeSyncopator = new SubtreeSyncopator(optimize);
+            SubtreeSyncopator subtreeSyncopator = new SubtreeSyncopator(optimize, funcTable, builder);
             return subtreeSyncopator.rootNodeSchemas.keySet();
         }
 

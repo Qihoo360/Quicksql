@@ -54,7 +54,6 @@ import org.apache.calcite.tools.RuleSets;
 import org.apache.calcite.tools.ValidationException;
 import org.apache.calcite.util.Pair;
 import org.apache.calcite.util.Util;
-import org.apache.commons.lang.StringEscapeUtils;
 
 /**
  * Create specific {@link ExtractProcedure} based on type of {@link RelOptTable}, which represent extracting data in
@@ -223,8 +222,7 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
             RelNode esPhysicalPlan = toPhysicalPlan(esLogicalPlan, rules);
             String esJson = toElasticsearchQuery((EnumerableRel) esPhysicalPlan);
             //TODO debug toLowerCase
-            properties.put("esQuery", StringEscapeUtils.escapeJava(esJson)
-                .replaceAll(" ", ""));
+            properties.put("esQuery", esJson.replaceAll(" ", ""));
             return esJson;
         }
 

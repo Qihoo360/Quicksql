@@ -60,7 +60,7 @@ public class DynamicSqlRunner extends SqlRunner {
         if (schema.equals("inline: ")) {
             schema = JdbcPipeline.CSV_DEFAULT_SCHEMA;
         }
-        return new QueryProcedureProducer(schema).createQueryProcedure(sql);
+        return new QueryProcedureProducer(schema, environment).createQueryProcedure(sql);
     }
 
     @Override
@@ -105,10 +105,10 @@ public class DynamicSqlRunner extends SqlRunner {
             return pipeline;
         } else {
             if (LOGGER.isDebugEnabled()) {
-                if (environment.isSpark()) {
-                    LOGGER.debug("Choose mixed runner " + "Spark" + " to execute query");
-                } else {
+                if (environment.isFlink()) {
                     LOGGER.debug("Choose mixed runner " + "Flink" + " to execute query");
+                } else {
+                    LOGGER.debug("Choose mixed runner " + "Spark" + " to execute query");
                 }
             }
             return getOrCreateClusterPipeline(procedure);
@@ -127,10 +127,10 @@ public class DynamicSqlRunner extends SqlRunner {
     private AbstractPipeline getOrCreateClusterPipeline(QueryProcedure procedure) {
         if (this.pipeline == null) {
             //runner type can't be changed
-            if (environment.isSpark()) {
-                this.pipeline = new SparkPipeline(procedure, environment);
-            } else {
+            if (environment.isFlink()) {
                 this.pipeline = new FlinkPipeline(procedure, environment);
+            } else {
+                this.pipeline = new SparkPipeline(procedure, environment);
             }
         }
 

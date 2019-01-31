@@ -28,7 +28,7 @@ public class FlinkProcedureVisitor extends ProcedureVisitor {
     public void visit(ExtractProcedure extractProcedure) {
         createVariableName();
         QueryGenerator builder = QueryGenerator.getQueryGenerator(
-            extractProcedure, composer, variable, false);
+            extractProcedure, composer, false);
         builder.execute();
         builder.saveToTempTable();
         visitNext(extractProcedure);

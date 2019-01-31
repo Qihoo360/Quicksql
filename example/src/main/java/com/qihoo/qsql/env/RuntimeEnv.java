@@ -22,7 +22,7 @@ public class RuntimeEnv {
         System.out.println("Elasticsearch Embedded Server is starting up, waiting....");
         final Map<String, String> mapping = ImmutableMap.of("stu_id", "keyword", "type", "keyword",
             "city", "keyword", "digest", "long", "province", "keyword");
-        NODE.createIndex("student-profile", mapping);
+        NODE.createIndex("student", mapping);
 
         // load records from file
         final List<ObjectNode> bulk = new ArrayList<>();
@@ -43,7 +43,7 @@ public class RuntimeEnv {
             throw new IllegalStateException("No records to index. Empty file ?");
         }
 
-        NODE.insertBulk("student-profile", bulk);
+        NODE.insertBulk("student", bulk);
         System.out.println("Elasticsearch Embedded Server has started!! Your query is running...");
     }
 
@@ -53,13 +53,13 @@ public class RuntimeEnv {
         + "  \"defaultSchema\": \"QSql\",\n"
         + "  \"schemas\": [{\n"
         + "      \"type\": \"custom\",\n"
-        + "      \"name\": \"CUSTOM_NAME\",\n"
+        + "      \"name\": \"custom_name\",\n"
         + "      \"factory\": \"org.apache.calcite.adapter.csv.CsvSchemaFactory\",\n"
         + "      \"operand\": {\n"
         + "        \"directory\": \"\"\n"
         + "      },\n"
         + "      \"tables\": [{\n"
-        + "        \"name\": \"DEPTS\",\n"
+        + "        \"name\": \"depts\",\n"
         + "        \"type\": \"custom\",\n"
         + "        \"factory\": \"org.apache.calcite.adapter.csv.CsvTableFactory\",\n"
         + "        \"operand\": {\n"
@@ -83,20 +83,20 @@ public class RuntimeEnv {
         + "        \"coordinates\": \"{'localhost': 9025}\",\n"
         + "        \"userConfig\": \"{'bulk.flush.max.actions': 10, 'bulk.flush.max.size.mb': 1,"
         + "'esUser':'username','esPass':'password'}\",\n"
-        + "        \"index\": \"student-profile\"\n"
+        + "        \"index\": \"student\"\n"
         + "      },\n"
         + "      \"tables\": [{\n"
-        + "        \"name\": \"STUDENT\",\n"
+        + "        \"name\": \"student\",\n"
         + "        \"factory\": \"org.apache.calcite.adapter.elasticsearch.ElasticsearchTableFactory\",\n"
         + "        \"operand\": {\n"
         + "          \"dbName\": \"student_profile\",\n"
-        + "          \"tableName\": \"STUDENT\",\n"
+        + "          \"tableName\": \"student\",\n"
         + "          \"esNodes\": \"localhost\",\n"
         + "          \"esPort\": \"9025\",\n"
         + "          \"esUser\": \"username\",\n"
         + "          \"esPass\": \"password\",\n"
         + "          \"esScrollNum\": \"246\",\n"
-        + "          \"esIndex\": \"student-profile\"\n"
+        + "          \"esIndex\": \"student\"\n"
         + "        },\n"
         + "        \"columns\": [{\n"
         + "            \"name\": \"city:string\"\n"
