@@ -135,9 +135,9 @@ public class ClassBodyComposer {
             builder.append("public class ").append(className)
                 .append(" extends SparkRequirement { \n");
 
-            builder.append("       public ").append(className).append("(SparkSession spark){\n")
-                .append("           super(spark);\n"
-                    + "       }\n\n");
+            builder.append("\t\tpublic ").append(className).append("(SparkSession spark){\n")
+                .append("\t\t\tsuper(spark);\n"
+                    + "\t\t}");
 
             successor.compose(builder);
 
@@ -217,13 +217,14 @@ public class ClassBodyComposer {
         @Override
         public void compose(StringBuilder builder) {
             builder.append("\n");
-            builder.append("       public void execute(){\n");
+            builder.append("\t\tpublic void execute(){\n");
+            builder.append("\t\t\tDataset<Row> tmp;\n");
 
             for (String sentence : sentences) {
                 builder.append("\t\t\t").append(sentence).append("\n");
             }
 
-            builder.append("       }\n");
+            builder.append("\t\t}\n");
         }
     }
 

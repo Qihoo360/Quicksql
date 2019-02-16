@@ -16,6 +16,7 @@
  */
 package org.apache.calcite.runtime;
 
+import java.util.regex.Matcher;
 import org.apache.calcite.DataContext;
 import org.apache.calcite.avatica.util.ByteString;
 import org.apache.calcite.avatica.util.DateTimeUtils;
@@ -106,6 +107,33 @@ public class SqlFunctions {
 
   private SqlFunctions() {
   }
+
+  //Updated by qsql-team
+  //qsql-start
+  public static int length(String str) {
+    return str.length();
+  }
+
+  public static String reverse(String str) {
+    return new StringBuilder(str).reverse().toString();
+  }
+
+  public static String regexpExtract(String column, String regexp, int group) {
+    Pattern pattern = Pattern.compile(regexp);
+    Matcher matcher = pattern.matcher(column);
+    return matcher.group(group);
+  }
+
+  public static String regexpReplace(String column, String regexp, String replaced) {
+    Pattern pattern = Pattern.compile(regexp);
+    Matcher matcher = pattern.matcher(column);
+    return matcher.replaceAll(replaced);
+  }
+
+  public static Object ifOperation(Boolean condition, Object args0, Object args1) {
+    return condition ? args0 : args1;
+  }
+  //qsql-end
 
   /** SQL SUBSTRING(string FROM ... FOR ...) function. */
   public static String substring(String c, int s, int l) {

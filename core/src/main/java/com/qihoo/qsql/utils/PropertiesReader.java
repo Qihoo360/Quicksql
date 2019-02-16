@@ -67,12 +67,18 @@ public class PropertiesReader {
     }
 
     /**
-     * Create metadata file path.
-     *
-     * @return metadata file path
+     * whether to execute in development environment.
      */
     public static boolean isDevelopEnv() {
         String osName = System.getProperties().getProperty("os.name");
         return osName.contains("Windows") || osName.contains("Mac");
+    }
+
+    /**
+     * Used to distinguish script execution methods in different environments.
+     */
+    public static boolean isSupportedShell() {
+        String osName = System.getProperties().getProperty("os.name");
+        return ! osName.contains("Windows");
     }
 }

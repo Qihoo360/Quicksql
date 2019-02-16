@@ -410,6 +410,10 @@ public abstract class OperandTypes {
   public static final SqlSingleOperandTypeChecker STRING_SAME_SAME_INTEGER =
       OperandTypes.and(STRING_STRING_INTEGER, SAME_SAME_INTEGER);
 
+  //Updated by qsql-team
+  public static final SqlSingleOperandTypeChecker BOOLEAN_SAME_SAME =
+      OperandTypes.and(BOOLEAN, SAME_SAME);
+
   public static final SqlSingleOperandTypeChecker ANY =
       family(SqlTypeFamily.ANY);
 

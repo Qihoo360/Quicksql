@@ -34,11 +34,11 @@ public class FlinkMySqlGenerator extends QueryGenerator {
     @Override
     protected void prepareQuery() {
         composer.handleComposition(ClassBodyComposer.CodeCategory.METHOD,
-            declareGetDataTypeMethod(alias));
+            declareGetDataTypeMethod());
         composer
-            .handleComposition(ClassBodyComposer.CodeCategory.METHOD, declareQueryMethod(alias));
+            .handleComposition(ClassBodyComposer.CodeCategory.METHOD, declareQueryMethod());
         composer.handleComposition(ClassBodyComposer.CodeCategory.INNER_CLASS,
-            declareDataSetWrapperClass(alias));
+            declareDataSetWrapperClass());
     }
 
     @Override
@@ -46,17 +46,17 @@ public class FlinkMySqlGenerator extends QueryGenerator {
         Invoker config = Invoker.registerMethod("query");
 
         String invokeWrap = config.invoke(convertProperties("jdbcUrl", "jdbcUser", "jdbcPassword"));
-        String wrapper = with("wrapper", alias);
+        String wrapper = with("wrapper", "tmp");
         String invokedStatement =
-            with("DataSetListWrapper", alias) + " " + wrapper + " = " + invokeWrap + ";";
+            with("DataSetListWrapper", "tmp") + " " + wrapper + " = " + invokeWrap + ";";
         composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE, invokedStatement);
 
         String invoked =
-            "DataSet " + alias + " = env.fromCollection(" + wrapper + ".rows, " + wrapper + ""
+            "DataSet tmp = env.fromCollection(" + wrapper + ".rows, " + wrapper + ""
                 + ".rowTypeInfo);";
         composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE, invoked);
 
-        String created = "tEnv.registerDataSet(\"" + tableName + "\", " + alias + ");";
+        String created = "tEnv.registerDataSet(\"" + tableName + "\", tmp);";
         composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE, created);
     }
 
@@ -65,8 +65,8 @@ public class FlinkMySqlGenerator extends QueryGenerator {
 
     }
 
-    private String declareGetDataTypeMethod(String varName) {
-        return " private String[] " + with("getDataTypes", varName)
+    private String declareGetDataTypeMethod() {
+        return " private String[] " + with("getDataTypes", "tmp")
             + "(ResultSet resultSet) throws SqlException { \n"
             + "    int n = resultSet.getMetaData().getColumnCount(); \n"
             + "    String[] array = new String[n]; \n"
@@ -78,8 +78,8 @@ public class FlinkMySqlGenerator extends QueryGenerator {
             + " } \n";
     }
 
-    private String declareQueryMethod(String varName) {
-        return " private " + with("DataSetListWrapper", varName) + " " + with("query", varName)
+    private String declareQueryMethod() {
+        return " private " + with("DataSetListWrapper", "tmp") + " " + with("query", "tmp")
             + "(String url, String user, String password) { \n"
             + "     try { \n"
             + "         Class.forName(\"com.mysql.jdbc.Driver\"); \n"
@@ -98,7 +98,7 @@ public class FlinkMySqlGenerator extends QueryGenerator {
             + "         String sql = \"" + query.toLowerCase() + "\"; \n"
             + "         stmt = conn.prepareStatement(sql); \n"
             + "         resultSet = stmt.executeQuery(sql); \n"
-            + "         columns = " + with("getDataTypes", varName) + "(resultSet); \n"
+            + "         columns = " + with("getDataTypes", "tmp") + "(resultSet); \n"
             + "         int n = resultSet.getMetaData().getColumnCount(); \n"
             + "         while (resultSet.next()) { \n"
             + "             Row row = new Row(n); \n"
@@ -131,16 +131,16 @@ public class FlinkMySqlGenerator extends QueryGenerator {
             + "     String[] fieldNames = columns; \n"
             + "     RowTypeInfo rowTypeInfo = new RowTypeInfo(types, fieldNames); \n"
             + "  \n"
-            + "     return new " + with("DataSetListWrapper", varName) + "(rows, rowTypeInfo); \n"
+            + "     return new " + with("DataSetListWrapper", "tmp") + "(rows, rowTypeInfo); \n"
             + " }  \n";
     }
 
-    private String declareDataSetWrapperClass(String varName) {
-        return "private class " + with("DataSetListWrapper", varName) + " { \n"
+    private String declareDataSetWrapperClass() {
+        return "private class " + with("DataSetListWrapper", "tmp") + " { \n"
             + "    public List<Row> rows; \n"
             + "    public RowTypeInfo rowTypeInfo; \n"
             + " \n"
-            + "    public " + with("DataSetListWrapper", varName)
+            + "    public " + with("DataSetListWrapper", "tmp")
             + "(List<Row> rows, RowTypeInfo rowTypeInfo) { \n"
             + "        this.rows = rows; \n"
             + "        this.rowTypeInfo = rowTypeInfo; \n"

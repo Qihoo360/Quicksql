@@ -142,10 +142,11 @@ public abstract class ReflectiveSqlOperatorTable implements SqlOperatorTable {
     return ImmutableList.copyOf(operators.values());
   }
 
+  //Updated by qsql-team
   /** Key for looking up operators. The name is stored in upper-case because we
    * store case-insensitively, even in a case-sensitive session. */
-  private static class Key extends Pair<String, SqlSyntax> {
-    Key(String name, SqlSyntax syntax) {
+  public static class Key extends Pair<String, SqlSyntax> {
+    public Key(String name, SqlSyntax syntax) {
       super(name.toUpperCase(Locale.ROOT), normalize(syntax));
     }
 
@@ -159,6 +160,11 @@ public abstract class ReflectiveSqlOperatorTable implements SqlOperatorTable {
         return SqlSyntax.FUNCTION;
       }
     }
+  }
+
+  //Updated by qsql-team
+  public Multimap<Key, SqlOperator> getOperators() {
+    return operators;
   }
 }
 

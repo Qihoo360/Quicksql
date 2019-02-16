@@ -25,13 +25,13 @@ public class SparkHiveGenerator extends QueryGenerator {
 
     @Override
     public void executeQuery() {
-        String invoked = "Dataset<Row> " + alias + " = spark.sql(\"" + query + "\");";
+        String invoked = "tmp = spark.sql(\"" + query + "\");";
         composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE, invoked);
     }
 
     @Override
     public void saveToTempTable() {
-        String created = alias + ".createOrReplaceTempView(\"" + tableName + "\");";
+        String created = "tmp.createOrReplaceTempView(\"" + tableName + "\");";
         composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE, created);
     }
 

@@ -159,6 +159,10 @@ public abstract class SqlRunner {
             return new DynamicSqlRunner(this);
         }
 
+        public RunnerType getRunner() {
+            return runner;
+        }
+
         public enum RunnerType {
             SPARK, FLINK, JDBC, DEFAULT;
 

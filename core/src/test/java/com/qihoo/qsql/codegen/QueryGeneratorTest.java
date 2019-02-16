@@ -66,8 +66,24 @@ public class QueryGeneratorTest {
     }
 
     @Test
+    public void testSameDataSourceQueryGenerator() {
+        String sql = "SELECT * FROM department AS DEP "
+            + "INNER JOIN (SELECT * FROM student "
+            + "WHERE city in ('FRAMINGHAM', 'BROCKTON', 'CONCORD')) FILTERED "
+            + "ON DEP.type = FILTERED.city";
+        List<String> tableList = SqlUtil.parseTableName(sql);
+        QueryProcedureProducer producer = new QueryProcedureProducer(
+                SqlUtil.getSchemaPath(tableList));
+        QueryProcedure procedure = producer.createQueryProcedure(sql);
+        IntegratedQueryWrapper wrapper = new SparkBodyWrapper();
+        wrapper.interpretProcedure(procedure);
+        wrapper.importSpecificDependency();
+        wrapper.compile();
+    }
+
+    @Test
     public void testVirtualGenerator() {
         AbstractPipeline pipeline = SqlRunner.builder().setTransformRunner(RunnerType.SPARK).ok().sql("select 1");
-        Assert.assertTrue(((SparkPipeline) pipeline).source().contains("Dataset<Row> $1 = spark.sql(\"select 1\")"));
+        Assert.assertTrue(((SparkPipeline) pipeline).source().contains("tmp = spark.sql(\"select 1\")"));
     }
 }

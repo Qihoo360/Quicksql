@@ -6,6 +6,7 @@ import com.qihoo.qsql.plan.proc.LoadProcedure;
 import com.qihoo.qsql.plan.proc.QueryProcedure;
 import java.util.concurrent.atomic.AtomicInteger;
 
+
 /**
  * As a child of {@link IntegratedQueryWrapper}, {@link SparkBodyWrapper} implement mixed operations code generation for
  * Spark.
@@ -28,23 +29,24 @@ public class SparkBodyWrapper extends IntegratedQueryWrapper {
         String[] imports = {
             "import org.apache.spark.sql.SparkSession",
             "import com.qihoo.qsql.exec.Requirement",
-            "import com.qihoo.qsql.exec.spark.SparkRequirement"
+            "import com.qihoo.qsql.exec.spark.SparkRequirement",
+            "import org.apache.spark.sql.Dataset",
+            "import org.apache.spark.sql.Row"
         };
-
         composer.handleComposition(ClassBodyComposer.CodeCategory.IMPORT, imports);
     }
 
     @Override
     public IntegratedQueryWrapper show() {
         composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE,
-            latestDeclaredVariable() + ".show();\n");
+            "tmp.show();\n");
         return this;
     }
 
     @Override
     public IntegratedQueryWrapper writeAsTextFile(String path, String deliminator) {
         composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE,
-            latestDeclaredVariable() + ".toJavaRDD().saveAsTextFile(\"" + path + "\");");
+            "tmp.toJavaRDD().saveAsTextFile(\"" + path + "\");");
         return this;
     }
 
@@ -56,7 +58,7 @@ public class SparkBodyWrapper extends IntegratedQueryWrapper {
     @Override
     public void createTempTable(String tableName) {
         composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE,
-            latestDeclaredVariable() + ".createOrReplaceTempView(\"" + tableName + "\");");
+            "tmp.createOrReplaceTempView(\"" + tableName + "\");");
     }
 
     private class SimpleSparkProcVisitor extends SparkProcedureVisitor {
