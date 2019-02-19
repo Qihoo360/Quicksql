@@ -54,13 +54,14 @@ public class SqlDatePartFunction extends SqlFunction {
 
   //~ Methods ----------------------------------------------------------------
 
-  @Override public SqlNode rewriteCall(SqlValidator validator, SqlCall call) {
-    final List<SqlNode> operands = call.getOperandList();
-    final SqlParserPos pos = call.getParserPosition();
-    return SqlStdOperatorTable.EXTRACT.createCall(pos,
-        new SqlIntervalQualifier(timeUnit, null, SqlParserPos.ZERO),
-        operands.get(0));
-  }
+  //Updated by qsql-team
+  // @Override public SqlNode rewriteCall(SqlValidator validator, SqlCall call) {
+  //   final List<SqlNode> operands = call.getOperandList();
+  //   final SqlParserPos pos = call.getParserPosition();
+  //   return SqlStdOperatorTable.EXTRACT.createCall(pos,
+  //       new SqlIntervalQualifier(timeUnit, null, SqlParserPos.ZERO),
+  //       operands.get(0));
+  // }
 
   public SqlOperandCountRange getOperandCountRange() {
     return SqlOperandCountRanges.of(1);

@@ -231,6 +231,9 @@ public class SubtreeSyncopator extends RelShuttleImpl {
         //Dynamic op table needs to judge if func not exists in related table
         if (rexNodes.stream().anyMatch(rexNode -> ! rexNode.accept(checker))) {
             pruneSubtree(parent, single, 0);
+            if (Objects.isNull(builder)) {
+                throw new RuntimeException("Need a builder to hold runner.");
+            }
             builder.setTransformRunner(runnerFuncTable.getRunner());
             return true;
         }

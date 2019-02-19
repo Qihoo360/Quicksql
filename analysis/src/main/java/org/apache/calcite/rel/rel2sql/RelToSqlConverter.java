@@ -172,7 +172,7 @@ public class RelToSqlConverter extends SqlImplementor
     }
   }
 
-  //Updated by
+  //Updated by qsql-team
   /** @see #dispatch */
   public Result visit(Project e) {
     Result x = visitChild(0, e.getInput());

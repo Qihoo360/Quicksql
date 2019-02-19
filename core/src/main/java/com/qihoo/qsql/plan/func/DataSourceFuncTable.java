@@ -148,9 +148,14 @@ public class DataSourceFuncTable {
         }
 
         if (! runnerTable.contains(operator)) {
+            String supportedFunctions = runnerTable.getSupportedFunctions().stream()
+                .map(SqlOperator::getName)
+                .reduce((x, y) -> x + "," + y)
+                .orElse("");
             throw new RuntimeException(String.format(
                 "Unsupported function '%s' in runner,"
-                    + " please contact with developer to add udf.", operator.getName()));
+                    + " Functions supported in current version are \n:%s",
+                operator.getName(), supportedFunctions));
         }
         if (table instanceof ElasticsearchTable) {
             return sources.get(DataSource.ELASTICSEARCH).contains(operator);

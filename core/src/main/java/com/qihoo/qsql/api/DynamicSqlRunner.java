@@ -136,4 +136,7 @@ public class DynamicSqlRunner extends SqlRunner {
 
         return this.pipeline;
     }
+    //TODO extract all of SqlParser for parsing by one config
+    //TODO test set identifier escape in dialect
+    //TODO adjust code architecture, make jdbc and runner perform in the same way.(always translate to a new lang)
 }

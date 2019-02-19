@@ -219,7 +219,8 @@ public class JdbcPipeline extends AbstractPipeline {
         QueryProcedure next = procedure.next();
         ResultSet resultSet = establishStatement();
 
-        if (next instanceof DiskLoadProcedure) {
+        //TODO add jdbc sql translate
+        if (next.hasNext() && next.next() instanceof DiskLoadProcedure) {
             String path = ((DiskLoadProcedure) next).path;
             String deliminator;
             if (((DiskLoadProcedure) next).getDataFormat() == LoadProcedure.DataFormat.DEFAULT) {
