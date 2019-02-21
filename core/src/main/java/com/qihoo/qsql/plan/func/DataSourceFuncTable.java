@@ -8,7 +8,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.calcite.adapter.elasticsearch.ElasticsearchTable;
 import org.apache.calcite.adapter.hive.HiveTable;
-import org.apache.calcite.adapter.mysql.MySQLTable;
+import org.apache.calcite.adapter.custom.JdbcTable;
 import org.apache.calcite.schema.Table;
 import org.apache.calcite.sql.SqlFunction;
 import org.apache.calcite.sql.SqlOperator;
@@ -159,7 +159,7 @@ public class DataSourceFuncTable {
         }
         if (table instanceof ElasticsearchTable) {
             return sources.get(DataSource.ELASTICSEARCH).contains(operator);
-        } else if (table instanceof MySQLTable) {
+        } else if (table instanceof JdbcTable) {
             return sources.get(DataSource.MYSQL).contains(operator);
         } else {
             return table instanceof HiveTable && sources.get(DataSource.HIVE).contains(operator);

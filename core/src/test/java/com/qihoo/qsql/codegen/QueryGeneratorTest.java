@@ -21,9 +21,9 @@ public class QueryGeneratorTest {
 
     @Test
     public void testMysqlGenerator() {
-        assertGenerateClass("select * from edu_manage.department",
+        assertGenerateClass("select * from stat.tbls",
             "spark.read().jdbc(\"\", \"edu_manage_department_0\","
-                + " SparkMySqlGenerator.config(\"username\", \"password\"))",
+                + " SparkJdbcGenerator.config(\"username\", \"password\"))",
             "createOrReplaceTempView(\"edu_manage_department_0\")");
 
     }
@@ -55,7 +55,7 @@ public class QueryGeneratorTest {
     public void testMysqlRegexpExtract() {
         assertGenerateClass("SELECT REGEXP_EXTRACT(type, '.*', 0) FROM department",
             "spark.read().jdbc(\"\", \"edu_manage_department_0\","
-                + " SparkMySqlGenerator.config(\"username\", \"password\"));",
+                + " SparkJdbcGenerator.config(\"username\", \"password\"));",
             "createOrReplaceTempView(\"edu_manage_department_0\")",
             "spark.sql(\"SELECT REGEXP_EXTRACT(type, '.*', 0) AS expr_col__0 FROM edu_manage_department_0");
     }
@@ -71,6 +71,7 @@ public class QueryGeneratorTest {
         wrapper.importSpecificDependency();
         wrapper.compile();
         String clazz = wrapper.toString();
+        System.out.println(clazz);
         Assert.assertTrue(Arrays.stream(args).allMatch(clazz::contains));
     }
 }

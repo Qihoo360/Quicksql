@@ -117,6 +117,7 @@ public class ClassBodyComposer {
             super(link);
         }
 
+        //TODO change to generate construction dynamically
         @Override
         protected void decorateTrait(Class clazz, String... code) {
             if (isMyResponsibility(clazz)) {

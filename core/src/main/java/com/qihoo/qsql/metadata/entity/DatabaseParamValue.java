@@ -18,6 +18,9 @@ public class DatabaseParamValue {
 
     public DatabaseParamValue() {}
 
+    public DatabaseParamValue(Long dbId) {
+        this.dbId = dbId;
+    }
     /**
      * constructor.
      * @param dbId dbId
@@ -42,16 +45,18 @@ public class DatabaseParamValue {
         return paramKey;
     }
 
-    public void setParamKey(String paramKey) {
+    public DatabaseParamValue setParamKey(String paramKey) {
         this.paramKey = paramKey;
+        return this;
     }
 
     public String getParamValue() {
         return paramValue;
     }
 
-    public void setParamValue(String paramValue) {
+    public DatabaseParamValue setParamValue(String paramValue) {
         this.paramValue = paramValue;
+        return this;
     }
 
     @Override

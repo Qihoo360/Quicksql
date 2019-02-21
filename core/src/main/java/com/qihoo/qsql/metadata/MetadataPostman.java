@@ -128,12 +128,13 @@ public class MetadataPostman {
 
                 LOGGER.debug("Received fields about table {} are {}", tableName, columnValues);
 
+                String dbType = databaseValue.getDbType().toLowerCase();
                 String dbName = databaseValue.getName();
                 String tbName = theUniqueTable.getTblName();
                 calciteProperties.put("dbName", dbName);
                 calciteProperties.put("tableName", tbName);
-
-                MetadataMapping calciteMeta = MetadataMapping.convertToAdapter(databaseValue.getDbType().toLowerCase());
+                calciteProperties.put("dbType", dbType);
+                MetadataMapping calciteMeta = MetadataMapping.convertToAdapter(dbType);
                 calciteMeta.completeComponentProperties(calciteProperties);
 
                 return new SchemaAssembler(dbName, tbName, calciteMeta, calciteProperties, columnValues);

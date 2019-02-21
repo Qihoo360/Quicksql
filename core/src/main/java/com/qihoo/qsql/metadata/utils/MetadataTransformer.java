@@ -30,18 +30,8 @@ public class MetadataTransformer {
      *
      * @param args D
      */
-    public static void main(String[] args) throws SQLException, ParseException {
+    public static void main(String[] args) throws SQLException {
         String path = MetadataTransformer.class.getClassLoader().getResource("QSql.json").getPath();
-        // Option optionMetaJson = Option.builder().longOpt("json").hasArg().desc("metadata json").build();
-        //
-        // Options options = new Options();
-        // options.addOption(optionMetaJson);
-        //
-        // CommandLineParser parser = new DefaultParser();
-
-        // CommandLine commandLine = parser.parse(options, args);
-        // if (commandLine.hasOption("json")) {
-        //     String path = commandLine.getOptionValue("json");
         File file = new File(path);
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String json = reader.lines().reduce((x, y) -> x + y).orElse("");
@@ -49,10 +39,6 @@ public class MetadataTransformer {
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
-        // } else {
-        //     LOGGER.error("No transformable metadata json!! Please input with `json` or `file` option "
-        //         + "then try again");
-        // }
     }
 
     private static void importMetadata(String json) throws SQLException, IOException {

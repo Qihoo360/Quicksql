@@ -2,6 +2,7 @@ package com.qihoo.qsql.plan.proc;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.qihoo.qsql.metadata.MetadataMapping;
 import com.qihoo.qsql.utils.SqlUtil;
 import java.io.IOException;
 import java.util.AbstractList;
@@ -22,7 +23,7 @@ import org.apache.calcite.adapter.enumerable.JavaRowFormat;
 import org.apache.calcite.adapter.enumerable.PhysType;
 import org.apache.calcite.adapter.enumerable.PhysTypeImpl;
 import org.apache.calcite.adapter.hive.HiveTable;
-import org.apache.calcite.adapter.mysql.MySQLTable;
+import org.apache.calcite.adapter.custom.JdbcTable;
 import org.apache.calcite.adapter.virtual.VirtualTable;
 import org.apache.calcite.plan.RelOptCluster;
 import org.apache.calcite.plan.RelOptLattice;
@@ -42,6 +43,7 @@ import org.apache.calcite.sql.SqlDialect;
 import org.apache.calcite.sql.SqlNode;
 import org.apache.calcite.sql.dialect.HiveSqlDialect;
 import org.apache.calcite.sql.dialect.MysqlSqlDialect;
+import org.apache.calcite.sql.dialect.OracleSqlDialect;
 import org.apache.calcite.sql.parser.SqlParseException;
 import org.apache.calcite.tools.FrameworkConfig;
 import org.apache.calcite.tools.Frameworks;
@@ -102,10 +104,21 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
             return new HiveExtractor(next,
                 ((HiveTable) relOptTable.getTable()).getProperties(),
                 config, relNode, tableName);
-        } else if (relOptTable.getTable() instanceof MySQLTable) {
-            return new MySqlExtractor(next,
-                ((MySQLTable) relOptTable.getTable()).getProperties(),
-                config, relNode, tableName);
+        } else if (relOptTable.getTable() instanceof JdbcTable) {
+            //TODO add more jdbc type
+            String dbType = ((JdbcTable) relOptTable.getTable())
+                .getProperties().getProperty("dbType", "unknown");
+            switch (dbType) {
+                case MetadataMapping.MYSQL:
+                    return new MySqlExtractor(next, ((JdbcTable) relOptTable.getTable())
+                        .getProperties(), config, relNode, tableName);
+                case MetadataMapping.ORACLE:
+                    return new OracleExtractor(next, ((JdbcTable) relOptTable.getTable())
+                        .getProperties(), config, relNode, tableName);
+                default:
+                    throw new RuntimeException("");
+            }
+
         } else if (relOptTable.getTable() instanceof VirtualTable) {
             return new VirtualExtractor(next,
                 ((VirtualTable) relOptTable.getTable()).getProperties(),
@@ -355,6 +368,25 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
         @Override
         public String getCategory() {
             return "MySQL";
+        }
+    }
+
+    public static class OracleExtractor extends PreparedExtractProcedure {
+
+        public OracleExtractor(QueryProcedure next, Properties properties,
+            FrameworkConfig config, RelNode relNode,
+            String tableName) {
+            super(next, properties, config, relNode, tableName);
+        }
+
+        @Override
+        public String toRecognizedQuery() {
+            return sql(new OracleSqlDialect(SqlDialect.EMPTY_CONTEXT)).toLowerCase();
+        }
+
+        @Override
+        public String getCategory() {
+            return "Oracle";
         }
     }
 

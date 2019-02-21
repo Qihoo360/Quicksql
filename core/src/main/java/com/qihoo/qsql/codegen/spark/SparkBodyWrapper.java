@@ -4,7 +4,6 @@ import com.qihoo.qsql.codegen.ClassBodyComposer;
 import com.qihoo.qsql.codegen.IntegratedQueryWrapper;
 import com.qihoo.qsql.plan.proc.LoadProcedure;
 import com.qihoo.qsql.plan.proc.QueryProcedure;
-import java.util.concurrent.atomic.AtomicInteger;
 
 
 /**
@@ -15,13 +14,13 @@ public class SparkBodyWrapper extends IntegratedQueryWrapper {
 
     @Override
     public IntegratedQueryWrapper run(QueryProcedure plan) {
-        plan.accept(new SparkProcedureVisitor(varId, composer));
+        plan.accept(new SparkProcedureVisitor(composer));
         return this;
     }
 
     @Override
     public void interpretProcedure(QueryProcedure plan) {
-        plan.accept(new SimpleSparkProcVisitor(varId, composer));
+        plan.accept(new SimpleSparkProcVisitor(composer));
     }
 
     @Override
@@ -63,13 +62,13 @@ public class SparkBodyWrapper extends IntegratedQueryWrapper {
 
     private class SimpleSparkProcVisitor extends SparkProcedureVisitor {
 
-        SimpleSparkProcVisitor(AtomicInteger varId,
-            ClassBodyComposer composer) {
-            super(varId, composer);
+        SimpleSparkProcVisitor(ClassBodyComposer composer) {
+            super(composer);
         }
 
         @Override
         public void visit(LoadProcedure procedure) {
+            //what's mean of this override method
         }
     }
 }

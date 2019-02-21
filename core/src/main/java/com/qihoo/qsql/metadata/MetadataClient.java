@@ -15,10 +15,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import org.apache.calcite.rel.rel2sql.SqlImplementor.Result;
 
 /**
  * Provide methods to fetch data from metastore.
  */
+//TODO replace with spring+mybatis
 public class MetadataClient implements AutoCloseable {
 
     private static Properties properties;
@@ -89,7 +91,7 @@ public class MetadataClient implements AutoCloseable {
      * insert data value into table.
      * @param value data value
      */
-    public void insertBasicDatabaseInfo(DatabaseValue value) {
+    public Long insertBasicDatabaseInfo(DatabaseValue value) {
         String sql = String.format("INSERT INTO DBS(NAME, DB_TYPE, `DESC`) VALUES('%s', '%s', '%s')",
             value.getName(), value.getDbType(), value.getDesc());
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -97,6 +99,7 @@ public class MetadataClient implements AutoCloseable {
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
+        return getLastInsertPrimaryKey();
     }
 
     /**
@@ -148,7 +151,7 @@ public class MetadataClient implements AutoCloseable {
      * insert table schema into table.
      * @param value data value
      */
-    public void insertTableSchema(TableValue value) {
+    public Long insertTableSchema(TableValue value) {
         String sql = String.format("INSERT INTO TBLS(DB_ID, TBL_NAME) VALUES(%s, '%s')",
             value.getDbId(), value.getTblName());
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -156,6 +159,7 @@ public class MetadataClient implements AutoCloseable {
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
+        return getLastInsertPrimaryKey();
     }
 
     /**
@@ -204,6 +208,15 @@ public class MetadataClient implements AutoCloseable {
         }
     }
 
+    public void deleteFieldsSchema(Long tbId) {
+        String sql = String.format("DELETE FROM COLUMNS WHERE CD_ID = %s", tbId.toString());
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.execute();
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
     /**
      * d.
      * @param tableId wait
@@ -229,6 +242,19 @@ public class MetadataClient implements AutoCloseable {
             return columns;
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
+        }
+    }
+
+    private Long getLastInsertPrimaryKey() {
+        try (PreparedStatement preparedStatement =
+            connection.prepareStatement("SELECT LAST_INSERT_ID()")) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (! resultSet.next()) {
+                throw new RuntimeException("Execute `SELECT LAST_INSERT_ID()` failed!!");
+            }
+            return resultSet.getLong(1);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 

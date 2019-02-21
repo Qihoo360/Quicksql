@@ -241,13 +241,17 @@ public class JavaTypeFactoryImpl
   public RelDataType getDataType(RelDataTypeFactory relDataTypeFactory, String javaType) {
     switch (javaType.toUpperCase()) {
       case "INT":
+      case "INTEGER":
         return relDataTypeFactory.createSqlType(SqlTypeName.INTEGER);
       case "STRING":
+      case "VARCHAR":
         return relDataTypeFactory.createSqlType(SqlTypeName.VARCHAR);
       case "TINYINT":
         return relDataTypeFactory.createSqlType(SqlTypeName.TINYINT);
       case "SMALLINT":
         return relDataTypeFactory.createSqlType(SqlTypeName.SMALLINT);
+      case "BIGINT":
+        return relDataTypeFactory.createSqlType(SqlTypeName.BIGINT);
       case "FLOAT":
         return relDataTypeFactory.createSqlType(SqlTypeName.FLOAT);
       case "DOUBLE":
@@ -262,6 +266,8 @@ public class JavaTypeFactoryImpl
         return relDataTypeFactory.createSqlType(SqlTypeName.MAP);
       case "DATE":
         return relDataTypeFactory.createSqlType(SqlTypeName.DATE);
+      case "TIMESTAMP":
+        return relDataTypeFactory.createSqlType(SqlTypeName.TIMESTAMP);
       default:
         return relDataTypeFactory.createSqlType(SqlTypeName.VARCHAR);
     }
