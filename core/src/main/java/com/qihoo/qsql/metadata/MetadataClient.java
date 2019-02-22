@@ -23,6 +23,7 @@ import org.apache.calcite.rel.rel2sql.SqlImplementor.Result;
 //TODO replace with spring+mybatis
 public class MetadataClient implements AutoCloseable {
 
+    //TODO think about more than one metastore
     private static Properties properties;
 
     static {
@@ -245,9 +246,10 @@ public class MetadataClient implements AutoCloseable {
         }
     }
 
+    //NOT THREAD-SAFE
     private Long getLastInsertPrimaryKey() {
         try (PreparedStatement preparedStatement =
-            connection.prepareStatement("SELECT LAST_INSERT_ID()")) {
+            connection.prepareStatement(getLastInsertSql())) {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (! resultSet.next()) {
                 throw new RuntimeException("Execute `SELECT LAST_INSERT_ID()` failed!!");
@@ -295,6 +297,18 @@ public class MetadataClient implements AutoCloseable {
             }
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
+        }
+    }
+
+    public String getLastInsertSql() throws SQLException {
+        String driver = connection.getMetaData().getDriverName().toLowerCase();
+        if (driver.contains("mysql")) {
+            return "SELECT LAST_INSERT_ID()";
+        } else if (driver.contains("sqlite")) {
+            return "SELECT LAST_INSERT_ROWID()";
+        } else {
+            throw new RuntimeException(
+                "Metadata collection for this type of data source is not supported!!");
         }
     }
 }

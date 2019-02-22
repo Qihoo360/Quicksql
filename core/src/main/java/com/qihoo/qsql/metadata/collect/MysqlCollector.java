@@ -42,7 +42,9 @@ public class MysqlCollector extends MetadataCollector {
     @Override
     protected List<DatabaseParamValue> convertDatabaseParamValue(Long dbId) {
         DatabaseParamValue[] paramValues = new DatabaseParamValue[4];
-        Arrays.fill(paramValues, new DatabaseParamValue(dbId));
+        for (int i = 0; i < paramValues.length; i++) {
+            paramValues[i] = new DatabaseParamValue(dbId);
+        }
         paramValues[0].setParamKey("jdbcUrl").setParamValue(prop.getJdbcUrl());
         paramValues[1].setParamKey("jdbcDriver").setParamValue(prop.getJdbcDriver());
         paramValues[2].setParamKey("jdbcUser").setParamValue(prop.getJdbcUser());
@@ -62,7 +64,7 @@ public class MysqlCollector extends MetadataCollector {
     @Override
     protected List<ColumnValue> convertColumnValue(Long tbId, String tableName, String dbName) {
         String sql = String.format("SELECT COLUMN_NAME, DATA_TYPE, ORDINAL_POSITION "
-                + "FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = %s AND TABLE_SCHEMA = %s",
+                + "FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '%s' AND TABLE_SCHEMA = '%s'",
             tableName, dbName);
         List<ColumnValue> columns = new ArrayList<>();
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {

@@ -17,6 +17,6 @@ public class CsvScanExample {
             .setAcceptedResultsNum(100)
             .ok();
         runner.sql(sql).show().run();
-        System.exit(-1);
+        System.exit(0);
     }
 }

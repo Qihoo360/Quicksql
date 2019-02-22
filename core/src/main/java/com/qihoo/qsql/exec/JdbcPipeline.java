@@ -209,9 +209,14 @@ public class JdbcPipeline extends AbstractPipeline {
      * @throws SQLException sql exception
      */
     public static Connection createCsvConnection(String json) throws SQLException {
-        Properties info = new Properties();
-        info.put("model", json);
-        Connection connection = DriverManager.getConnection("jdbc:calcite:", info);
+        ConnectionFactory connectionFactory = new MapConnectionFactory(
+            ImmutableMap.of("unquotedCasing", "unchanged", "caseSensitive", "true"),
+            ImmutableList.of()
+        ).with("model", json);
+
+        // Properties info = new Properties();
+        // info.put("model", json);
+        Connection connection = connectionFactory.createConnection();
         LOGGER.debug("Connect with embedded calcite server successfully!");
         return connection;
     }

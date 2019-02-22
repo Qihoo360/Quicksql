@@ -82,8 +82,11 @@ public abstract class MetadataCollector {
                 }
             }
             client.commit();
+            LOGGER.info("Successfully collected metadata for {} tables!!", tableNames.size());
+            LOGGER.info(tableNames.stream().reduce((x, y) -> x + "\n" + y).orElse(""));
         } catch (SQLException ex) {
             client.rollback();
+            LOGGER.info("Collect metadata failed!!");
         }
     }
 

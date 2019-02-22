@@ -4,10 +4,13 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Iterator of reading data from {@link JdbcPipelineResult}, which is the result of {@link
@@ -45,24 +48,114 @@ public abstract class JdbcPipelineResult implements PipelineResult {
 
         @Override
         public void run() {
-            if (! iterator.hasNext()) {
-                System.out.println("Empty set");
-            }
             try {
-                ResultSetMetaData meta = ((JdbcResultSetIterator) iterator).getResultSet().getMetaData();
-                String[] colLabels = new String[meta.getColumnCount()];
+                ResultSet resultSet = ((JdbcResultSetIterator) iterator).getResultSet();
+                ResultSetMetaData meta = resultSet.getMetaData();
+                int length = meta.getColumnCount();
+                String[] colLabels = new String[length];
+                int[] colCounts = new int[length];
+                int[] types = new int[length];
+                int[] changes = new int[length];
+                Arrays.fill(changes, 0);
+
                 for (int i = 0; i < meta.getColumnCount(); i++) {
-                    colLabels[i] = meta.getColumnLabel(i + 1) + ":" + meta.getColumnTypeName(i + 1);
+                    colLabels[i] = meta.getColumnLabel(i + 1).toUpperCase();
+                    types[i] = meta.getColumnType(i + 1);
                 }
-                String metadata = Arrays.stream(colLabels).reduce((x, y) -> x + "," + y).orElse("");
-                char[] sep = new char[metadata.length()];
-                Arrays.fill(sep, '-');
-                System.out.println(new String(sep) + "\n" + metadata + "\n" + new String(sep));
+
+                fillWithDisplaySize(types, colCounts);
+                StringBuilder builder = new StringBuilder();
+
+                for (int i = 0; i < meta.getColumnCount(); i++) {
+                    if (colLabels[i].length() > colCounts[i]) {
+                        changes[i] = colLabels[i].length() - colCounts[i];
+                        colCounts[i] = colLabels[i].length();
+                    }
+                    int sep = (colCounts[i] - colLabels[i].length());
+                    builder.append(String.format("|%s%" + (sep == 0 ? "" : sep) + "s", colLabels[i], ""));
+                }
+                builder.append("|");
+                int[] colWeights = Arrays.copyOf(colCounts, colCounts.length);
+
+                Function<String[], int[]> component = (labels) -> {
+                    int[] weights = new int[colWeights.length];
+                    for (int i = 0; i < weights.length; i++) {
+                        weights[i] = colWeights[i] + changes[i];
+                    }
+                    return weights;
+                };
+
+                Supplier<String> framer = () ->
+                    "+" + Arrays.stream(component.apply(colLabels))
+                        .mapToObj(col -> {
+                            char[] fr = new char[col];
+                            Arrays.fill(fr, '-');
+                            return new String(fr);
+                        }).reduce((x, y) -> x + "+" + y).orElse("") + "+";
+
+                System.out.println(framer.get());
+                System.out.println(builder.toString());
+                System.out.println(framer.get());
+
+                if (! resultSet.next()) {
+                    System.out.println("Empty set");
+                    return;
+                }
+
+                do {
+                    StringBuilder line = new StringBuilder();
+                    for (int i = 0; i < meta.getColumnCount(); i++) {
+                        String value = resultSet.getString(i + 1);
+                        //bug here
+                        if (value.length() > colCounts[i]) {
+                            changes[i] = value.length() - colCounts[i];
+                            colCounts[i] = value.length();
+                        }
+                        int sep = (colCounts[i] - value.length());
+                        line.append(
+                            String.format("|%s%" + (sep == 0 ? "" : sep) + "s", value, ""));
+                    }
+                    line.append("|");
+                    System.out.println(line.toString());
+                } while (resultSet.next());
+
+                System.out.println(framer.get());
             } catch (SQLException ex) {
                 throw new RuntimeException(ex);
             }
-            iterator.forEachRemaining(result -> System.out.println(JdbcResultSetIterator.CONCAT_FUNC.apply(result)));
             close();
+        }
+
+        private void fillWithDisplaySize(int[] type, int[] colCounts) {
+            for (int i = 0; i < type.length; i++) {
+                switch (type[i]) {
+                    case Types.BOOLEAN:
+                    case Types.TINYINT:
+                    case Types.SMALLINT:
+                        colCounts[i] = 4;
+                        break;
+                    case Types.INTEGER:
+                    case Types.BIGINT:
+                    case Types.REAL:
+                    case Types.FLOAT:
+                    case Types.DOUBLE:
+                        colCounts[i] = 10;
+                        break;
+                    case Types.CHAR:
+                        colCounts[i] = 2;
+                        break;
+                    case Types.VARCHAR:
+                        colCounts[i] = 28;
+                        break;
+                    case Types.DATE:
+                    case Types.TIME:
+                    case Types.TIMESTAMP:
+                        colCounts[i] = 24;
+                        break;
+                    default:
+                        colCounts[i] = 32;
+                }
+            }
         }
     }
 
