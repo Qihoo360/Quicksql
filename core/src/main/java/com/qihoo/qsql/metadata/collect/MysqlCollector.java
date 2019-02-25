@@ -1,6 +1,5 @@
 package com.qihoo.qsql.metadata.collect;
 
-import com.qihoo.qsql.metadata.collect.dto.ElasticsearchProp;
 import com.qihoo.qsql.metadata.collect.dto.JdbcProp;
 import com.qihoo.qsql.metadata.entity.ColumnValue;
 import com.qihoo.qsql.metadata.entity.DatabaseParamValue;
@@ -20,8 +19,10 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 
 public class MysqlCollector extends MetadataCollector {
+
     private JdbcProp prop;
     private Connection connection;
+
     public MysqlCollector(JdbcProp prop, String filter) throws SQLException, ClassNotFoundException {
         super(filter);
         this.prop = prop;

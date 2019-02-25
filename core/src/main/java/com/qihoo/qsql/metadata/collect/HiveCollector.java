@@ -12,17 +12,21 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 
-public class OracleCollector extends MetadataCollector {
+//TODO Extract jdbc metadata collector
+public class HiveCollector extends MetadataCollector {
 
+    //read from mysql database.
     private JdbcProp prop;
     private Connection connection;
-    OracleCollector(JdbcProp prop, String filterRegexp) throws SQLException, ClassNotFoundException {
+
+    HiveCollector(JdbcProp prop, String filterRegexp) throws SQLException, ClassNotFoundException {
         super(filterRegexp);
         this.prop = prop;
         Class.forName(prop.getJdbcDriver());
@@ -33,7 +37,7 @@ public class OracleCollector extends MetadataCollector {
     @Override
     protected DatabaseValue convertDatabaseValue() {
         DatabaseValue value = new DatabaseValue();
-        value.setDbType("oracle");
+        value.setDbType("hive");
         value.setDesc("Who am I");
         value.setName(getDatabasePosition());
         return value;
@@ -41,15 +45,9 @@ public class OracleCollector extends MetadataCollector {
 
     @Override
     protected List<DatabaseParamValue> convertDatabaseParamValue(Long dbId) {
-        DatabaseParamValue[] paramValues = new DatabaseParamValue[4];
-        for (int i = 0; i < paramValues.length; i++) {
-            paramValues[i] = new DatabaseParamValue(dbId);
-        }
-        paramValues[0].setParamKey("jdbcUrl").setParamValue(prop.getJdbcUrl());
-        paramValues[1].setParamKey("jdbcDriver").setParamValue(prop.getJdbcDriver());
-        paramValues[2].setParamKey("jdbcUser").setParamValue(prop.getJdbcUser());
-        paramValues[3].setParamKey("jdbcPassword").setParamValue(prop.getJdbcPassword());
-        return Arrays.stream(paramValues).collect(Collectors.toList());
+        DatabaseParamValue value = new DatabaseParamValue();
+        value.setParamKey("cluster").setParamValue("default");
+        return Collections.singletonList(value);
     }
 
     @Override
@@ -63,24 +61,8 @@ public class OracleCollector extends MetadataCollector {
 
     @Override
     protected List<ColumnValue> convertColumnValue(Long tbId, String tableName, String dbName) {
-        String sql = String.format("SELECT COLUMN_NAME, DATA_TYPE, COLUMN_ID "
-                + "FROM USER_TAB_COLUMNS WHERE TABLE_NAME = '%s'", tableName);
-        List<ColumnValue> columns = new ArrayList<>();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                ColumnValue value = new ColumnValue();
-                value.setColumnName(resultSet.getString(1));
-                value.setTypeName(resultSet.getString(2));
-                value.setCdId(tbId);
-                value.setIntegerIdx(resultSet.getInt(3));
-                value.setComment("Who am I");
-                columns.add(value);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return columns;
+        //need a big join
+        return Collections.emptyList();
     }
 
     @Override
@@ -90,8 +72,7 @@ public class OracleCollector extends MetadataCollector {
         }
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(
-            String.format("SELECT table_name FROM all_tables "
-                + "WHERE table_name LIKE '%s'", filterRegexp))) {
+            String.format("SHOW TABLES LIKE '%s'", filterRegexp))) {
             ResultSet resultSet = preparedStatement.executeQuery();
             List<String> tableNames = new ArrayList<>();
             while (resultSet.next()) {
@@ -105,10 +86,10 @@ public class OracleCollector extends MetadataCollector {
 
     private String getDatabasePosition() {
         try (PreparedStatement preparedStatement =
-            connection.prepareStatement("SELECT name FROM v$database")) {
+            connection.prepareStatement("SELECT CURRENT_DATABASE()")) {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (! resultSet.next()) {
-                throw new RuntimeException("Execute `SELECT name FROM v$database` failed!!");
+                throw new RuntimeException("Execute `SELECT CURRENT_DATABASE()` failed!!");
             }
             String database = resultSet.getString(1);
             if (Objects.isNull(database)) {
