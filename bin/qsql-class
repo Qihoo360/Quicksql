@@ -2,7 +2,7 @@
 
 export QSQL_HOME="$(cd "`dirname "$0"`"/..; pwd)"
 
-if [ -n "${JAVA_HOME}" ]; then
+if [[ -n "$JAVA_HOME" ]] && [[ -x "$JAVA_HOME/bin/java" ]];  then
     JAVA_RUNNER="${JAVA_HOME}/bin/java"
 else
     if [ `command -v java` ]; then
@@ -13,7 +13,17 @@ else
     fi
 fi
 
-if [ -n "${SPARK_HOME}" ]; then
+if [[ "$JAVA_RUNNER" ]]; then
+    version=$("$JAVA_RUNNER" -version 2>&1 | awk -F '"' '/version/ {print $2}')
+    IFS=.
+    read major minor extra <<<"$version";
+    if (( major == 1 && minor < 8 ));
+    then
+        echo "required java version > 1.8"
+    fi
+fi
+
+if [[ -n "$SPARK_HOME" ]] && [[ -x "$SPARK_HOME/bin/spark-submit" ]];  then
     SPARK_RUNNER="${SPARK_HOME}/bin/spark-submit"
 else
     if [ `command -v spark-submit` ]; then
@@ -24,6 +34,21 @@ else
     fi
 fi
 
+if [[ "$SPARK_RUNNER" ]]; then
+    version=$("$SPARK_RUNNER" --version 2>&1 | awk -F 'version' '/version/ {print $2}')
+    IFS=.   read major minor extra <<< "$version";
+    if (( major >= 2));
+    then
+        if (( minor <= 2));
+        then
+            echo "required spark version > 2.2"
+            exit 1
+        fi
+    else
+        echo "required spark version > 2.2"
+        exit 1
+    fi
+fi
 
 QSQL_LAUNCH_CLASSPATH="${QSQL_HOME}/lib/qsql-core-0.5.jar"
 QSQL_LAUNCH_CLASSPATH="${QSQL_LAUNCH_CLASSPATH}:${QSQL_JARS}"

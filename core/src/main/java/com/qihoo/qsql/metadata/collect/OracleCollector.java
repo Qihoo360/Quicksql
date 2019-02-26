@@ -22,6 +22,7 @@ public class OracleCollector extends MetadataCollector {
 
     private JdbcProp prop;
     private Connection connection;
+
     OracleCollector(JdbcProp prop, String filterRegexp) throws SQLException, ClassNotFoundException {
         super(filterRegexp);
         this.prop = prop;
@@ -64,7 +65,7 @@ public class OracleCollector extends MetadataCollector {
     @Override
     protected List<ColumnValue> convertColumnValue(Long tbId, String tableName, String dbName) {
         String sql = String.format("SELECT COLUMN_NAME, DATA_TYPE, COLUMN_ID "
-                + "FROM USER_TAB_COLUMNS WHERE TABLE_NAME = '%s'", tableName);
+            + "FROM USER_TAB_COLUMNS WHERE TABLE_NAME = '%s'", tableName);
         List<ColumnValue> columns = new ArrayList<>();
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -77,8 +78,8 @@ public class OracleCollector extends MetadataCollector {
                 value.setComment("Who am I");
                 columns.add(value);
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
         }
         return columns;
     }
@@ -98,8 +99,8 @@ public class OracleCollector extends MetadataCollector {
                 tableNames.add(resultSet.getString(1));
             }
             return tableNames;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
         }
     }
 
@@ -115,8 +116,8 @@ public class OracleCollector extends MetadataCollector {
                 throw new RuntimeException("Please add db_name in `jdbcUrl`");
             }
             return database;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
         }
     }
 }

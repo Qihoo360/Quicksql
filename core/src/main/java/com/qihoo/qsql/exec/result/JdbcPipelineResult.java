@@ -64,66 +64,72 @@ public abstract class JdbcPipelineResult implements PipelineResult {
                 }
 
                 fillWithDisplaySize(types, colCounts);
-                StringBuilder builder = new StringBuilder();
-
-                for (int i = 0; i < meta.getColumnCount(); i++) {
-                    if (colLabels[i].length() > colCounts[i]) {
-                        changes[i] = colLabels[i].length() - colCounts[i];
-                        colCounts[i] = colLabels[i].length();
-                    }
-                    int sep = (colCounts[i] - colLabels[i].length());
-                    builder.append(String.format("|%s%" + (sep == 0 ? "" : sep) + "s", colLabels[i], ""));
-                }
-                builder.append("|");
-                int[] colWeights = Arrays.copyOf(colCounts, colCounts.length);
-
-                Function<String[], int[]> component = (labels) -> {
-                    int[] weights = new int[colWeights.length];
-                    for (int i = 0; i < weights.length; i++) {
-                        weights[i] = colWeights[i] + changes[i];
-                    }
-                    return weights;
-                };
-
-                Supplier<String> framer = () ->
-                    "+" + Arrays.stream(component.apply(colLabels))
-                        .mapToObj(col -> {
-                            char[] fr = new char[col];
-                            Arrays.fill(fr, '-');
-                            return new String(fr);
-                        }).reduce((x, y) -> x + "+" + y).orElse("") + "+";
-
-                System.out.println(framer.get());
-                System.out.println(builder.toString());
-                System.out.println(framer.get());
-
-                if (! resultSet.next()) {
-                    System.out.println("Empty set");
-                    return;
-                }
-
-                do {
-                    StringBuilder line = new StringBuilder();
-                    for (int i = 0; i < meta.getColumnCount(); i++) {
-                        String value = resultSet.getString(i + 1);
-                        //bug here
-                        if (value.length() > colCounts[i]) {
-                            changes[i] = value.length() - colCounts[i];
-                            colCounts[i] = value.length();
-                        }
-                        int sep = (colCounts[i] - value.length());
-                        line.append(
-                            String.format("|%s%" + (sep == 0 ? "" : sep) + "s", value, ""));
-                    }
-                    line.append("|");
-                    System.out.println(line.toString());
-                } while (resultSet.next());
-
-                System.out.println(framer.get());
+                printResults(meta, resultSet, colLabels, colCounts, changes);
             } catch (SQLException ex) {
                 throw new RuntimeException(ex);
             }
             close();
+        }
+
+        private void printResults(ResultSetMetaData meta, ResultSet resultSet,
+            String[] colLabels, int[] colCounts, int[] changes) throws SQLException {
+            StringBuilder builder = new StringBuilder();
+
+            for (int i = 0; i < meta.getColumnCount(); i++) {
+                if (colLabels[i].length() > colCounts[i]) {
+                    changes[i] = colLabels[i].length() - colCounts[i];
+                    colCounts[i] = colLabels[i].length();
+                }
+                int sep = (colCounts[i] - colLabels[i].length());
+                builder.append(String.format("|%s%" + (sep == 0 ? "" : sep) + "s", colLabels[i], ""));
+            }
+            builder.append("|");
+            int[] colWeights = Arrays.copyOf(colCounts, colCounts.length);
+
+            Function<String[], int[]> component = (labels) -> {
+                int[] weights = new int[colWeights.length];
+                for (int i = 0; i < weights.length; i++) {
+                    weights[i] = colWeights[i] + changes[i];
+                }
+                return weights;
+            };
+
+            Supplier<String> framer = () ->
+                "+" + Arrays.stream(component.apply(colLabels))
+                    .mapToObj(col -> {
+                        char[] fr = new char[col];
+                        Arrays.fill(fr, '-');
+                        return new String(fr);
+                    }).reduce((x, y) -> x + "+" + y).orElse("") + "+";
+
+            if (! resultSet.next()) {
+                System.out.println("Empty set");
+                return;
+            }
+
+            System.out.println(framer.get());
+            System.out.println(builder.toString());
+            System.out.println(framer.get());
+
+            do {
+                StringBuilder line = new StringBuilder();
+                for (int i = 0; i < meta.getColumnCount(); i++) {
+                    String value = resultSet.getString(i + 1);
+                    //bug here
+                    if (value.length() > colCounts[i]) {
+                        changes[i] = value.length() - colCounts[i];
+                        colCounts[i] = value.length();
+                    }
+                    int sep = (colCounts[i] - value.length());
+                    line.append(
+                        String.format("|%s%" + (sep == 0 ? "" : sep) + "s", value, ""));
+                }
+                line.append("|");
+                System.out.println(line.toString());
+            }
+            while (resultSet.next());
+
+            System.out.println(framer.get());
         }
 
         private void fillWithDisplaySize(int[] type, int[] colCounts) {

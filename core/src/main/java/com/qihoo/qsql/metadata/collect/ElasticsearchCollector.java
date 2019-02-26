@@ -34,10 +34,14 @@ import org.elasticsearch.client.Response;
 import org.elasticsearch.client.RestClient;
 
 public class ElasticsearchCollector extends MetadataCollector {
+
     private ElasticsearchProp prop;
     private RestClient restClient;
     private ObjectMapper mapper = new ObjectMapper();
 
+    /**
+     * .
+     */
     public ElasticsearchCollector(ElasticsearchProp prop, String filter) throws SQLException {
         super(filter);
         this.prop = prop;
@@ -55,7 +59,7 @@ public class ElasticsearchCollector extends MetadataCollector {
         value.setDbType("es");
         value.setDesc("Who am I");
         String indexWithType = prop.getEsIndex();
-        if (indexWithType.lastIndexOf("/") == -1) {
+        if (indexWithType.lastIndexOf("/") == - 1) {
             value.setName(indexWithType);
         } else {
             value.setName(indexWithType.substring(0, indexWithType.lastIndexOf("/")));
@@ -110,8 +114,8 @@ public class ElasticsearchCollector extends MetadataCollector {
                 .replaceAll("%", ".*")
                 .replaceAll("_", ".?");
             return listTypesFromElastic(prop.getEsIndex()).stream().filter(line -> {
-                    Pattern pattern = Pattern.compile(regexp);
-                    return pattern.matcher(line).matches();
+                Pattern pattern = Pattern.compile(regexp);
+                return pattern.matcher(line).matches();
             }).collect(Collectors.toList());
         } catch (IOException ioe) {
             throw new RuntimeException(ioe);
@@ -121,7 +125,7 @@ public class ElasticsearchCollector extends MetadataCollector {
     private static RestClient connect(Map<String, Integer> coordinates,
         Map<String, String> userConfig) {
         Objects.requireNonNull(coordinates, "coordinates");
-        Preconditions.checkArgument(!coordinates.isEmpty(), "no ES coordinates specified");
+        Preconditions.checkArgument(! coordinates.isEmpty(), "no ES coordinates specified");
         final Set<HttpHost> set = new LinkedHashSet<>();
         for (Map.Entry<String, Integer> entry : coordinates.entrySet()) {
             set.add(new HttpHost(entry.getKey(), entry.getValue()));
@@ -143,7 +147,7 @@ public class ElasticsearchCollector extends MetadataCollector {
         final Response response = restClient.performRequest("GET", endpoint);
         try (InputStream is = response.getEntity().getContent()) {
             JsonNode root = mapper.readTree(is);
-            if (!root.isObject() || root.size() != 1) {
+            if (! root.isObject() || root.size() != 1) {
                 final String message = String.format(Locale.ROOT, "Invalid response for %s/%s "
                         + "Expected object of size 1 got %s (of size %d)", response.getHost(),
                     response.getRequestLine(), root.getNodeType(), root.size());
@@ -168,7 +172,7 @@ public class ElasticsearchCollector extends MetadataCollector {
         final Response response = restClient.performRequest("GET", endpoint);
         try (InputStream is = response.getEntity().getContent()) {
             JsonNode root = mapper.readTree(is);
-            if (!root.isObject() || root.size() != 1) {
+            if (! root.isObject() || root.size() != 1) {
                 final String message = String.format(Locale.ROOT, "Invalid response for %s/%s "
                         + "Expected object of size 1 got %s (of size %d)", response.getHost(),
                     response.getRequestLine(), root.getNodeType(), root.size());

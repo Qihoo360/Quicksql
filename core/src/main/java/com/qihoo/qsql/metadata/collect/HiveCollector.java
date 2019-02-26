@@ -11,12 +11,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 
 //TODO Extract jdbc metadata collector
@@ -79,8 +77,8 @@ public class HiveCollector extends MetadataCollector {
                 tableNames.add(resultSet.getString(1));
             }
             return tableNames;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
         }
     }
 
@@ -96,8 +94,8 @@ public class HiveCollector extends MetadataCollector {
                 throw new RuntimeException("Please add db_name in `jdbcUrl`");
             }
             return database;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
         }
     }
 }

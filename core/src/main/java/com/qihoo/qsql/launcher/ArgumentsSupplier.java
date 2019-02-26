@@ -46,6 +46,8 @@ public class ArgumentsSupplier {
         arguments.add(parser.getOptionValue(OptionsParser.SubmitOption.JAR_NAME));
         arguments.add(longSparkOpt("jar"));
         arguments.add(parser.getOptionValue(SubmitOption.JAR));
+        arguments.add(longSparkOpt("master"));
+        arguments.add(parser.getOptionValue(SubmitOption.MASTER_MODE));
         arguments.add(longSparkOpt("runner"));
         arguments.add(parser.getOptionValue(OptionsParser.SubmitOption.RUNNER));
         return arguments;

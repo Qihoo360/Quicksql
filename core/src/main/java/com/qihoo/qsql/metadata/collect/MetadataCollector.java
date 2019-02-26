@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class MetadataCollector {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(MetadataCollector.class);
     private static ObjectMapper mapper = new ObjectMapper();
     private MetadataClient client = new MetadataClient();
@@ -24,6 +25,9 @@ public abstract class MetadataCollector {
         this.filterRegexp = filterRegexp;
     }
 
+    /**
+     * .
+     */
     public static MetadataCollector create(String json, String dataSource, String regexp) {
         try {
             switch (dataSource.toLowerCase()) {
@@ -43,6 +47,9 @@ public abstract class MetadataCollector {
         }
     }
 
+    /**
+     * .
+     */
     public void execute() throws SQLException {
         try {
             client.setAutoCommit(false);
@@ -91,8 +98,12 @@ public abstract class MetadataCollector {
     }
 
     protected abstract DatabaseValue convertDatabaseValue();
+
     protected abstract List<DatabaseParamValue> convertDatabaseParamValue(Long dbId);
+
     protected abstract TableValue convertTableValue(Long dbId, String tableName);
+
     protected abstract List<ColumnValue> convertColumnValue(Long tbId, String tableName, String dbName);
+
     protected abstract List<String> getTableNameList();
 }

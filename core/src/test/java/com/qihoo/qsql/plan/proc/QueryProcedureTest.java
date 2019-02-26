@@ -317,8 +317,8 @@ public class QueryProcedureTest {
                 "SELECT stu_id, date_time, signature, course_type, content FROM action_required.homework_content",
                 "select min(times) as m, count(*) as c, count(times) as d from edu_manage.department",
                 "{\"_source\":[\"city\",\"province\",\"digest\",\"type\",\"stu_id\"]}")
-            .checkTrans("SELECT CONCAT(TRIM(BOTH, ' ', student_profile_student_0.city),"
-                + " TRIM(BOTH, ' ', action_required_homework_content_1.course_type)) AS expr_col__0"
+            .checkTrans("SELECT CONCAT(TRIM(student_profile_student_0.city),"
+                + " TRIM(action_required_homework_content_1.course_type)) AS expr_col__0"
                 + " FROM student_profile_student_0 INNER JOIN action_required_homework_content_1"
                 + " ON student_profile_student_0.stu_id = action_required_homework_content_1.stu_id,"
                 + " edu_manage_department_2 WHERE CASE WHEN edu_manage_department_2.c = 0"
@@ -344,7 +344,7 @@ public class QueryProcedureTest {
                     + "(SELECT signature reved, CURRENT_TIMESTAMP pmonth,"
                     + " date_time FROM action_required.homework_content "
                     + "ORDER BY date_time) t0",
-                "select trim(both, ' ', type) as expr_col__0, '20180101' as pday from edu_manage.department")
+                "select trim(type) as expr_col__0, '20180101' as pday from edu_manage.department")
             .checkTrans("SELECT action_required_homework_content_0.reved, "
                 + "action_required_homework_content_0.pmonth, "
                 + "edu_manage_department_1.expr_col__0, edu_manage_department_1.pday "
@@ -374,7 +374,7 @@ public class QueryProcedureTest {
                     + "\"aggregations\":{\"expr_col__0\":{\"max\":{\"field\":\"digest\"}}}}")
             .checkTrans("SELECT student_profile_student_1.expr_col__0, "
                 + "CASE WHEN action_required_homework_content_0.signature = 'abc' "
-                + "THEN 'cde' ELSE 'def' END expr_col__1, "
+                + "THEN 'cde' ELSE 'def' END AS expr_col__1, "
                 + "CASE WHEN action_required_homework_content_0.date_time <> '20180820' "
                 + "THEN 'Hello' ELSE 'WORLD' END AS col FROM action_required_homework_content_0 "
                 + "LEFT JOIN student_profile_student_1 ON TRUE")
@@ -496,7 +496,7 @@ public class QueryProcedureTest {
             .checkExtra("select type, times from edu_manage.department "
                 + "where ' world ' = 'world' group by type, times")
             .checkTrans("SELECT type FROM edu_manage_department_0 "
-                + "WHERE TRIM(BOTH ' ' FROM ' hello ') = 'hello' AND CEIL(times) = 1");
+                + "WHERE TRIM(' hello ') = 'hello' AND CEIL(times) = 1");
 
         //After cut having op, there is no project in sql, so returns '*'
         prepareForChecking("SELECT type FROM edu_manage.department "
@@ -504,7 +504,7 @@ public class QueryProcedureTest {
             + "GROUP BY type HAVING TRIM(' hello ') = 'hello'", RunnerType.SPARK)
             .checkExtra("select dep_id, cycle, type, times from edu_manage.department")
             .checkTrans("SELECT type FROM edu_manage_department_0 WHERE LENGTH(' world ') = 3"
-                + " OR CEIL(times) = 1 GROUP BY type HAVING TRIM(BOTH ' ' FROM ' hello ') = 'hello'");
+                + " OR CEIL(times) = 1 GROUP BY type HAVING TRIM(' hello ') = 'hello'");
     }
 
     @Test
@@ -589,6 +589,12 @@ public class QueryProcedureTest {
 
     }
 
+    @Test
+    public void testTrimFunction() {
+        prepareForChecking("SELECT TRIM(BOTH ' ' FROM 'hello') FROM student_profile.student", RunnerType.DEFAULT)
+            .checkExtra("{\"_source\":[\"city\",\"province\",\"digest\",\"type\",\"stu_id\"]}")
+            .checkTrans("SELECT TRIM('hello') AS expr_col__0 FROM student_profile_student_0");
+    }
     //TODO add collection type
     //agg function
     @Test
@@ -598,7 +604,7 @@ public class QueryProcedureTest {
             + "type limit 3", RunnerType.DEFAULT)
             .checkExtra("{\"_source\":[\"type\"]}")
             .checkTrans("SELECT LENGTH('ddd') AS expr_col__0,"
-                + " TRIM(BOTH, ' ', 'bbb') AS expr_col__1,"
+                + " TRIM('bbb') AS expr_col__1,"
                 + " LOWER(type) AS expr_col__2, type"
                 + " FROM student_profile_student_0 GROUP BY type ORDER BY type LIMIT 3");
     }

@@ -95,3 +95,42 @@ SqlNode SqlUseSchema():
     }
 }
 
+SqlNode SqlInsertOutput():
+{
+    SqlParserPos pos;
+    SqlNode position;
+    SqlNodeList extendList = null;
+    SqlNodeList columnList = null;
+    SqlIdentifier dataSource;
+    SqlNode select;
+}
+{
+    <INSERT> { pos = getPos(); }
+    <INTO> position = CompoundIdentifier()
+    [
+        LOOKAHEAD(5)
+        [ <EXTEND> ]
+        extendList = ExtendList() {
+            position = extend(position, extendList);
+        }
+    ]
+    [
+        LOOKAHEAD(2)
+        { final Pair<SqlNodeList, SqlNodeList> p; }
+        p = ParenthesizedCompoundIdentifierList() {
+            if (p.right.size() > 0) {
+                position = extend(position, p.right);
+            }
+            if (p.left.size() > 0) {
+                columnList = p.left;
+            }
+        }
+    ]
+
+    <IN> dataSource = CompoundIdentifier()
+    select = OrderedQueryOrExpr(ExprContext.ACCEPT_QUERY)
+    {
+        return new SqlInsertOutput(pos, position, dataSource, columnList, select);
+    }
+}
+

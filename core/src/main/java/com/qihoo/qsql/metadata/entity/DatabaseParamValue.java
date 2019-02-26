@@ -3,12 +3,8 @@ package com.qihoo.qsql.metadata.entity;
 import java.util.Objects;
 
 /**
- * Database params related information.
- * <p>
- * dbTd, database id
- * paramKey, param key for database, such as esIndex.
- * paramValue, param value for database, such as 127.0.0.1.
- * </p>
+ * Database params related information. <p> dbTd, database id paramKey, param key for database, such as esIndex.
+ * paramValue, param value for database, such as 127.0.0.1. </p>
  */
 public class DatabaseParamValue {
 
@@ -16,13 +12,16 @@ public class DatabaseParamValue {
     private String paramKey;
     private String paramValue;
 
-    public DatabaseParamValue() {}
+    public DatabaseParamValue() {
+    }
 
     public DatabaseParamValue(Long dbId) {
         this.dbId = dbId;
     }
+
     /**
      * constructor.
+     *
      * @param dbId dbId
      * @param paramKey paramKey.
      * @param paramValue paramValue.

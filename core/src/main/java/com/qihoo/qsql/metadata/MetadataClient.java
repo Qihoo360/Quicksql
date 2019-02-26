@@ -15,7 +15,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import org.apache.calcite.rel.rel2sql.SqlImplementor.Result;
 
 /**
  * Provide methods to fetch data from metastore.
@@ -43,6 +42,7 @@ public class MetadataClient implements AutoCloseable {
 
     /**
      * select by dbId.
+     *
      * @param dbId db identifier
      * @return database value
      */
@@ -66,6 +66,7 @@ public class MetadataClient implements AutoCloseable {
 
     /**
      * select by dbName.
+     *
      * @param databaseName database name
      * @return database value
      */
@@ -90,6 +91,7 @@ public class MetadataClient implements AutoCloseable {
 
     /**
      * insert data value into table.
+     *
      * @param value data value
      */
     public Long insertBasicDatabaseInfo(DatabaseValue value) {
@@ -105,6 +107,7 @@ public class MetadataClient implements AutoCloseable {
 
     /**
      * insert schema params into table.
+     *
      * @param values database params
      */
     public void insertDatabaseSchema(List<DatabaseParamValue> values) {
@@ -114,7 +117,7 @@ public class MetadataClient implements AutoCloseable {
             "(" + value.getDbId() + ", '" + value.getParamKey() + "', '" + value.getParamValue() + "')")
             .reduce((left, right) -> left + ", " + right).orElse("()");
         String sql = String.format("INSERT INTO DATABASE_PARAMS(DB_ID, PARAM_KEY, PARAM_VALUE) VALUES %s",
-                waitedForInsert);
+            waitedForInsert);
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.execute();
         } catch (SQLException ex) {
@@ -124,6 +127,7 @@ public class MetadataClient implements AutoCloseable {
 
     /**
      * d.
+     *
      * @param databaseId wait
      * @return wait
      */
@@ -150,6 +154,7 @@ public class MetadataClient implements AutoCloseable {
 
     /**
      * insert table schema into table.
+     *
      * @param value data value
      */
     public Long insertTableSchema(TableValue value) {
@@ -165,6 +170,7 @@ public class MetadataClient implements AutoCloseable {
 
     /**
      * d.
+     *
      * @param tableName wait
      * @return wait
      */
@@ -191,6 +197,7 @@ public class MetadataClient implements AutoCloseable {
 
     /**
      * insert table columns into table.
+     *
      * @param columns data value
      */
     public void insertFieldsSchema(List<ColumnValue> columns) {
@@ -209,6 +216,9 @@ public class MetadataClient implements AutoCloseable {
         }
     }
 
+    /**
+     * .
+     */
     public void deleteFieldsSchema(Long tbId) {
         String sql = String.format("DELETE FROM COLUMNS WHERE CD_ID = %s", tbId.toString());
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -220,6 +230,7 @@ public class MetadataClient implements AutoCloseable {
 
     /**
      * d.
+     *
      * @param tableId wait
      * @return wait
      */
@@ -255,8 +266,8 @@ public class MetadataClient implements AutoCloseable {
                 throw new RuntimeException("Execute `SELECT LAST_INSERT_ID()` failed!!");
             }
             return resultSet.getLong(1);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
         }
     }
 
@@ -300,6 +311,9 @@ public class MetadataClient implements AutoCloseable {
         }
     }
 
+    /**
+     * .
+     */
     public String getLastInsertSql() throws SQLException {
         String driver = connection.getMetaData().getDriverName().toLowerCase();
         if (driver.contains("mysql")) {

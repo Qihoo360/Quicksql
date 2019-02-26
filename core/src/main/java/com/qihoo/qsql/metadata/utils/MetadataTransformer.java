@@ -17,7 +17,6 @@ import org.apache.calcite.model.JsonCustomSchema;
 import org.apache.calcite.model.JsonCustomTable;
 import org.apache.calcite.model.JsonRoot;
 import org.apache.calcite.model.JsonTable;
-import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

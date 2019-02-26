@@ -1,6 +1,7 @@
 package com.qihoo.qsql.plan;
 
 import com.qihoo.qsql.plan.proc.DirectQueryProcedure;
+import com.qihoo.qsql.plan.proc.DiskLoadProcedure;
 import com.qihoo.qsql.plan.proc.ExtractProcedure;
 import com.qihoo.qsql.plan.proc.LoadProcedure;
 import com.qihoo.qsql.plan.proc.PreparedExtractProcedure;
@@ -34,7 +35,7 @@ public class ProcedurePortFire {
 
         QueryProcedure currHead = sortedProcedures.get(0);
         //just leave one extract procedure
-        if (procedures.size() == 1) {
+        if (procedures.size() == 1 && ! hasDiskLoad(currHead)) {
             //as a part of optimization, this block should move to package 'opt'
             if (procedures.get(0) instanceof PreparedExtractProcedure.VirtualExtractor) {
                 for (QueryProcedure curr = currHead,
@@ -61,6 +62,14 @@ public class ProcedurePortFire {
         }
 
         return procedures;
+    }
+
+    //like sqoop
+    private boolean hasDiskLoad(QueryProcedure currHead) {
+        if (! currHead.hasNext()) {
+            return currHead instanceof DiskLoadProcedure;
+        }
+        return hasDiskLoad(currHead.next());
     }
 
     private class FlattenProcedureVisitor extends ProcedureVisitor {

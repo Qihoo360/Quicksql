@@ -23,6 +23,9 @@ public class MysqlCollector extends MetadataCollector {
     private JdbcProp prop;
     private Connection connection;
 
+    /**
+     * .
+     */
     public MysqlCollector(JdbcProp prop, String filter) throws SQLException, ClassNotFoundException {
         super(filter);
         this.prop = prop;
@@ -79,8 +82,8 @@ public class MysqlCollector extends MetadataCollector {
                 value.setComment("Who am I");
                 columns.add(value);
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
         }
         return columns;
     }
@@ -99,8 +102,8 @@ public class MysqlCollector extends MetadataCollector {
                 tableNames.add(resultSet.getString(1));
             }
             return tableNames;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
         }
     }
 
@@ -116,8 +119,8 @@ public class MysqlCollector extends MetadataCollector {
                 throw new RuntimeException("Please add db_name in `jdbcUrl`");
             }
             return database;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
         }
     }
 }

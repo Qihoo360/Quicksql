@@ -76,6 +76,22 @@ do
             QSQL_MASTER="yarn-client"
             shift;
             ;;
+            local*)
+            QSQL_MASTER="local[*]"
+            shift;
+            ;;
+            mesos*)
+            QSQL_MASTER=${1}
+            shift;
+            ;;
+            spark*)
+            QSQL_MASTER=${1}
+            shift;
+            ;;
+            mesos*)
+            QSQL_MASTER=${1}
+            shift;
+            ;;
             *)
             echo "--master error! please select property master!"
             exit 1
