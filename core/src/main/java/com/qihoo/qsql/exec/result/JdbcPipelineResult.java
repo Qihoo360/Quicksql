@@ -48,6 +48,14 @@ public abstract class JdbcPipelineResult implements PipelineResult {
 
         @Override
         public void run() {
+            print();
+            close();
+        }
+
+        /**
+         * print result set.
+         */
+        public void print() {
             try {
                 ResultSet resultSet = ((JdbcResultSetIterator) iterator).getResultSet();
                 ResultSetMetaData meta = resultSet.getMetaData();
@@ -68,7 +76,6 @@ public abstract class JdbcPipelineResult implements PipelineResult {
             } catch (SQLException ex) {
                 throw new RuntimeException(ex);
             }
-            close();
         }
 
         private void printResults(ResultSetMetaData meta, ResultSet resultSet,
@@ -103,7 +110,7 @@ public abstract class JdbcPipelineResult implements PipelineResult {
                     }).reduce((x, y) -> x + "+" + y).orElse("") + "+";
 
             if (! resultSet.next()) {
-                System.out.println("Empty set");
+                System.out.println("[Empty set]");
                 return;
             }
 
@@ -145,21 +152,21 @@ public abstract class JdbcPipelineResult implements PipelineResult {
                     case Types.REAL:
                     case Types.FLOAT:
                     case Types.DOUBLE:
-                        colCounts[i] = 10;
+                        colCounts[i] = 8;
                         break;
                     case Types.CHAR:
                         colCounts[i] = 2;
                         break;
                     case Types.VARCHAR:
-                        colCounts[i] = 28;
+                        colCounts[i] = 20;
                         break;
                     case Types.DATE:
                     case Types.TIME:
                     case Types.TIMESTAMP:
-                        colCounts[i] = 24;
+                        colCounts[i] = 20;
                         break;
                     default:
-                        colCounts[i] = 32;
+                        colCounts[i] = 20;
                 }
             }
         }

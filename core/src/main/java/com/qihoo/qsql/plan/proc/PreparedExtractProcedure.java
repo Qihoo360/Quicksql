@@ -381,7 +381,7 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
 
         @Override
         public String toRecognizedQuery() {
-            return sql(new OracleSqlDialect(SqlDialect.EMPTY_CONTEXT)).toLowerCase();
+            return sql(new OracleSqlDialect(SqlDialect.EMPTY_CONTEXT));
         }
 
         @Override

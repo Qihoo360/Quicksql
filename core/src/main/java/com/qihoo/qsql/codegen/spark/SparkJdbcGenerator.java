@@ -32,7 +32,7 @@ public class SparkJdbcGenerator extends QueryGenerator {
         String invokeWrap = config.invoke(convertProperties("jdbcUser", "jdbcPassword", "jdbcDriver"));
         String invoked = String.format("tmp = spark.read().jdbc(\"%s\", \"%s\", %s);",
                 properties.getOrDefault("jdbcUrl", ""),
-            "(" + query + ") as " + tableName, invokeWrap);
+            "(" + query + ") " + tableName, invokeWrap);
         composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE, invoked);
     }
 

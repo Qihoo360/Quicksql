@@ -8,7 +8,7 @@ import java.io.IOException;
 public class CsvScanExample {
     public static void main(String[] args) throws IOException {
         RuntimeEnv.init();
-        String sql = "select * from DEPTS";
+        String sql = "select * from depts";
         SqlRunner.Builder.RunnerType runnerType = RunnerType.DEFAULT;
         SqlRunner runner = SqlRunner.builder()
             .setTransformRunner(runnerType)

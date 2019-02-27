@@ -8,6 +8,7 @@ import com.qihoo.qsql.metadata.entity.ColumnValue;
 import com.qihoo.qsql.metadata.entity.DatabaseParamValue;
 import com.qihoo.qsql.metadata.entity.DatabaseValue;
 import com.qihoo.qsql.metadata.entity.TableValue;
+import com.qihoo.qsql.utils.PropertiesReader;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
@@ -15,11 +16,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class MetadataCollector {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(MetadataCollector.class);
     private static ObjectMapper mapper = new ObjectMapper();
     private MetadataClient client = new MetadataClient();
     String filterRegexp;
+
+    static {
+        PropertiesReader.configLogger();
+    }
 
     MetadataCollector(String filterRegexp) throws SQLException {
         this.filterRegexp = filterRegexp;
@@ -30,9 +34,15 @@ public abstract class MetadataCollector {
      */
     public static MetadataCollector create(String json, String dataSource, String regexp) {
         try {
+            LOGGER.info("Connecting server.....");
             switch (dataSource.toLowerCase()) {
-                case "mysql":
                 case "oracle":
+                    return new OracleCollector(
+                        mapper.readValue(json, JdbcProp.class), regexp);
+                case "hive":
+                    return new HiveCollector(
+                        mapper.readValue(json, JdbcProp.class), regexp);
+                case "mysql":
                     return new MysqlCollector(
                         mapper.readValue(json, JdbcProp.class), regexp);
                 case "es":
@@ -52,6 +62,7 @@ public abstract class MetadataCollector {
      */
     public void execute() throws SQLException {
         try {
+            LOGGER.info("Connected successfully!!");
             client.setAutoCommit(false);
             DatabaseValue dbValue = convertDatabaseValue();
             Long dbId;
@@ -106,4 +117,18 @@ public abstract class MetadataCollector {
     protected abstract List<ColumnValue> convertColumnValue(Long tbId, String tableName, String dbName);
 
     protected abstract List<String> getTableNameList();
+
+    /**
+     * entrance.
+     */
+    public static void main(String[] args) throws SQLException {
+        if (args.length == 0) {
+            throw new RuntimeException("Required conn info at least");
+        }
+
+        LOGGER.info("Input params: properties({}), type({}), filter regex({})",
+            args[0], args[1], args[2]);
+        MetadataCollector.create(args[0], args[1], args[2]).execute();
+        System.exit(0);
+    }
 }

@@ -595,6 +595,7 @@ public class QueryProcedureTest {
             .checkExtra("{\"_source\":[\"city\",\"province\",\"digest\",\"type\",\"stu_id\"]}")
             .checkTrans("SELECT TRIM('hello') AS expr_col__0 FROM student_profile_student_0");
     }
+
     //TODO add collection type
     //agg function
     @Test

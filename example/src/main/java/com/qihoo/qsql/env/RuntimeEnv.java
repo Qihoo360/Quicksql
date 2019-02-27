@@ -13,7 +13,9 @@ import java.util.List;
 import java.util.Map;
 
 public class RuntimeEnv {
-
+    static {
+        PropertiesReader.configLogger();
+    }
     private static final String TEST_DATA_URL = PropertiesReader.getTestDataFilePath();
 
     private static final EmbeddedElasticsearchPolicy NODE = EmbeddedElasticsearchPolicy.create();
