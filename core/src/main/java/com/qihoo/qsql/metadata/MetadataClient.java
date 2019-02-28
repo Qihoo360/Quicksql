@@ -15,12 +15,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Provide methods to fetch data from metastore.
  */
 //TODO replace with spring+mybatis
 public class MetadataClient implements AutoCloseable {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MetadataClient.class);
 
     //TODO think about more than one metastore
     private static Properties properties;
@@ -48,7 +52,8 @@ public class MetadataClient implements AutoCloseable {
      */
     public DatabaseValue getBasicDatabaseInfoById(Long dbId) {
         DatabaseValue databaseValue = null;
-        String sql = String.format("select DB_ID,NAME,DB_TYPE from DBS where DB_ID ='%d'", dbId);
+        String sql = String.format("select DB_ID, NAME, DB_TYPE from DBS where DB_ID ='%d'", dbId);
+        LOGGER.debug("getBasicDatabaseInfoById sql is {}", sql);
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet != null && resultSet.next()) {
@@ -72,7 +77,8 @@ public class MetadataClient implements AutoCloseable {
      */
     public DatabaseValue getBasicDatabaseInfo(String databaseName) {
         DatabaseValue databaseValue = null;
-        String sql = String.format("select DB_ID, `DESC`, NAME,DB_TYPE from DBS where name ='%s'", databaseName);
+        String sql = String.format("select DB_ID, `DESC`, NAME, DB_TYPE from DBS where name ='%s'", databaseName);
+        LOGGER.debug("getBasicDatabaseInfo sql is {}", sql);
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet != null && resultSet.next()) {
@@ -97,6 +103,7 @@ public class MetadataClient implements AutoCloseable {
     public Long insertBasicDatabaseInfo(DatabaseValue value) {
         String sql = String.format("INSERT INTO DBS(NAME, DB_TYPE, `DESC`) VALUES('%s', '%s', '%s')",
             value.getName(), value.getDbType(), value.getDesc());
+        LOGGER.debug("insertBasicDatabaseInfo sql is {}", sql);
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.execute();
         } catch (SQLException ex) {
@@ -118,6 +125,7 @@ public class MetadataClient implements AutoCloseable {
             .reduce((left, right) -> left + ", " + right).orElse("()");
         String sql = String.format("INSERT INTO DATABASE_PARAMS(DB_ID, PARAM_KEY, PARAM_VALUE) VALUES %s",
             waitedForInsert);
+        LOGGER.debug("insertDatabaseSchema sql is {}", sql);
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.execute();
         } catch (SQLException ex) {
@@ -134,6 +142,7 @@ public class MetadataClient implements AutoCloseable {
     public List<DatabaseParamValue> getDatabaseSchema(Long databaseId) {
         List<DatabaseParamValue> databaseParams = new ArrayList<>();
         String sql = String.format("select PARAM_KEY,PARAM_VALUE from DATABASE_PARAMS where DB_ID='%d'", databaseId);
+        LOGGER.debug("getDatabaseSchema sql is {}", sql);
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet != null) {
@@ -160,6 +169,7 @@ public class MetadataClient implements AutoCloseable {
     public Long insertTableSchema(TableValue value) {
         String sql = String.format("INSERT INTO TBLS(DB_ID, TBL_NAME) VALUES(%s, '%s')",
             value.getDbId(), value.getTblName());
+        LOGGER.debug("insertTableSchema sql is {}", sql);
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.execute();
         } catch (SQLException ex) {
@@ -177,6 +187,7 @@ public class MetadataClient implements AutoCloseable {
     public List<TableValue> getTableSchema(String tableName) {
         List<TableValue> tbls = new ArrayList<>();
         String sql = String.format("select DB_ID,TBL_ID,TBL_NAME from TBLS where TBL_NAME='%s'", tableName);
+        LOGGER.debug("getTableSchema sql is {}", sql);
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet != null) {
@@ -209,6 +220,7 @@ public class MetadataClient implements AutoCloseable {
             .reduce((left, right) -> left + ", " + right).orElse("()");
         String sql = String.format(
             "INSERT INTO COLUMNS(CD_ID, COLUMN_NAME,TYPE_NAME,INTEGER_IDX) VALUES %s", waitedForInsert);
+        LOGGER.debug("insertFieldsSchema sql is {}", sql);
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.execute();
         } catch (SQLException ex) {
@@ -221,6 +233,7 @@ public class MetadataClient implements AutoCloseable {
      */
     public void deleteFieldsSchema(Long tbId) {
         String sql = String.format("DELETE FROM COLUMNS WHERE CD_ID = %s", tbId.toString());
+        LOGGER.debug("deleteFieldsSchema sql is {}", sql);
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.execute();
         } catch (SQLException ex) {
@@ -239,6 +252,7 @@ public class MetadataClient implements AutoCloseable {
         String sql = String.format(""
             + "SELECT COLUMN_NAME,TYPE_NAME,INTEGER_IDX FROM COLUMNS WHERE CD_ID='%s' ORDER BY "
             + "INTEGER_IDX", tableId);
+        LOGGER.debug("getFieldsSchema sql is {}", sql);
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet != null) {

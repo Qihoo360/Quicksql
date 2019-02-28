@@ -4,13 +4,13 @@ import javax.validation.constraints.NotNull;
 
 public class JdbcProp {
     @NotNull
-    private String jdbcDriver;
+    protected String jdbcDriver;
     @NotNull
-    private String jdbcUrl;
+    protected String jdbcUrl;
     @NotNull
-    private String jdbcUser;
+    protected String jdbcUser;
     @NotNull
-    private String jdbcPassword;
+    protected String jdbcPassword;
 
     public String getJdbcDriver() {
         return jdbcDriver;
