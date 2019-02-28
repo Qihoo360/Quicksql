@@ -78,7 +78,7 @@ public class ElasticsearchCollector extends MetadataCollector {
         paramValues[2].setParamKey("esUser").setParamValue(prop.getEsUser());
         paramValues[3].setParamKey("esPass").setParamValue(prop.getEsPass());
         paramValues[4].setParamKey("esIndex").setParamValue(prop.getEsIndex());
-        paramValues[5].setParamKey("esScrollNum").setParamValue("256");
+        paramValues[5].setParamKey("esScrollNum").setParamValue("1");
         return Arrays.stream(paramValues).collect(Collectors.toList());
     }
 
