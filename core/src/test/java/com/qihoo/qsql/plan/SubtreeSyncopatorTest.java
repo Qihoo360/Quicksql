@@ -222,7 +222,7 @@ public class SubtreeSyncopatorTest {
         private static List<String> parseTableName(String sql) {
             TableNameCollector collector = new TableNameCollector();
             try {
-                return new ArrayList<>(collector.parseTableName(sql));
+                return new ArrayList<>(collector.parseTableName(sql).tableNames);
             } catch (SqlParseException ex) {
                 throw new RuntimeException(ex.getMessage());
             }

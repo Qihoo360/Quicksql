@@ -35,7 +35,7 @@ public class ProcedurePortFire {
 
         QueryProcedure currHead = sortedProcedures.get(0);
         //just leave one extract procedure
-        if (procedures.size() == 1 && ! hasDiskLoad(currHead)) {
+        if (procedures.size() == 1) {
             //as a part of optimization, this block should move to package 'opt'
             if (procedures.get(0) instanceof PreparedExtractProcedure.VirtualExtractor) {
                 for (QueryProcedure curr = currHead,
@@ -45,6 +45,11 @@ public class ProcedurePortFire {
                     }
                 }
             }
+
+            if (hasDiskLoad(currHead)) {
+                return currHead;
+            }
+
             return new DirectQueryProcedure(currHead);
         } else {
             return currHead;

@@ -5,6 +5,7 @@ import com.qihoo.qsql.codegen.ClassBodyComposer.CodeCategory;
 import com.qihoo.qsql.codegen.QueryGenerator;
 import com.qihoo.qsql.plan.ProcedureVisitor;
 import com.qihoo.qsql.plan.proc.DirectQueryProcedure;
+import com.qihoo.qsql.plan.proc.DiskLoadProcedure;
 import com.qihoo.qsql.plan.proc.ExtractProcedure;
 import com.qihoo.qsql.plan.proc.LoadProcedure;
 import com.qihoo.qsql.plan.proc.MemoryLoadProcedure;
@@ -44,6 +45,12 @@ public class SparkProcedureVisitor extends ProcedureVisitor {
     public void visit(LoadProcedure loadProcedure) {
         if (loadProcedure instanceof MemoryLoadProcedure) {
             composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE, "tmp.show();\n");
+        } else if (loadProcedure instanceof DiskLoadProcedure) {
+            composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE,
+                String.format("tmp.write().format(\"com.databricks.spark.csv\")"
+                    + ".save(\"%s\");\n", ((DiskLoadProcedure) loadProcedure).path));
+            // composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE,
+            //     String.format("tmp.write().text(\"%s\");\n", ((DiskLoadProcedure) loadProcedure).path));
         }
         visitNext(loadProcedure);
     }

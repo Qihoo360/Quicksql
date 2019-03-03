@@ -20,15 +20,6 @@ public class QueryGeneratorTest {
     public static final EmbeddedElasticsearchPolicy NODE = EmbeddedElasticsearchPolicy.create();
 
     @Test
-    public void testMysqlGenerator() {
-        assertGenerateClass("select * from stat.tbls",
-            "spark.read().jdbc(\"\", \"edu_manage_department_0\","
-                + " SparkJdbcGenerator.config(\"username\", \"password\"))",
-            "createOrReplaceTempView(\"edu_manage_department_0\")");
-
-    }
-
-    @Test
     public void testHiveGenerator() {
         assertGenerateClass("select * from action_required.homework_content");
     }
@@ -48,20 +39,22 @@ public class QueryGeneratorTest {
     @Test
     public void testVirtualGenerator() {
         AbstractPipeline pipeline = SqlRunner.builder().setTransformRunner(RunnerType.SPARK).ok().sql("select 1");
-        Assert.assertTrue(((SparkPipeline) pipeline).source().contains("spark.sql(\"select 1\")"));
+        System.out.println(((SparkPipeline) pipeline).source());
+        Assert.assertTrue(((SparkPipeline) pipeline).source().contains("spark.sql(\"SELECT 1\")"));
     }
 
     @Test
     public void testMysqlRegexpExtract() {
         assertGenerateClass("SELECT REGEXP_EXTRACT(type, '.*', 0) FROM department",
-            "spark.read().jdbc(\"\", \"edu_manage_department_0\","
-                + " SparkJdbcGenerator.config(\"username\", \"password\"));",
+            "spark.read().jdbc(\"\", \"(select dep_id, cycle, type, times from edu_manage.department) "
+                + "edu_manage_department_0\", "
+                + "SparkJdbcGenerator.config(\"username\", \"password\", \"\"))",
             "createOrReplaceTempView(\"edu_manage_department_0\")",
             "spark.sql(\"SELECT REGEXP_EXTRACT(type, '.*', 0) AS expr_col__0 FROM edu_manage_department_0");
     }
 
     private void assertGenerateClass(String sql, String...args) {
-        List<String> tableList = SqlUtil.parseTableName(sql);
+        List<String> tableList = SqlUtil.parseTableName(sql).tableNames;
         QueryProcedureProducer producer = new QueryProcedureProducer(
             SqlUtil.getSchemaPath(tableList), SqlRunner.builder());
         QueryProcedure procedure = producer.createQueryProcedure(sql);

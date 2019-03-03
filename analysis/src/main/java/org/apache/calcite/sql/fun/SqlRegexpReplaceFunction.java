@@ -21,7 +21,7 @@ public class SqlRegexpReplaceFunction extends SqlFunction {
             SqlKind.OTHER_FUNCTION,
             ReturnTypes.ARG0_NULLABLE_VARYING,
             null,
-            null,
+            OperandTypes.STRING_STRING_STRING,
             SqlFunctionCategory.STRING);
     }
 

@@ -1,5 +1,6 @@
 package com.qihoo.qsql.plan;
 
+import com.qihoo.qsql.utils.SqlUtil;
 import org.apache.calcite.avatica.util.Casing;
 import org.apache.calcite.avatica.util.Quoting;
 import org.apache.calcite.sql.SqlNode;
@@ -34,7 +35,7 @@ public class ExtSqlParserTest {
 
     @Test
     public void testWriteToHdfs() {
-        check("INSERT INTO `hdfs://cluster:9090/hello/world` IN HDFS SELECT 1 as col LIMIT 10");
+        check("INSERT INTO `hdfs://cluster:9090/hello/world` IN HDFS SELECT 1 as col LIMIT 10", true);
     }
 
     @Test
@@ -47,6 +48,12 @@ public class ExtSqlParserTest {
         check("INSERT INTO `/hello/world` IN HDFS SELECT * FROM tab WHERE tab.col LIKE '%all%'");
     }
 
+    @Test
+    public void testDmlJudgement() {
+        check("INSERT INTO `hdfs://cluster:9090/hello/world` IN HDFS SELECT 1 as col LIMIT 10", true);
+        check("SELECT 1 as col LIMIT 10", false);
+    }
+
     private void check(String sql) {
         SqlParser parser = SqlParser.create(sql, config);
         SqlNode root = null;
@@ -57,5 +64,10 @@ public class ExtSqlParserTest {
             Assert.assertTrue(false);
         }
         Assert.assertEquals(root.getClass().getSimpleName(), "SqlInsertOutput");
+    }
+
+    private void check(String sql, boolean isDml) {
+        QueryTables tables = SqlUtil.parseTableName(sql);
+        Assert.assertEquals(tables.isDml(), isDml);
     }
 }

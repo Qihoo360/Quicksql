@@ -16,6 +16,7 @@ import com.qihoo.qsql.metadata.MetadataMapping;
 import com.qihoo.qsql.metadata.MetadataPostman;
 import com.qihoo.qsql.metadata.SchemaAssembler;
 import com.qihoo.qsql.plan.QueryProcedureProducer;
+import com.qihoo.qsql.plan.QueryTables;
 import com.qihoo.qsql.plan.proc.QueryProcedure;
 import com.qihoo.qsql.utils.PropertiesReader;
 import com.qihoo.qsql.utils.SqlUtil;
@@ -57,11 +58,17 @@ public class ExecutionDispatcher {
         }
 
         OptionsParser parser = new OptionsParser(args);
-        String sqlArg = parser.getOptionValue(SubmitOption.SQL);
+        final String sqlArg = parser.getOptionValue(SubmitOption.SQL);
         String runner = parser.getOptionValue(SubmitOption.RUNNER);
 
         String sql = new String(Base64.getDecoder().decode(sqlArg), StandardCharsets.UTF_8);
-        List<String> tableNames = SqlUtil.parseTableName(sql);
+        LOGGER.info("Your SQL is '{}'", sql);
+        QueryTables tables = SqlUtil.parseTableName(sql);
+        List<String> tableNames = tables.tableNames;
+
+        if (tables.isDml()) {
+            runner = "SPARK";
+        }
 
         welcome();
         long latestTime = System.currentTimeMillis();

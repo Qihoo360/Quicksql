@@ -79,6 +79,19 @@ public class ExecutionDispatcherTest {
         }
     }
 
+    @Test
+    public void testInsertOutput() throws SQLException, ParseException {
+        try {
+            // sql("select 1")
+            //     .runner(RunnerType.SPARK).check(this::executedBySparkOrFlink);
+            sql("insert into `\\output\\` in hdfs "
+                + "select * from department as dep inner join homework_content as stu on dep.dep_id = stu.stu_id")
+                .runner(RunnerType.SPARK).check(this::executedBySparkOrFlink);
+        } catch (QsqlException exception) {
+            Assert.assertTrue(true);
+        }
+    }
+
     private boolean executedBySparkOrFlink(Exception ex) {
         return ex.getMessage().contains("Process exited with an error");
     }

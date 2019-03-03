@@ -2,7 +2,6 @@ package com.qihoo.qsql.codegen.spark;
 
 import com.qihoo.qsql.codegen.ClassBodyComposer;
 import com.qihoo.qsql.codegen.IntegratedQueryWrapper;
-import com.qihoo.qsql.plan.proc.LoadProcedure;
 import com.qihoo.qsql.plan.proc.QueryProcedure;
 
 
@@ -64,11 +63,6 @@ public class SparkBodyWrapper extends IntegratedQueryWrapper {
 
         SimpleSparkProcVisitor(ClassBodyComposer composer) {
             super(composer);
-        }
-
-        @Override
-        public void visit(LoadProcedure procedure) {
-            //what's mean of this override method
         }
     }
 }

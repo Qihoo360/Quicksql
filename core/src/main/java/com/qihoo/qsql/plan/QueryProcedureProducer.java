@@ -53,7 +53,7 @@ public class QueryProcedureProducer {
     private FrameworkConfig config = null;
     private SqlRunnerFuncTable funcTable = SqlRunnerFuncTable.getInstance(RunnerType.DEFAULT);
     private Builder builder;
-    private SqlInsertOutput output = null;
+    private SqlNode output = null;
 
     /**
      * Constructs an QueryProcedureProducer with init planner config.
@@ -105,19 +105,21 @@ public class QueryProcedureProducer {
             extractProcedures.add(PreparedExtractProcedure.createSpecificProcedure(
                 transformProcedure, ((RelOptTableImpl) entry.getValue().getValue()),
                 config, entry.getKey(),
-                entry.getValue().getKey(), sql));
+                entry.getValue().getKey(),
+                (output instanceof SqlInsertOutput)
+                    ? ((SqlInsertOutput) output).getSelect() : output));
         }
         return new ProcedurePortFire(extractProcedures).optimize();
     }
 
     private LoadProcedure createLoadProcedure() {
-        if (output == null) {
+        if (! (output instanceof SqlInsertOutput)) {
             return new MemoryLoadProcedure();
         }
 
-        switch (output.getDataSource().getSimple().toUpperCase()) {
+        switch (((SqlInsertOutput) output).getDataSource().getSimple().toUpperCase()) {
             case "HDFS":
-                SqlIdentifier path = (SqlIdentifier) output.getPath();
+                SqlIdentifier path = (SqlIdentifier) ((SqlInsertOutput) output).getPath();
                 if (path.names.size() != 1) {
                     throw new RuntimeException("Illegal path format, expected a simple path");
                 }
@@ -160,6 +162,8 @@ public class QueryProcedureProducer {
             if (parsed instanceof SqlInsertOutput) {
                 output = (SqlInsertOutput) parsed;
                 parsed = ((SqlInsertOutput) parsed).getSelect();
+            } else {
+                output = parsed;
             }
 
             SqlNode validated = planner.validate(parsed);

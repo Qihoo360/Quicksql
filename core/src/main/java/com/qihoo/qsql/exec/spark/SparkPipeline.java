@@ -95,6 +95,6 @@ public class SparkPipeline extends AbstractPipeline implements Compilable {
 
     @Override
     public String source() {
-        return wrapper.show().toString();
+        return wrapper.toString();
     }
 }

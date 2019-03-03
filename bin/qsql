@@ -93,7 +93,7 @@ do
             shift;
             ;;
             *)
-            echo "ERROR: ``--master` error! please select property master!"
+            echo "ERROR: `--master` error! please select property master!"
             exit 1
             ;;
         esac
@@ -202,7 +202,7 @@ CONF=${CONF}" --jar=${JARS} "
 
 
 if [ ! -z "${SQL}" ] ; then
-    SQL=`echo "${SQL}" | base64 -w 0`
+    SQL=$(echo "${SQL}" | base64 -w 0)
     CONF=${CONF}"--sql=${SQL}"
     eval ${QSQL_HOME}/bin/qsql-class com.qihoo.qsql.cli.QSqlSubmit "$CONF"
     exit $?

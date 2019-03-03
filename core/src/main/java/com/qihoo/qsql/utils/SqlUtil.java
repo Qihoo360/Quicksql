@@ -2,8 +2,8 @@ package com.qihoo.qsql.utils;
 
 import com.qihoo.qsql.exec.JdbcPipeline;
 import com.qihoo.qsql.metadata.MetadataPostman;
+import com.qihoo.qsql.plan.QueryTables;
 import com.qihoo.qsql.plan.TableNameCollector;
-import java.util.ArrayList;
 import java.util.List;
 import org.apache.calcite.sql.parser.SqlParseException;
 
@@ -11,17 +11,17 @@ import org.apache.calcite.sql.parser.SqlParseException;
  * Sql related utils.
  */
 public class SqlUtil {
-
     /**
      * Parse table names.
      *
      * @param sql sql string
      * @return table names
      */
-    public static List<String> parseTableName(String sql) {
+    //TODO reconstruct `QueryTables` to fit the data source directly to HDFS
+    public static QueryTables parseTableName(String sql) {
         TableNameCollector collector = new TableNameCollector();
         try {
-            return new ArrayList<>(collector.parseTableName(sql));
+            return collector.parseTableName(sql);
         } catch (SqlParseException ex) {
             throw new RuntimeException(ex.getMessage());
         }

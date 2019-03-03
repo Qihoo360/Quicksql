@@ -1,5 +1,7 @@
 package com.qihoo.qsql.plan.proc;
 
+import com.qihoo.qsql.plan.ProcedureVisitor;
+
 /**
  * Describe the function for saving data into disk.
  */
@@ -19,5 +21,10 @@ public class DiskLoadProcedure extends LoadProcedure {
 
     public boolean isResultsOnLocal() {
         return isOnCluster;
+    }
+
+    @Override
+    public void accept(ProcedureVisitor visitor) {
+        visitor.visit(this);
     }
 }

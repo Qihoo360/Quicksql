@@ -76,7 +76,7 @@ public class QueryProcedureTest {
     @Test
     public void testOnlyValue() {
         String sql = "SELECT 'Hello World' AS col1, 1010 AS col2";
-        prepareForChecking(sql).checkExtra("SELECT 'Hello World' AS col1, 1010 AS col2");
+        prepareForChecking(sql).checkExtra("SELECT 'Hello World' AS \"col1\", 1010 AS \"col2\"");
     }
 
     @Test
@@ -104,14 +104,14 @@ public class QueryProcedureTest {
     public void testValueIn() {
         String sql = "SELECT UPPER('Time') NOT IN ('Time', 'New', 'Roman') AS res";
         prepareForChecking(sql)
-            .checkExtra("SELECT UPPER('Time') NOT IN ('Time', 'New', 'Roman') AS res");
+            .checkExtra("SELECT UPPER('Time') NOT IN ('Time', 'New', 'Roman') AS \"res\"");
     }
 
     @Test
     public void testValueWithUselessTableScan() {
         String sql = "SELECT 1 IN (SELECT dep.times FROM edu_manage.department AS dep) AS res";
-        prepareForChecking(sql).checkExtra("SELECT 1 IN "
-            + "(SELECT dep.times FROM edu_manage.department AS dep) AS res");
+        prepareForChecking(sql).checkExtra("SELECT 1 IN (SELECT \"dep\".\"times\" "
+            + "FROM \"edu_manage\".\"department\" AS \"dep\") AS \"res\"");
     }
 
     @Test
@@ -126,31 +126,33 @@ public class QueryProcedureTest {
     public void testSelectWithoutFrom() {
         prepareForChecking("SELECT 1").checkExtra(
             "SELECT 1");
-        prepareForChecking("SELECT 'hello' < Some('world', 'hi')").checkExtra(
-            "SELECT 'hello' < Some('world', 'hi')");
+        prepareForChecking("SELECT 'hello' < SOME ('world', 'hi')").checkExtra(
+            "SELECT 'hello' < SOME ('world', 'hi')");
     }
 
     @Test
     public void testSelectWithoutFromWithJoin() {
         String sql = "SELECT a.e1 FROM (SELECT 1 e1) as a join (SELECT 2 e2) as b ON (a.e1 = b.e2)";
         prepareForChecking(sql).checkExtra(
-            "SELECT a.e1 FROM (SELECT 1 e1) as a join (SELECT 2 e2) as b ON (a.e1 = b.e2)");
+            "SELECT \"a\".\"e1\" FROM (SELECT 1 AS \"e1\") AS \"a\" "
+                + "INNER JOIN (SELECT 2 AS \"e2\") AS \"b\" ON \"a\".\"e1\" = \"b\".\"e2\"");
     }
 
     @Test
     public void testSimpleArithmetic() {
         String sql = "SELECT ABS(-1) + FLOOR(1.23) % 1 AS res";
-        prepareForChecking(sql).checkExtra("SELECT ABS(-1) + FLOOR(1.23) % 1 AS res");
+        prepareForChecking(sql).checkExtra("SELECT ABS(-1) + FLOOR(1.23) % 1 AS \"res\"");
     }
 
     @Test
     public void testFunctionLength() {
         //original function is length
         String sql = "SELECT ABS(CHAR_LENGTH('Hello World')) AS res";
-        prepareForChecking(sql).checkExtra("SELECT ABS(CHAR_LENGTH('Hello World')) AS res");
+        prepareForChecking(sql).checkExtra("SELECT ABS(CHAR_LENGTH('Hello World')) AS \"res\"");
     }
 
     @Test
+    //TODO resolve subquery function control
     public void testFunctionConcat() {
         String sql = "SELECT SUBSTRING('Hello World', 0, 5) || SUBSTRING('Hello World', 5) AS res";
         prepareForChecking(sql)
@@ -167,14 +169,14 @@ public class QueryProcedureTest {
     @Test
     public void testComparison() {
         String sql = "SELECT (1 < 2 <> TRUE) AND TRUE AS res";
-        prepareForChecking(sql).checkExtra("SELECT (1 < 2 <> TRUE) AND TRUE AS res");
+        prepareForChecking(sql).checkExtra("SELECT 1 < 2 <> TRUE AND TRUE AS \"res\"");
     }
 
     @Test
     public void testValueWithIn() {
         String sql = "SELECT UPPER('Time') NOT IN ('Time', 'New', 'Roman') AS res";
         prepareForChecking(sql)
-            .checkExtra("SELECT UPPER('Time') NOT IN ('Time', 'New', 'Roman') AS res");
+            .checkExtra("SELECT UPPER('Time') NOT IN ('Time', 'New', 'Roman') AS \"res\"");
     }
 
     @Test
@@ -252,10 +254,11 @@ public class QueryProcedureTest {
             + "GROUP BY course_type\n"
             + "HAVING ((COUNT(*) > 100) AND (1 = 2))\n"
             + "ORDER BY course_type";
-        prepareForChecking(sql).checkExtra("SELECT course_type  "
-            + "FROM action_required.homework_content AS test "
-            + "WHERE date_time = '20180820' GROUP BY course_type "
-            + "HAVING ((COUNT(*) > 100) AND (1 = 2)) ORDER BY course_type");
+        prepareForChecking(sql).checkExtra("SELECT \"test\".\"course_type\" "
+            + "FROM \"action_required\".\"homework_content\" AS \"test\" "
+            + "WHERE \"test\".\"date_time\" = '20180820' "
+            + "GROUP BY \"test\".\"course_type\" HAVING COUNT(*) > 100 AND 1 = 2 "
+            + "ORDER BY \"course_type\" ORDER BY \"course_type\"");
     }
 
     @Test
@@ -277,7 +280,7 @@ public class QueryProcedureTest {
     @Test
     public void testComplexSingleValue() {
         String sql = "SELECT (SELECT (SELECT 1))";
-        prepareForChecking(sql).checkExtra("SELECT (SELECT (SELECT 1))");
+        prepareForChecking(sql).checkExtra("SELECT (((SELECT (((SELECT 1))))))");
     }
 
     @Test
@@ -587,6 +590,11 @@ public class QueryProcedureTest {
     @Test
     public void testElasticLike() {
 
+    }
+
+    @Test
+    public void testInsertInto() {
+        prepareForChecking("INSERT INTO `HELLO` IN HDFS SELECT * FROM homework_content");
     }
 
     @Test

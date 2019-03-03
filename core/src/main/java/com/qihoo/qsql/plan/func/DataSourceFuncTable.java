@@ -160,6 +160,7 @@ public class DataSourceFuncTable {
         if (table instanceof ElasticsearchTable) {
             return sources.get(DataSource.ELASTICSEARCH).contains(operator);
         } else if (table instanceof JdbcTable) {
+            //Add oracle func table
             return sources.get(DataSource.MYSQL).contains(operator);
         } else {
             return table instanceof HiveTable && sources.get(DataSource.HIVE).contains(operator);
