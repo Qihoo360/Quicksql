@@ -7,7 +7,6 @@ public class HiveProp extends JdbcProp {
     @NotNull
     private String dbName;
 
-
     public String getDbName() {
         return dbName;
     }

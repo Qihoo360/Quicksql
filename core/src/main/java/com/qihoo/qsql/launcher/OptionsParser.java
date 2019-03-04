@@ -52,7 +52,6 @@ public class OptionsParser {
         }
     }
 
-
     public enum SubmitOption {
         CLASS_NAME("class_name", "", null, null),
         JAR_NAME("jar_name", "", "'non-opt'", null),
@@ -61,7 +60,7 @@ public class OptionsParser {
         WORKER_MEMORY("worker_memory", "1G", "executor-memory", null),
         DRIVER_MEMORY("driver_memory", "3G", "driver-memory", null),
         WORKER_NUM("worker_num", "20", "num-executors", null),
-        RUNNER("runner", "jdbc", null, null),
+        RUNNER("runner", "dynamic", null, null),
         SQL("sql", "", null, null),
         APP_NAME("app_name", "", null, null),
         FILE("file", "", null, null);

@@ -171,23 +171,24 @@ public class SqlSubstringFunction extends SqlFunction {
     return SqlOperandCountRanges.between(2, 3);
   }
 
-  public void unparse(
-      SqlWriter writer,
-      SqlCall call,
-      int leftPrec,
-      int rightPrec) {
-    final SqlWriter.Frame frame = writer.startFunCall(getName());
-    call.operand(0).unparse(writer, leftPrec, rightPrec);
-    writer.sep("FROM");
-    call.operand(1).unparse(writer, leftPrec, rightPrec);
-
-    if (3 == call.operandCount()) {
-      writer.sep("FOR");
-      call.operand(2).unparse(writer, leftPrec, rightPrec);
-    }
-
-    writer.endFunCall(frame);
-  }
+  //Updated by Qsql-team
+  // public void unparse(
+  //     SqlWriter writer,
+  //     SqlCall call,
+  //     int leftPrec,
+  //     int rightPrec) {
+  //   final SqlWriter.Frame frame = writer.startFunCall(getName());
+  //   call.operand(0).unparse(writer, leftPrec, rightPrec);
+  //   writer.sep("FROM");
+  //   call.operand(1).unparse(writer, leftPrec, rightPrec);
+  //
+  //   if (3 == call.operandCount()) {
+  //     writer.sep("FOR");
+  //     call.operand(2).unparse(writer, leftPrec, rightPrec);
+  //   }
+  //
+  //   writer.endFunCall(frame);
+  // }
 
   @Override public SqlMonotonicity getMonotonicity(SqlOperatorBinding call) {
     // SUBSTRING(x FROM 0 FOR constant) has same monotonicity as x

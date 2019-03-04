@@ -155,8 +155,6 @@ public abstract class JdbcPipelineResult implements PipelineResult {
                         colCounts[i] = 8;
                         break;
                     case Types.CHAR:
-                        colCounts[i] = 2;
-                        break;
                     case Types.VARCHAR:
                         colCounts[i] = 20;
                         break;

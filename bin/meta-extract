@@ -1,6 +1,7 @@
 #!/bin/bash
 
 export QSQL_HOME="$(cd "`dirname "$0"`"/..; pwd)"
+. "${QSQL_HOME}/bin/load-qsql-env"
 
 ARGS=`getopt -o "p:d:r:h" -n "meta-extract" -- "$@"`
 
@@ -93,7 +94,7 @@ do
     fi
 done
 
-"${JAVA_RUNNER}" -cp "${QSQL_JARS}" com.qihoo.qsql.metadata.collect.MetadataCollector "${PROPERTY}" "${DATA_SOURCE}"
-"${MATCHER}"
+"${JAVA_RUNNER}" -cp "${QSQL_JARS}" com.qihoo.qsql.metadata.collect.MetadataCollector \
+"${PROPERTY}" "${DATA_SOURCE}" "${MATCHER}"
 
 exit 0

@@ -106,7 +106,8 @@ public class OracleCollector extends MetadataCollector {
 
     private String getDatabasePosition() {
         try (PreparedStatement preparedStatement =
-            connection.prepareStatement("SELECT name FROM v$database")) {
+            connection.prepareStatement(
+                "SELECT sys_context( 'userenv', 'current_schema' ) FROM dual")) {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (! resultSet.next()) {
                 throw new RuntimeException("Execute `SELECT name FROM v$database` failed!!");

@@ -156,8 +156,7 @@ public class QueryProcedureTest {
     public void testFunctionConcat() {
         String sql = "SELECT SUBSTRING('Hello World', 0, 5) || SUBSTRING('Hello World', 5) AS res";
         prepareForChecking(sql)
-            .checkExtra(
-                "SELECT SUBSTRING('Hello World', 0, 5) || SUBSTRING('Hello World', 5) AS res");
+            .checkExtra("SELECT SUBSTRING('Hello World', 0, 5) || SUBSTRING('Hello World', 5) AS \"res\"");
     }
 
     @Test

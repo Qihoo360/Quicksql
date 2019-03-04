@@ -64,8 +64,8 @@ public abstract class MetadataCollector {
      * entrance.
      */
     public static void main(String[] args) throws SQLException {
-        if (args.length == 0) {
-            throw new RuntimeException("Required conn info at least");
+        if (args.length < 2) {
+            throw new RuntimeException("Required conn info and type at least");
         }
 
         LOGGER.info("Input params: properties({}), type({}), filter regex({})",
