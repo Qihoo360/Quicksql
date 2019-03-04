@@ -1,6 +1,6 @@
 package com.qihoo.qsql.metadata.collect;
 
-import com.qihoo.qsql.metadata.collect.dto.JdbcProp;
+import com.qihoo.qsql.metadata.collect.dto.HiveProp;
 import com.qihoo.qsql.metadata.entity.ColumnValue;
 import com.qihoo.qsql.metadata.entity.DatabaseParamValue;
 import com.qihoo.qsql.metadata.entity.DatabaseValue;
@@ -11,20 +11,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
 
-//TODO Extract jdbc metadata collector
 public class HiveCollector extends MetadataCollector {
 
     //read from mysql database.
-    private JdbcProp prop;
+    private HiveProp prop;
     private Connection connection;
 
-    HiveCollector(JdbcProp prop, String filterRegexp) throws SQLException, ClassNotFoundException {
+    HiveCollector(HiveProp prop, String filterRegexp) throws SQLException, ClassNotFoundException {
         super(filterRegexp);
         this.prop = prop;
         Class.forName(prop.getJdbcDriver());
@@ -43,9 +41,11 @@ public class HiveCollector extends MetadataCollector {
 
     @Override
     protected List<DatabaseParamValue> convertDatabaseParamValue(Long dbId) {
-        DatabaseParamValue value = new DatabaseParamValue();
+        DatabaseParamValue value = new DatabaseParamValue(dbId);
         value.setParamKey("cluster").setParamValue("default");
-        return Collections.singletonList(value);
+        List<DatabaseParamValue> values = new ArrayList<>();
+        values.add(value);
+        return values;
     }
 
     @Override
@@ -59,8 +59,32 @@ public class HiveCollector extends MetadataCollector {
 
     @Override
     protected List<ColumnValue> convertColumnValue(Long tbId, String tableName, String dbName) {
-        //need a big join
-        return Collections.emptyList();
+
+        List<ColumnValue> columns = new ArrayList<>();
+        // read Columns
+        String sql = String.format(""
+                + "SELECT COLUMNS_V2.* "
+                + "FROM COLUMNS_V2, SDS, TBLS, DBS "
+                + "WHERE COLUMNS_V2.CD_ID = SDS.CD_ID "
+                + "AND SDS.SD_ID = TBLS.SD_ID "
+                + "AND TBLS.DB_ID = DBS.DB_ID "
+                + "AND TBLS.TBL_NAME='%s' "
+                + "AND DBS.NAME = '%s' ",
+            tableName, dbName);
+
+        columns.addAll(readColumnAndPartitions(tbId, sql));
+        // read Paritions
+        String sql2 = String.format(""
+                + "SELECT PARTITION_KEYS.* "
+                + "FROM PARTITION_KEYS, TBLS, DBS "
+                + "WHERE PARTITION_KEYS.TBL_ID = TBLS.TBL_ID "
+                + "AND TBLS.DB_ID = DBS.DB_ID "
+                + "AND TBLS.TBL_NAME='%s' "
+                + "AND DBS.NAME = '%s' ",
+            tableName, dbName);
+        columns.addAll(readColumnAndPartitions(tbId, sql2));
+
+        return columns;
     }
 
     @Override
@@ -70,7 +94,7 @@ public class HiveCollector extends MetadataCollector {
         }
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(
-            String.format("SHOW TABLES LIKE '%s'", filterRegexp))) {
+            String.format("SELECT TBL_NAME FROM TBLS WHERE TBL_NAME LIKE '%s'", filterRegexp))) {
             ResultSet resultSet = preparedStatement.executeQuery();
             List<String> tableNames = new ArrayList<>();
             while (resultSet.next()) {
@@ -83,11 +107,16 @@ public class HiveCollector extends MetadataCollector {
     }
 
     private String getDatabasePosition() {
+        if (prop.getDbName() == null) {
+            throw new RuntimeException("Error when extracting dbName from property, "
+                + "please check properties");
+        }
         try (PreparedStatement preparedStatement =
-            connection.prepareStatement("SELECT CURRENT_DATABASE()")) {
+            connection.prepareStatement("SELECT NAME FROM DBS WHERE NAME = \"" + prop.getDbName() + "\"")) {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (! resultSet.next()) {
-                throw new RuntimeException("Execute `SELECT CURRENT_DATABASE()` failed!!");
+                throw new RuntimeException("Execute `SELECT NAME FROM DBS WHERE NAME = "
+                    + prop.getDbName() + " ` failed!!");
             }
             String database = resultSet.getString(1);
             if (Objects.isNull(database)) {
@@ -97,5 +126,24 @@ public class HiveCollector extends MetadataCollector {
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    private List<ColumnValue> readColumnAndPartitions(Long tbId, String sql) {
+        List<ColumnValue> columns = new ArrayList<>();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                ColumnValue value = new ColumnValue();
+                value.setColumnName(resultSet.getString(3));
+                value.setTypeName(resultSet.getString(4));
+                value.setCdId(tbId);
+                value.setIntegerIdx(resultSet.getInt(5));
+                value.setComment("Who am I");
+                columns.add(value);
+            }
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+        return columns;
     }
 }

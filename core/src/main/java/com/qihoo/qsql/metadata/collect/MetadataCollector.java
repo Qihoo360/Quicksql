@@ -3,6 +3,7 @@ package com.qihoo.qsql.metadata.collect;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qihoo.qsql.metadata.MetadataClient;
 import com.qihoo.qsql.metadata.collect.dto.ElasticsearchProp;
+import com.qihoo.qsql.metadata.collect.dto.HiveProp;
 import com.qihoo.qsql.metadata.collect.dto.JdbcProp;
 import com.qihoo.qsql.metadata.entity.ColumnValue;
 import com.qihoo.qsql.metadata.entity.DatabaseParamValue;
@@ -16,14 +17,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class MetadataCollector {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(MetadataCollector.class);
     private static ObjectMapper mapper = new ObjectMapper();
-    private MetadataClient client = new MetadataClient();
-    String filterRegexp;
 
     static {
         PropertiesReader.configLogger();
     }
+
+    String filterRegexp;
+    private MetadataClient client = new MetadataClient();
 
     MetadataCollector(String filterRegexp) throws SQLException {
         this.filterRegexp = filterRegexp;
@@ -41,7 +44,7 @@ public abstract class MetadataCollector {
                         mapper.readValue(json, JdbcProp.class), regexp);
                 case "hive":
                     return new HiveCollector(
-                        mapper.readValue(json, JdbcProp.class), regexp);
+                        mapper.readValue(json, HiveProp.class), regexp);
                 case "mysql":
                     return new MysqlCollector(
                         mapper.readValue(json, JdbcProp.class), regexp);
@@ -55,6 +58,20 @@ public abstract class MetadataCollector {
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    /**
+     * entrance.
+     */
+    public static void main(String[] args) throws SQLException {
+        if (args.length == 0) {
+            throw new RuntimeException("Required conn info at least");
+        }
+
+        LOGGER.info("Input params: properties({}), type({}), filter regex({})",
+            args[0], args[1], args[2]);
+        MetadataCollector.create(args[0], args[1], args[2]).execute();
+        System.exit(0);
     }
 
     /**
@@ -117,18 +134,4 @@ public abstract class MetadataCollector {
     protected abstract List<ColumnValue> convertColumnValue(Long tbId, String tableName, String dbName);
 
     protected abstract List<String> getTableNameList();
-
-    /**
-     * entrance.
-     */
-    public static void main(String[] args) throws SQLException {
-        if (args.length == 0) {
-            throw new RuntimeException("Required conn info at least");
-        }
-
-        LOGGER.info("Input params: properties({}), type({}), filter regex({})",
-            args[0], args[1], args[2]);
-        MetadataCollector.create(args[0], args[1], args[2]).execute();
-        System.exit(0);
-    }
 }
