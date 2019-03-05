@@ -5,68 +5,123 @@
 ### Requirements
 
 - Java >= 1.8
-- Scala >= 2.11
 - Spark >= 2.2
-- [Options] MySQL, Elasticsearch, Hive
 
 ### Deployment
 
-Uncompress the package qsql-0.5.tar.gz 
+1. Download then decompress binary package. Download path: https://github.com/Qihoo360/Quicksql/releases
 
 ```shell
-tar -zxvf ./qsql-0.5.tar.gz
+tar -zxvf ./qsql-release-bin.tar.gz
 ```
 
-Create a soft link
+2. Go to the '/conf' , open `base-env.sh`, and set the environment variables.
+
+- JAVA_HOME (REQUIRED VERSION >= 1.8)
+- SPARK_HOME (REQUIRED VERSION >= 2.2)
+
+3. Go to the '/bin', run the `run-example` script to test environment.
 
 ```shell
-ln -s qsql-0.5/ qsql
+./run-example com.qihoo.qsql.CsvJoinWithEsExample
 ```
 
-The main directory structure after decompression of the release package is：
+	If you can query the following results, the deployment is successful.
 
-- bin: included all of scripts for building environment and running sql.
-- conf: included all of configures in runtime.
-- data: stored data for testing.
-- metastore: included a embedded database and create table statements scripts for managing metadata. 
-
-In directory ```$QSQL_HOME/conf```, configure the following files：
-
-- base-env.sh：Included correlated environment variables：
-  - JAVA_HOME
-  - SPARK_HOME
-  - QSQL_CLUSTER_URL
-  - QSQL_HDFS_TMP
-- qsql-runner.properties：Included serveral runtime properties
-- log4j.properties：Included logger level
+```sql
++------+-------+----------+--------+------+-------+------+
+|deptno|   name|      city|province|digest|   type|stu_id|
++------+-------+----------+--------+------+-------+------+
+|    40|Scholar|  BROCKTON|      MA| 59498|Scholar|  null|
+|    45| Master|   CONCORD|      NH| 34035| Master|  null|
+|    40|Scholar|FRAMINGHAM|      MA| 65046|Scholar|  null|
++------+-------+----------+--------+------+-------+------+
+```
 
 ## Getting Started
 
-### QSQL Shell
+Before querying the real data source, you need to put metadata information such as tables and fields into the QSQL metastore.
 
+### Metadata Extraction
+
+QSQL supports extracting metadata from MySQL, Elasticsearch, Hive and Oracle through scripts.
+
+#### Basic Usage
+
+Script Position：$QSQL_HOME/bin/meta-extract
+
+Accepted Parameters：
+
+-p:  data source connection information, connection configuration details see the examples below
+
+-d:  data source type								[oracle, mysql, hive, es]
+
+-r:  Table name filter condition, following LIKE syntax	[%，_，?]
+
+```json
+//MySQL Example
+{
+	"jdbcDriver": "com.mysql.jdbc.Driver",
+	"jdbcUrl": "jdbc:mysql://localhost:3306/db",
+	"jdbcUser": "user",
+	"jdbcPassword": "pass"
+}
+//Oracle Example
+{
+	"jdbcDriver": "oracle.jdbc.driver.OracleDriver",
+	"jdbcUrl": "jdbc:oracle:thin:@localhost:1521/namespace",
+	"jdbcUser": "user",
+	"jdbcPassword": "pass" 
+}
+//Elasticsearch Example
+{
+	"esNodes": "192.168.1.1",
+	"esPort": "9000",
+	"esUser": "user",
+	"esPass": "pass",
+	"esIndex": "index/type"
+}
+//Hive Example
+{
+	"jdbcDriver": "com.mysql.jdbc.Driver",
+	"jdbcUrl": "jdbc:mysql://localhost:3306/db",
+	"jdbcUser": "user",
+	"jdbcPassword": "pass",
+	"dbName": "hive_db"
+}
 ```
-./bin/qsql -e "select 1"
+
+#### Use Example
+
+Note: Double quotes in linux are special characters, which need to be escaped when passing JSON parameters.
+
+Sample 1 (MySQL)：
+
+1. Extract the metadata of the table named my_table table from MySQL and import it into the embedded metabase.
+
+```shell
+./meta-extract -p "{\"jdbcDriver\": \"com.mysql.jdbc.Driver\", \"jdbcUrl\": \"jdbc:mysql://localhost:3306/db\", \"jdbcUser\": \"user\",\"jdbcPassword\": \"pass\"}" -d "mysql" -r "my_table"
 ```
 
-### Query Example
+2. After the import is complete, then query.
 
-Several sample queries are included with QSQL. To run one of them, use ```./run-example <class> [params]``` 
-
-Example 1: Memory Table Query
-
-```
-./bin/run-example com.qihoo.qsql.CsvScanExample
+```shell
+./qsql -e "SELECT * FROM my_table LIMIT 10"
 ```
 
-Example 2: Hive Join MySQL
+Sample 2 (Elasticsearch)：
 
+1. Extract all type metadata from Elasticsearch and import it into the embedded metabase
+
+   ```shell
+   ./meta-extract -p "{\"esNodes\": \"192.168.1.1\",\"esPort\": \"9090\",\"esUser\": \"user\",\"esPass\": \"pass\",\"esIndex\": \"index/type\"}" -d "es" -r "%"
+   ```
+
+2. After the import is complete, then query.
+
+```shell
+./qsql -e "SELECT name, age FROM my_type WHERE age < 24 LIMIT 10"
 ```
-./bin/run-example com.qihoo.qsql.CsvJoinWithEsExample
-```
-
-**Note**:
-
-If you are running a hybrid query, make sure the current machine has deployed Spark, Hive and MySQL environment and inserted the correct connection information of Hive and MySQL into the metastore.
 
 ## Properties Configure
 
@@ -185,106 +240,3 @@ Initialize the sample data to the MySQL database
 cd $QSQL_HOME/bin/
 ./metadata --dbType mysql --action init
 ```
-
-### Configure Metadata
-
-#### Hive
-
-Sample Configuration：
-
-#### DBS
-
-| DB_ID | DESC         | NAME          | DB_TYPE |
-| ----- | ------------ | ------------- | ------- |
-| 26    | hive message | hive_database | hive    |
-
-#### DATABASE_PARAMS
-
-| DB_ID | PARAM_KEY | PARAM_VALUE  |
-| ----- | --------- | ------------ |
-| 26    | cluster   | cluster_name |
-
-#### TBLS
-
-| TBL_ID | CREATE_TIME         | DB_ID | TBL_NAME    |
-| ------ | ------------------- | ----- | ----------- |
-| 60     | 2018-11-06 10:44:51 | 26    | hive_mobile |
-
-#### COLUMNS
-
-| CD_ID | COMMENT | COLUMN_NAME | TYPE_NAME | INTEGER_IDX |
-| ----- | ------- | ----------- | --------- | ----------- |
-| 60    |         | retsize     | string    | 1           |
-| 60    |         | im          | string    | 2           |
-| 60    |         | wto         | string    | 3           |
-| 60    |         | pro         | int       | 4           |
-| 60    |         | pday        | string    | 5           |
-
-#### Elasticsearch
-
-Sample Configuration：
-
-#### DBS 
-
-| DB_ID | DESC       | NAME     | DB_TYPE |
-| ----- | ---------- | -------- | ------- |
-| 24    | es message | es_index | es      |
-
-#### DATABASE_PARAMS
-
-| DB_ID | PARAM_KEY   | PARAM_VALUE      |
-| ----- | ----------- | ---------------- |
-| 24    | esNodes     | localhost        |
-| 24    | esPort      | 9025             |
-| 24    | esUser      | es_user          |
-| 24    | esPass      | es_password      |
-| 24    | esIndex     | es_index/es_type |
-| 24    | esScrollNum | 156              |
-
-#### TBLS
-
-| TBL_ID | CREATE_TIME         | DB_ID | TBL_NAME |
-| ------ | ------------------- | ----- | -------- |
-| 57     | 2018-11-06 10:44:51 | 24    | profile  |
-
-#### COLUMNS
-
-| CD_ID | COMMENT | COLUMN_NAME | TYPE_NAME | INTEGER_IDX |
-| ----- | ------- | ----------- | --------- | ----------- |
-| 57    | comment | id          | int       | 1           |
-| 57    | comment | name        | string    | 2           |
-| 57    | comment | country     | string    | 3           |
-| 57    | comment | gender      | string    | 4           |
-| 57    | comment | operator    | string    | 5           |
-
-#### MySQL
-
-Sample Configuration：
-
-#### DBS 
-
-| DB_ID | DESC             | NAME           | DB_TYPE |
-| ----- | ---------------- | -------------- | ------- |
-| 25    | mysql db message | mysql_database | mysql   |
-
-#### DATABASE_PARAMS
-
-| DB_ID | PARAM_KEY    | PARAM_VALUE                                |
-| ----- | ------------ | ------------------------------------------ |
-| 25    | jdbcDriver   | com.mysql.jdbc.Driver                      |
-| 25    | jdbcUrl      | jdbc:mysql://localhost:3006/mysql_database |
-| 25    | jdbcUser     | root                                       |
-| 25    | jdbcPassword | root                                       |
-
-#### TBLS
-
-| TBL_ID | CREATE_TIME         | DB_ID | TBL_NAME  |
-| ------ | ------------------- | ----- | --------- |
-| 58     | 2018-11-06 10:44:51 | 25    | test_date |
-
-#### COLUMNS
-
-| CD_ID | COMMENT | COLUMN_NAME | TYPE_NAME | INTEGER_IDX |
-| ----- | ------- | ----------- | --------- | ----------- |
-| 58    | comment | id          | int       | 1           |
-| 58    | comment | name        | string    | 2           |

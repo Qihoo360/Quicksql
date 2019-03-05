@@ -50,11 +50,27 @@ QSQL only supports these API currently, more API will be developed gradually.
 
 ### Submit Job
 
-After writing the code in your project, you should package this class, then put it into your LINUX server.  You need to submit the task using the submit command corresponding to the runner used in your program. If you use spark runner, you can submit just like this:
+The following script templates are available when submitting API applications using spark-submit.
 
-```
-spark-submit 
-```
+``````shell
+#!/bin/bash
 
-Note: If you have not set the runner, just use `java -jar` set up your package is  also well.
+export QSQL_HOME="$(cd "`dirname "$0"`"/..; pwd)"
 
+. "${QSQL_HOME}/bin/load-qsql-env"
+. "${QSQL_HOME}/bin/qsql-env"
+
+for jar in `find ${QSQL_HOME}/lib -maxdepth 1 -name "*.jar"`
+do
+    if [ ! -n "${JARS}" ]
+    then
+        export JARS="${jar}"
+    elif [[ ! ${jar} =~ "elasticsearch-spark" ]]
+    then
+        export JARS="${JARS},${jar}"
+    fi
+done
+
+/spark2.2/bin/spark-submit --class com.qihoo.qsql.CsvScanExample --conf "spark.driver.userClassPathFirst=true" --conf
+"spark.executor.extraClassPath=${QSQL_HOME}/lib/qsql-core-0.5.jar" --jars ${JARS} ${QSQL_HOME}/lib/qsql-core-0.5.jar
+``````

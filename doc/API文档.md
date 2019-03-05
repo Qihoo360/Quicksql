@@ -50,10 +50,27 @@ QSQL目前只支持以上API，后续随着功能迭代将开发更多可用的A
 
 ### 启动程序
 
-在项目中写完代码后，你应当将相关类打包，并将Jar包放在Linux服务器上，然后使用在程序中指定的Runner对应的任务提交方式提交QSQL的Jar包。例如，如果你使用Spark Runner，你可以像这样提交：
+使用spark-submit提交API应用时可使用以下脚本模板。
+
+``` shell
+#!/bin/bash
+
+export QSQL_HOME="$(cd "`dirname "$0"`"/..; pwd)"
+
+. "${QSQL_HOME}/bin/load-qsql-env"
+. "${QSQL_HOME}/bin/qsql-env"
+
+for jar in `find ${QSQL_HOME}/lib -maxdepth 1 -name "*.jar"`
+do
+    if [ ! -n "${JARS}" ]
+    then
+        export JARS="${jar}"
+    elif [[ ! ${jar} =~ "elasticsearch-spark" ]]
+    then
+        export JARS="${JARS},${jar}"
+    fi
+done
+
+/spark2.2/bin/spark-submit --class com.qihoo.qsql.CsvScanExample --conf "spark.driver.userClassPathFirst=true" --conf "spark.executor.extraClassPath=${QSQL_HOME}/lib/qsql-core-0.5.jar" --jars ${JARS} ${QSQL_HOME}/lib/qsql-core-0.5.jar
 
 ```
-spark-submit 
-```
-
-注意：如果你没有设置Runner，请使用java -jar提交你的Jar包。（这句话有问题）
