@@ -8,7 +8,7 @@ AutomaticConnection is one of the methods for querying in Quicksql, and you can 
 
 ### Getting Started
 
-Add Quicksql jars:`qsql-core-0.5.jar`,`qsql-calcite-elasticsearch-0.5.jar`,`qsql-calcite-analysis-0.5.jar`  into your dependent libs and you can connect with Quicksql. 
+Add Quicksql jars:`qsql-core-0.6.jar`,`qsql-calcite-elasticsearch-0.5.jar`,`qsql-calcite-analysis-0.5.jar`  into your dependent libs and you can connect with Quicksql.
 
 Here is the example,
 

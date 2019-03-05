@@ -72,5 +72,5 @@ do
 done
 
 /spark2.2/bin/spark-submit --class com.qihoo.qsql.CsvScanExample --conf "spark.driver.userClassPathFirst=true" --conf
-"spark.executor.extraClassPath=${QSQL_HOME}/lib/qsql-core-0.5.jar" --jars ${JARS} ${QSQL_HOME}/lib/qsql-core-0.5.jar
+"spark.executor.extraClassPath=${QSQL_HOME}/lib/qsql-core-0.6.jar" --jars ${JARS} ${QSQL_HOME}/lib/qsql-core-0.6.jar
 ``````

@@ -22,12 +22,12 @@ limitations under the License.
     <parent>
         <groupId>com.qihoo.qsql</groupId>
         <artifactId>qsql</artifactId>
-        <version>0.5</version>
+        <version>0.6</version>
     </parent>
 
     <artifactId>qsql-core</artifactId>
     <packaging>jar</packaging>
-    <version>0.5</version>
+    <version>0.6</version>
     <name>qsql-core</name>
 
     <properties>

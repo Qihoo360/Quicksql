@@ -51,7 +51,7 @@ if [[ "$SPARK_RUNNER" ]]; then
     fi
 fi
 
-QSQL_LAUNCH_CLASSPATH="${QSQL_HOME}/lib/qsql-core-0.5.jar"
+QSQL_LAUNCH_CLASSPATH="${QSQL_HOME}/lib/qsql-core-0.6.jar"
 QSQL_LAUNCH_CLASSPATH="${QSQL_LAUNCH_CLASSPATH}:${QSQL_JARS}"
 
 "${JAVA_RUNNER}" -cp "${QSQL_LAUNCH_CLASSPATH}" com.qihoo.qsql.launcher.ExecutionDispatcher "$@"

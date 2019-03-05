@@ -196,7 +196,7 @@ fi
 . "${QSQL_HOME}/bin/qsql-env"
 
 
-CONF=${CONF}" --jar_name=${QSQL_HOME}/lib/qsql-core-0.5.jar "
+CONF=${CONF}" --jar_name=${QSQL_HOME}/lib/qsql-core-0.6.jar "
 CONF=${CONF}" --class_name=com.qihoo.qsql.cli.QSqlSubmit "
 CONF=${CONF}" --jar=${JARS} "
 
