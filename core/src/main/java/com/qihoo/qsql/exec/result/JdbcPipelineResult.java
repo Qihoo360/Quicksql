@@ -122,7 +122,9 @@ public abstract class JdbcPipelineResult implements PipelineResult {
                 StringBuilder line = new StringBuilder();
                 for (int i = 0; i < meta.getColumnCount(); i++) {
                     String value = resultSet.getString(i + 1);
-                    //bug here
+                    if (value == null) {
+                        value = "null";
+                    }
                     if (value.length() > colCounts[i]) {
                         changes[i] = value.length() - colCounts[i];
                         colCounts[i] = value.length();
