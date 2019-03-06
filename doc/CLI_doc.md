@@ -34,13 +34,19 @@ For example:
 
 Run the command, then you will start a spark program to execute the query with 2G Driver Memory and 2G Executor Memory.
 
+If the query result set needs to be stored in HDFS, just add INSERT INTO IN HDFS before the Query SQL, as shown in the following statement:
+
+```shell
+./bin/qsql -e "INSERT INTO \`hdfs://cluster:9000/hello/world\` IN HDFS SELECT 1"
+
+./bin/qsql -e "INSERT INTO \`hdfs://cluster:9000/hello/world\` IN HDFS SELECT col1, col2 FROM my_table WHERE col2 = 'wodeshena'"
+```
+
 Also, you can use `-h` for detailed Configuration like below:
 
 ```
 ./bin/qsql -h
 ```
-
-
 
 Note that you'd better initialize [meta data](#Meta Data) before for better experience.  
 

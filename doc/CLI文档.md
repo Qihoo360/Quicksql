@@ -18,7 +18,7 @@
 
 `SELECT 1`是最简单的SQL，你会发现它可以运行在Hive、MySql等各个数据存储引擎上，所以我们用它来做Quicksql命令行执行的例子。下一步，你可以尝试指定一个执行引擎：
 
-```
+```shell
 ./bin/qsql -e "SELECT 1" --runner spark
 ```
 
@@ -26,19 +26,25 @@
 
 举个例子吧，下面的命令可以配置计算引擎的相关参数：
 
-```
+```shell
 ./bin/qsql -e "SELECT 1" --runner spark --driver_memory 2G --worker_memory 2G
 ```
 
 这个例子的结果就是，你启动了一个拥有2G worker memory的和2G driver memory的Spark程序来执行你的查询。
+
+如果查询结果集需要落入HDFS，只需要在Query SQL前添加INSERT INTO IN HDFS，如下语句所示：
+
+```shell
+./bin/qsql -e "INSERT INTO \`hdfs://cluster:9000/hello/world\` IN HDFS SELECT 1"
+
+./bin/qsql -e "INSERT INTO \`hdfs://cluster:9000/hello/world\` IN HDFS SELECT col1, col2 FROM my_table WHERE col2 = 'wodeshena'"
+```
 
 除了上面的示例参数，你也可以使用`-h`或者`--help`来查看全部参数的解释：
 
 ```
 ./bin/qsql -h
 ```
-
-
 
 当然，需要注意的是，你最好在使用命令查询数据前先将相关表的信息写入元数据，不然会报错哦。
 
