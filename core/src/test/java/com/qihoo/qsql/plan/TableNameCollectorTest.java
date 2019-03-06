@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.apache.calcite.sql.parser.SqlParseException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -18,9 +17,7 @@ public class TableNameCollectorTest {
     private static List<String> parseTableName(String sql) {
         TableNameCollector collector = new TableNameCollector();
         try {
-            return collector.parseTableName(sql)
-                .stream()
-                .collect(Collectors.toList());
+            return new ArrayList<>(collector.parseTableName(sql).tableNames);
         } catch (SqlParseException ex) {
             throw new RuntimeException(ex.getMessage());
         }
@@ -101,7 +98,7 @@ public class TableNameCollectorTest {
     @Test
     public void testParseMixTableNameWithSubSqlInFrom() {
         String sql = "SELECT A.a1 FROM ( SELECT count(B.b1) as a1 FROM B ) as A";
-        Assert.assertEquals(Arrays.asList("B"), parseTableName(sql));
+        Assert.assertEquals(Collections.singletonList("B"), parseTableName(sql));
     }
 
     @Test
@@ -143,6 +140,18 @@ public class TableNameCollectorTest {
             parseTableName(sql);
         } catch (RuntimeException ex) {
             Assert.assertTrue(true);
+        }
+    }
+
+    @Test
+    public void testParseInsertInto() {
+        String sql = "INSERT INTO `hello` IN HDFS SELECT 1";
+        TableNameCollector collector = new TableNameCollector();
+        try {
+            Assert.assertTrue(collector.parseTableName(sql).isDml());
+        } catch (SqlParseException ex) {
+            ex.printStackTrace();
+            Assert.assertTrue(false);
         }
     }
 

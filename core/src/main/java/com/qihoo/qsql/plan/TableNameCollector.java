@@ -1,6 +1,8 @@
 package com.qihoo.qsql.plan;
 
 import com.qihoo.qsql.exception.ParseException;
+import java.util.Arrays;
+import java.util.List;
 import org.apache.calcite.avatica.util.Casing;
 import org.apache.calcite.avatica.util.Quoting;
 import org.apache.calcite.sql.SqlAsOperator;
@@ -16,22 +18,19 @@ import org.apache.calcite.sql.SqlNode;
 import org.apache.calcite.sql.SqlNodeList;
 import org.apache.calcite.sql.SqlOrderBy;
 import org.apache.calcite.sql.SqlSelect;
+import org.apache.calcite.sql.ext.SqlInsertOutput;
 import org.apache.calcite.sql.parser.SqlParseException;
 import org.apache.calcite.sql.parser.SqlParser;
 import org.apache.calcite.sql.util.SqlVisitor;
 import org.apache.calcite.sql.validate.SqlConformance;
 import org.apache.calcite.sql.validate.SqlConformanceEnum;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * Parse SQL line and extract the table name in it.
  */
-public class TableNameCollector implements SqlVisitor<List<String>> {
+public class TableNameCollector implements SqlVisitor<QueryTables> {
 
-    private List<String> tableNames = new ArrayList<>();
+    private QueryTables tableNames = new QueryTables();
     //TODO extract SqlParser to correspond with calcite-core
     private SqlConformance conformance = SqlConformanceEnum.MYSQL_5;
     private Quoting quoting = Quoting.BACK_TICK;
@@ -51,19 +50,24 @@ public class TableNameCollector implements SqlVisitor<List<String>> {
      * @param sql SQL line
      * @return List of TableName
      */
-    public List<String> parseTableName(String sql) throws SqlParseException {
+    public QueryTables parseTableName(String sql) throws SqlParseException {
         SqlParser parser = SqlParser.create(sql, config);
-        SqlNode sqlNode = parser.parseQuery(sql);
+        SqlNode sqlNode = parser.parseQuery();
         return validateTableName(sqlNode.accept(this));
     }
 
     @Override
-    public List<String> visit(SqlLiteral sqlLiteral) {
+    public QueryTables visit(SqlLiteral sqlLiteral) {
         return tableNames;
     }
 
     @Override
-    public List<String> visit(SqlCall sqlCall) {
+    public QueryTables visit(SqlCall sqlCall) {
+        if (sqlCall instanceof SqlInsertOutput) {
+            tableNames.isDmlActually();
+            ((SqlInsertOutput) sqlCall).getSelect().accept(this);
+        }
+
         if (sqlCall instanceof SqlSelect) {
             ((SqlSelect) sqlCall).getSelectList().accept(this);
             if (((SqlSelect) sqlCall).getFrom() != null) {
@@ -97,7 +101,7 @@ public class TableNameCollector implements SqlVisitor<List<String>> {
     }
 
     @Override
-    public List<String> visit(SqlNodeList sqlNodeList) {
+    public QueryTables visit(SqlNodeList sqlNodeList) {
         sqlNodeList.iterator().forEachRemaining((entry) -> {
             if (entry instanceof SqlSelect) {
                 entry.accept(this);
@@ -113,7 +117,7 @@ public class TableNameCollector implements SqlVisitor<List<String>> {
     }
 
     @Override
-    public List<String> visit(SqlIdentifier sqlIdentifier) {
+    public QueryTables visit(SqlIdentifier sqlIdentifier) {
         if (sqlIdentifier.names.size() == 0) {
             return tableNames;
         }
@@ -123,17 +127,17 @@ public class TableNameCollector implements SqlVisitor<List<String>> {
     }
 
     @Override
-    public List<String> visit(SqlDataTypeSpec sqlDataTypeSpec) {
+    public QueryTables visit(SqlDataTypeSpec sqlDataTypeSpec) {
         return tableNames;
     }
 
     @Override
-    public List<String> visit(SqlDynamicParam sqlDynamicParam) {
+    public QueryTables visit(SqlDynamicParam sqlDynamicParam) {
         return tableNames;
     }
 
     @Override
-    public List<String> visit(SqlIntervalQualifier sqlIntervalQualifier) {
+    public QueryTables visit(SqlIntervalQualifier sqlIntervalQualifier) {
         return tableNames;
     }
 
@@ -160,8 +164,8 @@ public class TableNameCollector implements SqlVisitor<List<String>> {
         }
     }
 
-    private List<String> validateTableName(List<String> tableNames) {
-        for (String tableName : tableNames) {
+    private QueryTables validateTableName(QueryTables tableNames) {
+        for (String tableName : tableNames.tableNames) {
             if (tableName.split("\\.", - 1).length > 2) {
                 throw new ParseException("Qsql only support structure like dbName.tableName,"
                     + " and there is a unsupported tableName here: " + tableName);
@@ -169,5 +173,4 @@ public class TableNameCollector implements SqlVisitor<List<String>> {
         }
         return tableNames;
     }
-
 }

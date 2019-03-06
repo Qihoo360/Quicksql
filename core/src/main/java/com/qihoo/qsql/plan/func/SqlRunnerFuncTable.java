@@ -4,6 +4,8 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.qihoo.qsql.api.SqlRunner.Builder.RunnerType;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.apache.calcite.sql.SqlFunction;
 import org.apache.calcite.sql.SqlOperator;
 import org.apache.calcite.sql.SqlSpecialOperator;
@@ -53,7 +55,7 @@ public class SqlRunnerFuncTable {
     }
 
     static class SparkFunctionsHolder implements RunnerFunctionsHolder {
-        //TODO change to remove strategy
+        //TODO change SqlOperator to remove strategy
         static final SqlFunction[] FUNCTIONS = {
             //aggregation functions
             SqlStdOperatorTable.APPROX_COUNT_DISTINCT,
@@ -91,7 +93,6 @@ public class SqlRunnerFuncTable {
             //string functions
             // SqlStdOperatorTable.BASE64 -> need to add
             // SqlStdOperatorTable.UNBASE64 -> need to add
-            // SqlStdOperatorTable.CONCAT -> concat(expr: Column*)
 
             SqlStdOperatorTable.LTRIM,
             SqlStdOperatorTable.RTRIM,
@@ -105,6 +106,7 @@ public class SqlRunnerFuncTable {
             SqlStdOperatorTable.LOWER,
             SqlStdOperatorTable.REPLACE,
             SqlStdOperatorTable.SUBSTRING,
+            //Hive not support trim(both ' ' from '')
             SqlStdOperatorTable.TRIM,
             SqlStdOperatorTable.UPPER,
             
@@ -150,5 +152,14 @@ public class SqlRunnerFuncTable {
 
     public RunnerType getRunner() {
         return runner;
+    }
+
+    /**
+     * .
+     */
+    public List<SqlFunction> getSupportedFunctions() {
+        return operators.values().stream().filter(op -> op instanceof SqlFunction)
+            .map(func -> (SqlFunction) func)
+            .collect(Collectors.toList());
     }
 }

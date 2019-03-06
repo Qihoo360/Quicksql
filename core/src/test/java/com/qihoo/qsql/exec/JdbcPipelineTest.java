@@ -17,7 +17,7 @@ public class JdbcPipelineTest {
         SqlRunner.Builder.RunnerType runnerType = RunnerType.DEFAULT;
         SqlRunner runner = SqlRunner.builder()
             .setTransformRunner(runnerType)
-            .setSchemaPath(SqlUtil.getSchemaPath(SqlUtil.parseTableName(sql)))
+            .setSchemaPath(SqlUtil.getSchemaPath(SqlUtil.parseTableName(sql).tableNames))
             .setAppName("test mysql")
             .setAcceptedResultsNum(2000)
             .ok();
@@ -31,7 +31,7 @@ public class JdbcPipelineTest {
         SqlRunner.Builder.RunnerType runnerType = RunnerType.DEFAULT;
         SqlRunner runner = SqlRunner.builder()
             .setTransformRunner(runnerType)
-            .setSchemaPath(SqlUtil.getSchemaPath(SqlUtil.parseTableName(sql)))
+            .setSchemaPath(SqlUtil.getSchemaPath(SqlUtil.parseTableName(sql).tableNames))
             .setAppName("test virtual")
             .setAcceptedResultsNum(2000)
             .ok();
@@ -45,7 +45,7 @@ public class JdbcPipelineTest {
         SqlRunner.Builder.RunnerType runnerType = RunnerType.DEFAULT;
         SqlRunner runner = SqlRunner.builder()
             .setTransformRunner(runnerType)
-            .setSchemaPath(SqlUtil.getSchemaPath(SqlUtil.parseTableName(sql)))
+            .setSchemaPath(SqlUtil.getSchemaPath(SqlUtil.parseTableName(sql).tableNames))
             .setAppName("test virtual")
             .setAcceptedResultsNum(2000)
             .ok();

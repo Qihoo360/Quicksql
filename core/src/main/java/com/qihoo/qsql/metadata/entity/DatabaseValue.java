@@ -67,7 +67,6 @@ public class DatabaseValue {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(dbId, desc, name, dbType);
     }
 }

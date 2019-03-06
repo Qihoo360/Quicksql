@@ -34,7 +34,9 @@ import org.apache.calcite.sql.SqlLiteral;
 import org.apache.calcite.sql.SqlNode;
 import org.apache.calcite.sql.SqlNodeList;
 import org.apache.calcite.sql.SqlSelect;
+import org.apache.calcite.sql.SqlUtil;
 import org.apache.calcite.sql.SqlWriter;
+import org.apache.calcite.sql.fun.HiveSqlOperatorTable;
 import org.apache.calcite.sql.fun.SqlCase;
 import org.apache.calcite.sql.fun.SqlStdOperatorTable;
 import org.apache.calcite.sql.parser.SqlParserPos;
@@ -142,20 +144,26 @@ public class MysqlSqlDialect extends SqlDialect {
     return caseExpr;
   }
 
+  //Updated by qsql-team
   @Override public void unparseCall(SqlWriter writer, SqlCall call,
       int leftPrec, int rightPrec) {
-    switch (call.getKind()) {
-    case FLOOR:
-      if (call.operandCount() != 2) {
-        super.unparseCall(writer, call, leftPrec, rightPrec);
-        return;
+
+    if (call.getOperator() == SqlStdOperatorTable.CONCAT) {
+      SqlUtil.unparseFunctionSyntax(HiveSqlOperatorTable.CONCAT, writer, call);
+    } else {
+      switch (call.getKind()) {
+        case FLOOR:
+          if (call.operandCount() != 2) {
+            super.unparseCall(writer, call, leftPrec, rightPrec);
+            return;
+          }
+
+          unparseFloor(writer, call);
+          break;
+
+        default:
+          super.unparseCall(writer, call, leftPrec, rightPrec);
       }
-
-      unparseFloor(writer, call);
-      break;
-
-    default:
-      super.unparseCall(writer, call, leftPrec, rightPrec);
     }
   }
 

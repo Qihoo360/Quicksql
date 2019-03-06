@@ -92,19 +92,11 @@ public class SchemaAssembler {
 
     //maybe exist same db name problem
     private String reduceJsonSchemaOperand() {
-        String coordinates = new StringBuilder("{'")
-            .append(connProperties.getOrDefault("esNodes", ""))
-            .append("': ")
-            .append(connProperties.getOrDefault("esPort", ""))
-            .append("}")
-            .toString();
-        String userConfig = new StringBuilder("{'bulk.flush.max.actions': 10, ")
-            .append("'bulk.flush.max.size.mb': 1,")
-            .append("'esUser':'").append(connProperties.getOrDefault("esUser", ""))
-            .append("',")
-            .append("'esPass':'").append(connProperties.getOrDefault("esPass", ""))
-            .append("'}")
-            .toString();
+        String coordinates = "{'" + connProperties.getOrDefault("esNodes", "")
+            + "': " + connProperties.getOrDefault("esPort", "") + "}";
+        String userConfig = "{'bulk.flush.max.actions': 10, " + "'bulk.flush.max.size.mb': 1,"
+            + "'esUser':'" + connProperties.getOrDefault("esUser", "")
+            + "'," + "'esPass':'" + connProperties.getOrDefault("esPass", "") + "'}";
         return Stream.of(
             formatPlainProperty("coordinates", coordinates),
             formatPlainProperty("userConfig", userConfig),
@@ -130,59 +122,51 @@ public class SchemaAssembler {
     private String reduceJsonFields(List<ColumnValue> fields) {
         return fields.stream()
             .filter(field -> ! (field.getColumnName().isEmpty() || field.getTypeName().isEmpty()))
-            .map(field -> {
-                String type = field.getTypeName();
-                switch (type.trim()) {
-                    case "date":
-                    case "string":
-                    case "int":
-                        return field.toString();
-                    default:
-                        ColumnValue value = new ColumnValue();
-                        value.setColumnName(field.getColumnName());
-                        value.setTypeName("string");
-                        return value.toString();
-                }
-            })
+            .map(this::convertFieldType)
             .reduce((left, right) -> left + ",\n" + right)
             .orElse("");
     }
 
 
     private String formatPlainProperty(String key, String value) {
-        return new StringBuilder("\"")
-            .append(key)
-            .append("\": ")
-            .append("\"")
-            .append(value)
-            .append("\"")
-            .toString();
+        return "\"" + key + "\": " + "\"" + value  + "\"";
     }
 
     private String formatObjectProperty(String key, String value) {
-        return new StringBuilder("\"")
-            .append(key)
-            .append("\": ")
-            .append("{\n")
-            .append(value)
-            .append("\n}")
-            .toString();
+        return "\"" + key + "\": " + "{\n" + value + "\n}";
     }
 
     private String formatElementProperty(String value) {
-        return new StringBuilder("{\n")
-            .append(value)
-            .append("\n}")
-            .toString();
+        return "{\n" + value + "\n}";
     }
 
     private String formatArrayProperty(String key, String value) {
-        return new StringBuilder("\"")
-            .append(key)
-            .append("\": ")
-            .append("[\n")
-            .append(value)
-            .append("\n]")
-            .toString();
+        return "\"" + key + "\": " + "[\n" + value + "\n]";
+    }
+
+    private String convertFieldType(ColumnValue columnValue) {
+        switch (columnValue.getTypeName().trim().toUpperCase()) {
+            case "INT":
+            case "INTEGER":
+            case "STRING":
+            case "VARCHAR":
+            case "TINYINT":
+            case "SMALLINT":
+            case "BIGINT":
+            case "FLOAT":
+            case "DOUBLE":
+            case "LONG":
+            case "BOOLEAN":
+            case "ARRAY":
+            case "MAP":
+            case "DATE":
+            case "TIMESTAMP":
+                return columnValue.toString();
+            default:
+                ColumnValue value = new ColumnValue();
+                value.setColumnName(columnValue.getColumnName());
+                value.setTypeName("STRING");
+                return value.toString();
+        }
     }
 }

@@ -52,7 +52,7 @@ public class SubtreeSyncopatorTest {
     public void testSimpleSqlWithMySql() {
         String sql = "SELECT dep_id FROM edu_manage.department WHERE dep_id = 1";
         Set<RelNode> result = new Sql(sql).exec();
-        String[] expect = {"LogicalProject-LogicalFilter-MySQLTableScan"};
+        String[] expect = {"LogicalProject-LogicalFilter-JdbcTableScan"};
         Assert.assertArrayEquals("testSimpleSqlWithMySql", expect, sortRelNode(result).toArray());
     }
 
@@ -61,7 +61,7 @@ public class SubtreeSyncopatorTest {
         String sql = "SELECT times, SUM(dep_id) FROM edu_manage.department"
             + " WHERE times = 1 GROUP BY times";
         Set<RelNode> result = new Sql(sql).exec();
-        String[] expect = {"LogicalAggregate-LogicalProject-LogicalFilter-MySQLTableScan"};
+        String[] expect = {"LogicalAggregate-LogicalProject-LogicalFilter-JdbcTableScan"};
         Assert.assertArrayEquals("testSimpleSqlWithMySqlAggregate", expect, sortRelNode(result).toArray());
     }
 
@@ -71,7 +71,7 @@ public class SubtreeSyncopatorTest {
             + " FROM edu_manage.department AS a, action_required.homework_content AS b"
             + " WHERE a.dep_id = b.stu_id";
         Set<RelNode> result = new Sql(sql).exec();
-        String[] expect = {"LogicalProject-MySQLTableScan", "LogicalProject-HiveTableScan"};
+        String[] expect = {"LogicalProject-JdbcTableScan", "LogicalProject-HiveTableScan"};
         Assert.assertArrayEquals("test", expect, sortRelNode(result).toArray());
     }
 
@@ -83,7 +83,7 @@ public class SubtreeSyncopatorTest {
             + " JOIN (SELECT stu_id FROM action_required.homework_content) AS b"
             + " ON(a.dep_id = b.stu_id)";
         Set<RelNode> result = new Sql(sql).exec();
-        String[] expect = {"LogicalProject-LogicalProject-LogicalFilter-MySQLTableScan",
+        String[] expect = {"LogicalProject-LogicalProject-LogicalFilter-JdbcTableScan",
             "LogicalProject-LogicalProject-HiveTableScan"};
         Assert.assertArrayEquals("testMixSqlWithJoinAndFilter", expect, sortRelNode(result).toArray());
     }
@@ -93,7 +93,7 @@ public class SubtreeSyncopatorTest {
         String sql = " (SELECT dep_id FROM edu_manage.department WHERE dep_id = 1)"
             + " UNION (SELECT stu_id FROM action_required.homework_content) ";
         Set<RelNode> result = new Sql(sql).exec();
-        String[] expect = {"LogicalProject-LogicalProject-LogicalFilter-MySQLTableScan",
+        String[] expect = {"LogicalProject-LogicalProject-LogicalFilter-JdbcTableScan",
             "LogicalProject-LogicalProject-HiveTableScan"};
         Assert.assertArrayEquals("testMixSqlWithUnion", expect, sortRelNode(result).toArray());
     }
@@ -104,7 +104,7 @@ public class SubtreeSyncopatorTest {
         String sql = "SELECT dep_id, (SELECT COUNT(stu_id) FROM action_required.homework_content)"
             + " FROM edu_manage.department WHERE dep_id = 1";
         Set<RelNode> result = new Sql(sql).execOptimize();
-        String[] expect = {"LogicalProject-LogicalFilter-MySQLTableScan",
+        String[] expect = {"LogicalProject-LogicalFilter-JdbcTableScan",
             "LogicalProject-LogicalAggregate-LogicalProject-HiveTableScan"};
         Assert.assertArrayEquals("testMixSqlWithUnion", expect, sortRelNode(result).toArray());
     }
@@ -114,7 +114,7 @@ public class SubtreeSyncopatorTest {
         String sql = "SELECT dep_id FROM edu_manage.department WHERE EXISTS "
             + " (SELECT stu_id FROM action_required.homework_content )";
         Set<RelNode> result = new Sql(sql).execOptimize();
-        String[] expect = {"LogicalProject-MySQLTableScan",
+        String[] expect = {"LogicalProject-JdbcTableScan",
             "LogicalProject-LogicalAggregate-LogicalProject-HiveTableScan"};
         Assert.assertArrayEquals("testMixSqlWithUnion", expect, sortRelNode(result).toArray());
     }
@@ -125,7 +125,7 @@ public class SubtreeSyncopatorTest {
         String sql = "SELECT dep_id FROM edu_manage.department WHERE dep_id IN"
             + " (SELECT stu_id FROM action_required.homework_content)";
         Set<RelNode> result = new Sql(sql).execOptimize();
-        String[] expect = {"LogicalProject-MySQLTableScan",
+        String[] expect = {"LogicalProject-JdbcTableScan",
             "LogicalProject-LogicalAggregate-LogicalProject-HiveTableScan"};
         Assert.assertArrayEquals("testMixSqlWithUnion", expect, sortRelNode(result).toArray());
     }
@@ -138,7 +138,7 @@ public class SubtreeSyncopatorTest {
             + " ON(a.dep_id = b.stu_id)";
         Set<RelNode> result = new Sql(sql).exec();
         String[] expect = {
-            "LogicalProject-LogicalJoin-LogicalProject-LogicalFilter-MySQLTableScan-LogicalProject-LogicalValues"
+            "LogicalProject-LogicalJoin-LogicalProject-LogicalFilter-JdbcTableScan-LogicalProject-LogicalValues"
         };
         Assert.assertArrayEquals("testSimpleSqlWithAndWithoutTableName",
             expect, sortRelNode(result).toArray());
@@ -156,8 +156,8 @@ public class SubtreeSyncopatorTest {
     //         + " (SELECT dep_id FROM edu_manage.department)";
     //     Set<RelNode> result = new Sql(sql).exec();
     //     String[] expect = {
-    //         "LogicalProject-LogicalProject-LogicalJoin-LogicalProject-MySQLTableScan-LogicalProject-MySQLTableScan",
-    //         "LogicalProject-LogicalProject-MySQLTableScan"};
+    //         "LogicalProject-LogicalProject-LogicalJoin-LogicalProject-JdbcTableScan-LogicalProject-JdbcTableScan",
+    //         "LogicalProject-LogicalProject-JdbcTableScan"};
     //     Assert.assertArrayEquals("testMixSqlWithJoinBetweenDifferentDb",
     //         expect, sortRelNode(result).toArray());
     // }
@@ -174,9 +174,9 @@ public class SubtreeSyncopatorTest {
     //         + " (SELECT id FROM edu_manage.department_student_relation)";
     //     Set<RelNode> result = new Sql(sql).exec();
     //     String[] expect = {
-    //         "LogicalProject-LogicalProject-MySQLTableScan",
-    //         "LogicalProject-LogicalProject-MySQLTableScan",
-    //         "LogicalProject-LogicalProject-MySQLTableScan"};
+    //         "LogicalProject-LogicalProject-JdbcTableScan",
+    //         "LogicalProject-LogicalProject-JdbcTableScan",
+    //         "LogicalProject-LogicalProject-JdbcTableScan"};
     //     Assert.assertArrayEquals("testMixSqlWithJoinBetweenDifferentDb2",
     //         expect, sortRelNode(result).toArray());
     // }
@@ -222,7 +222,7 @@ public class SubtreeSyncopatorTest {
         private static List<String> parseTableName(String sql) {
             TableNameCollector collector = new TableNameCollector();
             try {
-                return new ArrayList<>(collector.parseTableName(sql));
+                return new ArrayList<>(collector.parseTableName(sql).tableNames);
             } catch (SqlParseException ex) {
                 throw new RuntimeException(ex.getMessage());
             }

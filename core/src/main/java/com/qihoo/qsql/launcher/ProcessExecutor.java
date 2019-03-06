@@ -37,10 +37,12 @@ public class ProcessExecutor {
         Option optionJars = Option.builder().longOpt("jar").hasArg().desc("jars").build();
         Option optionAdapter = Option.builder().longOpt("runner").hasArg().desc("compute runner type").build();
         Option optionAppName = Option.builder().longOpt("app_name").hasArg().desc("app name").build();
+        Option optionMaster = Option.builder().longOpt("master").hasArg().desc("master").build();
 
         Options options = new Options();
         options.addOption(optionSourceCode).addOption(optionClassName)
-            .addOption(optionAdapter).addOption(optionAppName).addOption(optionJars);
+            .addOption(optionAdapter).addOption(optionAppName)
+            .addOption(optionJars).addOption(optionMaster);
         CommandLineParser parser = new DefaultParser();
 
         String className;
@@ -48,6 +50,7 @@ public class ProcessExecutor {
         String runner;
         String appName = "QSQL-" + UUID.randomUUID();
         String extraJars;
+        String master;
 
         try {
             CommandLine commandLine = parser.parse(options, args);
@@ -57,11 +60,13 @@ public class ProcessExecutor {
             if (commandLine.hasOption("source")
                 && commandLine.hasOption("class_name")
                 && commandLine.hasOption("runner")
-                && commandLine.hasOption("jar")) {
+                && commandLine.hasOption("jar")
+                && commandLine.hasOption("master")) {
                 source = new String(Base64.getDecoder().decode(commandLine.getOptionValue("source")));
                 className = commandLine.getOptionValue("class_name");
                 runner = commandLine.getOptionValue("runner");
                 extraJars = commandLine.getOptionValue("jar");
+                master = commandLine.getOptionValue("master");
             } else {
                 throw new RuntimeException("Options --source or --className or --runner not found");
             }
@@ -70,11 +75,12 @@ public class ProcessExecutor {
         }
 
         ProcessExecutor executor = new ProcessExecutor();
-        executor.execute(source, className, runner, appName, extraJars);
+        executor.execute(source, className, runner, appName, extraJars, master);
     }
 
     @SuppressWarnings("unchecked")
-    private void execute(String source, String className, String runner, String appName, String extraJars) {
+    private void execute(String source, String className,
+        String runner, String appName, String extraJars, String master) {
         Class requirementClass;
         try {
             requirementClass = ClassBodyWrapper.compileSourceAndLoadClass(
@@ -84,23 +90,6 @@ public class ProcessExecutor {
         }
 
         switch (runner.toUpperCase()) {
-            case "DYNAMIC":
-            case "SPARK":
-                try {
-                    final Constructor<SparkRequirement> constructor =
-                        ((Class<SparkRequirement>) requirementClass).getConstructor(SparkSession.class);
-                    SparkSession sc = SparkSession.builder()
-                        .appName(appName)
-                        .enableHiveSupport()
-                        .getOrCreate();
-
-                    constructor.newInstance(sc).execute();
-                    sc.stop();
-                } catch (NoSuchMethodException | IllegalAccessException
-                    | InvocationTargetException | InstantiationException ex) {
-                    throw new RuntimeException(ex);
-                }
-                break;
             case "FLINK":
                 try {
                     final Constructor<FlinkRequirement> constructor =
@@ -114,6 +103,22 @@ public class ProcessExecutor {
                 }
                 break;
             default:
+                try {
+                    final Constructor<SparkRequirement> constructor =
+                        ((Class<SparkRequirement>) requirementClass).getConstructor(SparkSession.class);
+                    SparkSession sc = SparkSession.builder()
+                        .master(master)
+                        .appName(appName)
+                        .enableHiveSupport()
+                        .getOrCreate();
+
+                    constructor.newInstance(sc).execute();
+                    sc.stop();
+                } catch (NoSuchMethodException | IllegalAccessException
+                    | InvocationTargetException | InstantiationException ex) {
+                    throw new RuntimeException(ex);
+                }
+                break;
         }
     }
 }

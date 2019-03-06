@@ -76,7 +76,7 @@ public class QueryProcedureTest {
     @Test
     public void testOnlyValue() {
         String sql = "SELECT 'Hello World' AS col1, 1010 AS col2";
-        prepareForChecking(sql).checkExtra("SELECT 'Hello World' AS col1, 1010 AS col2");
+        prepareForChecking(sql).checkExtra("SELECT 'Hello World' AS \"col1\", 1010 AS \"col2\"");
     }
 
     @Test
@@ -104,14 +104,14 @@ public class QueryProcedureTest {
     public void testValueIn() {
         String sql = "SELECT UPPER('Time') NOT IN ('Time', 'New', 'Roman') AS res";
         prepareForChecking(sql)
-            .checkExtra("SELECT UPPER('Time') NOT IN ('Time', 'New', 'Roman') AS res");
+            .checkExtra("SELECT UPPER('Time') NOT IN ('Time', 'New', 'Roman') AS \"res\"");
     }
 
     @Test
     public void testValueWithUselessTableScan() {
         String sql = "SELECT 1 IN (SELECT dep.times FROM edu_manage.department AS dep) AS res";
-        prepareForChecking(sql).checkExtra("SELECT 1 IN "
-            + "(SELECT dep.times FROM edu_manage.department AS dep) AS res");
+        prepareForChecking(sql).checkExtra("SELECT 1 IN (SELECT \"dep\".\"times\" "
+            + "FROM \"edu_manage\".\"department\" AS \"dep\") AS \"res\"");
     }
 
     @Test
@@ -126,36 +126,37 @@ public class QueryProcedureTest {
     public void testSelectWithoutFrom() {
         prepareForChecking("SELECT 1").checkExtra(
             "SELECT 1");
-        prepareForChecking("SELECT 'hello' < Some('world', 'hi')").checkExtra(
-            "SELECT 'hello' < Some('world', 'hi')");
+        prepareForChecking("SELECT 'hello' < SOME ('world', 'hi')").checkExtra(
+            "SELECT 'hello' < SOME ('world', 'hi')");
     }
 
     @Test
     public void testSelectWithoutFromWithJoin() {
         String sql = "SELECT a.e1 FROM (SELECT 1 e1) as a join (SELECT 2 e2) as b ON (a.e1 = b.e2)";
         prepareForChecking(sql).checkExtra(
-            "SELECT a.e1 FROM (SELECT 1 e1) as a join (SELECT 2 e2) as b ON (a.e1 = b.e2)");
+            "SELECT \"a\".\"e1\" FROM (SELECT 1 AS \"e1\") AS \"a\" "
+                + "INNER JOIN (SELECT 2 AS \"e2\") AS \"b\" ON \"a\".\"e1\" = \"b\".\"e2\"");
     }
 
     @Test
     public void testSimpleArithmetic() {
         String sql = "SELECT ABS(-1) + FLOOR(1.23) % 1 AS res";
-        prepareForChecking(sql).checkExtra("SELECT ABS(-1) + FLOOR(1.23) % 1 AS res");
+        prepareForChecking(sql).checkExtra("SELECT ABS(-1) + FLOOR(1.23) % 1 AS \"res\"");
     }
 
     @Test
     public void testFunctionLength() {
         //original function is length
         String sql = "SELECT ABS(CHAR_LENGTH('Hello World')) AS res";
-        prepareForChecking(sql).checkExtra("SELECT ABS(CHAR_LENGTH('Hello World')) AS res");
+        prepareForChecking(sql).checkExtra("SELECT ABS(CHAR_LENGTH('Hello World')) AS \"res\"");
     }
 
     @Test
+    //TODO resolve subquery function control
     public void testFunctionConcat() {
         String sql = "SELECT SUBSTRING('Hello World', 0, 5) || SUBSTRING('Hello World', 5) AS res";
         prepareForChecking(sql)
-            .checkExtra(
-                "SELECT SUBSTRING('Hello World', 0, 5) || SUBSTRING('Hello World', 5) AS res");
+            .checkExtra("SELECT SUBSTRING('Hello World', 0, 5) || SUBSTRING('Hello World', 5) AS \"res\"");
     }
 
     @Test
@@ -167,14 +168,14 @@ public class QueryProcedureTest {
     @Test
     public void testComparison() {
         String sql = "SELECT (1 < 2 <> TRUE) AND TRUE AS res";
-        prepareForChecking(sql).checkExtra("SELECT (1 < 2 <> TRUE) AND TRUE AS res");
+        prepareForChecking(sql).checkExtra("SELECT 1 < 2 <> TRUE AND TRUE AS \"res\"");
     }
 
     @Test
     public void testValueWithIn() {
         String sql = "SELECT UPPER('Time') NOT IN ('Time', 'New', 'Roman') AS res";
         prepareForChecking(sql)
-            .checkExtra("SELECT UPPER('Time') NOT IN ('Time', 'New', 'Roman') AS res");
+            .checkExtra("SELECT UPPER('Time') NOT IN ('Time', 'New', 'Roman') AS \"res\"");
     }
 
     @Test
@@ -252,10 +253,11 @@ public class QueryProcedureTest {
             + "GROUP BY course_type\n"
             + "HAVING ((COUNT(*) > 100) AND (1 = 2))\n"
             + "ORDER BY course_type";
-        prepareForChecking(sql).checkExtra("SELECT course_type  "
-            + "FROM action_required.homework_content AS test "
-            + "WHERE date_time = '20180820' GROUP BY course_type "
-            + "HAVING ((COUNT(*) > 100) AND (1 = 2)) ORDER BY course_type");
+        prepareForChecking(sql).checkExtra("SELECT \"test\".\"course_type\" "
+            + "FROM \"action_required\".\"homework_content\" AS \"test\" "
+            + "WHERE \"test\".\"date_time\" = '20180820' "
+            + "GROUP BY \"test\".\"course_type\" HAVING COUNT(*) > 100 AND 1 = 2 "
+            + "ORDER BY \"course_type\" ORDER BY \"course_type\"");
     }
 
     @Test
@@ -277,7 +279,7 @@ public class QueryProcedureTest {
     @Test
     public void testComplexSingleValue() {
         String sql = "SELECT (SELECT (SELECT 1))";
-        prepareForChecking(sql).checkExtra("SELECT (SELECT (SELECT 1))");
+        prepareForChecking(sql).checkExtra("SELECT (((SELECT (((SELECT 1))))))");
     }
 
     @Test
@@ -317,15 +319,14 @@ public class QueryProcedureTest {
                 "SELECT stu_id, date_time, signature, course_type, content FROM action_required.homework_content",
                 "select min(times) as m, count(*) as c, count(times) as d from edu_manage.department",
                 "{\"_source\":[\"city\",\"province\",\"digest\",\"type\",\"stu_id\"]}")
-            .checkTrans("SELECT TRIM(BOTH ' ' FROM student_profile_student_0.city) || "
-                + "TRIM(BOTH ' ' FROM action_required_homework_content_1.course_type) expr_col__0 "
-                + "FROM student_profile_student_0 INNER JOIN action_required_homework_content_1 "
-                + "ON student_profile_student_0.stu_id = action_required_homework_content_1.stu_id, "
-                + "edu_manage_department_2 "
-                + "WHERE CASE WHEN edu_manage_department_2.c = 0 "
-                + "THEN FALSE WHEN student_profile_student_0.digest > edu_manage_department_2.m IS TRUE "
-                + "THEN TRUE WHEN edu_manage_department_2.c > edu_manage_department_2.d "
-                + "THEN NULL ELSE student_profile_student_0.digest > edu_manage_department_2.m END");
+            .checkTrans("SELECT CONCAT(TRIM(student_profile_student_0.city),"
+                + " TRIM(action_required_homework_content_1.course_type)) AS expr_col__0"
+                + " FROM student_profile_student_0 INNER JOIN action_required_homework_content_1"
+                + " ON student_profile_student_0.stu_id = action_required_homework_content_1.stu_id,"
+                + " edu_manage_department_2 WHERE CASE WHEN edu_manage_department_2.c = 0"
+                + " THEN FALSE WHEN student_profile_student_0.digest > edu_manage_department_2.m IS TRUE"
+                + " THEN TRUE WHEN edu_manage_department_2.c > edu_manage_department_2.d"
+                + " THEN NULL ELSE student_profile_student_0.digest > edu_manage_department_2.m END");
 
     }
 
@@ -345,7 +346,7 @@ public class QueryProcedureTest {
                     + "(SELECT signature reved, CURRENT_TIMESTAMP pmonth,"
                     + " date_time FROM action_required.homework_content "
                     + "ORDER BY date_time) t0",
-                "select trim(both ' ' from type) as expr_col__0, '20180101' as pday from edu_manage.department")
+                "select trim(type) as expr_col__0, '20180101' as pday from edu_manage.department")
             .checkTrans("SELECT action_required_homework_content_0.reved, "
                 + "action_required_homework_content_0.pmonth, "
                 + "edu_manage_department_1.expr_col__0, edu_manage_department_1.pday "
@@ -375,9 +376,9 @@ public class QueryProcedureTest {
                     + "\"aggregations\":{\"expr_col__0\":{\"max\":{\"field\":\"digest\"}}}}")
             .checkTrans("SELECT student_profile_student_1.expr_col__0, "
                 + "CASE WHEN action_required_homework_content_0.signature = 'abc' "
-                + "THEN 'cde' ELSE 'def' END expr_col__1, "
+                + "THEN 'cde' ELSE 'def' END AS expr_col__1, "
                 + "CASE WHEN action_required_homework_content_0.date_time <> '20180820' "
-                + "THEN 'Hello' ELSE 'WORLD' END col FROM action_required_homework_content_0 "
+                + "THEN 'Hello' ELSE 'WORLD' END AS col FROM action_required_homework_content_0 "
                 + "LEFT JOIN student_profile_student_1 ON TRUE")
             .checkArchitect(("[E]->[E]->[T]->[L]"));
     }
@@ -404,7 +405,7 @@ public class QueryProcedureTest {
             + "group by province order by province limit 10";
         prepareForChecking(sql, RunnerType.DEFAULT)
             .checkExtra("{\"_source\":[\"province\",\"city\"]}")
-            .checkTrans("SELECT COUNT(*) expr_col__0, province "
+            .checkTrans("SELECT COUNT(*) AS expr_col__0, province "
                 + "FROM student_profile_student_0 GROUP BY province ORDER BY province LIMIT 10")
             .checkArchitect("[D]->[E]->[T]->[L]");
 
@@ -436,7 +437,7 @@ public class QueryProcedureTest {
         prepareForChecking(sql).checkExtra(
             "SELECT stu_id, date_time, signature, course_type, content FROM action_required.homework_content",
             "{\"_source\":[\"type\"]}")
-            .checkTrans("SELECT COUNT(*) expr_col__0, COUNT(*) expr_col__1 "
+            .checkTrans("SELECT COUNT(*) AS expr_col__0, COUNT(*) AS expr_col__1 "
                 + "FROM action_required_homework_content_0 INNER JOIN student_profile_student_1 "
                 + "ON action_required_homework_content_0.date_time = student_profile_student_1.type "
                 + "GROUP BY action_required_homework_content_0.date_time, action_required_homework_content_0.signature")
@@ -478,7 +479,7 @@ public class QueryProcedureTest {
                     + "on department.dep_id = department_student_relation.dep_id")
             .checkTrans("SELECT edu_manage_department_0.stu_id,"
                 + " edu_manage_department_0.times,"
-                + " action_required_homework_content_1.stu_id stu_id0,"
+                + " action_required_homework_content_1.stu_id AS stu_id0,"
                 + " action_required_homework_content_1.date_time,"
                 + " action_required_homework_content_1.signature,"
                 + " action_required_homework_content_1.course_type,"
@@ -497,7 +498,7 @@ public class QueryProcedureTest {
             .checkExtra("select type, times from edu_manage.department "
                 + "where ' world ' = 'world' group by type, times")
             .checkTrans("SELECT type FROM edu_manage_department_0 "
-                + "WHERE TRIM(BOTH ' ' FROM ' hello ') = 'hello' AND CEIL(times) = 1");
+                + "WHERE TRIM(' hello ') = 'hello' AND CEIL(times) = 1");
 
         //After cut having op, there is no project in sql, so returns '*'
         prepareForChecking("SELECT type FROM edu_manage.department "
@@ -505,7 +506,7 @@ public class QueryProcedureTest {
             + "GROUP BY type HAVING TRIM(' hello ') = 'hello'", RunnerType.SPARK)
             .checkExtra("select dep_id, cycle, type, times from edu_manage.department")
             .checkTrans("SELECT type FROM edu_manage_department_0 WHERE LENGTH(' world ') = 3"
-                + " OR CEIL(times) = 1 GROUP BY type HAVING TRIM(BOTH ' ' FROM ' hello ') = 'hello'");
+                + " OR CEIL(times) = 1 GROUP BY type HAVING TRIM(' hello ') = 'hello'");
     }
 
     @Test
@@ -528,12 +529,12 @@ public class QueryProcedureTest {
                 "{\"_source\":[\"city\",\"province\",\"digest\",\"type\",\"stu_id\"]}")
             .checkTrans("SELECT student_profile_student_0.city, student_profile_student_0.province,"
                 + " student_profile_student_0.digest, student_profile_student_0.type,"
-                + " student_profile_student_0.stu_id, student_profile_student_1.city city0,"
-                + " student_profile_student_1.province province0, student_profile_student_1.digest digest0,"
-                + " student_profile_student_1.type type0,"
-                + " student_profile_student_1.stu_id stu_id0 "
-                + "FROM student_profile_student_0 INNER JOIN student_profile_student_1 "
-                + "ON student_profile_student_0.stu_id = student_profile_student_1.stu_id");
+                + " student_profile_student_0.stu_id, student_profile_student_1.city AS city0,"
+                + " student_profile_student_1.province AS province0,"
+                + " student_profile_student_1.digest AS digest0, student_profile_student_1.type AS type0,"
+                + " student_profile_student_1.stu_id AS stu_id0 FROM student_profile_student_0"
+                + " INNER JOIN student_profile_student_1"
+                + " ON student_profile_student_0.stu_id = student_profile_student_1.stu_id");
     }
 
     @Test
@@ -548,6 +549,72 @@ public class QueryProcedureTest {
             .checkExtra("SELECT REGEXP_EXTRACT("
                 + "REGEXP_REPLACE(signature, '[0-9]+', 'hello'), '[0-9]*', 1) expr_col__0 "
                 + "FROM action_required.homework_content WHERE LENGTH(signature) > 10");
+    }
+
+    @Test
+    public void testConcatTranslate() {
+        prepareForChecking("SELECT signature || 'hello' || 'world' FROM action_required.homework_content")
+            .checkExtra("SELECT CONCAT(CONCAT(signature, 'hello'), 'world') expr_col__0 "
+                + "FROM action_required.homework_content");
+    }
+
+    @Test
+    public void testCountDistinct() {
+        prepareForChecking("SELECT count(distinct signature) res FROM action_required.homework_content")
+            .checkExtra("SELECT COUNT(DISTINCT signature) res FROM action_required.homework_content");
+    }
+
+    @Test
+    public void testNotExistedFunction() {
+        try {
+            prepareForChecking("SELECT CHARACTER_LENGTH(signature) res FROM action_required.homework_content",
+                RunnerType.DEFAULT);
+        } catch (RuntimeException ex) {
+            Assert.assertTrue(ex.getMessage().contains("Unsupported function"));
+        }
+    }
+
+    @Test
+    public void testDateFunction() {
+        prepareForChecking("SELECT YEAR(date_time) FROM action_required.homework_content", RunnerType.DEFAULT)
+            .checkExtra("SELECT YEAR(date_time) expr_col__0 FROM action_required.homework_content");
+        prepareForChecking("SELECT MONTH(date_time) FROM action_required.homework_content", RunnerType.DEFAULT)
+            .checkExtra("SELECT MONTH(date_time) expr_col__0 FROM action_required.homework_content");
+        prepareForChecking("SELECT DAYOFYEAR(date_time) FROM action_required.homework_content", RunnerType.DEFAULT)
+            .checkExtra("SELECT DAYOFYEAR(date_time) expr_col__0 FROM action_required.homework_content");
+        prepareForChecking("SELECT DAYOFWEEK(date_time) FROM action_required.homework_content", RunnerType.DEFAULT)
+            .checkExtra("SELECT DAYOFWEEK(date_time) expr_col__0 FROM action_required.homework_content");
+    }
+
+    @Test
+    public void testElasticLike() {
+
+    }
+
+    @Test
+    public void testInsertInto() {
+        prepareForChecking("INSERT INTO `HELLO` IN HDFS SELECT * FROM homework_content");
+    }
+
+    @Test
+    public void testTrimFunction() {
+        prepareForChecking("SELECT TRIM(BOTH ' ' FROM 'hello') FROM student_profile.student", RunnerType.DEFAULT)
+            .checkExtra("{\"_source\":[\"city\",\"province\",\"digest\",\"type\",\"stu_id\"]}")
+            .checkTrans("SELECT TRIM('hello') AS expr_col__0 FROM student_profile_student_0");
+    }
+
+    //TODO add collection type
+    //agg function
+    @Test
+    public void testElasticUnsupportedFunctions() {
+        prepareForChecking("SELECT LENGTH('ddd'), TRIM('bbb'), LOWER(type) "
+            + "FROM student_profile.student group by type order by "
+            + "type limit 3", RunnerType.DEFAULT)
+            .checkExtra("{\"_source\":[\"type\"]}")
+            .checkTrans("SELECT LENGTH('ddd') AS expr_col__0,"
+                + " TRIM('bbb') AS expr_col__1,"
+                + " LOWER(type) AS expr_col__2, type"
+                + " FROM student_profile_student_0 GROUP BY type ORDER BY type LIMIT 3");
     }
 
     private SqlHolder prepareForChecking(String sql) {

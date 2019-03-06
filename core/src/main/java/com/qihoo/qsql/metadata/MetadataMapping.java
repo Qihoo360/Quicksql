@@ -20,10 +20,10 @@ public enum MetadataMapping {
     /**
      * use '%' and literal 'value' to complete mapping.
      */
-    JDBC("org.apache.calcite.adapter.mysql.MySQLSchemaFactory",
-        "org.apache.calcite.adapter.mysql.MySQLTableFactory",
+    JDBC("org.apache.calcite.adapter.custom.JdbcSchemaFactory",
+        "org.apache.calcite.adapter.custom.JdbcTableFactory",
         Arrays.asList(
-            "dbName", "tableName", "jdbcDriver",
+            "dbName", "tableName", "dbType", "jdbcDriver",
             "jdbcUrl", "jdbcUser", "jdbcPassword"),
         Collections.emptyList()
         ),
@@ -33,6 +33,11 @@ public enum MetadataMapping {
         Arrays.asList(
             "dbName", "tableName", "cluster"),
         Collections.emptyList());
+
+    public static final String ELASTICSEARCH = "es";
+    public static final String MYSQL = "mysql";
+    public static final String ORACLE = "oracle";
+    public static final String HIVE = "hive";
 
     private static final String JOINT_FLAG = "%";
     String schemaClass;
@@ -50,11 +55,12 @@ public enum MetadataMapping {
 
     static MetadataMapping convertToAdapter(String name) {
         switch (name.toLowerCase()) {
-            case "es":
+            case ELASTICSEARCH:
                 return MetadataMapping.Elasticsearch;
-            case "mysql":
+            case MYSQL:
+            case ORACLE:
                 return MetadataMapping.JDBC;
-            case "hive":
+            case HIVE:
                 return MetadataMapping.Hive;
             default:
                 throw new RuntimeException("Not support given adapter name!!");

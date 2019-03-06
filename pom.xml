@@ -8,7 +8,7 @@
     <groupId>com.qihoo.qsql</groupId>
     <artifactId>qsql</artifactId>
     <packaging>pom</packaging>
-    <version>0.5</version>
+    <version>0.6</version>
     <name>qsql</name>
 
     <modules>
@@ -146,7 +146,7 @@
         <dom4j.version>1.6.1</dom4j.version>
 
         <!---->
-        <qsql.release>qsql-0.5</qsql.release>
+        <qsql.release>qsql-0.6</qsql.release>
     </properties>
 
     <!-- 使用dependencyManagement管理,可以防止Module依赖Parent POM的全部Jar包,又可以省略version
@@ -533,7 +533,6 @@
                 <artifactId>commons-exec</artifactId>
                 <version>1.3</version>
             </dependency>
-
         </dependencies>
     </dependencyManagement>
 

@@ -9,9 +9,8 @@ import com.qihoo.qsql.plan.QueryProcedureProducer;
 import com.qihoo.qsql.plan.proc.EmbeddedElasticsearchPolicy;
 import com.qihoo.qsql.plan.proc.QueryProcedure;
 import com.qihoo.qsql.utils.SqlUtil;
+import java.util.Arrays;
 import java.util.List;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.MatcherAssert;
 import org.junit.Assert;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -21,48 +20,8 @@ public class QueryGeneratorTest {
     public static final EmbeddedElasticsearchPolicy NODE = EmbeddedElasticsearchPolicy.create();
 
     @Test
-    public void testMysqlGenerator() {
-        String sql = "select * from edu_manage.department";
-        List<String> tableList = SqlUtil.parseTableName(sql);
-        QueryProcedureProducer producer = new QueryProcedureProducer(
-            SqlUtil.getSchemaPath(tableList));
-        QueryProcedure procedure = producer.createQueryProcedure(sql);
-
-        IntegratedQueryWrapper wrapper = new SparkBodyWrapper();
-        wrapper.interpretProcedure(procedure);
-        wrapper.importSpecificDependency();
-
-        Class requirementClass = wrapper.compile();
-        MatcherAssert.assertThat("", requirementClass.getSuperclass().toString(),
-            CoreMatchers.containsString("class com.qihoo.qsql.exec.spark.SparkRequirement"));
-    }
-
-    // @Test
-    // public void testElasticsearchGenerator() {
-    //     String sql = "select * from student_profile.student";
-    //     AbstractPipeline pipeline = SqlRunner.builder().setTransformRunner(RunnerType.SPARK).ok().sql(sql);
-    //     Assert.assertTrue(((SparkPipeline) pipeline)
-    //         .source()
-    //         .contains("JavaEsSparkSQL"));
-    // }
-
-    @Test
     public void testHiveGenerator() {
-        String sql = "select * from action_required.homework_content";
-        List<String> tableList = SqlUtil.parseTableName(sql);
-        QueryProcedureProducer producer = new QueryProcedureProducer(
-            SqlUtil.getSchemaPath(tableList));
-        QueryProcedure procedure = producer.createQueryProcedure(sql);
-
-        IntegratedQueryWrapper wrapper = new SparkBodyWrapper();
-        wrapper.interpretProcedure(procedure);
-        wrapper.importSpecificDependency();
-        Class requirementClass = wrapper.compile();
-
-        MatcherAssert.assertThat("",
-            requirementClass.getSuperclass().toString(),
-            CoreMatchers
-                .containsString("class com.qihoo.qsql.exec.spark.SparkRequirement"));
+        assertGenerateClass("select * from action_required.homework_content");
     }
 
     @Test
@@ -71,19 +30,41 @@ public class QueryGeneratorTest {
             + "INNER JOIN (SELECT * FROM student "
             + "WHERE city in ('FRAMINGHAM', 'BROCKTON', 'CONCORD')) FILTERED "
             + "ON DEP.type = FILTERED.city";
-        List<String> tableList = SqlUtil.parseTableName(sql);
-        QueryProcedureProducer producer = new QueryProcedureProducer(
-                SqlUtil.getSchemaPath(tableList));
-        QueryProcedure procedure = producer.createQueryProcedure(sql);
-        IntegratedQueryWrapper wrapper = new SparkBodyWrapper();
-        wrapper.interpretProcedure(procedure);
-        wrapper.importSpecificDependency();
-        wrapper.compile();
+        assertGenerateClass(sql,
+            "createOrReplaceTempView(\"student_profile_student_1\")",
+            "createOrReplaceTempView(\"edu_manage_department_0\")",
+            "JavaEsSparkSQL.esDF(spark, config)");
     }
 
     @Test
     public void testVirtualGenerator() {
         AbstractPipeline pipeline = SqlRunner.builder().setTransformRunner(RunnerType.SPARK).ok().sql("select 1");
-        Assert.assertTrue(((SparkPipeline) pipeline).source().contains("tmp = spark.sql(\"select 1\")"));
+        System.out.println(((SparkPipeline) pipeline).source());
+        Assert.assertTrue(((SparkPipeline) pipeline).source().contains("spark.sql(\"SELECT 1\")"));
+    }
+
+    @Test
+    public void testMysqlRegexpExtract() {
+        assertGenerateClass("SELECT REGEXP_EXTRACT(type, '.*', 0) FROM department",
+            "spark.read().jdbc(\"\", \"(select dep_id, cycle, type, times from edu_manage.department) "
+                + "edu_manage_department_0\", "
+                + "SparkJdbcGenerator.config(\"username\", \"password\", \"\"))",
+            "createOrReplaceTempView(\"edu_manage_department_0\")",
+            "spark.sql(\"SELECT REGEXP_EXTRACT(type, '.*', 0) AS expr_col__0 FROM edu_manage_department_0");
+    }
+
+    private void assertGenerateClass(String sql, String...args) {
+        List<String> tableList = SqlUtil.parseTableName(sql).tableNames;
+        QueryProcedureProducer producer = new QueryProcedureProducer(
+            SqlUtil.getSchemaPath(tableList), SqlRunner.builder());
+        QueryProcedure procedure = producer.createQueryProcedure(sql);
+
+        SparkBodyWrapper wrapper = new SparkBodyWrapper();
+        wrapper.interpretProcedure(procedure);
+        wrapper.importSpecificDependency();
+        wrapper.compile();
+        String clazz = wrapper.toString();
+        System.out.println(clazz);
+        Assert.assertTrue(Arrays.stream(args).allMatch(clazz::contains));
     }
 }

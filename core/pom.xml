@@ -22,12 +22,12 @@ limitations under the License.
     <parent>
         <groupId>com.qihoo.qsql</groupId>
         <artifactId>qsql</artifactId>
-        <version>0.5</version>
+        <version>0.6</version>
     </parent>
 
     <artifactId>qsql-core</artifactId>
     <packaging>jar</packaging>
-    <version>0.5</version>
+    <version>0.6</version>
     <name>qsql-core</name>
 
     <properties>
@@ -224,6 +224,12 @@ limitations under the License.
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
+        <!-- oracle -->
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc7</artifactId>
+            <version>12.1.0.3</version>
+        </dependency>
         <!-- Process Executor need this jar for lording spark hive driver-->
         <dependency>
             <groupId>org.apache.derby</groupId>
@@ -272,6 +278,7 @@ limitations under the License.
             <artifactId>httpcore</artifactId>
             <version>${httpcore.version}</version>
         </dependency>
+
     </dependencies>
 
     <build>

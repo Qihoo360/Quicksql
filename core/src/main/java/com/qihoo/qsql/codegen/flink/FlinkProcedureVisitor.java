@@ -1,6 +1,7 @@
 package com.qihoo.qsql.codegen.flink;
 
 import com.qihoo.qsql.codegen.ClassBodyComposer;
+import com.qihoo.qsql.codegen.ClassBodyComposer.CodeCategory;
 import com.qihoo.qsql.codegen.QueryGenerator;
 import com.qihoo.qsql.plan.ProcedureVisitor;
 import com.qihoo.qsql.plan.proc.DirectQueryProcedure;
@@ -8,7 +9,6 @@ import com.qihoo.qsql.plan.proc.ExtractProcedure;
 import com.qihoo.qsql.plan.proc.LoadProcedure;
 import com.qihoo.qsql.plan.proc.QueryProcedure;
 import com.qihoo.qsql.plan.proc.TransformProcedure;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * For traversing procedures to generate.
@@ -16,37 +16,35 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class FlinkProcedureVisitor extends ProcedureVisitor {
 
     private ClassBodyComposer composer;
-    private AtomicInteger varId;
-    private String variable;
 
-    public FlinkProcedureVisitor(AtomicInteger varId, ClassBodyComposer composer) {
+    public FlinkProcedureVisitor(ClassBodyComposer composer) {
         this.composer = composer;
-        this.varId = varId;
     }
 
     @Override
     public void visit(ExtractProcedure extractProcedure) {
-        createVariableName();
+        composer.handleComposition(CodeCategory.SENTENCE, "{");
         QueryGenerator builder = QueryGenerator.getQueryGenerator(
             extractProcedure, composer, false);
         builder.execute();
         builder.saveToTempTable();
+        composer.handleComposition(CodeCategory.SENTENCE, "}");
         visitNext(extractProcedure);
     }
 
+    //TODO Care for `tmp` is not declared.
     @Override
     public void visit(TransformProcedure transformProcedure) {
         composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE,
             "Table table = tEnv.sqlQuery(\"" + transformProcedure.sql() + "\");");
         composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE,
-            "DataSet " + variable + " = tEnv.toDataSet(table, Row.class);");
+            "tmp = tEnv.toDataSet(table, Row.class);");
         visitNext(transformProcedure);
     }
 
     @Override
     public void visit(LoadProcedure loadProcedure) {
-        composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE,
-            variable + ".print();\n");
+        composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE, "tmp.print();\n");
         visitNext(loadProcedure);
     }
 
@@ -58,9 +56,5 @@ public class FlinkProcedureVisitor extends ProcedureVisitor {
     @Override
     public void visit(DirectQueryProcedure queryProcedure) {
         visitNext(queryProcedure);
-    }
-
-    protected void createVariableName() {
-        this.variable = "$" + (varId.incrementAndGet());
     }
 }

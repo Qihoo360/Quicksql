@@ -17,9 +17,13 @@
 package org.apache.calcite.sql.dialect;
 
 import org.apache.calcite.config.NullCollation;
+import org.apache.calcite.sql.SqlCall;
 import org.apache.calcite.sql.SqlDialect;
 import org.apache.calcite.sql.SqlNode;
+import org.apache.calcite.sql.SqlUtil;
 import org.apache.calcite.sql.SqlWriter;
+import org.apache.calcite.sql.fun.HiveSqlOperatorTable;
+import org.apache.calcite.sql.fun.SqlStdOperatorTable;
 
 /**
  * A <code>SqlDialect</code> implementation for the Apache Hive database.
@@ -58,6 +62,16 @@ public class HiveSqlDialect extends SqlDialect {
     }
 
     return null;
+  }
+
+  //Updated by qsql-team
+  @Override public void unparseCall(SqlWriter writer, SqlCall call,
+      int leftPrec, int rightPrec) {
+    if (call.getOperator() == SqlStdOperatorTable.CONCAT) {
+      SqlUtil.unparseFunctionSyntax(HiveSqlOperatorTable.CONCAT, writer, call);
+    } else {
+      super.unparseCall(writer, call, leftPrec, rightPrec);
+    }
   }
 
   @Override public boolean supportsCharSet() {

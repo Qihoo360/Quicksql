@@ -4,101 +4,128 @@
 
 ## 集群环境部署
 
-### 1 编译环境依赖
+### 环境依赖
 
-- java >= 1.8
-- scala >= 2.11
-- maven >= 3.3
+- Java >= 1.8
+- Spark >= 2.2
 
-### 2 编译步骤
+### 部署流程
 
-在源码根目录下，执行：
-
-```shell
-mvn -DskipTests clean package
-```
-
-编译成功后执行：
+1. 下载并解压二进制包。下载地址：https://github.com/Qihoo360/Quicksql/releases
 
 ```shell
-ls ./target/
+tar -zxvf ./qsql-release-bin.tar.gz
 ```
 
-在./target/目录下，会生成发布包 qsql-0.5.tar.gz。
+2. 进入conf目录，打开base-env.sh，设置环境变量。
 
-### 3 部署环境依赖
+- JAVA_HOME (务必保证版本 >= 1.8)
+- SPARK_HOME (务必保证版本 >= 2.2)
 
-- CentOS 6.2
-- java >= 1.8
-- scala >= 2.11
-- spark >= 2.2
-- [可选] 目前QSQL支持的存储引擎MySQL、Elasticsearch、Hive、Druid
-
-### 4 客户端部署
-
-在客户端解压缩发布包 qsql-0.5.tar.gz 
+3. 进入bin目录，执行run-example脚本测试环境。
 
 ```shell
-tar -zxvf ./qsql-0.5.tar.gz
+./run-example com.qihoo.qsql.CsvJoinWithEsExample
 ```
 
-建立软链
+如果可以查询出以下结果，则表示部署成功。
 
-```shell
-ln -s qsql-0.5/ qsql
+```sql
++------+-------+----------+--------+------+-------+------+
+|deptno|   name|      city|province|digest|   type|stu_id|
++------+-------+----------+--------+------+-------+------+
+|    40|Scholar|  BROCKTON|      MA| 59498|Scholar|  null|
+|    45| Master|   CONCORD|      NH| 34035| Master|  null|
+|    40|Scholar|FRAMINGHAM|      MA| 65046|Scholar|  null|
++------+-------+----------+--------+------+-------+------+
 ```
-
-该发布包解压后的主要目录结构如下：
-
-- bin：脚本目录
-- conf：配置文件
-- data：存放测试数据
-- lib：依赖jar包
-- metastore：元数据管理
-
-在QSQL发布包$QSQL_HOME/conf目录中，分别配置如下文件：
-
-- base-env.sh：设置相关环境变量，如：
-  - JAVA_HOME
-  - SPARK_HOME
-  - QSQL_CLUSTER_URL
-  - QSQL_HDFS_TMP
-- qsql-runner.properties：设置系统参数
-- log4j.properties：设置日志级别
 
 ## 开始执行
 
-### QSQL Shell
+在查询真实数据源前，需要将数据源相关的表、字段等元数据信息录入QSQL的元数据库。
 
+### 元数据录入
+
+QSQL支持通过脚本录入MySQL，Elasticsearch，Hive和Oracle的元数据。
+
+#### 功能介绍
+
+执行脚本：/bin/meta-extract
+
+接收参数：
+
+-p:  数据源连接信息，连接配置详情见下方示例
+
+-d:  数据源类型					[oracle, mysql, hive, es]
+
+-r:  表名过滤条件，遵循LIKE语法	[%：全部匹配，_：占位匹配，?：可选匹配]
+
+```json
+//MySQL示例：
+{
+	"jdbcDriver": "com.mysql.jdbc.Driver",
+	"jdbcUrl": "jdbc:mysql://localhost:3306/db",
+	"jdbcUser": "user",
+	"jdbcPassword": "pass"
+}
+//Oracle示例：
+{
+	"jdbcDriver": "oracle.jdbc.driver.OracleDriver",
+	"jdbcUrl": "jdbc:oracle:thin:@localhost:1521/namespace",
+	"jdbcUser": "user",
+	"jdbcPassword": "pass" 
+}
+//Elasticsearch示例：
+{
+	"esNodes": "192.168.1.1",
+	"esPort": "9000",
+	"esUser": "user",
+	"esPass": "pass",
+	"esIndex": "index/type"
+}
+//Hive示例(当前支持元数据存在MySQL中的Hive元数据抽取)：
+{
+	"jdbcDriver": "com.mysql.jdbc.Driver",
+	"jdbcUrl": "jdbc:mysql://localhost:3306/db",
+	"jdbcUser": "user",
+	"jdbcPassword": "pass",
+	"dbName": "hive_db"
+}
 ```
-./bin/qsql -e "select 1"
-```
 
-### 示例程序
+#### 使用示例
 
-QSQL附带了示例目录中的几个示例程序。要运行其中一个，使用./run-example <class> [params]。例如：
+注意：linux中双引号"是特殊字符，传JSON参数时需要做转义。
 
-内存表数据：
+**示例场景一 (MySQL)：**
 
-```
-./bin/run-example com.qihoo.qsql.CsvScanExample
-```
+1. 从MySQL中取出表名为my_table表的元数据并导入内嵌元数据库
 
-Hive join MySQL：
+``````shell
+./meta-extract -p "{\"jdbcDriver\": \"com.mysql.jdbc.Driver\", \"jdbcUrl\": \"jdbc:mysql://localhost:3306/db\", \"jdbcUser\": \"user\",\"jdbcPassword\": \"pass\"}" -d "mysql" -r "my_table"
+``````
 
-```
-./bin/run-example com.qihoo.qsql.CsvJoinWithEsExample
-```
+2. 导入完成后，进行查询
 
-**注意**
+``````shell
+./qsql -e "SELECT * FROM my_table LIMIT 10"
+``````
 
-```
-./run-example <com.qihoo.qsql.CsvJoinWithEsExample>
-```
+**示例场景二 (Elasticsearch)：**
 
-运行混算，请确保当前客户端存在Spark、Hive、MySQL环境。并且将Hive与MySQL的连接信息添加到元数据管理中。
+1. 从Elasticsearch取出所有的type元数据并导入内嵌元数据库
 
-## 参数配置
+`````shell
+./meta-extract -p "{\"esNodes\": \"192.168.1.1\",\"esPort\": \"9090\",\"esUser\": \"user\",\"esPass\": \"pass\",\"esIndex\": \"index/type\"}" -d "es" -r "%"
+`````
+
+2. 导入完成后，进行查询
+
+``````shell
+./qsql -e "SELECT name, age FROM my_type WHERE age < 24 LIMIT 10"
+``````
+
+## 其他参数配置
 
 ### 环境变量
 
@@ -140,46 +167,6 @@ Hive join MySQL：
 | meta.extern.schema.user     | （none）               | 外部数据库的用户名                                           |
 | meta.extern.schema.password | （none）               | 外部数据库的密码                                             |
 
-## 元数据管理
-
-### 表结构
-
-#### DBS 
-
-| 表字段  | 说明       | 示例数据         |
-| ------- | ---------- | ---------------- |
-| DB_ID   | 数据库ID   | 1                |
-| DESC    | 数据库描述 | es 索引          |
-| NAME    | 数据库名   | es_profile_index |
-| DB_TYPE | 数据库类型 | es、hive、mysql  |
-
-#### DATABASE_PARAMS
-
-| 表字段      | 说明     | 示例数据 |
-| ----------- | -------- | -------- |
-| DB_ID       | 数据库ID | 1        |
-| PARAM_KEY   | 参数名   | UserName |
-| PARAM_VALUE | 参数值   | root     |
-
-#### TBLS
-
-| 表字段       | 说明     | 示例数据            |
-| ------------ | -------- | ------------------- |
-| TBL_ID       | 表ID     | 101                 |
-| CREATED_TIME | 创建时间 | 2018-10-22 14:36:10 |
-| DB_ID        | 数据库ID | 1                   |
-| TBL_NAME     | 表名     | student             |
-
-#### COLUMNS
-
-| 表字段      | 说明       | 示例数据 |
-| ----------- | ---------- | -------- |
-| CD_ID       | 字段信息ID | 10101    |
-| COMMENT     | 字段注释   | 学生姓名 |
-| COLUMN_NAME | 字段名     | name     |
-| TYPE_NAME   | 字段类型   | varchar  |
-| INTEGER_IDX | 字段顺序   | 1        |
-
 ### 内置SQLite数据库
 
 在QSQL发布包$QSQL_HOME/metastore目录中，存在如下文件：
@@ -214,82 +201,3 @@ vim metadata.properties
 cd $QSQL_HOME/bin/
 ./metadata --dbType mysql --action init
 ```
-
-### 配置元数据信息
-
-#### Hive
-
-示例配置：
-
-| DB_ID | DESC         | NAME          | DB_TYPE |
-| ----- | ------------ | ------------- | ------- |
-| 26    | hive message | hive_database | hive    |
-
-| DB_ID | PARAM_KEY | PARAM_VALUE  |
-| ----- | --------- | ------------ |
-| 26    | cluster   | cluster_name |
-
-| TBL_ID | CREATE_TIME         | DB_ID | TBL_NAME    |
-| ------ | ------------------- | ----- | ----------- |
-| 60     | 2018-11-06 10:44:51 | 26    | hive_mobile |
-
-| CD_ID | COMMENT | COLUMN_NAME | TYPE_NAME | INTEGER_IDX |
-| ----- | ------- | ----------- | --------- | ----------- |
-| 60    |         | retsize     | string    | 1           |
-| 60    |         | im          | string    | 2           |
-| 60    |         | wto         | string    | 3           |
-| 60    |         | pro         | int       | 4           |
-| 60    |         | pday        | string    | 5           |
-
-#### Elasticsearch
-
-示例配置：
-
-| DB_ID | DESC       | NAME     | DB_TYPE |
-| ----- | ---------- | -------- | ------- |
-| 24    | es message | es_index | es      |
-
-| DB_ID | PARAM_KEY   | PARAM_VALUE      |
-| ----- | ----------- | ---------------- |
-| 24    | esNodes     | localhost        |
-| 24    | esPort      | 9025             |
-| 24    | esUser      | es_user          |
-| 24    | esPass      | es_password      |
-| 24    | esIndex     | es_index/es_type |
-| 24    | esScrollNum | 156              |
-
-| TBL_ID | CREATE_TIME         | DB_ID | TBL_NAME |
-| ------ | ------------------- | ----- | -------- |
-| 57     | 2018-11-06 10:44:51 | 24    | profile  |
-
-| CD_ID | COMMENT | COLUMN_NAME | TYPE_NAME | INTEGER_IDX |
-| ----- | ------- | ----------- | --------- | ----------- |
-| 57    | comment | id          | int       | 1           |
-| 57    | comment | name        | string    | 2           |
-| 57    | comment | country     | string    | 3           |
-| 57    | comment | gender      | string    | 4           |
-| 57    | comment | operator    | string    | 5           |
-
-#### MySQL
-
-示例配置：
-
-| DB_ID | DESC             | NAME           | DB_TYPE |
-| ----- | ---------------- | -------------- | ------- |
-| 25    | mysql db message | mysql_database | mysql   |
-
-| DB_ID | PARAM_KEY    | PARAM_VALUE                                |
-| ----- | ------------ | ------------------------------------------ |
-| 25    | jdbcDriver   | com.mysql.jdbc.Driver                      |
-| 25    | jdbcUrl      | jdbc:mysql://localhost:3006/mysql_database |
-| 25    | jdbcUser     | root                                       |
-| 25    | jdbcPassword | root                                       |
-
-| TBL_ID | CREATE_TIME         | DB_ID | TBL_NAME  |
-| ------ | ------------------- | ----- | --------- |
-| 58     | 2018-11-06 10:44:51 | 25    | test_date |
-
-| CD_ID | COMMENT | COLUMN_NAME | TYPE_NAME | INTEGER_IDX |
-| ----- | ------- | ----------- | --------- | ----------- |
-| 58    | comment | id          | int       | 1           |
-| 58    | comment | name        | string    | 2           |

@@ -32,7 +32,7 @@ public class ExecutionDispatcherTest {
         args.add("--jar");
         args.add("test.jar");
         args.add("--jar_name");
-        args.add("./target/qsql-core-0.5.jar");
+        args.add("./target/qsql-core-0.6.jar");
     }
 
     @Test
@@ -74,6 +74,19 @@ public class ExecutionDispatcherTest {
     public void testHiveWithJdbc() {
         try {
             sql("select * from homework_content").runner(RunnerType.JDBC);
+        } catch (QsqlException exception) {
+            Assert.assertTrue(true);
+        }
+    }
+
+    @Test
+    public void testInsertOutput() throws SQLException, ParseException {
+        try {
+            // sql("select 1")
+            //     .runner(RunnerType.SPARK).check(this::executedBySparkOrFlink);
+            sql("insert into `\\output\\` in hdfs "
+                + "select * from department as dep inner join homework_content as stu on dep.dep_id = stu.stu_id")
+                .runner(RunnerType.SPARK).check(this::executedBySparkOrFlink);
         } catch (QsqlException exception) {
             Assert.assertTrue(true);
         }

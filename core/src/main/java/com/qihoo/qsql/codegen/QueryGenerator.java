@@ -8,7 +8,7 @@ import com.qihoo.qsql.codegen.flink.FlinkVirtualGenerator;
 import com.qihoo.qsql.codegen.spark.SparkCsvGenerator;
 import com.qihoo.qsql.codegen.spark.SparkElasticsearchGenerator;
 import com.qihoo.qsql.codegen.spark.SparkHiveGenerator;
-import com.qihoo.qsql.codegen.spark.SparkMySqlGenerator;
+import com.qihoo.qsql.codegen.spark.SparkJdbcGenerator;
 import com.qihoo.qsql.codegen.spark.SparkVirtualGenerator;
 import com.qihoo.qsql.plan.proc.ExtractProcedure;
 import com.qihoo.qsql.plan.proc.PreparedExtractProcedure;
@@ -26,7 +26,7 @@ public abstract class QueryGenerator {
 
     private static QueryGenerator elasticSearch = null;
     private static QueryGenerator hive = null;
-    private static QueryGenerator mysql = null;
+    private static QueryGenerator jdbc = null;
     private static QueryGenerator virtual = null;
     private static QueryGenerator csv = null;
 
@@ -53,8 +53,9 @@ public abstract class QueryGenerator {
             return createHiveQueryGenerator(procedure, composer, isSpark);
         } else if (procedure instanceof PreparedExtractProcedure.ElasticsearchExtractor) {
             return createElasticsearchQueryGenerator(procedure, composer, isSpark);
-        } else if (procedure instanceof PreparedExtractProcedure.MySqlExtractor) {
-            return createMySqlQueryGenerator(procedure, composer, isSpark);
+        } else if (procedure instanceof PreparedExtractProcedure.MySqlExtractor
+            || procedure instanceof PreparedExtractProcedure.OracleExtractor) {
+            return createJdbcQueryGenerator(procedure, composer, isSpark);
         } else if (procedure instanceof PreparedExtractProcedure.VirtualExtractor) {
             return createVirtualQueryGenerator(procedure, composer, isSpark);
         } else if (procedure instanceof PreparedExtractProcedure.CsvExtractor) {
@@ -100,21 +101,21 @@ public abstract class QueryGenerator {
         return elasticSearch;
     }
 
-    private static QueryGenerator createMySqlQueryGenerator(ExtractProcedure procedure,
+    private static QueryGenerator createJdbcQueryGenerator(ExtractProcedure procedure,
         ClassBodyComposer composer,
         boolean isSpark) {
-        if (mysql == null) {
+        if (jdbc == null) {
             if (isSpark) {
-                mysql = new SparkMySqlGenerator();
+                jdbc = new SparkJdbcGenerator();
             } else {
-                mysql = new FlinkMySqlGenerator();
+                jdbc = new FlinkMySqlGenerator();
             }
-            setSpecificState(mysql, procedure, composer);
-            mysql.prepare();
+            setSpecificState(jdbc, procedure, composer);
+            jdbc.prepare();
         } else {
-            setSpecificState(mysql, procedure, composer);
+            setSpecificState(jdbc, procedure, composer);
         }
-        return mysql;
+        return jdbc;
     }
 
     private static QueryGenerator createVirtualQueryGenerator(ExtractProcedure procedure,
@@ -166,7 +167,7 @@ public abstract class QueryGenerator {
     public static void close() {
         elasticSearch = null;
         hive = null;
-        mysql = null;
+        jdbc = null;
         virtual = null;
         csv = null;
     }

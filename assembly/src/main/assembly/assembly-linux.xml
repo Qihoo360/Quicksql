@@ -92,6 +92,7 @@
                 <include>org.elasticsearch:elasticsearch-spark*:jar</include>
                 <include>mysql:mysql-connector-java*:jar</include>
                 <include>org.apache.derby:derby*:jar</include>
+                <include>*:ojdbc*:jar</include>
             </includes>
             <outputDirectory>/${qsql.release}/lib/spark</outputDirectory>
             <scope>runtime</scope>

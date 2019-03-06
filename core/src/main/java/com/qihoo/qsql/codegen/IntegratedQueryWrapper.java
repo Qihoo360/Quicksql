@@ -2,8 +2,6 @@ package com.qihoo.qsql.codegen;
 
 import com.qihoo.qsql.plan.proc.QueryProcedure;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 /**
  * Provide several method, which can generate execution code in intermediate engine layer.
  * <p>
@@ -14,9 +12,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 
 public abstract class IntegratedQueryWrapper extends ClassBodyWrapper {
-
-    protected static final String VARIABLE_PREFIX = "$";
-    protected AtomicInteger varId = new AtomicInteger(0);
 
     public abstract IntegratedQueryWrapper run(QueryProcedure plan);
 
@@ -32,7 +27,4 @@ public abstract class IntegratedQueryWrapper extends ClassBodyWrapper {
 
     public abstract void createTempTable(String tableName);
 
-    protected String latestDeclaredVariable() {
-        return VARIABLE_PREFIX + varId.get();
-    }
 }

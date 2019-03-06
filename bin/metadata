@@ -95,7 +95,7 @@ else
     fi
 fi
 
-QSQL_METADATA_CLASSPATH="${QSQL_HOME}/lib/qsql-core-0.5.jar"
+QSQL_METADATA_CLASSPATH="${QSQL_HOME}/lib/qsql-core-0.6.jar"
 QSQL_METADATA_CLASSPATH="${QSQL_HOME}/lib/mysql-connector-java-5.1.20.jar:${QSQL_METADATA_CLASSPATH}"
 QSQL_METADATA_CLASSPATH="${QSQL_HOME}/lib/ibatis-core-3.0.jar:${QSQL_METADATA_CLASSPATH}"
 

@@ -9,15 +9,17 @@ import com.qihoo.qsql.exception.QsqlException;
 import com.qihoo.qsql.exec.AbstractPipeline;
 import com.qihoo.qsql.exec.JdbcPipeline;
 import com.qihoo.qsql.exec.result.CloseableIterator;
+import com.qihoo.qsql.exec.result.JdbcPipelineResult;
 import com.qihoo.qsql.exec.result.JdbcResultSetIterator;
 import com.qihoo.qsql.launcher.OptionsParser.SubmitOption;
 import com.qihoo.qsql.metadata.MetadataMapping;
 import com.qihoo.qsql.metadata.MetadataPostman;
 import com.qihoo.qsql.metadata.SchemaAssembler;
 import com.qihoo.qsql.plan.QueryProcedureProducer;
+import com.qihoo.qsql.plan.QueryTables;
 import com.qihoo.qsql.plan.proc.QueryProcedure;
+import com.qihoo.qsql.utils.PropertiesReader;
 import com.qihoo.qsql.utils.SqlUtil;
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
@@ -27,7 +29,6 @@ import java.sql.SQLException;
 import java.util.Base64;
 import java.util.List;
 import org.apache.commons.cli.ParseException;
-import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +40,7 @@ public class ExecutionDispatcher {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExecutionDispatcher.class);
 
     static {
-        config();
+        PropertiesReader.configLogger();
     }
 
     /**
@@ -57,11 +58,17 @@ public class ExecutionDispatcher {
         }
 
         OptionsParser parser = new OptionsParser(args);
-        String sqlArg = parser.getOptionValue(SubmitOption.SQL);
+        final String sqlArg = parser.getOptionValue(SubmitOption.SQL);
         String runner = parser.getOptionValue(SubmitOption.RUNNER);
 
         String sql = new String(Base64.getDecoder().decode(sqlArg), StandardCharsets.UTF_8);
-        List<String> tableNames = SqlUtil.parseTableName(sql);
+        LOGGER.info("Your SQL is '{}'", sql);
+        QueryTables tables = SqlUtil.parseTableName(sql);
+        List<String> tableNames = tables.tableNames;
+
+        if (tables.isDml()) {
+            runner = "SPARK";
+        }
 
         welcome();
         long latestTime = System.currentTimeMillis();
@@ -96,7 +103,7 @@ public class ExecutionDispatcher {
 
         ProcessExecClient execClient = ProcessExecClient.createProcessClient(pipeline, parser);
         execClient.exec();
-        System.out.printf("(%.2f sec)\n", ((double) (System.currentTimeMillis() - latestTime) / 1000));
+        System.out.printf("(%.2f sec)\r\n", ((double) (System.currentTimeMillis() - latestTime) / 1000));
     }
 
     private static boolean tryToExecuteQueryDirectly(String sql, List<String> tableNames, String runner)
@@ -133,11 +140,7 @@ public class ExecutionDispatcher {
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet resultSet = statement.executeQuery();
             try (CloseableIterator<Object> iterator = new JdbcResultSetIterator<>(resultSet)) {
-                if (! iterator.hasNext()) {
-                    System.out.println("[Empty Set]");
-                }
-                iterator.forEachRemaining(result ->
-                    System.out.println(JdbcResultSetIterator.CONCAT_FUNC.apply(result)));
+                new JdbcPipelineResult.ShowPipelineResult(iterator).print();
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
@@ -182,17 +185,9 @@ public class ExecutionDispatcher {
                 + "              / __ \\__  __(_)____/ /__/ ___// __ \\  / / \n"
                 + "             / / / / / / / / ___/ //_/\\__ \\/ / / / / /  \n"
                 + "            / /_/ / /_/ / / /__/ ,<  ___/ / /_/ / / /___\n"
-                + "Welcome to  \\___\\_\\__,_/_/\\___/_/|_|/____/\\___\\_\\/_____/  version 0.5.";
+                + "Welcome to  \\___\\_\\__,_/_/\\___/_/|_|/____/\\___\\_\\/_____/  version 0.6.";
         String slogan = "   \\  Process data placed anywhere with the most flexible SQL  /";
         System.out.println(welcome);
         System.out.println(slogan);
-    }
-
-    private static void config() {
-        String logProp;
-        if (((logProp = System.getenv("QSQL_HOME")) != null) && ! logProp.isEmpty()) {
-            PropertyConfigurator.configure(logProp
-                + File.separator + "conf" + File.separator + "log4j.properties");
-        }
     }
 }

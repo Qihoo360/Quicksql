@@ -2,6 +2,7 @@ package com.qihoo.qsql.plan.proc;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.qihoo.qsql.metadata.MetadataMapping;
 import com.qihoo.qsql.utils.SqlUtil;
 import java.io.IOException;
 import java.util.AbstractList;
@@ -22,7 +23,7 @@ import org.apache.calcite.adapter.enumerable.JavaRowFormat;
 import org.apache.calcite.adapter.enumerable.PhysType;
 import org.apache.calcite.adapter.enumerable.PhysTypeImpl;
 import org.apache.calcite.adapter.hive.HiveTable;
-import org.apache.calcite.adapter.mysql.MySQLTable;
+import org.apache.calcite.adapter.custom.JdbcTable;
 import org.apache.calcite.adapter.virtual.VirtualTable;
 import org.apache.calcite.plan.RelOptCluster;
 import org.apache.calcite.plan.RelOptLattice;
@@ -40,8 +41,10 @@ import org.apache.calcite.rel.rel2sql.RelToSqlConverter;
 import org.apache.calcite.rel.type.RelDataType;
 import org.apache.calcite.sql.SqlDialect;
 import org.apache.calcite.sql.SqlNode;
+import org.apache.calcite.sql.dialect.CalciteSqlDialect;
 import org.apache.calcite.sql.dialect.HiveSqlDialect;
 import org.apache.calcite.sql.dialect.MysqlSqlDialect;
+import org.apache.calcite.sql.dialect.OracleSqlDialect;
 import org.apache.calcite.sql.parser.SqlParseException;
 import org.apache.calcite.tools.FrameworkConfig;
 import org.apache.calcite.tools.Frameworks;
@@ -84,7 +87,6 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
      * @param config config of procedure
      * @param relNode relNode of Procedure
      * @param tableName tableName of Sql
-     * @param sql sql
      */
     public static PreparedExtractProcedure createSpecificProcedure(
         QueryProcedure next,
@@ -92,28 +94,42 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
         FrameworkConfig config,
         RelNode relNode,
         String tableName,
-        String sql) {
+        SqlNode sqlNode) {
         //rewrite this paragraph
         if (relOptTable.getTable() instanceof ElasticsearchTable) {
+            String newSql = Util.toLinux(sqlNode.toSqlString(CalciteSqlDialect.DEFAULT).getSql());
             return new ElasticsearchExtractor(next,
                 ((ElasticsearchTranslatableTable) relOptTable.getTable()).getProperties(),
-                config, relNode, tableName, sql);
+                config, relNode, tableName, newSql);
         } else if (relOptTable.getTable() instanceof HiveTable) {
             return new HiveExtractor(next,
                 ((HiveTable) relOptTable.getTable()).getProperties(),
                 config, relNode, tableName);
-        } else if (relOptTable.getTable() instanceof MySQLTable) {
-            return new MySqlExtractor(next,
-                ((MySQLTable) relOptTable.getTable()).getProperties(),
-                config, relNode, tableName);
+        } else if (relOptTable.getTable() instanceof JdbcTable) {
+            //TODO add more jdbc type
+            String dbType = ((JdbcTable) relOptTable.getTable())
+                .getProperties().getProperty("dbType", "unknown");
+            switch (dbType) {
+                case MetadataMapping.MYSQL:
+                    return new MySqlExtractor(next, ((JdbcTable) relOptTable.getTable())
+                        .getProperties(), config, relNode, tableName);
+                case MetadataMapping.ORACLE:
+                    return new OracleExtractor(next, ((JdbcTable) relOptTable.getTable())
+                        .getProperties(), config, relNode, tableName);
+                default:
+                    throw new RuntimeException("");
+            }
+
         } else if (relOptTable.getTable() instanceof VirtualTable) {
+            String newSql = Util.toLinux(sqlNode.toSqlString(CalciteSqlDialect.DEFAULT).getSql());
             return new VirtualExtractor(next,
                 ((VirtualTable) relOptTable.getTable()).getProperties(),
-                config, relNode, tableName, sql);
+                config, relNode, tableName, newSql);
         } else if (relOptTable.getTable() instanceof CsvTable) {
+            String newSql = Util.toLinux(sqlNode.toSqlString(CalciteSqlDialect.DEFAULT).getSql());
             return new CsvExtractor(next,
                 ((CsvTable) relOptTable.getTable()).getProperties(),
-                config, relNode, tableName, sql);
+                config, relNode, tableName, newSql);
         } else {
             throw new RuntimeException("Unsupported metadata type");
         }
@@ -358,6 +374,25 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
         }
     }
 
+    public static class OracleExtractor extends PreparedExtractProcedure {
+
+        public OracleExtractor(QueryProcedure next, Properties properties,
+            FrameworkConfig config, RelNode relNode,
+            String tableName) {
+            super(next, properties, config, relNode, tableName);
+        }
+
+        @Override
+        public String toRecognizedQuery() {
+            return sql(new OracleSqlDialect(SqlDialect.EMPTY_CONTEXT));
+        }
+
+        @Override
+        public String getCategory() {
+            return "Oracle";
+        }
+    }
+
     public static class HiveExtractor extends PreparedExtractProcedure {
 
         public HiveExtractor(QueryProcedure next, Properties properties,
@@ -417,7 +452,9 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
         @Override
         public String toRecognizedQuery() {
             String sql = sql(new HiveSqlDialect(SqlDialect.EMPTY_CONTEXT));
-            this.properties.put("tableName", SqlUtil.parseTableName(sql).get(0).replaceAll("\\.", "_"));
+            //TODO Here is one more cost of SQL parsing here. Replace it
+            this.properties.put("tableName", SqlUtil.parseTableName(sql)
+                .tableNames.get(0).replaceAll("\\.", "_"));
             return sql;
         }
 

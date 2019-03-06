@@ -76,4 +76,8 @@ public class JdbcResultSetIterator<T> extends LookaheadIterator<T> {
             }
         }
     }
+
+    public ResultSet getResultSet() {
+        return resultSet;
+    }
 }

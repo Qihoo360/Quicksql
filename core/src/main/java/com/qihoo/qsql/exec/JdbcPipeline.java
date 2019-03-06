@@ -88,9 +88,9 @@ public class JdbcPipeline extends AbstractPipeline {
         try {
             Map<String, String> properties = parseJsonSchema(parsedTables, json);
             switch (properties.get("type")) {
-                case "mysql":
-                    LOGGER.debug("Connecting to MySQL server....");
-                    return createMySqlConnection(properties);
+                case "jdbc":
+                    LOGGER.debug("Connecting to JDBC server....");
+                    return createJdbcConnection(properties);
                 case "elasticsearch":
                     LOGGER.debug("Connection to Elasticsearch server....");
                     return createElasticsearchConnection(json);
@@ -133,8 +133,8 @@ public class JdbcPipeline extends AbstractPipeline {
                     return createElasticsearchConnection(
                         "inline: " + MetadataPostman.assembleSchema(assemblers));
                 case JDBC:
-                    LOGGER.debug("Connecting to MySQL server....");
-                    return createMySqlConnection(conn);
+                    LOGGER.debug("Connecting to JDBC server....");
+                    return createJdbcConnection(conn);
                 default:
                     throw new RuntimeException("Unsupported jdbc type");
             }
@@ -154,13 +154,19 @@ public class JdbcPipeline extends AbstractPipeline {
         return connection;
     }
 
-    private static Connection createMySqlConnection(Map<String, String> conn)
+    private static Connection createJdbcConnection(Map<String, String> conn)
         throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.jdbc.Driver");
-        String ip = conn.getOrDefault("jdbcNode", "");
-        String port = conn.getOrDefault("jdbcPort", "");
-        String db = conn.getOrDefault("dbName", "");
-        String url = conn.getOrDefault("jdbcUrl", "jdbc:mysql://" + ip + ":" + port + "/" + db);
+        if (! conn.containsKey("jdbcDriver")) {
+            throw new RuntimeException("The `jdbcDriver` property needed to be set.");
+        }
+        Class.forName(conn.get("jdbcDriver"));
+        // String ip = conn.getOrDefault("jdbcNode", "");
+        // String port = conn.getOrDefault("jdbcPort", "");
+        // String db = conn.getOrDefault("dbName", "");
+        if (! conn.containsKey("jdbcUrl")) {
+            throw new RuntimeException("The `jdbcUrl` property needed to be set.");
+        }
+        String url = conn.get("jdbcUrl");
         String user = conn.getOrDefault("jdbcUser", "");
         String password = conn.getOrDefault("jdbcPassword", "");
         Connection connection = DriverManager.getConnection(url, user, password);
@@ -203,9 +209,14 @@ public class JdbcPipeline extends AbstractPipeline {
      * @throws SQLException sql exception
      */
     public static Connection createCsvConnection(String json) throws SQLException {
-        Properties info = new Properties();
-        info.put("model", json);
-        Connection connection = DriverManager.getConnection("jdbc:calcite:", info);
+        ConnectionFactory connectionFactory = new MapConnectionFactory(
+            ImmutableMap.of("unquotedCasing", "unchanged", "caseSensitive", "true"),
+            ImmutableList.of()
+        ).with("model", json);
+
+        // Properties info = new Properties();
+        // info.put("model", json);
+        Connection connection = connectionFactory.createConnection();
         LOGGER.debug("Connect with embedded calcite server successfully!");
         return connection;
     }
@@ -219,7 +230,8 @@ public class JdbcPipeline extends AbstractPipeline {
         QueryProcedure next = procedure.next();
         ResultSet resultSet = establishStatement();
 
-        if (next instanceof DiskLoadProcedure) {
+        //TODO add jdbc sql translate
+        if (next.hasNext() && next.next() instanceof DiskLoadProcedure) {
             String path = ((DiskLoadProcedure) next).path;
             String deliminator;
             if (((DiskLoadProcedure) next).getDataFormat() == LoadProcedure.DataFormat.DEFAULT) {
@@ -358,7 +370,7 @@ public class JdbcPipeline extends AbstractPipeline {
     }
 
     enum JdbcType {
-        ELASTICSEARCH, MYSQL, CSV
+        ELASTICSEARCH, JDBC, CSV
     }
 
     public interface ConnectionPostProcessor {
@@ -428,7 +440,7 @@ public class JdbcPipeline extends AbstractPipeline {
         private JdbcType type = null;
 
         JsonVisitor(List<String> names) {
-            this.names = names.stream().collect(Collectors.toList());
+            this.names = new ArrayList<>(names);
         }
 
         Map<String, String> getConnectionInfo() {
@@ -440,7 +452,7 @@ public class JdbcPipeline extends AbstractPipeline {
                 case CSV:
                     connectionInfo.put("type", "csv");
                     break;
-                case MYSQL:
+                case JDBC:
                     connectionInfo =
                         jdbcProps.stream().reduce((left, right) -> {
                             String leftUrl = left.getOrDefault("jdbcUrl", "");
@@ -456,7 +468,7 @@ public class JdbcPipeline extends AbstractPipeline {
                             "Not find any schema info for given table names in "
                                 + "sql"));
 
-                    connectionInfo.put("type", "mysql");
+                    connectionInfo.put("type", "jdbc");
                     break;
                 default:
                     throw new RuntimeException("Do not support this engine type: " + type);
@@ -473,10 +485,7 @@ public class JdbcPipeline extends AbstractPipeline {
         }
 
         boolean visit(JsonSchema schema) {
-            if (schema instanceof JsonCustomSchema) {
-                return visit((JsonCustomSchema) schema);
-            }
-            return false;
+            return schema instanceof JsonCustomSchema && visit((JsonCustomSchema) schema);
         }
 
         boolean visit(JsonCustomSchema schema) {
@@ -499,8 +508,8 @@ public class JdbcPipeline extends AbstractPipeline {
             }
 
             if (jdbcProps.size() == names.size()) {
-                if (schema.factory.toLowerCase().contains("mysql")) {
-                    type = JdbcType.MYSQL;
+                if (schema.factory.toLowerCase().contains("jdbc")) {
+                    type = JdbcType.JDBC;
                 } else if (schema.factory.toLowerCase().contains("elasticsearch")) {
                     type = JdbcType.ELASTICSEARCH;
                 } else if (schema.factory.toLowerCase().contains("csv")) {

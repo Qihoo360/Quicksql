@@ -1,0 +1,1 @@
+package com.qihoo.qsql.metadata.collect;

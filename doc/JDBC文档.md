@@ -8,7 +8,8 @@ AutomaticConnection 是使用Quicksql进行查询的方法之一，你可以通�
 
 ### 开始执行一个SQL
 
-首先，将Quicksql相关jar包放入你的项目依赖中，包括：`qsql-core-0.5.jar`,`qsql-calcite-elasticsearch-0.5.jar`,`qsql-calcite-analysis-0.5.jar` ，然后你就可以开始写代码啦~
+首先，将Quicksql相关jar包放入你的项目依赖中，包括：`qsql-core-0.6.jar`,`qsql-calcite-elasticsearch-0.6.jar`,`qsql-calcite-analysis-0.6.jar`
+，然后你就可以开始写代码啦~
 
 下面是示例代码：
 

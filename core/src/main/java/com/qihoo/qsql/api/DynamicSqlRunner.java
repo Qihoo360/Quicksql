@@ -1,8 +1,10 @@
 package com.qihoo.qsql.api;
 
+import com.qihoo.qsql.api.SqlRunner.Builder.RunnerType;
 import com.qihoo.qsql.exception.QsqlException;
 import com.qihoo.qsql.metadata.MetadataPostman;
 import com.qihoo.qsql.plan.QueryProcedureProducer;
+import com.qihoo.qsql.plan.QueryTables;
 import com.qihoo.qsql.plan.proc.DirectQueryProcedure;
 import com.qihoo.qsql.plan.proc.ExtractProcedure;
 import com.qihoo.qsql.plan.proc.PreparedExtractProcedure;
@@ -66,7 +68,12 @@ public class DynamicSqlRunner extends SqlRunner {
     @Override
     public AbstractPipeline sql(String sql) {
         LOGGER.info("The SQL that is ready to execute is: \n" + sql);
-        tableNames = SqlUtil.parseTableName(sql);
+        QueryTables tables = SqlUtil.parseTableName(sql);
+        tableNames = tables.tableNames;
+
+        if (tables.isDml()) {
+            environment.setTransformRunner(RunnerType.SPARK);
+        }
 
         LOGGER.debug("Parsed table names for upper SQL are: {}", tableNames);
         QueryProcedure procedure = createQueryPlan(sql);
@@ -136,4 +143,7 @@ public class DynamicSqlRunner extends SqlRunner {
 
         return this.pipeline;
     }
+    //TODO extract all of SqlParser for parsing by one config
+    //TODO test set identifier escape in dialect
+    //TODO adjust code architecture, make jdbc and runner perform in the same way.(always translate to a new lang)
 }

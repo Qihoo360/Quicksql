@@ -89,10 +89,8 @@ public class ColumnValue {
         }
         ColumnValue that = (ColumnValue) obj;
         return Objects.equals(cdId, that.cdId)
-            && Objects.equals(comment, that.comment)
             && Objects.equals(columnName, that.columnName)
-            && Objects.equals(typeName, that.typeName)
-            && Objects.equals(integerIdx, that.integerIdx);
+            && Objects.equals(typeName, that.typeName);
     }
 
     @Override

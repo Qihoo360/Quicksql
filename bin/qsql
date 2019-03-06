@@ -26,7 +26,7 @@ do
         shift 
         case "${1}" in
             "")
-            echo "no --runner selected, decide to default runner";
+            echo "ERROR: No --runner selected, decide to default runner";
             QSQL_RUNNER="${QSQL_DEFAULT_RUNNER}"
             shift ;  
             ;;
@@ -47,7 +47,7 @@ do
             shift ;
             ;;
             *)
-            echo "--runner error! please select property runner!"
+            echo "ERROR: `--runner` error! please select property runner!"
             exit 1
             ;;
         esac
@@ -56,7 +56,7 @@ do
         shift ;
         case "${1}" in
             "")
-            echo "no --master selected, decide to default master";
+            echo "ERROR: No --master selected, decide to default master";
             QSQL_MASTER="${QSQL_DEFAULT_MASTER}"
             shift  
             ;;
@@ -76,8 +76,24 @@ do
             QSQL_MASTER="yarn-client"
             shift;
             ;;
+            local*)
+            QSQL_MASTER="local[*]"
+            shift;
+            ;;
+            mesos*)
+            QSQL_MASTER=${1}
+            shift;
+            ;;
+            spark*)
+            QSQL_MASTER=${1}
+            shift;
+            ;;
+            k8s*)
+            QSQL_MASTER=${1}
+            shift;
+            ;;
             *)
-            echo "--master error! please select property master!"
+            echo "ERROR: `--master` error! please select property master!"
             exit 1
             ;;
         esac
@@ -86,7 +102,7 @@ do
         shift ;
         case "${1}" in
             "")
-            echo "no --worker_memory selected, decide to default worker_memory";
+            echo "ERROR: No --worker_memory selected, decide to default worker_memory";
             QSQL_WORKER_MEMORY="${QSQL_DEFAULT_WORKER_MEMORY}"
             shift  
             ;;
@@ -100,7 +116,7 @@ do
         shift ;
         case "${1}" in
             "")
-            echo "no --driver_memory selected, decide to default driver_memory";
+            echo "ERROR: No --driver_memory selected, decide to default driver_memory";
             QSQL_DRIVER_MEMORY="${QSQL_DEFAULT_DRIVER_MEMORY}"
             shift  
             ;;
@@ -114,7 +130,7 @@ do
         shift;
         case "${1}" in
             "")
-            echo "no --worker_num selected, decide to default worker_num";
+            echo "ERROR: No --worker_num selected, decide to default worker_num";
             QSQL_WORKER_NUM="${QSQL_DEFAULT_WORKER_NUM}"
             shift  
             ;;
@@ -180,13 +196,13 @@ fi
 . "${QSQL_HOME}/bin/qsql-env"
 
 
-CONF=${CONF}" --jar_name=${QSQL_HOME}/lib/qsql-core-0.5.jar "
+CONF=${CONF}" --jar_name=${QSQL_HOME}/lib/qsql-core-0.6.jar "
 CONF=${CONF}" --class_name=com.qihoo.qsql.cli.QSqlSubmit "
 CONF=${CONF}" --jar=${JARS} "
 
 
 if [ ! -z "${SQL}" ] ; then
-    SQL=`echo "${SQL}" | base64 -w 0`
+    SQL=$(echo "${SQL}" | base64 -w 0)
     CONF=${CONF}"--sql=${SQL}"
     eval ${QSQL_HOME}/bin/qsql-class com.qihoo.qsql.cli.QSqlSubmit "$CONF"
     exit $?

@@ -13,7 +13,7 @@ public class SparkPipelineTest {
         SqlRunner.Builder.RunnerType runnerType = RunnerType.SPARK;
         SqlRunner runner = SqlRunner.builder()
             .setTransformRunner(runnerType)
-            .setSchemaPath(SqlUtil.getSchemaPath(SqlUtil.parseTableName(sql)))
+            .setSchemaPath(SqlUtil.getSchemaPath(SqlUtil.parseTableName(sql).tableNames))
             .setAppName("test hive")
             .setAcceptedResultsNum(10)
             .ok();
@@ -26,7 +26,7 @@ public class SparkPipelineTest {
         SqlRunner.Builder.RunnerType runnerType = RunnerType.SPARK;
         SqlRunner runner = SqlRunner.builder()
             .setTransformRunner(runnerType)
-            .setSchemaPath(SqlUtil.getSchemaPath(SqlUtil.parseTableName(sql)))
+            .setSchemaPath(SqlUtil.getSchemaPath(SqlUtil.parseTableName(sql).tableNames))
             .setAppName("test hive")
             .setAcceptedResultsNum(10)
             .ok();
@@ -39,7 +39,7 @@ public class SparkPipelineTest {
         SqlRunner.Builder.RunnerType runnerType = RunnerType.SPARK;
         SqlRunner runner = SqlRunner.builder()
             .setTransformRunner(runnerType)
-            .setSchemaPath(SqlUtil.getSchemaPath(SqlUtil.parseTableName(sql)))
+            .setSchemaPath(SqlUtil.getSchemaPath(SqlUtil.parseTableName(sql).tableNames))
             .setAppName("test hive")
             .setAcceptedResultsNum(10)
             .ok();
@@ -52,7 +52,7 @@ public class SparkPipelineTest {
         SqlRunner.Builder.RunnerType runnerType = RunnerType.SPARK;
         SqlRunner runner = SqlRunner.builder()
             .setTransformRunner(runnerType)
-            .setSchemaPath(SqlUtil.getSchemaPath(SqlUtil.parseTableName(sql)))
+            .setSchemaPath(SqlUtil.getSchemaPath(SqlUtil.parseTableName(sql).tableNames))
             .setAppName("test hive")
             .setAcceptedResultsNum(10)
             .ok();

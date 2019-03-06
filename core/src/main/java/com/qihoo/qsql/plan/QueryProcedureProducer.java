@@ -5,6 +5,7 @@ import com.qihoo.qsql.api.SqlRunner.Builder.RunnerType;
 import com.qihoo.qsql.exception.ParseException;
 import com.qihoo.qsql.plan.func.SqlRunnerFuncTable;
 import com.qihoo.qsql.plan.proc.DataSetTransformProcedure;
+import com.qihoo.qsql.plan.proc.DiskLoadProcedure;
 import com.qihoo.qsql.plan.proc.ExtractProcedure;
 import com.qihoo.qsql.plan.proc.LoadProcedure;
 import com.qihoo.qsql.plan.proc.MemoryLoadProcedure;
@@ -28,7 +29,9 @@ import org.apache.calcite.prepare.RelOptTableImpl;
 import org.apache.calcite.rel.RelNode;
 import org.apache.calcite.rel.rules.SubQueryRemoveRule;
 import org.apache.calcite.schema.SchemaPlus;
+import org.apache.calcite.sql.SqlIdentifier;
 import org.apache.calcite.sql.SqlNode;
+import org.apache.calcite.sql.ext.SqlInsertOutput;
 import org.apache.calcite.sql.parser.SqlParseException;
 import org.apache.calcite.sql.parser.SqlParser;
 import org.apache.calcite.sql.validate.SqlConformanceEnum;
@@ -50,6 +53,7 @@ public class QueryProcedureProducer {
     private FrameworkConfig config = null;
     private SqlRunnerFuncTable funcTable = SqlRunnerFuncTable.getInstance(RunnerType.DEFAULT);
     private Builder builder;
+    private SqlNode output = null;
 
     /**
      * Constructs an QueryProcedureProducer with init planner config.
@@ -90,7 +94,8 @@ public class QueryProcedureProducer {
         Map<RelNode, AbstractMap.SimpleEntry<String, RelOptTable>> resultRelNode =
             subtreeSyncopator.rootNodeSchemas;
 
-        LoadProcedure procedure = new MemoryLoadProcedure();
+        LoadProcedure procedure = createLoadProcedure();
+
         TransformProcedure transformProcedure =
             new DataSetTransformProcedure(procedure, subtreeSyncopator.getRoot());
 
@@ -100,9 +105,28 @@ public class QueryProcedureProducer {
             extractProcedures.add(PreparedExtractProcedure.createSpecificProcedure(
                 transformProcedure, ((RelOptTableImpl) entry.getValue().getValue()),
                 config, entry.getKey(),
-                entry.getValue().getKey(), sql));
+                entry.getValue().getKey(),
+                (output instanceof SqlInsertOutput)
+                    ? ((SqlInsertOutput) output).getSelect() : output));
         }
         return new ProcedurePortFire(extractProcedures).optimize();
+    }
+
+    private LoadProcedure createLoadProcedure() {
+        if (! (output instanceof SqlInsertOutput)) {
+            return new MemoryLoadProcedure();
+        }
+
+        switch (((SqlInsertOutput) output).getDataSource().getSimple().toUpperCase()) {
+            case "HDFS":
+                SqlIdentifier path = (SqlIdentifier) ((SqlInsertOutput) output).getPath();
+                if (path.names.size() != 1) {
+                    throw new RuntimeException("Illegal path format, expected a simple path");
+                }
+                return new DiskLoadProcedure(path.names.get(0));
+            default:
+                throw new RuntimeException("Only support HDFS in this version.");
+        }
     }
 
     private void initPlannerConfig(String jsonPath) throws IOException {
@@ -135,6 +159,13 @@ public class QueryProcedureProducer {
 
         try {
             SqlNode parsed = planner.parse(sql);
+            if (parsed instanceof SqlInsertOutput) {
+                output = (SqlInsertOutput) parsed;
+                parsed = ((SqlInsertOutput) parsed).getSelect();
+            } else {
+                output = parsed;
+            }
+
             SqlNode validated = planner.validate(parsed);
             return planner.rel(validated).rel;
         } catch (SqlParseException ex) {

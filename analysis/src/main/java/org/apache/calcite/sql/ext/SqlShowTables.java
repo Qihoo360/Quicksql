@@ -6,6 +6,7 @@ import org.apache.calcite.sql.parser.SqlParserPos;
 
 import java.util.List;
 
+//Updated by qsql-team
 public class SqlShowTables extends SqlCall {
 
     private final SqlIdentifier db;
