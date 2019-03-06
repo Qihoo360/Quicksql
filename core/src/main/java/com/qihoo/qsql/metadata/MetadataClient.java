@@ -287,13 +287,13 @@ public class MetadataClient implements AutoCloseable {
 
     private Connection createConnection() throws SQLException {
         if (! MetaConnectionUtil.isEmbeddedDatabase(properties)) {
-            MetaConnectionUtil.getExternalConnection(properties);
+            return MetaConnectionUtil.getExternalConnection(properties);
         }
 
         try {
             Class.forName("org.sqlite.JDBC");
             return DriverManager.getConnection("jdbc:sqlite://"
-                + new File(properties.getProperty(MetadataParams.META_INTERN_SCHEMA_DIR, "../sqlite/schema.db"))
+                + new File(properties.getProperty(MetadataParams.META_INTERN_SCHEMA_DIR, "../metastore/schema.db"))
                 .getAbsolutePath());
         } catch (ClassNotFoundException | SQLException ex) {
             throw new RuntimeException(ex);
