@@ -187,12 +187,12 @@ public class ElasticsearchCollector extends MetadataCollector {
             JsonNode typeObject = mappings.get(type);
             JsonNode properties = typeObject.get("properties");
             List<ColumnValue> columnValues = new ArrayList<>();
-
             properties.fieldNames().forEachRemaining(name -> {
                 ColumnValue value = new ColumnValue();
                 value.setComment("Who am I?");
                 value.setColumnName(name);
-                value.setTypeName(convertDataType(properties.get(name).get("type").asText()));
+                JsonNode node = properties.get(name).get("type");
+                value.setTypeName(convertDataType(properties.get(name).has("type") ? node.asText() : "keyword"));
                 columnValues.add(value);
             });
             return columnValues;

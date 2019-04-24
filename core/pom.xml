@@ -228,7 +228,7 @@ limitations under the License.
         <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>ojdbc7</artifactId>
-            <version>12.1.0.3</version>
+            <version>12.1.0.2</version>
         </dependency>
         <!-- Process Executor need this jar for lording spark hive driver-->
         <dependency>
