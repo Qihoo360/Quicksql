@@ -52,13 +52,6 @@
                 <include>**/*</include>
             </includes>
         </fileSet>
-        <fileSet>
-            <directory>${project.parent.basedir}/metastore/scripts/</directory>
-            <outputDirectory>/${qsql.release}/metastore/scripts</outputDirectory>
-            <includes>
-                <include>**/*</include>
-            </includes>
-        </fileSet>
     </fileSets>
 
     <moduleSets>
