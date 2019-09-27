@@ -93,9 +93,10 @@ public class HiveCollector extends MetadataCollector {
             throw new RuntimeException("`Filter regular expression` needed to be set");
         }
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(
-            String.format("SELECT TBL_NAME FROM TBLS WHERE TBL_NAME LIKE '%s'", filterRegexp))) {
-            ResultSet resultSet = preparedStatement.executeQuery();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(String.format(
+                "SELECT TBL_NAME FROM TBLS INNER JOIN DBS ON TBLS.DB_ID = DBS.DB_ID "
+                        + "WHERE TBL_NAME LIKE '%s' AND DBS.NAME ='%s'",
+                filterRegexp, prop.getDbName())); ResultSet resultSet = preparedStatement.executeQuery()) {
             List<String> tableNames = new ArrayList<>();
             while (resultSet.next()) {
                 tableNames.add(resultSet.getString(1));
@@ -112,8 +113,9 @@ public class HiveCollector extends MetadataCollector {
                 + "please check properties");
         }
         try (PreparedStatement preparedStatement =
-            connection.prepareStatement("SELECT NAME FROM DBS WHERE NAME = \"" + prop.getDbName() + "\"")) {
-            ResultSet resultSet = preparedStatement.executeQuery();
+            connection.prepareStatement("SELECT NAME FROM DBS WHERE NAME = \"" + prop.getDbName() + "\"");
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+
             if (! resultSet.next()) {
                 throw new RuntimeException("Execute `SELECT NAME FROM DBS WHERE NAME = "
                     + prop.getDbName() + " ` failed!!");
@@ -130,8 +132,9 @@ public class HiveCollector extends MetadataCollector {
 
     private List<ColumnValue> readColumnAndPartitions(Long tbId, String sql) {
         List<ColumnValue> columns = new ArrayList<>();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            ResultSet resultSet = preparedStatement.executeQuery();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                ResultSet resultSet = preparedStatement.executeQuery()) {
+
             while (resultSet.next()) {
                 ColumnValue value = new ColumnValue();
                 value.setColumnName(resultSet.getString(3));
