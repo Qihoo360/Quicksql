@@ -1,6 +1,9 @@
 package com.qihoo.qsql.metadata;
 
 import com.qihoo.qsql.metadata.entity.ColumnValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +13,8 @@ import java.util.stream.Stream;
  * Provide table related params and methods which can generate metadata Json based on those params.
  */
 public class SchemaAssembler {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SchemaAssembler.class);
 
     public String dbName;
     private String tableName;
@@ -154,6 +159,7 @@ public class SchemaAssembler {
             case "SMALLINT":
             case "BIGINT":
             case "FLOAT":
+            case "DECIMAL":
             case "DOUBLE":
             case "LONG":
             case "BOOLEAN":
@@ -163,10 +169,16 @@ public class SchemaAssembler {
             case "TIMESTAMP":
                 return columnValue.toString();
             default:
-                ColumnValue value = new ColumnValue();
-                value.setColumnName(columnValue.getColumnName());
-                value.setTypeName("STRING");
-                return value.toString();
+                if (columnValue.getTypeName().trim().toUpperCase().startsWith("DECIMAL")) {
+                    return columnValue.toString();
+                } else {
+                    LOGGER.warn("Data type {} is not recognized, using STRING instead",
+                        columnValue.getTypeName().trim().toUpperCase());
+                    ColumnValue value = new ColumnValue();
+                    value.setColumnName(columnValue.getColumnName());
+                    value.setTypeName("STRING");
+                    return value.toString();
+                }
         }
     }
 }

@@ -256,6 +256,8 @@ public class JavaTypeFactoryImpl
         return relDataTypeFactory.createSqlType(SqlTypeName.FLOAT);
       case "DOUBLE":
         return relDataTypeFactory.createSqlType(SqlTypeName.DOUBLE);
+      case "DECIMAL":
+        return relDataTypeFactory.createSqlType(SqlTypeName.DECIMAL);
       case "LONG":
         return relDataTypeFactory.createSqlType(SqlTypeName.BIGINT);
       case "BOOLEAN":
@@ -269,7 +271,11 @@ public class JavaTypeFactoryImpl
       case "TIMESTAMP":
         return relDataTypeFactory.createSqlType(SqlTypeName.TIMESTAMP);
       default:
-        return relDataTypeFactory.createSqlType(SqlTypeName.VARCHAR);
+        if (javaType.toUpperCase().trim().toUpperCase().startsWith("DECIMAL")) {
+          return relDataTypeFactory.createSqlType(SqlTypeName.DECIMAL);
+        } else {
+          return relDataTypeFactory.createSqlType(SqlTypeName.VARCHAR);
+        }
     }
   }
 
