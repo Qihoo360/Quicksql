@@ -36,6 +36,7 @@ public enum MetadataMapping {
 
     public static final String ELASTICSEARCH = "es";
     public static final String MYSQL = "mysql";
+    public static final String KYLIN = "kylin";
     public static final String ORACLE = "oracle";
     public static final String HIVE = "hive";
 
@@ -58,6 +59,7 @@ public enum MetadataMapping {
             case ELASTICSEARCH:
                 return MetadataMapping.Elasticsearch;
             case MYSQL:
+            case KYLIN:
             case ORACLE:
                 return MetadataMapping.JDBC;
             case HIVE:
