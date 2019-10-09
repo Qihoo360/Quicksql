@@ -103,6 +103,9 @@ public abstract class MetadataCollector {
                     tbId = client.insertTableSchema(tableValue);
                     LOGGER.info("Insert table {} successfully!!", tableValue.getTblName());
                     List<ColumnValue> cols = convertColumnValue(tbId, table, dbValue.getName());
+                    if (cols.size() == 0) {
+                        throw new RuntimeException("No column found in table '" + table + "'.");
+                    }
                     client.insertFieldsSchema(cols);
                 } else {
                     TableValue shoot = originTable.stream()
