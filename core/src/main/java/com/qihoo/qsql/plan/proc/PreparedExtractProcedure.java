@@ -389,7 +389,7 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
         @Override
         public String toRecognizedQuery() {
             return sql(new AnsiSqlDialect(SqlDialect.EMPTY_CONTEXT
-                    .withDatabaseProduct(SqlDialect.DatabaseProduct.UNKNOWN).withIdentifierQuoteString("\\\"")));
+                    .withDatabaseProduct(SqlDialect.DatabaseProduct.UNKNOWN).withIdentifierQuoteString("\"")));
         }
 
         @Override
