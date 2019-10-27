@@ -77,6 +77,9 @@ INNER JOIN
 	ON emp.name = act.name) AS tmp 
 ON es_profile.prefer = tmp.prefer
 ```
+下图展示了Quicksql对于联邦查询的优化流程：
+
+![1540973404791](./picture/p2.png)
 
 ***3. 选择最合适的方式来执行查询***
 

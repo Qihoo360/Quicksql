@@ -46,7 +46,7 @@ tar -zxvf ./qsql-release-bin.tar.gz
 
 ### 元数据录入
 
-QSQL支持通过脚本录入MySQL，Elasticsearch，Hive和Oracle的元数据。
+QSQL支持通过脚本录入MySQL, Elasticsearch, Hive, Oracle和Kylin的元数据。
 
 #### 功能介绍
 
@@ -90,6 +90,14 @@ QSQL支持通过脚本录入MySQL，Elasticsearch，Hive和Oracle的元数据。
 	"jdbcUser": "user",
 	"jdbcPassword": "pass",
 	"dbName": "hive_db"
+}
+//Kylin示例
+{
+	"jdbcDriver": "org.apache.kylin.jdbc.Driver",
+	"jdbcUrl": "jdbc:kylin://localhost:7070/learn_kylin",
+	"jdbcUser": "ADMIN",
+	"jdbcPassword": "KYLIN",
+	"dbName": "default"
 }
 ```
 

@@ -46,15 +46,15 @@ public abstract class QueryGenerator {
      * @param isSpark Decide if running engine is Spark
      * @return suitable QueryGenerator
      */
-    public static QueryGenerator getQueryGenerator(ExtractProcedure procedure,
-        ClassBodyComposer composer,
-        boolean isSpark) {
+    public static QueryGenerator getQueryGenerator(ExtractProcedure procedure, ClassBodyComposer composer,
+            boolean isSpark) {
         if (procedure instanceof PreparedExtractProcedure.HiveExtractor) {
             return createHiveQueryGenerator(procedure, composer, isSpark);
         } else if (procedure instanceof PreparedExtractProcedure.ElasticsearchExtractor) {
             return createElasticsearchQueryGenerator(procedure, composer, isSpark);
         } else if (procedure instanceof PreparedExtractProcedure.MySqlExtractor
-            || procedure instanceof PreparedExtractProcedure.OracleExtractor) {
+                || procedure instanceof PreparedExtractProcedure.OracleExtractor
+                || procedure instanceof PreparedExtractProcedure.KylinExtractor) {
             return createJdbcQueryGenerator(procedure, composer, isSpark);
         } else if (procedure instanceof PreparedExtractProcedure.VirtualExtractor) {
             return createVirtualQueryGenerator(procedure, composer, isSpark);

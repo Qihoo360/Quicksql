@@ -44,7 +44,7 @@ Before querying the real data source, you need to put metadata information such 
 
 ### Metadata Extraction
 
-QSQL supports extracting metadata from MySQL, Elasticsearch, Hive and Oracle through scripts.
+QSQL supports extracting metadata from MySQL, Elasticsearch, Hive, Oracle and Kylin through scripts.
 
 #### Basic Usage
 
@@ -88,6 +88,14 @@ Accepted Parameters：
 	"jdbcUser": "user",
 	"jdbcPassword": "pass",
 	"dbName": "hive_db"
+}
+//Kylin Example
+{
+	"jdbcDriver": "org.apache.kylin.jdbc.Driver",
+	"jdbcUrl": "jdbc:kylin://localhost:7070/learn_kylin",
+	"jdbcUser": "ADMIN",
+	"jdbcPassword": "KYLIN",
+	"dbName": "default"
 }
 ```
 
