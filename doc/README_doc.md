@@ -80,6 +80,9 @@ INNER JOIN
 	ON emp.name = act.name) AS tmp 
 ON es_profile.prefer = tmp.prefer
 ```
+The following figure shows the optimization process for a mixed query:
+
+![1540973404791](./picture/p2.png)
 
 ***3. Choose the most appropriate way to execute the query***
 

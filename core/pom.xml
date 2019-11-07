@@ -217,8 +217,8 @@ limitations under the License.
         <!-- oracle -->
         <dependency>
             <groupId>com.oracle</groupId>
-            <artifactId>ojdbc7</artifactId>
-            <version>12.1.0.2</version>
+            <artifactId>ojdbc6</artifactId>
+            <version>11.2.0.3</version>
         </dependency>
         <!-- Process Executor need this jar for lording spark hive driver-->
         <dependency>
@@ -267,6 +267,11 @@ limitations under the License.
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpcore</artifactId>
             <version>${httpcore.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.kylin</groupId>
+            <artifactId>kylin-jdbc</artifactId>
+            <version>1.6.0</version>
         </dependency>
     </dependencies>
 

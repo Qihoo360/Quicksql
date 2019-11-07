@@ -41,6 +41,7 @@ import org.apache.calcite.rel.rel2sql.RelToSqlConverter;
 import org.apache.calcite.rel.type.RelDataType;
 import org.apache.calcite.sql.SqlDialect;
 import org.apache.calcite.sql.SqlNode;
+import org.apache.calcite.sql.dialect.AnsiSqlDialect;
 import org.apache.calcite.sql.dialect.CalciteSqlDialect;
 import org.apache.calcite.sql.dialect.HiveSqlDialect;
 import org.apache.calcite.sql.dialect.MysqlSqlDialect;
@@ -113,6 +114,9 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
                 case MetadataMapping.MYSQL:
                     return new MySqlExtractor(next, ((JdbcTable) relOptTable.getTable())
                         .getProperties(), config, relNode, tableName);
+                case MetadataMapping.KYLIN:
+                    return new KylinExtractor(next, ((JdbcTable) relOptTable.getTable())
+                            .getProperties(), config, relNode, tableName);
                 case MetadataMapping.ORACLE:
                     return new OracleExtractor(next, ((JdbcTable) relOptTable.getTable())
                         .getProperties(), config, relNode, tableName);
@@ -371,6 +375,26 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
         @Override
         public String getCategory() {
             return "MySQL";
+        }
+    }
+
+    public static class KylinExtractor extends PreparedExtractProcedure {
+
+        public KylinExtractor(QueryProcedure next, Properties properties,
+                              FrameworkConfig config, RelNode relNode,
+                              String tableName) {
+            super(next, properties, config, relNode, tableName);
+        }
+
+        @Override
+        public String toRecognizedQuery() {
+            return sql(new AnsiSqlDialect(SqlDialect.EMPTY_CONTEXT
+                    .withDatabaseProduct(SqlDialect.DatabaseProduct.UNKNOWN).withIdentifierQuoteString("\"")));
+        }
+
+        @Override
+        public String getCategory() {
+            return "Kylin";
         }
     }
 

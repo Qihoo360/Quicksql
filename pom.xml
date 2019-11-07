@@ -79,7 +79,7 @@
         <hydromatic-resource.version>0.6</hydromatic-resource.version>
         <hydromatic-toolbox.version>0.3</hydromatic-toolbox.version>
         <hydromatic-tpcds.version>0.4</hydromatic-tpcds.version>
-        <jackson.version>2.10.0.pr1</jackson.version>
+        <jackson.version>2.6.5</jackson.version>
         <janino.version>3.0.9</janino.version>
         <java-diff.version>1.1.2</java-diff.version>
         <javacc-maven-plugin.version>2.4</javacc-maven-plugin.version>
@@ -99,7 +99,6 @@
         <mysql-driver.version>5.1.20</mysql-driver.version>
         <natty.version>0.13</natty.version>
         <opencsv.version>2.3</opencsv.version>
-        <oracle-jdbc6-driver.version>11.2.0.2.0</oracle-jdbc6-driver.version>
         <owasp-dependency-check.version>3.3.1</owasp-dependency-check.version>
         <pig.version>0.16.0</pig.version>
         <aggdesigner.version>6.0</aggdesigner.version>
@@ -251,11 +250,6 @@
                 <groupId>com.joestelmach</groupId>
                 <artifactId>natty</artifactId>
                 <version>${natty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.oracle</groupId>
-                <artifactId>ojdbc6</artifactId>
-                <version>${oracle-jdbc6-driver.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.yahoo.datasketches</groupId>
@@ -869,6 +863,12 @@
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
+        </repository>
+
+        <repository>
+            <id>spring plugins</id>
+            <name>Spring Plugins Repository</name>
+            <url>https://repo.spring.io/plugins-release/</url>
         </repository>
     </repositories>
 

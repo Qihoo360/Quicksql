@@ -53,6 +53,9 @@ public abstract class MetadataCollector {
                 case "mysql":
                     return new MysqlCollector(
                         mapper.readValue(json, JdbcProp.class), regexp);
+                case "kylin":
+                    return new KylinCollector(
+                            mapper.readValue(json, HiveProp.class), regexp);
                 case "es":
                 case "elasticsearch":
                     return new ElasticsearchCollector(
