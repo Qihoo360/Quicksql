@@ -1,7 +1,6 @@
 package com.qihoo.qsql.metadata;
 
 
-import com.qihoo.qsql.metadata.entity.ColumnValue;
 import com.qihoo.qsql.metadata.entity.DatabaseParamValue;
 import com.qihoo.qsql.metadata.entity.DatabaseValue;
 import com.qihoo.qsql.metadata.entity.TableValue;

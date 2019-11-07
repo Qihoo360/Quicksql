@@ -39,6 +39,7 @@ public class SparkPipeline extends AbstractPipeline implements Compilable {
     }
 
     private SparkSession session() {
+        //TODO
         if (System.getenv("SPARK_HOME") != null) {
             SparkSession sc;
             if (builder.getEnableHive()) {

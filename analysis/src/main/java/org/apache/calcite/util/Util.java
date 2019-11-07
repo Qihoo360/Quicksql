@@ -141,7 +141,9 @@ public class Util {
       Pattern.compile("[a-zA-Z_$][a-zA-Z0-9$]*");
 
   private static final Charset DEFAULT_CHARSET =
-      Charset.forName(SaffronProperties.INSTANCE.defaultCharset().get());
+      // Charset.forName(SaffronProperties.INSTANCE.defaultCharset().get());
+      // Charsets.UTF_16;
+      Charset.forName("UTF-8");
 
   /**
    * Maps classes to the map of their enum values. Uses a weak map so that

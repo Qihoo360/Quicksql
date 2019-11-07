@@ -839,6 +839,7 @@ public abstract class SqlUtil {
    * @param name SQL-level name
    * @return Java-level name, or null if SQL-level name is unknown
    */
+  //Updated by qsql-team
   public static String translateCharacterSetName(String name) {
     if (name.equals("LATIN1")) {
       return "ISO-8859-1";
@@ -847,8 +848,12 @@ public abstract class SqlUtil {
     } else if (name.equals(ConversionUtil.NATIVE_UTF16_CHARSET_NAME)) {
       // no translation needed
       return name;
-    } else if (name.equals("ISO-8859-1")) {
+    } else if (name.equals("UTF-8")||name.equals("UTF8")) {
+      return name;
+    }else if (name.equals("ISO-8859-1")) {
       // no translation needed
+      return name;
+    }else if("GBK".equals(name)){
       return name;
     }
     return null;

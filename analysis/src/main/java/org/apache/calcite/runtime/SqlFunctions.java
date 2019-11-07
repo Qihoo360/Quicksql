@@ -16,7 +16,17 @@
  */
 package org.apache.calcite.runtime;
 
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Objects;
 import java.util.regex.Matcher;
+import java.util.stream.Collectors;
 import org.apache.calcite.DataContext;
 import org.apache.calcite.avatica.util.ByteString;
 import org.apache.calcite.avatica.util.DateTimeUtils;
@@ -133,6 +143,116 @@ public class SqlFunctions {
   public static Object ifOperation(Boolean condition, Object args0, Object args1) {
     return condition ? args0 : args1;
   }
+
+  public static String substr(String c, int s, int l) {
+    return substring(c, s, l);
+  }
+
+  public static String urldecode(String str) {
+    String result = "";
+    if (null == str) {
+      return "";
+    }
+    try {
+      result = URLDecoder.decode(str, "GBK");
+    } catch (UnsupportedEncodingException e) {
+      e.printStackTrace();
+    }
+    return result;
+  }
+
+  public static String urlencode(String str) {
+    String result = "";
+    if (null == str) {
+      return "";
+    }
+    try {
+      result = URLEncoder.encode(str, "GBK");
+    } catch (UnsupportedEncodingException e) {
+      e.printStackTrace();
+    }
+    return result;
+  }
+
+  public static Object[] split(String str, String regex) {
+    if (Objects.isNull(str)) {
+      return new Object[0];
+    }
+    if (".".equals(regex)) {
+      regex = "\\.";
+    }
+    return str.split(regex);
+  }
+
+  public static int datediff(String endDate, String startDate) {
+    if (Objects.isNull(endDate) || Objects.isNull(startDate)) {
+      return -1;
+    }
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    try {
+      Date endTime = simpleDateFormat.parse(endDate);
+      Date startTime = simpleDateFormat.parse(startDate);
+      return (int) ((endTime.getTime() - startTime.getTime()) / (1000 * 60 * 60 * 24));
+    } catch (ParseException e) {
+      e.printStackTrace();
+    }
+    return -1;
+  }
+
+  public static String dateadd(String startTime, Integer days){
+    if(Objects.isNull(startTime)||Objects.isNull(days)) return "";
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    Date dt = null;
+    try {
+      dt = sdf.parse(startTime);
+    } catch (ParseException e) {
+      e.printStackTrace();
+    }
+    Calendar rightNow = Calendar.getInstance();
+    rightNow.setTime(dt);
+    rightNow.add(Calendar.DAY_OF_YEAR, days);
+    Date resultDate = rightNow.getTime();
+    return sdf.format(resultDate);
+  }
+
+  public static String datesub(String startTime,Integer days){
+    return  dateadd(startTime,days);
+  }
+
+  public static Object reflect(String...s1) {
+      if (s1.length < 2) {
+          throw new IllegalArgumentException("reflect error: incomplete parameters");
+      }
+      try {
+          Class<?> clazz = Class.forName(s1[0]);
+          List<Method> invoked = Arrays.stream(clazz.getMethods())
+              .filter(method -> method.getParameterCount() == s1.length - 2)
+              .collect(Collectors.toList());
+          if (invoked.size() != 1) {
+              throw new IllegalArgumentException("reflect error: Unsupported reflection");
+          }
+          List<String> params = new ArrayList<>(Arrays.asList(s1).subList(2, s1.length));
+          return invoked.get(0).invoke(clazz.newInstance(), params.toArray());
+      } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+          throw new IllegalArgumentException(String.format("reflect error: class %s not found", s1[0]));
+      }
+  }
+
+  /**
+   * SQL {@code concat(String... s)} operator.
+   */
+  public static String concat(String...s1) {
+    if (s1.length == 0) {
+      return "";
+    }
+    StringBuilder stringBuilder = new StringBuilder();
+    for (Object aS1 : s1) {
+      stringBuilder.append(aS1);
+    }
+    return stringBuilder.toString();
+  }
+
+
   //qsql-end
 
   /** SQL SUBSTRING(string FROM ... FOR ...) function. */
@@ -234,7 +354,7 @@ public class SqlFunctions {
   }
 
   /** SQL {@code string || string} operator. */
-  public static String concat(String s0, String s1) {
+  public static String str_concat(String s0, String s1) {
     return s0 + s1;
   }
 

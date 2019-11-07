@@ -7,13 +7,17 @@ import java.io.IOException;
 
 public class CsvJoinWithEsExample {
 
+    /**
+     * If you want to execute in the IDE, adjust the scope of the spark package in the parent pom to compile.
+     * @param args nothing
+     */
     public static void main(String[] args) throws IOException {
         RuntimeEnv.init();
         String sql = "SELECT * FROM depts "
             + "INNER JOIN (SELECT * FROM student " +
             "WHERE city in ('FRAMINGHAM', 'BROCKTON', 'CONCORD')) FILTERED " +
             "ON depts.name = FILTERED.type ";
-        System.out.println("Input: " + sql);
+        System.out.println("Iput: " + sql);
         SqlRunner.Builder.RunnerType runnerType = RunnerType.SPARK;
         SqlRunner runner = SqlRunner.builder()
             .setTransformRunner(runnerType)

@@ -15,12 +15,11 @@ public class PropertiesReader {
      * @param fileName fileName in conf
      * @return Properties
      */
-    public static Properties readProperties(String fileName) {
+    public static Properties readProperties(String fileName, Class clazz) {
         Properties properties = new Properties();
-        File confParentDir = new File(getConfFilePath());
+        // File confParentDir = new File(getConfFilePath());
 
-        try (InputStream input = new FileInputStream(
-            new File(confParentDir.getAbsolutePath() + "/" + fileName))) {
+        try (InputStream input = new FileInputStream(getConfFilePath(fileName, clazz))) {
             properties.load(input);
         } catch (IOException ioe) {
             throw new RuntimeException(ioe);
@@ -33,24 +32,11 @@ public class PropertiesReader {
      *
      * @return conf file path
      */
-    public static String getConfFilePath() {
+    public static File getConfFilePath(String fileName, Class clazz) {
         if (isDevelopEnv()) {
-            return System.getProperty("user.dir") + "/../conf";
+            return new File(clazz.getResource("/" + fileName).getFile());
         } else {
-            return System.getenv("QSQL_HOME") + "/conf";
-        }
-    }
-
-    /**
-     * Create metadata file path.
-     *
-     * @return metadata file path
-     */
-    public static String getMetadataFilePath() {
-        if (isDevelopEnv()) {
-            return System.getProperty("user.dir") + "/../metastore/scripts";
-        } else {
-            return System.getenv("QSQL_HOME") + "/metastore/scripts";
+            return new File(System.getenv("QSQL_HOME") + "/conf/" + fileName);
         }
     }
 
