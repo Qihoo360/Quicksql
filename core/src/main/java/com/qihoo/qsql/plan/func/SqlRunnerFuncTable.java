@@ -77,6 +77,9 @@ public class SqlRunnerFuncTable {
             SqlStdOperatorTable.DAYOFYEAR,
             SqlStdOperatorTable.CURRENT_DATE,
             SqlStdOperatorTable.CURRENT_TIMESTAMP,
+            SqlStdOperatorTable.DATE_ADD,
+            SqlStdOperatorTable.DATE_SUB,
+            SqlStdOperatorTable.DATEDIFF,
             // SqlStdOperatorTable.DATETIME_PLUS -> date_add(start: Column, days: Int)
             // SqlStdOperatorTable.TIMESTAMP_DIFF -> datediff(end: Column, start: column)
 
@@ -93,6 +96,8 @@ public class SqlRunnerFuncTable {
             //string functions
             // SqlStdOperatorTable.BASE64 -> need to add
             // SqlStdOperatorTable.UNBASE64 -> need to add
+            SqlStdOperatorTable.STRING_CONCAT,
+            SqlStdOperatorTable.SPLIT,
 
             SqlStdOperatorTable.LTRIM,
             SqlStdOperatorTable.RTRIM,
@@ -101,6 +106,7 @@ public class SqlRunnerFuncTable {
             SqlStdOperatorTable.REGEXP_EXTRACT,
             SqlStdOperatorTable.REGEXP_REPLACE,
             SqlStdOperatorTable.IF,
+            SqlStdOperatorTable.SUBSTR,
             // SqlStdOperatorTable.IFNULL -> need to add
             // SqlStdOperatorTable.SPLIT -> need to add
             SqlStdOperatorTable.LOWER,
@@ -112,9 +118,14 @@ public class SqlRunnerFuncTable {
             
             //other functions
             SqlStdOperatorTable.RAND,
-            SqlStdOperatorTable.CAST
+            SqlStdOperatorTable.CAST,
+            SqlStdOperatorTable.REFLECT,
 
             //window functions
+
+            //code functions
+            SqlStdOperatorTable.URLDECODE,
+            SqlStdOperatorTable.URLENCODE
         };
 
         // *** SqlStdOperatorTable.COUNT_DISTINCT -> count(distinct)

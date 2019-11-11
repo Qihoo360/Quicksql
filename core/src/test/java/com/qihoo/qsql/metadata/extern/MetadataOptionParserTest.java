@@ -47,27 +47,4 @@ public class MetadataOptionParserTest {
             Assert.assertTrue(true);
         }
     }
-
-    @Test
-    public void testEmptyAction() {
-
-        List<String> args = Arrays.asList("--dbType=mysql", "--action=");
-        try {
-            metadataOptionParser.parse(args);
-        } catch (ParseException ex) {
-            Assert.assertTrue(true);
-        }
-    }
-
-    @Test
-    public void testEmptyDbType() {
-
-        List<String> args = Arrays.asList("--dbType=", "--action=init");
-        try {
-            metadataOptionParser.parse(args);
-        } catch (ParseException ex) {
-            Assert.assertTrue(true);
-        }
-    }
-
 }

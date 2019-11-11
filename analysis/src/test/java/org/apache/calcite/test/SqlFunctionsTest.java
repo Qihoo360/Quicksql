@@ -39,6 +39,7 @@ import static org.apache.calcite.runtime.SqlFunctions.lesser;
 import static org.apache.calcite.runtime.SqlFunctions.lower;
 import static org.apache.calcite.runtime.SqlFunctions.ltrim;
 import static org.apache.calcite.runtime.SqlFunctions.rtrim;
+import static org.apache.calcite.runtime.SqlFunctions.str_concat;
 import static org.apache.calcite.runtime.SqlFunctions.subtractMonths;
 import static org.apache.calcite.runtime.SqlFunctions.trim;
 import static org.apache.calcite.runtime.SqlFunctions.upper;
@@ -62,7 +63,7 @@ public class SqlFunctionsTest {
   }
 
   @Test public void testConcat() {
-    assertEquals("a bcd", concat("a b", "cd"));
+    assertEquals("a bcd", str_concat("a b", "cd"));
     // The code generator will ensure that nulls are never passed in. If we
     // pass in null, it is treated like the string "null", as the following
     // tests show. Not the desired behavior for SQL.

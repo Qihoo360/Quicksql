@@ -1290,6 +1290,83 @@ public class SqlStdOperatorTable extends ReflectiveSqlOperatorTable {
           OperandTypes.CHARACTER,
           SqlFunctionCategory.NUMERIC);
 
+
+  public static final SqlFunction URLDECODE =
+      new SqlFunction(
+          "URLDECODE",
+          SqlKind.OTHER_FUNCTION,
+          ReturnTypes.ARG0_NULLABLE_VARYING,
+          null,
+          OperandTypes.CHARACTER,
+          SqlFunctionCategory.STRING);
+
+  public static final SqlFunction URLENCODE =
+      new SqlFunction(
+          "URLENCODE",
+          SqlKind.OTHER_FUNCTION,
+          ReturnTypes.ARG0_NULLABLE_VARYING,
+          null,
+          OperandTypes.CHARACTER,
+          SqlFunctionCategory.STRING);
+
+  public static final SqlFunction STRING_CONCAT =
+      new SqlFunction(
+          "CONCAT",
+          SqlKind.OTHER_FUNCTION,
+          ReturnTypes.VARCHAR_2000,
+          null,
+          OperandTypes.VARIADIC,
+          SqlFunctionCategory.STRING
+      );
+
+  public static final SqlFunction SPLIT =
+      new SqlFunction(
+          "SPLIT",
+          SqlKind.OTHER_FUNCTION,
+          ReturnTypes.VARCHAR_2000,
+          null,
+          OperandTypes.VARIADIC,
+          SqlFunctionCategory.STRING
+      );
+
+  public static final SqlFunction DATEDIFF = new SqlFunction(
+      "DATEDIFF",
+      SqlKind.OTHER_FUNCTION,
+      ReturnTypes.VARCHAR_2000,
+      null,
+      OperandTypes.STRING_STRING,
+      SqlFunctionCategory.STRING
+  );
+
+  public static final SqlFunction REFLECT = new SqlFunction(
+      "REFLECT",
+      SqlKind.OTHER_FUNCTION,
+      ReturnTypes.VARCHAR_2000,
+      null,
+      OperandTypes.VARIADIC,
+      SqlFunctionCategory.STRING
+  );
+
+  public static final SqlFunction DATE_ADD = new SqlFunction(
+      "DATE_ADD",
+      SqlKind.OTHER_FUNCTION,
+      ReturnTypes.VARCHAR_2000,
+      null,
+      OperandTypes.STRING_SAME_SAME_INTEGER,
+      SqlFunctionCategory.STRING
+  );
+
+  public static final SqlFunction DATE_SUB = new SqlFunction(
+      "DATE_SUB",
+      SqlKind.OTHER_FUNCTION,
+      ReturnTypes.VARCHAR_2000,
+      null,
+      OperandTypes.STRING_SAME_SAME_INTEGER,
+      SqlFunctionCategory.STRING
+  );
+
+  public static final SqlFunction SUBSTR = new SqlSubstrFunction();
+
   public static final SqlFunction REGEXP_EXTRACT = new SqlRegexpExtractFunction();
 
   public static final SqlFunction REGEXP_REPLACE = new SqlRegexpReplaceFunction();

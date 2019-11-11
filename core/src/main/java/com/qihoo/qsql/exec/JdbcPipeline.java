@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.qihoo.qsql.exception.QsqlException;
 import com.qihoo.qsql.metadata.MetadataPostman;
 import com.qihoo.qsql.metadata.SchemaAssembler;
 import com.qihoo.qsql.plan.proc.DiskLoadProcedure;
@@ -113,7 +114,14 @@ public class JdbcPipeline extends AbstractPipeline {
      */
     public static Connection createSpecificConnection(List<SchemaAssembler> assemblers) {
         if (assemblers.size() < 1) {
-            throw new RuntimeException("There is no valid table name in sql!!");
+            try {
+                return createCsvConnection();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                throw new QsqlException("Error when create Connection with non-table", ex);
+            }
+            // 将无表情况整合进入
+            // throw new RuntimeException("There is no valid table name in sql!!");
         }
         SchemaAssembler result = assemblers.get(0);
 
@@ -167,6 +175,9 @@ public class JdbcPipeline extends AbstractPipeline {
             throw new RuntimeException("The `jdbcUrl` property needed to be set.");
         }
         String url = conn.get("jdbcUrl");
+        if (conn.containsValue("com.mysql.jdbc.Driver")) {
+            url = conn.get("jdbcUrl") + "?zeroDateTimeBehavior=convertToNull";
+        }
         String user = conn.getOrDefault("jdbcUser", "");
         String password = conn.getOrDefault("jdbcPassword", "");
         Connection connection = DriverManager.getConnection(url, user, password);

@@ -1,8 +1,7 @@
 package com.qihoo.qsql.metadata.extern;
 
 import com.qihoo.qsql.exception.ParseException;
-import com.qihoo.qsql.exception.QsqlException;
-import com.qihoo.qsql.metadata.utils.MetaConnectionUtil;
+import com.qihoo.qsql.metadata.utils.MetadataUtil;
 import com.qihoo.qsql.utils.PropertiesReader;
 import java.util.Properties;
 import org.junit.Assert;
@@ -12,7 +11,8 @@ import org.junit.Test;
 public class MetadataToolTest {
 
     MetadataTool metadataTool;
-    Properties metadataProperties = PropertiesReader.readProperties("metadata.properties");
+    Properties metadataProperties = PropertiesReader.readProperties(
+        "metadata.properties", MetadataUtil.class);
 
     /**
      * init metadataTool.
@@ -24,7 +24,7 @@ public class MetadataToolTest {
 
     @Test
     public void testMetadataTool() {
-        if (! MetaConnectionUtil.isEmbeddedDatabase(metadataProperties)) {
+        if (! MetadataUtil.isEmbeddedDatabase(metadataProperties)) {
             Properties properties = new Properties();
             properties.put("--action", "delete");
             properties.put("--dbType", "mysql");
@@ -38,7 +38,7 @@ public class MetadataToolTest {
 
     @Test
     public void testMetadataToolWithoutDbType() {
-        if (! MetaConnectionUtil.isEmbeddedDatabase(metadataProperties)) {
+        if (! MetadataUtil.isEmbeddedDatabase(metadataProperties)) {
             Properties properties = new Properties();
             properties.put("--action", "init");
             try {
@@ -49,27 +49,4 @@ public class MetadataToolTest {
         }
     }
 
-    @Test
-    public void testMetadataToolWithErrorAction() {
-        Properties properties = new Properties();
-        properties.put("--action", "update");
-        properties.put("--dbType", "mysql");
-        try {
-            metadataTool.run(properties);
-        } catch (QsqlException ex) {
-            Assert.assertTrue(true);
-        }
-    }
-
-    @Test
-    public void testMetadataToolWithErrorDbType() {
-        Properties properties = new Properties();
-        properties.put("--action", "init");
-        properties.put("--dbType", "oracle");
-        try {
-            metadataTool.run(properties);
-        } catch (QsqlException ex) {
-            Assert.assertTrue(true);
-        }
-    }
 }

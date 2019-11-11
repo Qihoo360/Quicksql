@@ -16,6 +16,9 @@
  */
 package org.apache.calcite.rex;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.apache.calcite.sql.SqlBasicCall;
 import org.apache.calcite.sql.SqlCall;
 import org.apache.calcite.sql.SqlDataTypeSpec;
@@ -27,10 +30,6 @@ import org.apache.calcite.sql.fun.SqlCaseOperator;
 import org.apache.calcite.sql.fun.SqlStdOperatorTable;
 import org.apache.calcite.sql.parser.SqlParserPos;
 import org.apache.calcite.sql.type.SqlTypeUtil;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Standard implementation of {@link RexSqlConvertletTable}.
@@ -104,6 +103,15 @@ public class RexSqlStandardConvertletTable
     registerEquivOp(SqlStdOperatorTable.IF);
     registerEquivOp(SqlStdOperatorTable.LTRIM);
     registerEquivOp(SqlStdOperatorTable.RTRIM);
+    registerEquivOp(SqlStdOperatorTable.SUBSTR);
+    registerEquivOp(SqlStdOperatorTable.URLDECODE);
+    registerEquivOp(SqlStdOperatorTable.URLENCODE);
+    registerEquivOp(SqlStdOperatorTable.STRING_CONCAT);
+    registerEquivOp(SqlStdOperatorTable.SPLIT);
+    registerEquivOp(SqlStdOperatorTable.DATEDIFF);
+    registerEquivOp(SqlStdOperatorTable.DATE_ADD);
+    registerEquivOp(SqlStdOperatorTable.DATE_SUB);
+    registerEquivOp(SqlStdOperatorTable.REFLECT);
     //qsql end
 
     registerEquivOp(SqlStdOperatorTable.SUBSTRING);

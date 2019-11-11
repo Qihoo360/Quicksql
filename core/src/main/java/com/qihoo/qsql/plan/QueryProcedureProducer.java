@@ -27,6 +27,7 @@ import org.apache.calcite.plan.hep.HepProgram;
 import org.apache.calcite.plan.hep.HepProgramBuilder;
 import org.apache.calcite.prepare.RelOptTableImpl;
 import org.apache.calcite.rel.RelNode;
+import org.apache.calcite.rel.rules.FilterJoinRule.JoinConditionPushRule;
 import org.apache.calcite.rel.rules.SubQueryRemoveRule;
 import org.apache.calcite.schema.SchemaPlus;
 import org.apache.calcite.sql.SqlIdentifier;
@@ -183,6 +184,8 @@ public class QueryProcedureProducer {
             .addRuleInstance(SubQueryRemoveRule.PROJECT)
             .addRuleInstance(SubQueryRemoveRule.FILTER)
             .addRuleInstance(SubQueryRemoveRule.JOIN)
+            .addRuleInstance(JoinConditionPushRule.FILTER_ON_JOIN)
+            .addRuleInstance(JoinConditionPushRule.JOIN)
             .build();
 
         HepPlanner prePlanner = new HepPlanner(program);

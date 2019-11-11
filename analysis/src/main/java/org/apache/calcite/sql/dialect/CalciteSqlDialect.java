@@ -17,6 +17,8 @@
 package org.apache.calcite.sql.dialect;
 
 import org.apache.calcite.sql.SqlDialect;
+import org.apache.calcite.sql.SqlNode;
+import org.apache.calcite.sql.SqlWriter;
 
 /**
  * A <code>SqlDialect</code> implementation that produces SQL that can be parsed
@@ -38,6 +40,12 @@ public class CalciteSqlDialect extends SqlDialect {
   public CalciteSqlDialect(Context context) {
     super(context);
   }
+
+  @Override public void unparseOffsetFetch(SqlWriter writer, SqlNode offset,
+      SqlNode fetch) {
+    unparseFetchUsingLimit(writer, offset, fetch);
+  }
+
 }
 
 // End CalciteSqlDialect.java

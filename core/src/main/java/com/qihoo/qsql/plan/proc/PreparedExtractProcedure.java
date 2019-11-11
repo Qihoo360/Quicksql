@@ -110,7 +110,7 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
             //TODO add more jdbc type
             String dbType = ((JdbcTable) relOptTable.getTable())
                 .getProperties().getProperty("dbType", "unknown");
-            switch (dbType) {
+            switch (dbType.toLowerCase()) {
                 case MetadataMapping.MYSQL:
                     return new MySqlExtractor(next, ((JdbcTable) relOptTable.getTable())
                         .getProperties(), config, relNode, tableName);
@@ -121,7 +121,7 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
                     return new OracleExtractor(next, ((JdbcTable) relOptTable.getTable())
                         .getProperties(), config, relNode, tableName);
                 default:
-                    throw new RuntimeException("");
+                    throw new RuntimeException("Unsupported database type");
             }
 
         } else if (relOptTable.getTable() instanceof VirtualTable) {
@@ -242,7 +242,7 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
             RelNode esPhysicalPlan = toPhysicalPlan(esLogicalPlan, rules);
             String esJson = toElasticsearchQuery((EnumerableRel) esPhysicalPlan);
             //TODO debug toLowerCase
-            properties.put("esQuery", esJson.replaceAll(" ", ""));
+            properties.put("esQuery", esJson);
             return esJson;
         }
 

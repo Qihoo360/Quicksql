@@ -280,6 +280,7 @@ public class RelToSqlConverter extends SqlImplementor
     return builder.result();
   }
 
+  //Updated by qsql-team
   /** @see #dispatch */
   public Result visit(Values e) {
     final List<Clause> clauses = ImmutableList.of(Clause.SELECT);

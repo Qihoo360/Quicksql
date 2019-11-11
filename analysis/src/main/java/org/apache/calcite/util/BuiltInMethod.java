@@ -108,6 +108,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.TimeZone;
 import javax.sql.DataSource;
+import org.apache.calcite.sql.SqlFunction;
 
 /**
  * Built-in methods.
@@ -117,10 +118,17 @@ public enum BuiltInMethod {
   //qsql start
   LENGTH(SqlFunctions.class, "length", String.class),
   REVERSE(SqlFunctions.class, "reverse", String.class),
+  SUBSTR(SqlFunctions.class, "substr", String.class,int.class,int.class),
   REGEXP_EXTRACT(SqlFunctions.class, "regexpExtract", String.class, String.class, int.class),
   REGEXP_REPLACE(SqlFunctions.class, "regexpReplace", String.class, String.class, String.class),
   IF(SqlFunctions.class, "ifOperation", Boolean.class, Object.class, Object.class),
-
+  URLDECODE(SqlFunctions.class,"urldecode",String.class),
+  URLENCODE(SqlFunctions.class,"urlencode",String.class),
+  SPLIT(SqlFunctions.class,"split",String.class,String.class),
+  DATEDIFF(SqlFunctions.class,"datediff",String.class,String.class),
+  DATE_ADD(SqlFunctions.class,"dateadd",String.class,Integer.class),
+  DATE_SUB(SqlFunctions.class,"datesub",String.class,Integer.class),
+  REFLECT(SqlFunctions.class,"reflect",Enumerable.class),
   //qsql end
 
   QUERYABLE_SELECT(Queryable.class, "select", FunctionExpression.class),
@@ -264,7 +272,7 @@ public enum BuiltInMethod {
   SUBSTRING(SqlFunctions.class, "substring", String.class, int.class,
       int.class),
   CHAR_LENGTH(SqlFunctions.class, "charLength", String.class),
-  STRING_CONCAT(SqlFunctions.class, "concat", String.class, String.class),
+  STRING_CONCAT(SqlFunctions.class, "concat", Collection.class),
   FLOOR_DIV(DateTimeUtils.class, "floorDiv", long.class, long.class),
   FLOOR_MOD(DateTimeUtils.class, "floorMod", long.class, long.class),
   ADD_MONTHS(SqlFunctions.class, "addMonths", long.class, int.class),

@@ -168,7 +168,7 @@ public class SqlBetweenOperator extends SqlInfixOperator {
         writer.startList(FRAME_TYPE, "", "");
     call.operand(VALUE_OPERAND).unparse(writer, getLeftPrec(), 0);
     writer.sep(super.getName());
-    writer.sep(flag.name());
+    // writer.sep(flag.name());
 
     // If the expression for the lower bound contains a call to an AND
     // operator, we need to wrap the expression in parentheses to prevent

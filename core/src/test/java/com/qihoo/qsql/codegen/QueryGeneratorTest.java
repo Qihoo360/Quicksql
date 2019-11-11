@@ -25,18 +25,6 @@ public class QueryGeneratorTest {
     }
 
     @Test
-    public void testSameDataSourceQueryGenerator() {
-        String sql = "SELECT * FROM department AS DEP "
-            + "INNER JOIN (SELECT * FROM student "
-            + "WHERE city in ('FRAMINGHAM', 'BROCKTON', 'CONCORD')) FILTERED "
-            + "ON DEP.type = FILTERED.city";
-        assertGenerateClass(sql,
-            "createOrReplaceTempView(\"student_profile_student_1\")",
-            "createOrReplaceTempView(\"edu_manage_department_0\")",
-            "JavaEsSparkSQL.esDF(spark, config)");
-    }
-
-    @Test
     public void testVirtualGenerator() {
         AbstractPipeline pipeline = SqlRunner.builder().setTransformRunner(RunnerType.SPARK).ok().sql("select 1");
         System.out.println(((SparkPipeline) pipeline).source());

@@ -48,6 +48,11 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>com.qihoo.qsql</groupId>
+            <artifactId>qsql-meta</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.qihoo.qsql</groupId>
             <artifactId>qsql-calcite-analysis</artifactId>
             <version>${project.parent.version}</version>
             <type>test-jar</type>
@@ -92,34 +97,19 @@ limitations under the License.
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-core_${scala.version}</artifactId>
-            <version>${spark.version}</version>
-            <scope>provided</scope>
-            <exclusions>
-                <exclusion>
-                    <artifactId>io.netty</artifactId>
-                    <groupId>*</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-sql_${scala.version}</artifactId>
-            <version>${spark.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-streaming_${scala.version}</artifactId>
-            <version>${spark.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-hive_${scala.version}</artifactId>
-            <version>${spark.version}</version>
-            <scope>provided</scope>
         </dependency>
-
         <!-- flink -->
         <dependency>
             <groupId>org.apache.flink</groupId>

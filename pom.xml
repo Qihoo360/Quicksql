@@ -17,6 +17,7 @@
         <module>elasticsearch</module>
         <module>example</module>
         <module>assembly</module>
+        <module>meta</module>
     </modules>
 
     <properties>
@@ -414,22 +415,6 @@
                 <version>${java-diff.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.spark</groupId>
-                <artifactId>spark-core_2.10</artifactId>
-                <version>${spark.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <artifactId>io.netty</artifactId>
-                        <groupId>netty-all</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>io.netty</artifactId>
-                        <groupId>netty</groupId>
-                    </exclusion>
-                </exclusions>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-server</artifactId>
                 <version>${jetty.version}</version>
@@ -527,9 +512,49 @@
                 <artifactId>commons-exec</artifactId>
                 <version>1.3</version>
             </dependency>
+            <!-- spark -->
+            <dependency>
+                <groupId>org.apache.spark</groupId>
+                <artifactId>spark-core_${scala.version}</artifactId>
+                <version>${spark.version}</version>
+                <scope>provided</scope>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>io.netty</artifactId>
+                        <groupId>*</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.spark</groupId>
+                <artifactId>spark-sql_${scala.version}</artifactId>
+                <version>${spark.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.spark</groupId>
+                <artifactId>spark-streaming_${scala.version}</artifactId>
+                <version>${spark.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.spark</groupId>
+                <artifactId>spark-hive_${scala.version}</artifactId>
+                <version>${spark.version}</version>
+                <scope>provided</scope>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>calcite-avatica</artifactId>
+                        <groupId>org.apache.calcite</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>calcite-core</artifactId>
+                        <groupId>org.apache.calcite</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
         </dependencies>
     </dependencyManagement>
-
 
     <build>
         <plugins>
