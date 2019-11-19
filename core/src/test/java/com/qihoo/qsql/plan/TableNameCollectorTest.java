@@ -4,6 +4,7 @@ import com.qihoo.qsql.exception.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import org.apache.calcite.sql.parser.SqlParseException;
 import org.junit.Assert;
@@ -17,7 +18,11 @@ public class TableNameCollectorTest {
     private static List<String> parseTableName(String sql) {
         TableNameCollector collector = new TableNameCollector();
         try {
-            return new ArrayList<>(collector.parseTableName(sql).tableNames);
+            List<String> list = new ArrayList<>();
+            list.addAll(new LinkedHashSet<String>(new ArrayList<>(collector
+                .parseTableName(sql)
+                .tableNames)));
+            return list;
         } catch (SqlParseException ex) {
             throw new RuntimeException(ex.getMessage());
         }
@@ -184,4 +189,18 @@ public class TableNameCollectorTest {
             Assert.assertTrue(false);
         }
     }
+
+    @Test
+    public void testIncludeWithWordTableName() {
+        String sql = "with A as (select * from B) select * from A";
+        Assert.assertEquals(Collections.singletonList("B"), parseTableName(sql));
+    }
+
+    @Test
+    public void testManyWithWordTableName() {
+        String sql = "with A as (select * from B),C as (select * from B) select A.*,C.* from A,C";
+        Assert.assertEquals(Collections.singletonList("B"), parseTableName(sql));
+    }
+
+
 }

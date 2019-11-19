@@ -18,6 +18,8 @@ import org.apache.calcite.sql.SqlNode;
 import org.apache.calcite.sql.SqlNodeList;
 import org.apache.calcite.sql.SqlOrderBy;
 import org.apache.calcite.sql.SqlSelect;
+import org.apache.calcite.sql.SqlWith;
+import org.apache.calcite.sql.SqlWithItem;
 import org.apache.calcite.sql.ext.SqlInsertOutput;
 import org.apache.calcite.sql.parser.SqlParseException;
 import org.apache.calcite.sql.parser.SqlParser;
@@ -77,11 +79,15 @@ public class TableNameCollector implements SqlVisitor<QueryTables> {
                 List<SqlNode> operands =
                     ((SqlBasicCall) ((SqlSelect) sqlCall).getWhere()).getOperandList();
                 for (SqlNode operand : operands) {
-                    if (! (operand instanceof SqlIdentifier)) {
+                    if (!(operand instanceof SqlIdentifier)) {
                         operand.accept(this);
                     }
                 }
             }
+        }
+
+        if (sqlCall instanceof SqlWith) {
+            ((SqlWith) sqlCall).withList.accept(this);
         }
 
         if (sqlCall instanceof SqlJoin) {
@@ -105,6 +111,8 @@ public class TableNameCollector implements SqlVisitor<QueryTables> {
         sqlNodeList.iterator().forEachRemaining((entry) -> {
             if (entry instanceof SqlSelect) {
                 entry.accept(this);
+            } else if (entry instanceof SqlWithItem) {
+                ((SqlWithItem) entry).query.accept(this);
             } else if (entry instanceof SqlBasicCall) {
                 String kind = ((SqlBasicCall) entry).getOperator().getName();
                 if ("AS".equalsIgnoreCase(kind)
@@ -146,7 +154,7 @@ public class TableNameCollector implements SqlVisitor<QueryTables> {
             if ((sqlCall).operands[0] instanceof SqlIdentifier
                 && (sqlCall).operands[1] instanceof SqlIdentifier) {
                 (sqlCall).operands[0].accept(this);
-            } else if (! ((sqlCall).operands[0] instanceof SqlIdentifier)) {
+            } else if (!((sqlCall).operands[0] instanceof SqlIdentifier)) {
                 (sqlCall).operands[0].accept(this);
             }
         } else {
@@ -166,7 +174,7 @@ public class TableNameCollector implements SqlVisitor<QueryTables> {
 
     private QueryTables validateTableName(QueryTables tableNames) {
         for (String tableName : tableNames.tableNames) {
-            if (tableName.split("\\.", - 1).length > 2) {
+            if (tableName.split("\\.", -1).length > 2) {
                 throw new ParseException("Qsql only support structure like dbName.tableName,"
                     + " and there is a unsupported tableName here: " + tableName);
             }
