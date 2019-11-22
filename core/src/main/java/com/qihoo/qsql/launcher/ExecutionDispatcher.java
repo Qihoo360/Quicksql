@@ -26,7 +26,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
@@ -38,6 +40,7 @@ import org.slf4j.LoggerFactory;
 public class ExecutionDispatcher {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExecutionDispatcher.class);
+    private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd mm:ss:SSS");
 
     static {
         PropertiesReader.configLogger();
@@ -52,6 +55,8 @@ public class ExecutionDispatcher {
      */
     public static void main(String[] args) throws
         SQLException, ParseException {
+        Date start = new Date();
+        LOGGER.info("job.execute.start:" + SDF.format(start));
         if (args.length == 0) {
             throw new RuntimeException("I have nothing to execute,"
                 + " Please input your SQL behind execution command as first argument!!");
@@ -89,21 +94,36 @@ public class ExecutionDispatcher {
         QueryProcedure procedure = new QueryProcedureProducer(schema, builder).createQueryProcedure(sql);
 
         AbstractPipeline pipeline = ((DynamicSqlRunner) builder.ok()).chooseAdaptPipeline(procedure);
+        Date sqlPased = new Date();
+        LOGGER.info("SQL.parsed:" + SDF.format(sqlPased));
         if (pipeline instanceof JdbcPipeline && isPointedToExecuteByJdbc(runner)) {
             try (Connection connection = JdbcPipeline.createSpecificConnection(
                 //TODO retrieve metadata repeatedly, should be optimized
                 MetadataPostman.getAssembledSchema(tableNames))) {
+                Date apply = new Date();
+                LOGGER.info("apply.resource:" + SDF.format(apply));
                 executeJdbcQuery(connection, sql);
+                Date executed = new Date();
+                LOGGER.info("job.execute.final:" + SDF.format(executed));
                 System.out.printf("(%.2f sec)", ((double) (System.currentTimeMillis() - latestTime) / 1000));
+                LOGGER.info("SQL.parsed.time:" + String.valueOf(sqlPased.getTime() - start.getTime()));
+                LOGGER.info("resource.apply.time:" + String.valueOf(apply.getTime() - sqlPased.getTime()));
+                LOGGER.info("job.query.time:" + String.valueOf(executed.getTime() - apply.getTime()));
                 return;
             }
         }
 
         LOGGER.info("It's a complex query, we need to setup computing engine, waiting...");
-
         ProcessExecClient execClient = ProcessExecClient.createProcessClient(pipeline, parser);
+        Date apply = new Date();
+        LOGGER.info("apply.resource:" + SDF.format(apply));
         execClient.exec();
-        System.out.printf("(%.2f sec)\r\n", ((double) (System.currentTimeMillis() - latestTime) / 1000));
+        Date executed = new Date();
+        LOGGER.info("job.execute.final:" + SDF.format(executed));
+        LOGGER.info("SQL.parsed.time:" + String.valueOf(sqlPased.getTime() - start.getTime()));
+        LOGGER.info("resource.apply.time:" + String.valueOf(apply.getTime() - sqlPased.getTime()));
+        LOGGER.info("job.query.time:" + String.valueOf(executed.getTime() - apply.getTime()));
+
     }
 
     private static boolean tryToExecuteQueryDirectly(String sql, List<String> tableNames, String runner)

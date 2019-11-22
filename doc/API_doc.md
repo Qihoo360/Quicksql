@@ -6,7 +6,7 @@ QSQL supports called API directly by other applications to execute queries. If y
 
 ``` java
 <dependency>
-		<groupId>com.qihoo.qsql</groupId>
+        <groupId>com.qihoo.qsql</groupId>
         <artifactId>qsql-core</artifactId>
         <version>${project.version}</version>
 </dependency>

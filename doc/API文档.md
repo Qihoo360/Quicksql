@@ -6,7 +6,7 @@ QSQL支持在其他应用中通过API执行查询，如果你有类似场景，�
 
 ``` java
 <dependency>
-		<groupId>com.qihoo.qsql</groupId>
+        <groupId>com.qihoo.qsql</groupId>
         <artifactId>qsql-core</artifactId>
         <version>${project.version}</version>
 </dependency>
