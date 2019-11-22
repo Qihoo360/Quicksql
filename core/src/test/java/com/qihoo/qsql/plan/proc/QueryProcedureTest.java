@@ -661,9 +661,11 @@ public class QueryProcedureTest {
                 + "select A.*,B.* from A,B limit 10";
         prepareForChecking(sql).checkExtra("SELECT t.stu_id, t.date_time, t.signature, t.course_type, t.content,"
             + " t0.stu_id stu_id0, t0.date_time date_time0, t0.action_type "
-            + "FROM (SELECT stu_id, date_time, signature, course_type, content FROM action_required.homework_content) t, "
+            + "FROM (SELECT stu_id, date_time, signature, course_type, content"
+            + " FROM action_required.homework_content) t, "
             + "(SELECT stu_id, date_time, action_type FROM action_required.action_detection_in_class) t0 LIMIT 10");
     }
+
 
 
     private SqlHolder prepareForChecking(String sql) {
