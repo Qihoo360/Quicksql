@@ -108,6 +108,21 @@ public class QueryProcedureTest {
     }
 
     @Test
+    public void testDatePlusInteger() {
+        String sql = "SELECT * FROM action_required.homework_content a join action_required.homework_content b"
+            + " on a.stu_id = b.stu_id  where a.date_time > b.date_time + 1";
+        prepareForChecking(sql).checkExtra(
+            "SELECT homework_content.stu_id, homework_content.date_time, homework_content.signature, "
+                + "homework_content.course_type, homework_content.content, homework_content0.stu_id stu_id0, "
+                + "homework_content0.date_time date_time0, homework_content0.signature signature0, "
+                + "homework_content0.course_type course_type0, homework_content0.content content0 "
+                + "FROM action_required.homework_content INNER JOIN action_required.homework_content homework_content0 "
+                + "ON homework_content.stu_id = homework_content0.stu_id "
+                + "AND homework_content.date_time > (homework_content0.date_time + 1)");
+    }
+
+
+    @Test
     public void testValueWithUselessTableScan() {
         String sql = "SELECT 1 IN (SELECT dep.times FROM edu_manage.department AS dep) AS res";
         prepareForChecking(sql).checkExtra("SELECT 1 IN (SELECT \"dep\".\"times\" "
@@ -497,8 +512,8 @@ public class QueryProcedureTest {
     @Test
     public void testNotExistedFunctionsInFilter() {
         prepareForChecking("SELECT type FROM edu_manage.department "
-                + "WHERE (' world ') = 'world' GROUP BY type, times "
-                + "HAVING TRIM(' hello ') = 'hello' and CEIL(times) = 1", RunnerType.SPARK)
+            + "WHERE (' world ') = 'world' GROUP BY type, times "
+            + "HAVING TRIM(' hello ') = 'hello' and CEIL(times) = 1", RunnerType.SPARK)
             .checkExtra("select type, times from edu_manage.department "
                 + "where ' world ' = 'world' group by type, times")
             .checkTrans("SELECT type FROM edu_manage_department_0 "
@@ -638,6 +653,18 @@ public class QueryProcedureTest {
         prepareForChecking("SELECT REFLECT('java.util.Arrays', 'asList', 'a', 'b', 'c', 'd', 'e')")
             .checkExtra("SELECT REFLECT('java.util.Arrays', 'asList', 'a', 'b', 'c', 'd', 'e')");
     }
+
+    @Test
+    public void testWithKeyWord() {
+        String sql =
+            "with A as (SELECT * FROM action_required.homework_content),B as (select * from action_detection_in_class) "
+                + "select A.*,B.* from A,B limit 10";
+        prepareForChecking(sql).checkExtra("SELECT t.stu_id, t.date_time, t.signature, t.course_type, t.content,"
+            + " t0.stu_id stu_id0, t0.date_time date_time0, t0.action_type "
+            + "FROM (SELECT stu_id, date_time, signature, course_type, content FROM action_required.homework_content) t, "
+            + "(SELECT stu_id, date_time, action_type FROM action_required.action_detection_in_class) t0 LIMIT 10");
+    }
+
 
     private SqlHolder prepareForChecking(String sql) {
         return new SqlHolder(producer.createQueryProcedure(sql));
