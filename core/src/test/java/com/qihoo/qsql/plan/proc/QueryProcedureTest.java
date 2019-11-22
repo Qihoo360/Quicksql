@@ -80,9 +80,38 @@ public class QueryProcedureTest {
     }
 
     @Test
+    public void testWith() {
+        String sql = "WITH department AS \n"
+            + "    (SELECT times\n"
+            + "    FROM department\n"
+            + "    GROUP BY  times), student AS \n"
+            + "    (SELECT *\n"
+            + "    FROM student LIMIT 30) \n"
+            + "    (SELECT *\n"
+            + "    FROM department\n"
+            + "    INNER JOIN student\n"
+            + "        ON department.times = student.city LIMIT 10)";
+        prepareForChecking(sql)
+            .checkExtra("{\"_source\":[\"city\",\"province\",\"digest\",\"type\",\"stu_id\"],\"size\":30}",
+            "select times from edu_manage.department group by times")
+            .checkTrans("SELECT edu_manage_department_0.times, student_profile_student_1.city, "
+                + "student_profile_student_1.province, student_profile_student_1.digest, "
+                + "student_profile_student_1.type, student_profile_student_1.stu_id "
+                + "FROM edu_manage_department_0 INNER JOIN student_profile_student_1 "
+                + "ON edu_manage_department_0.times = student_profile_student_1.city LIMIT 10");
+    }
+
+    @Test
     public void testElasticsearchEmbeddedSource() {
         String sql = "SELECT city FROM student";
         prepareForChecking(sql).checkExtra("{\"_source\":[\"city\"]}");
+    }
+
+    @Test
+    public void testQuoting() {
+        String sql = "SELECT \"double-quote\", 'quote', times as `c` FROM department as `dep`";
+        prepareForChecking(sql).checkExtra("select 'double-quote' as expr_col__0, 'quote' as expr_col__1, times as c "
+            + "from edu_manage.department");
     }
 
     @Test
