@@ -43,7 +43,7 @@ public class FlinkMySqlGenerator extends QueryGenerator {
 
     @Override
     protected void executeQuery() {
-        Invoker config = Invoker.registerMethod("query");
+        Invoker config = Invoker.registerMethod("query_tmp");
 
         String invokeWrap = config.invoke(convertProperties("jdbcUrl", "jdbcUser", "jdbcPassword"));
         String wrapper = with("wrapper", "tmp");
@@ -52,11 +52,11 @@ public class FlinkMySqlGenerator extends QueryGenerator {
         composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE, invokedStatement);
 
         String invoked =
-            "DataSet tmp = env.fromCollection(" + wrapper + ".rows, " + wrapper + ""
+            "DataSet tmpData = env.fromCollection(" + wrapper + ".rows, " + wrapper + ""
                 + ".rowTypeInfo);";
         composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE, invoked);
 
-        String created = "tEnv.registerDataSet(\"" + tableName + "\", tmp);";
+        String created = "tableEnv.registerData(\"" + tableName + "\", tmpData);";
         composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE, created);
     }
 
