@@ -100,11 +100,19 @@ public final class SqlParserUtil {
    * quotes and unescaping internal doubled quotes).
    */
   public static String parseString(String s) {
-    int i = s.indexOf("'"); // start of body
-    if (i > 0) {
-      s = s.substring(i);
+    if (s.startsWith("'")) {
+      int i = s.indexOf("'"); // start of body
+      if (i > 0) {
+        s = s.substring(i);
+      }
+      return strip(s, "'", "'", "''", Casing.UNCHANGED);
+    } else {
+      int i = s.indexOf("\""); // start of body
+      if (i > 0) {
+        s = s.substring(i);
+      }
+      return strip(s, "\"", "\"", "\"\"", Casing.UNCHANGED);
     }
-    return strip(s, "'", "'", "''", Casing.UNCHANGED);
   }
 
   public static BigDecimal parseDecimal(String s) {
