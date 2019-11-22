@@ -162,6 +162,7 @@ public class JdbcPipeline extends AbstractPipeline {
         return connection;
     }
 
+    //TODO add zeroDateTimeBehavior=convertToNull property
     private static Connection createJdbcConnection(Map<String, String> conn)
         throws ClassNotFoundException, SQLException {
         if (! conn.containsKey("jdbcDriver")) {
@@ -175,9 +176,6 @@ public class JdbcPipeline extends AbstractPipeline {
             throw new RuntimeException("The `jdbcUrl` property needed to be set.");
         }
         String url = conn.get("jdbcUrl");
-        if (conn.containsValue("com.mysql.jdbc.Driver")) {
-            url = conn.get("jdbcUrl") + "?zeroDateTimeBehavior=convertToNull";
-        }
         String user = conn.getOrDefault("jdbcUser", "");
         String password = conn.getOrDefault("jdbcPassword", "");
         Connection connection = DriverManager.getConnection(url, user, password);
