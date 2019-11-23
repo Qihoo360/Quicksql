@@ -9,7 +9,7 @@ public class CsvScanExample {
     public static void main(String[] args) throws IOException {
         RuntimeEnv.init();
         String sql = "select * from depts";
-        SqlRunner.Builder.RunnerType runnerType = RunnerType.DEFAULT;
+        SqlRunner.Builder.RunnerType runnerType = RunnerType.SPARK;
         SqlRunner runner = SqlRunner.builder()
             .setTransformRunner(runnerType)
             .setSchemaPath(RuntimeEnv.metadata)

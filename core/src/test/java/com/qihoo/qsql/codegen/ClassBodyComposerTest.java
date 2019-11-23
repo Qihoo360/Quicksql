@@ -1,6 +1,7 @@
 package com.qihoo.qsql.codegen;
 
 import com.qihoo.qsql.codegen.ClassBodyComposer.CodeCategory;
+import com.qihoo.qsql.codegen.spark.SparkBodyWrapper;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -8,7 +9,7 @@ public class ClassBodyComposerTest {
 
     @Test
     public void testBasicCompositionFunction() {
-        ClassBodyComposer composer = new ClassBodyComposer();
+        ClassBodyComposer composer = new ClassBodyComposer(SparkBodyWrapper.class);
 
         composer.handleComposition(CodeCategory.IMPORT,
             "import java.util.List");
@@ -45,7 +46,7 @@ public class ClassBodyComposerTest {
 
     @Test
     public void testDuplicatedImport() {
-        ClassBodyComposer composer = new ClassBodyComposer();
+        ClassBodyComposer composer = new ClassBodyComposer(SparkBodyWrapper.class);
         composer.handleComposition(CodeCategory.IMPORT,
             "import java.util.List");
         composer.handleComposition(CodeCategory.IMPORT,
@@ -71,7 +72,7 @@ public class ClassBodyComposerTest {
 
     @Test
     public void testComposeMultipleInnerClass() {
-        ClassBodyComposer composer = new ClassBodyComposer();
+        ClassBodyComposer composer = new ClassBodyComposer(SparkBodyWrapper.class);
         composer.handleComposition(CodeCategory.INNER_CLASS,
             "      static class Animal { \n"
                 + "             public String name;\n"
@@ -101,7 +102,7 @@ public class ClassBodyComposerTest {
 
     @Test
     public void testNonClassNameClass() {
-        ClassBodyComposer composer = new ClassBodyComposer();
+        ClassBodyComposer composer = new ClassBodyComposer(SparkBodyWrapper.class);
         try {
             composer.handleComposition(CodeCategory.CLASS);
             Assert.assertTrue(false);

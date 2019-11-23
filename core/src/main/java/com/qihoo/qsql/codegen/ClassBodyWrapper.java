@@ -32,7 +32,7 @@ public abstract class ClassBodyWrapper {
     private static final Logger LOGGER = LoggerFactory.getLogger(ClassBodyComposer.class);
     private static final String CLASS_NAME_PREFIX = "Requirement";
     protected String className;
-    protected ClassBodyComposer composer = new ClassBodyComposer();
+    protected ClassBodyComposer composer = new ClassBodyComposer(this.getClass());
 
     /**
      * ClassBodyWrapper constructor, which create a new Class name.

@@ -130,6 +130,14 @@ public class QueryProcedureTest {
     }
 
     @Test
+    public void testCorrelationForProject() {
+        String sql = "SELECT MIN(digest), MAX(digest), type "
+            + "FROM student_profile.student group by type order by "
+            + "type limit 3";
+        //prepareForChecking(sql).checkExtra("");
+    }
+
+    @Test
     public void testValueIn() {
         String sql = "SELECT UPPER('Time') NOT IN ('Time', 'New', 'Roman') AS res";
         prepareForChecking(sql)
