@@ -19,30 +19,30 @@ package org.apache.calcite.test;
 import org.apache.calcite.avatica.util.Casing;
 import org.apache.calcite.avatica.util.Quoting;
 import org.apache.calcite.avatica.util.TimeUnit;
-import org.apache.calcite.config.Lex;
-import org.apache.calcite.rel.type.RelDataType;
-import org.apache.calcite.rel.type.RelDataTypeSystem;
-import org.apache.calcite.sql.SqlCollation;
-import org.apache.calcite.sql.SqlOperator;
-import org.apache.calcite.sql.SqlSpecialOperator;
-import org.apache.calcite.sql.fun.OracleSqlOperatorTable;
-import org.apache.calcite.sql.fun.SqlStdOperatorTable;
-import org.apache.calcite.sql.test.SqlTester;
-import org.apache.calcite.sql.type.ArraySqlType;
-import org.apache.calcite.sql.type.SqlTypeFactoryImpl;
-import org.apache.calcite.sql.type.SqlTypeName;
-import org.apache.calcite.sql.type.SqlTypeUtil;
-import org.apache.calcite.sql.util.ChainedSqlOperatorTable;
-import org.apache.calcite.sql.validate.SqlAbstractConformance;
-import org.apache.calcite.sql.validate.SqlConformance;
-import org.apache.calcite.sql.validate.SqlConformanceEnum;
-import org.apache.calcite.sql.validate.SqlDelegatingConformance;
-import org.apache.calcite.sql.validate.SqlMonotonicity;
-import org.apache.calcite.sql.validate.SqlValidator;
-import org.apache.calcite.sql.validate.SqlValidatorUtil;
+import com.qihoo.qsql.org.apache.calcite.config.Lex;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataType;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeSystem;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlCollation;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlOperator;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlSpecialOperator;
+import com.qihoo.qsql.org.apache.calcite.sql.fun.OracleSqlOperatorTable;
+import com.qihoo.qsql.org.apache.calcite.sql.fun.SqlStdOperatorTable;
+import com.qihoo.qsql.org.apache.calcite.sql.test.SqlTester;
+import com.qihoo.qsql.org.apache.calcite.sql.type.ArraySqlType;
+import com.qihoo.qsql.org.apache.calcite.sql.type.SqlTypeFactoryImpl;
+import com.qihoo.qsql.org.apache.calcite.sql.type.SqlTypeName;
+import com.qihoo.qsql.org.apache.calcite.sql.type.SqlTypeUtil;
+import com.qihoo.qsql.org.apache.calcite.sql.util.ChainedSqlOperatorTable;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlAbstractConformance;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlConformance;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlConformanceEnum;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlDelegatingConformance;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlMonotonicity;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlValidator;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlValidatorUtil;
 import org.apache.calcite.test.catalog.CountingFactory;
-import org.apache.calcite.util.Bug;
-import org.apache.calcite.util.ImmutableBitSet;
+import com.qihoo.qsql.org.apache.calcite.util.Bug;
+import com.qihoo.qsql.org.apache.calcite.util.ImmutableBitSet;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Ordering;
@@ -75,7 +75,7 @@ import static org.junit.Assert.assertTrue;
  *
  * <p>If you want to run these same tests in a different environment, create a
  * derived class whose {@link #getTester} returns a different implementation of
- * {@link org.apache.calcite.sql.test.SqlTester}.
+ * {@link com.qihoo.qsql.org.apache.calcite.sql.test.SqlTester}.
  */
 public class SqlValidatorTest extends SqlValidatorTestCase {
   //~ Static fields/initializers ---------------------------------------------
@@ -958,7 +958,7 @@ public class SqlValidatorTest extends SqlValidatorTestCase {
 
   @Test public void testCastRegisteredType() {
     checkExpFails("cast(123 as customBigInt)",
-        "class org.apache.calcite.sql.SqlIdentifier: CUSTOMBIGINT");
+        "class com.qihoo.qsql.org.apache.calcite.sql.SqlIdentifier: CUSTOMBIGINT");
     checkExpType("cast(123 as sales.customBigInt)", "BIGINT NOT NULL");
     checkExpType("cast(123 as catalog.sales.customBigInt)", "BIGINT NOT NULL");
   }
@@ -966,7 +966,7 @@ public class SqlValidatorTest extends SqlValidatorTestCase {
   @Test public void testCastFails() {
     checkExpFails(
         "cast('foo' as ^bar^)",
-        "class org.apache.calcite.sql.SqlIdentifier: BAR");
+        "class com.qihoo.qsql.org.apache.calcite.sql.SqlIdentifier: BAR");
     checkWholeExpFails(
         "cast(multiset[1] as integer)",
         "(?s).*Cast function cannot convert value of type INTEGER MULTISET to type INTEGER");
@@ -5111,7 +5111,7 @@ public class SqlValidatorTest extends SqlValidatorTestCase {
   }
 
   /** Unit test for
-   * {@link org.apache.calcite.sql.validate.SqlValidatorUtil#rollup}. */
+   * {@link com.qihoo.qsql.org.apache.calcite.sql.validate.SqlValidatorUtil#rollup}. */
   @Test public void testRollupBitSets() {
     assertThat(rollup(ImmutableBitSet.of(1), ImmutableBitSet.of(3)).toString(),
         equalTo("[{1, 3}, {1}, {}]"));
@@ -5148,7 +5148,7 @@ public class SqlValidatorTest extends SqlValidatorTestCase {
   }
 
   /** Unit test for
-   * {@link org.apache.calcite.sql.validate.SqlValidatorUtil#cube}. */
+   * {@link com.qihoo.qsql.org.apache.calcite.sql.validate.SqlValidatorUtil#cube}. */
   @Test public void testCubeBitSets() {
     assertThat(cube(ImmutableBitSet.of(1), ImmutableBitSet.of(3)).toString(),
         equalTo("[{1, 3}, {1}, {3}, {}]"));

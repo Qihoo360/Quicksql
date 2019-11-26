@@ -18,14 +18,14 @@ import com.qihoo.qsql.exec.result.JdbcPipelineResult;
 import com.qihoo.qsql.exec.result.JdbcResultSetIterator;
 import com.qihoo.qsql.exec.result.PipelineResult;
 import org.apache.calcite.avatica.util.DateTimeUtils;
-import org.apache.calcite.config.CalciteConnectionProperty;
-import org.apache.calcite.jdbc.CalciteConnection;
-import org.apache.calcite.model.JsonCustomSchema;
-import org.apache.calcite.model.JsonCustomTable;
-import org.apache.calcite.model.JsonRoot;
-import org.apache.calcite.model.JsonSchema;
-import org.apache.calcite.model.JsonTable;
-import org.apache.calcite.runtime.FlatLists;
+import com.qihoo.qsql.org.apache.calcite.config.CalciteConnectionProperty;
+import com.qihoo.qsql.org.apache.calcite.jdbc.CalciteConnection;
+import com.qihoo.qsql.org.apache.calcite.model.JsonCustomSchema;
+import com.qihoo.qsql.org.apache.calcite.model.JsonCustomTable;
+import com.qihoo.qsql.org.apache.calcite.model.JsonRoot;
+import com.qihoo.qsql.org.apache.calcite.model.JsonSchema;
+import com.qihoo.qsql.org.apache.calcite.model.JsonTable;
+import com.qihoo.qsql.org.apache.calcite.runtime.FlatLists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,7 +58,7 @@ public class JdbcPipeline extends AbstractPipeline {
         + "    {\n"
         + "      name: 'SALES',\n"
         + "      type: 'custom',\n"
-        + "      factory: 'org.apache.calcite.adapter.csv.CsvSchemaFactory',\n"
+        + "      factory: 'com.qihoo.qsql.org.apache.calcite.adapter.csv.CsvSchemaFactory',\n"
         + "      operand: {\n"
         + "        directory: 'sales'\n"
         + "      }\n"

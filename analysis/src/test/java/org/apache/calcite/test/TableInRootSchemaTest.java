@@ -16,21 +16,21 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.adapter.enumerable.EnumerableTableScan;
-import org.apache.calcite.adapter.java.AbstractQueryableTable;
-import org.apache.calcite.jdbc.CalciteConnection;
-import org.apache.calcite.linq4j.Enumerator;
-import org.apache.calcite.linq4j.Linq4j;
-import org.apache.calcite.linq4j.QueryProvider;
-import org.apache.calcite.linq4j.Queryable;
-import org.apache.calcite.plan.RelOptTable;
-import org.apache.calcite.rel.RelNode;
-import org.apache.calcite.rel.type.RelDataType;
-import org.apache.calcite.rel.type.RelDataTypeFactory;
-import org.apache.calcite.schema.SchemaPlus;
-import org.apache.calcite.schema.TranslatableTable;
-import org.apache.calcite.schema.impl.AbstractTableQueryable;
-import org.apache.calcite.util.Pair;
+import com.qihoo.qsql.org.apache.calcite.adapter.enumerable.EnumerableTableScan;
+import com.qihoo.qsql.org.apache.calcite.adapter.java.AbstractQueryableTable;
+import com.qihoo.qsql.org.apache.calcite.jdbc.CalciteConnection;
+import com.qihoo.qsql.org.apache.calcite.linq4j.Enumerator;
+import com.qihoo.qsql.org.apache.calcite.linq4j.Linq4j;
+import com.qihoo.qsql.org.apache.calcite.linq4j.QueryProvider;
+import com.qihoo.qsql.org.apache.calcite.linq4j.Queryable;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptTable;
+import com.qihoo.qsql.org.apache.calcite.rel.RelNode;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataType;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeFactory;
+import com.qihoo.qsql.org.apache.calcite.schema.SchemaPlus;
+import com.qihoo.qsql.org.apache.calcite.schema.TranslatableTable;
+import com.qihoo.qsql.org.apache.calcite.schema.impl.AbstractTableQueryable;
+import com.qihoo.qsql.org.apache.calcite.util.Pair;
 
 import com.google.common.collect.ImmutableMultiset;
 

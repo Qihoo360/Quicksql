@@ -16,44 +16,44 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.adapter.java.ReflectiveSchema;
-import org.apache.calcite.jdbc.JavaTypeFactoryImpl;
-import org.apache.calcite.materialize.MaterializationService;
-import org.apache.calcite.plan.RelOptPlanner;
-import org.apache.calcite.plan.RelOptPredicateList;
-import org.apache.calcite.plan.RelOptRule;
-import org.apache.calcite.plan.RelOptTable;
-import org.apache.calcite.plan.SubstitutionVisitor;
-import org.apache.calcite.prepare.Prepare;
-import org.apache.calcite.rel.RelNode;
-import org.apache.calcite.rel.RelReferentialConstraint;
-import org.apache.calcite.rel.RelReferentialConstraintImpl;
-import org.apache.calcite.rel.RelVisitor;
-import org.apache.calcite.rel.core.TableScan;
-import org.apache.calcite.rel.type.RelDataType;
-import org.apache.calcite.rel.type.RelDataTypeSystem;
-import org.apache.calcite.rex.RexBuilder;
-import org.apache.calcite.rex.RexInputRef;
-import org.apache.calcite.rex.RexLiteral;
-import org.apache.calcite.rex.RexNode;
-import org.apache.calcite.rex.RexSimplify;
-import org.apache.calcite.rex.RexUnknownAs;
-import org.apache.calcite.rex.RexUtil;
-import org.apache.calcite.runtime.Hook;
-import org.apache.calcite.schema.QueryableTable;
-import org.apache.calcite.schema.TranslatableTable;
-import org.apache.calcite.sql.fun.SqlStdOperatorTable;
+import com.qihoo.qsql.org.apache.calcite.adapter.java.ReflectiveSchema;
+import com.qihoo.qsql.org.apache.calcite.jdbc.JavaTypeFactoryImpl;
+import com.qihoo.qsql.org.apache.calcite.materialize.MaterializationService;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptPlanner;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptPredicateList;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptRule;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptTable;
+import com.qihoo.qsql.org.apache.calcite.plan.SubstitutionVisitor;
+import com.qihoo.qsql.org.apache.calcite.prepare.Prepare;
+import com.qihoo.qsql.org.apache.calcite.rel.RelNode;
+import com.qihoo.qsql.org.apache.calcite.rel.RelReferentialConstraint;
+import com.qihoo.qsql.org.apache.calcite.rel.RelReferentialConstraintImpl;
+import com.qihoo.qsql.org.apache.calcite.rel.RelVisitor;
+import com.qihoo.qsql.org.apache.calcite.rel.core.TableScan;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataType;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeSystem;
+import com.qihoo.qsql.org.apache.calcite.rex.RexBuilder;
+import com.qihoo.qsql.org.apache.calcite.rex.RexInputRef;
+import com.qihoo.qsql.org.apache.calcite.rex.RexLiteral;
+import com.qihoo.qsql.org.apache.calcite.rex.RexNode;
+import com.qihoo.qsql.org.apache.calcite.rex.RexSimplify;
+import com.qihoo.qsql.org.apache.calcite.rex.RexUnknownAs;
+import com.qihoo.qsql.org.apache.calcite.rex.RexUtil;
+import com.qihoo.qsql.org.apache.calcite.runtime.Hook;
+import com.qihoo.qsql.org.apache.calcite.schema.QueryableTable;
+import com.qihoo.qsql.org.apache.calcite.schema.TranslatableTable;
+import com.qihoo.qsql.org.apache.calcite.sql.fun.SqlStdOperatorTable;
 import org.apache.calcite.test.JdbcTest.Department;
 import org.apache.calcite.test.JdbcTest.Dependent;
 import org.apache.calcite.test.JdbcTest.Employee;
 import org.apache.calcite.test.JdbcTest.Event;
 import org.apache.calcite.test.JdbcTest.Location;
-import org.apache.calcite.tools.RuleSet;
-import org.apache.calcite.tools.RuleSets;
-import org.apache.calcite.util.JsonBuilder;
-import org.apache.calcite.util.Smalls;
-import org.apache.calcite.util.TryThreadLocal;
-import org.apache.calcite.util.mapping.IntPair;
+import com.qihoo.qsql.org.apache.calcite.tools.RuleSet;
+import com.qihoo.qsql.org.apache.calcite.tools.RuleSets;
+import com.qihoo.qsql.org.apache.calcite.util.JsonBuilder;
+import com.qihoo.qsql.org.apache.calcite.util.Smalls;
+import com.qihoo.qsql.org.apache.calcite.util.TryThreadLocal;
+import com.qihoo.qsql.org.apache.calcite.util.mapping.IntPair;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Ordering;
@@ -134,7 +134,7 @@ public class MaterializationTest {
                 + "  schemas: [ {\n"
                 + "    name: 'SCOTT_CLONE',\n"
                 + "    type: 'custom',\n"
-                + "    factory: 'org.apache.calcite.adapter.clone.CloneSchema$Factory',\n"
+                + "    factory: 'com.qihoo.qsql.org.apache.calcite.adapter.clone.CloneSchema$Factory',\n"
                 + "    operand: {\n"
                 + "      jdbcDriver: '" + JdbcTest.SCOTT.driver + "',\n"
                 + "      jdbcUser: '" + JdbcTest.SCOTT.username + "',\n"
@@ -352,7 +352,7 @@ public class MaterializationTest {
           + "      ],\n"
           + "      type: 'custom',\n"
           + "      name: 'hr',\n"
-          + "      factory: 'org.apache.calcite.adapter.java.ReflectiveSchema$Factory',\n"
+          + "      factory: 'com.qihoo.qsql.org.apache.calcite.adapter.java.ReflectiveSchema$Factory',\n"
           + "      operand: {\n"
           + "        class: 'org.apache.calcite.test.JdbcTest$HrSchema'\n"
           + "      }\n"
@@ -602,7 +602,7 @@ public class MaterializationTest {
   @Test public void testMaterializationReferencesTableInOtherSchema() {}
 
   /** Unit test for logic functions
-   * {@link org.apache.calcite.plan.SubstitutionVisitor#mayBeSatisfiable} and
+   * {@link com.qihoo.qsql.org.apache.calcite.plan.SubstitutionVisitor#mayBeSatisfiable} and
    * {@link RexUtil#simplify}. */
   @Test public void testSatisfiable() {
     // TRUE may be satisfiable
@@ -2041,7 +2041,7 @@ public class MaterializationTest {
           + "      ],\n"
           + "      type: 'custom',\n"
           + "      name: 'hr',\n"
-          + "      factory: 'org.apache.calcite.adapter.java.ReflectiveSchema$Factory',\n"
+          + "      factory: 'com.qihoo.qsql.org.apache.calcite.adapter.java.ReflectiveSchema$Factory',\n"
           + "      operand: {\n"
           + "        class: 'org.apache.calcite.test.JdbcTest$HrSchema'\n"
           + "      }\n"

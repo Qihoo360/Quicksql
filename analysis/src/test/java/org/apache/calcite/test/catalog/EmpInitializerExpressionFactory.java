@@ -16,14 +16,14 @@
  */
 package org.apache.calcite.test.catalog;
 
-import org.apache.calcite.plan.RelOptTable;
-import org.apache.calcite.rel.type.RelDataTypeFactory;
-import org.apache.calcite.rex.RexBuilder;
-import org.apache.calcite.rex.RexNode;
-import org.apache.calcite.schema.ColumnStrategy;
-import org.apache.calcite.sql.type.SqlTypeName;
-import org.apache.calcite.sql2rel.InitializerContext;
-import org.apache.calcite.sql2rel.NullInitializerExpressionFactory;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptTable;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeFactory;
+import com.qihoo.qsql.org.apache.calcite.rex.RexBuilder;
+import com.qihoo.qsql.org.apache.calcite.rex.RexNode;
+import com.qihoo.qsql.org.apache.calcite.schema.ColumnStrategy;
+import com.qihoo.qsql.org.apache.calcite.sql.type.SqlTypeName;
+import com.qihoo.qsql.org.apache.calcite.sql2rel.InitializerContext;
+import com.qihoo.qsql.org.apache.calcite.sql2rel.NullInitializerExpressionFactory;
 
 import java.math.BigDecimal;
 

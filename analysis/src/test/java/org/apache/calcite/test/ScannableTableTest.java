@@ -16,27 +16,27 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.DataContext;
-import org.apache.calcite.jdbc.CalciteConnection;
-import org.apache.calcite.linq4j.AbstractEnumerable;
-import org.apache.calcite.linq4j.Enumerable;
-import org.apache.calcite.linq4j.Enumerator;
-import org.apache.calcite.rel.type.RelDataType;
-import org.apache.calcite.rel.type.RelDataTypeFactory;
-import org.apache.calcite.rex.RexCall;
-import org.apache.calcite.rex.RexInputRef;
-import org.apache.calcite.rex.RexLiteral;
-import org.apache.calcite.rex.RexNode;
-import org.apache.calcite.schema.FilterableTable;
-import org.apache.calcite.schema.ProjectableFilterableTable;
-import org.apache.calcite.schema.ScannableTable;
-import org.apache.calcite.schema.Schema;
-import org.apache.calcite.schema.SchemaPlus;
-import org.apache.calcite.schema.Table;
-import org.apache.calcite.schema.impl.AbstractSchema;
-import org.apache.calcite.schema.impl.AbstractTable;
-import org.apache.calcite.sql.fun.SqlStdOperatorTable;
-import org.apache.calcite.sql.type.SqlTypeName;
+import com.qihoo.qsql.org.apache.calcite.DataContext;
+import com.qihoo.qsql.org.apache.calcite.jdbc.CalciteConnection;
+import com.qihoo.qsql.org.apache.calcite.linq4j.AbstractEnumerable;
+import com.qihoo.qsql.org.apache.calcite.linq4j.Enumerable;
+import com.qihoo.qsql.org.apache.calcite.linq4j.Enumerator;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataType;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeFactory;
+import com.qihoo.qsql.org.apache.calcite.rex.RexCall;
+import com.qihoo.qsql.org.apache.calcite.rex.RexInputRef;
+import com.qihoo.qsql.org.apache.calcite.rex.RexLiteral;
+import com.qihoo.qsql.org.apache.calcite.rex.RexNode;
+import com.qihoo.qsql.org.apache.calcite.schema.FilterableTable;
+import com.qihoo.qsql.org.apache.calcite.schema.ProjectableFilterableTable;
+import com.qihoo.qsql.org.apache.calcite.schema.ScannableTable;
+import com.qihoo.qsql.org.apache.calcite.schema.Schema;
+import com.qihoo.qsql.org.apache.calcite.schema.SchemaPlus;
+import com.qihoo.qsql.org.apache.calcite.schema.Table;
+import com.qihoo.qsql.org.apache.calcite.schema.impl.AbstractSchema;
+import com.qihoo.qsql.org.apache.calcite.schema.impl.AbstractTable;
+import com.qihoo.qsql.org.apache.calcite.sql.fun.SqlStdOperatorTable;
+import com.qihoo.qsql.org.apache.calcite.sql.type.SqlTypeName;
 import org.apache.calcite.test.CalciteAssert.ConnectionPostProcessor;
 
 import com.google.common.collect.ImmutableMap;
@@ -64,7 +64,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Unit test for {@link org.apache.calcite.schema.ScannableTable}.
+ * Unit test for {@link com.qihoo.qsql.org.apache.calcite.schema.ScannableTable}.
  */
 public class ScannableTableTest {
   @Test public void testTens() throws SQLException {
@@ -134,7 +134,7 @@ public class ScannableTableTest {
     assertThat(buf.toString(), is("returnCount=4"));
   }
 
-  /** A filter on a {@link org.apache.calcite.schema.ProjectableFilterableTable}
+  /** A filter on a {@link com.qihoo.qsql.org.apache.calcite.schema.ProjectableFilterableTable}
    * with two columns (cooperative). */
   @Test public void testProjectableFilterableCooperative() throws Exception {
     final StringBuilder buf = new StringBuilder();
@@ -168,7 +168,7 @@ public class ScannableTableTest {
     assertThat(buf.toString(), is("returnCount=4, projects=[1, 0]"));
   }
 
-  /** A filter on a {@link org.apache.calcite.schema.ProjectableFilterableTable}
+  /** A filter on a {@link com.qihoo.qsql.org.apache.calcite.schema.ProjectableFilterableTable}
    * with two columns, and a project in the query. (Cooperative)*/
   @Test public void testProjectableFilterableWithProjectAndFilter() throws Exception {
     final StringBuilder buf = new StringBuilder();
@@ -186,7 +186,7 @@ public class ScannableTableTest {
         is("returnCount=2, filter=4, projects=[2, 1]"));
   }
 
-  /** A filter on a {@link org.apache.calcite.schema.ProjectableFilterableTable}
+  /** A filter on a {@link com.qihoo.qsql.org.apache.calcite.schema.ProjectableFilterableTable}
    * with two columns, and a project in the query (NonCooperative). */
   @Test public void testProjectableFilterableWithProjectFilterNonCooperative()
       throws Exception {
@@ -207,7 +207,7 @@ public class ScannableTableTest {
   }
 
   /** A filter and project on a
-   * {@link org.apache.calcite.schema.ProjectableFilterableTable}. The table
+   * {@link com.qihoo.qsql.org.apache.calcite.schema.ProjectableFilterableTable}. The table
    * refuses to execute the filter, so Calcite should add a pull up and
    * transform the filter (projecting the column needed by the filter). */
   @Test public void testPFTableRefusesFilterCooperative() throws Exception {

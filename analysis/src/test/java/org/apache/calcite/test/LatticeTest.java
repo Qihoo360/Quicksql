@@ -16,15 +16,15 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.jdbc.CalciteSchema;
-import org.apache.calcite.materialize.Lattice;
-import org.apache.calcite.materialize.Lattices;
-import org.apache.calcite.materialize.MaterializationService;
-import org.apache.calcite.plan.RelOptUtil;
-import org.apache.calcite.runtime.Hook;
-import org.apache.calcite.schema.SchemaPlus;
-import org.apache.calcite.util.ImmutableBitSet;
-import org.apache.calcite.util.TestUtil;
+import com.qihoo.qsql.org.apache.calcite.jdbc.CalciteSchema;
+import com.qihoo.qsql.org.apache.calcite.materialize.Lattice;
+import com.qihoo.qsql.org.apache.calcite.materialize.Lattices;
+import com.qihoo.qsql.org.apache.calcite.materialize.MaterializationService;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptUtil;
+import com.qihoo.qsql.org.apache.calcite.runtime.Hook;
+import com.qihoo.qsql.org.apache.calcite.schema.SchemaPlus;
+import com.qihoo.qsql.org.apache.calcite.util.ImmutableBitSet;
+import com.qihoo.qsql.org.apache.calcite.util.TestUtil;
 
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;

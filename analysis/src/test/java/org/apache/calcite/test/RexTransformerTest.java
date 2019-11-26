@@ -16,24 +16,24 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.jdbc.JavaTypeFactoryImpl;
-import org.apache.calcite.plan.RelOptUtil;
-import org.apache.calcite.plan.RelOptUtil.Logic;
-import org.apache.calcite.rel.RelNode;
-import org.apache.calcite.rel.logical.LogicalJoin;
-import org.apache.calcite.rel.logical.LogicalProject;
-import org.apache.calcite.rel.type.RelDataType;
-import org.apache.calcite.rel.type.RelDataTypeFactory;
-import org.apache.calcite.rel.type.RelDataTypeField;
-import org.apache.calcite.rel.type.RelDataTypeSystem;
-import org.apache.calcite.rex.LogicVisitor;
-import org.apache.calcite.rex.RexBuilder;
-import org.apache.calcite.rex.RexInputRef;
-import org.apache.calcite.rex.RexLiteral;
-import org.apache.calcite.rex.RexNode;
-import org.apache.calcite.rex.RexTransformer;
-import org.apache.calcite.sql.fun.SqlStdOperatorTable;
-import org.apache.calcite.sql.type.SqlTypeName;
+import com.qihoo.qsql.org.apache.calcite.jdbc.JavaTypeFactoryImpl;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptUtil;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptUtil.Logic;
+import com.qihoo.qsql.org.apache.calcite.rel.RelNode;
+import com.qihoo.qsql.org.apache.calcite.rel.logical.LogicalJoin;
+import com.qihoo.qsql.org.apache.calcite.rel.logical.LogicalProject;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataType;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeFactory;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeField;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeSystem;
+import com.qihoo.qsql.org.apache.calcite.rex.LogicVisitor;
+import com.qihoo.qsql.org.apache.calcite.rex.RexBuilder;
+import com.qihoo.qsql.org.apache.calcite.rex.RexInputRef;
+import com.qihoo.qsql.org.apache.calcite.rex.RexLiteral;
+import com.qihoo.qsql.org.apache.calcite.rex.RexNode;
+import com.qihoo.qsql.org.apache.calcite.rex.RexTransformer;
+import com.qihoo.qsql.org.apache.calcite.sql.fun.SqlStdOperatorTable;
+import com.qihoo.qsql.org.apache.calcite.sql.type.SqlTypeName;
 
 import org.junit.After;
 import org.junit.Before;
@@ -379,7 +379,7 @@ public class RexTransformerTest {
     assertThat(rightJoinKeys.isEmpty(), is(true));
   }
 
-  /** Test case for {@link org.apache.calcite.rex.LogicVisitor}. */
+  /** Test case for {@link com.qihoo.qsql.org.apache.calcite.rex.LogicVisitor}. */
   @Test public void testLogic() {
     // x > FALSE AND ((y = z) IS NOT NULL)
     final RexNode node = and(greaterThan(x, falseRex), isNotNull(equals(y, z)));

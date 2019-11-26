@@ -126,10 +126,10 @@
         <maven-javadoc-html5>-html5</maven-javadoc-html5>
         <maven-javadoc-plugin.excludePackageNames>
             org.apache.calcite.benchmarks.generated,
-            org.apache.calcite.sql.parser.babel,
-            org.apache.calcite.sql.parser.ddl,
-            org.apache.calcite.sql.parser.impl,
-            org.apache.calcite.sql.parser.parserextensiontesting,
+            com.qihoo.qsql.org.apache.calcite.sql.parser.babel,
+            com.qihoo.qsql.org.apache.calcite.sql.parser.ddl,
+            com.qihoo.qsql.org.apache.calcite.sql.parser.impl,
+            com.qihoo.qsql.org.apache.calcite.sql.parser.parserextensiontesting,
             org.apache.calcite.piglet.parser,
             org.openjdk.jmh
         </maven-javadoc-plugin.excludePackageNames>
@@ -139,20 +139,14 @@
         <elasticsearch5-java-driver.version>5.5.2
         </elasticsearch5-java-driver.version>
         <calcite.version>1.17.0</calcite.version>
+        <calcite.linq4j.version>1.20.0</calcite.linq4j.version>
         <elasticsearch-hadoop.version>6.2.4</elasticsearch-hadoop.version>
         <flink.version>1.9.1</flink.version>
         <commons-csv.version>1.5</commons-csv.version>
         <hppc.version>0.7.1</hppc.version>
         <dom4j.version>1.6.1</dom4j.version>
-
-        <!---->
         <qsql.release>qsql-0.6</qsql.release>
     </properties>
-
-    <!-- 使用dependencyManagement管理,可以防止Module依赖Parent POM的全部Jar包,又可以省略version
-    如果子模块不声明依赖的使用,即使该依赖已经在Parent POM文件dependencyManagement中声明了,也
-    不会产生任何实际的效果
-     -->
 
     <dependencyManagement>
         <dependencies>
@@ -172,10 +166,11 @@
                 <artifactId>avatica-server</artifactId>
                 <version>${avatica.version}</version>
             </dependency>
+            <!--Use high version linq4j for adapt flink calcite, need to be fixed-->
             <dependency>
                 <groupId>org.apache.calcite</groupId>
                 <artifactId>calcite-linq4j</artifactId>
-                <version>${calcite.version}</version>
+                <version>${calcite.linq4j.version}</version>
             </dependency>
 
             <!-- Now third-party dependencies, sorted by groupId and artifactId. -->
@@ -580,23 +575,11 @@
                 <artifactId>flink-table-api-java-bridge_${scala.version}</artifactId>
                 <version>${flink.version}</version>
                 <!--<scope>provided</scope>-->
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.apache.calcite</groupId>
-                        <artifactId>*</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.apache.flink</groupId>
                 <artifactId>flink-table-planner_${scala.version}</artifactId>
                 <version>${flink.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.apache.calcite</groupId>
-                        <artifactId>*</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.apache.flink</groupId>

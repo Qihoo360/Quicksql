@@ -42,7 +42,7 @@ public class AutomaticConnection implements Connection {
         + "    {\n"
         + "      name: 'SALES',\n"
         + "      type: 'custom',\n"
-        + "      factory: 'org.apache.calcite.adapter.csv.CsvSchemaFactory',\n"
+        + "      factory: 'com.qihoo.qsql.org.apache.calcite.adapter.csv.CsvSchemaFactory',\n"
         + "      operand: {\n"
         + "        directory: 'sales'\n"
         + "      }\n"

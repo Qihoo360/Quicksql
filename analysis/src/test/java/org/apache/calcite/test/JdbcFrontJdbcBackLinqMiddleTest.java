@@ -16,7 +16,7 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.util.Bug;
+import com.qihoo.qsql.org.apache.calcite.util.Bug;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -227,7 +227,7 @@ public class JdbcFrontJdbcBackLinqMiddleTest {
         .planContains("            public boolean moveNext() {\n"
             + "              while (inputEnumerator.moveNext()) {\n"
             + "                final String v = (String) ((Object[]) inputEnumerator.current())[10];\n"
-            + "                if (v != null && org.apache.calcite.runtime.SqlFunctions.eq(v, \"USA\")) {\n"
+            + "                if (v != null && com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.eq(v, \"USA\")) {\n"
             + "                  return true;\n"
             + "                }\n"
             + "              }\n"
@@ -251,7 +251,7 @@ public class JdbcFrontJdbcBackLinqMiddleTest {
             + "            while (inputEnumerator.moveNext()) {\n"
             + "              final Object[] current12 = (Object[]) inputEnumerator.current();\n"
             + "              final String v1 = (String) current12[10];\n"
-            + "              if (org.apache.calcite.runtime.SqlFunctions.eq((String) current12[12], \"USA\") && (v1 != null && org.apache.calcite.runtime.SqlFunctions.eq(org.apache.calcite.runtime.SqlFunctions.upper(v1), org.apache.calcite.runtime.SqlFunctions.trim(org.apache.calcite.runtime.SqlFunctions.upper(\"CA\"))))) {\n"
+            + "              if (com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.eq((String) current12[12], \"USA\") && (v1 != null && com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.eq(com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.upper(v1), com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.trim(com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.upper(\"CA\"))))) {\n"
             + "                return true;\n"
             + "              }\n"
             + "            }\n"
@@ -270,7 +270,7 @@ public class JdbcFrontJdbcBackLinqMiddleTest {
         .query(
             "select \"store\".\"store_country\" as \"c0\", sum(\"inventory_fact_1997\".\"supply_time\") as \"m0\" from \"store\" as \"store\", \"inventory_fact_1997\" as \"inventory_fact_1997\" where \"inventory_fact_1997\".\"store_id\" = \"store\".\"store_id\" group by \"store\".\"store_country\"")
         .planContains(
-            " left.join(right, new org.apache.calcite.linq4j.function.Function1() {\n");
+            " left.join(right, new Function1() {\n");
   }
 }
 

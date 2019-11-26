@@ -3,11 +3,11 @@ package com.qihoo.qsql.plan.proc;
 import com.qihoo.qsql.plan.ProcedureVisitor;
 import com.qihoo.qsql.plan.func.SparkSqlDialect;
 import java.util.List;
-import org.apache.calcite.rel.RelNode;
-import org.apache.calcite.rel.rel2sql.RelToSqlConverter;
-import org.apache.calcite.sql.SqlDialect;
-import org.apache.calcite.sql.SqlNode;
-import org.apache.calcite.util.Util;
+import com.qihoo.qsql.org.apache.calcite.rel.RelNode;
+import com.qihoo.qsql.org.apache.calcite.rel.rel2sql.RelToSqlConverter;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlDialect;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlNode;
+import com.qihoo.qsql.org.apache.calcite.util.Util;
 
 /**
  * Represent the execution procedure in calculation engine.

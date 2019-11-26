@@ -6,12 +6,12 @@ import com.qihoo.qsql.api.SqlRunner.Builder.RunnerType;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.apache.calcite.sql.SqlFunction;
-import org.apache.calcite.sql.SqlOperator;
-import org.apache.calcite.sql.SqlSpecialOperator;
-import org.apache.calcite.sql.SqlSyntax;
-import org.apache.calcite.sql.fun.SqlStdOperatorTable;
-import org.apache.calcite.sql.util.ReflectiveSqlOperatorTable.Key;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlFunction;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlOperator;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlSpecialOperator;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlSyntax;
+import com.qihoo.qsql.org.apache.calcite.sql.fun.SqlStdOperatorTable;
+import com.qihoo.qsql.org.apache.calcite.sql.util.ReflectiveSqlOperatorTable.Key;
 
 /**
  * .

@@ -16,79 +16,79 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.adapter.enumerable.EnumerableMergeJoin;
-import org.apache.calcite.linq4j.tree.Types;
-import org.apache.calcite.plan.RelOptCluster;
-import org.apache.calcite.plan.RelOptPlanner;
-import org.apache.calcite.plan.RelOptPredicateList;
-import org.apache.calcite.plan.RelOptTable;
-import org.apache.calcite.rel.InvalidRelException;
-import org.apache.calcite.rel.RelCollation;
-import org.apache.calcite.rel.RelCollationTraitDef;
-import org.apache.calcite.rel.RelCollations;
-import org.apache.calcite.rel.RelDistribution;
-import org.apache.calcite.rel.RelDistributions;
-import org.apache.calcite.rel.RelFieldCollation;
-import org.apache.calcite.rel.RelNode;
-import org.apache.calcite.rel.RelRoot;
-import org.apache.calcite.rel.core.Aggregate;
-import org.apache.calcite.rel.core.AggregateCall;
-import org.apache.calcite.rel.core.Correlate;
-import org.apache.calcite.rel.core.Filter;
-import org.apache.calcite.rel.core.Join;
-import org.apache.calcite.rel.core.JoinRelType;
-import org.apache.calcite.rel.core.Minus;
-import org.apache.calcite.rel.core.Project;
-import org.apache.calcite.rel.core.SemiJoin;
-import org.apache.calcite.rel.core.Sort;
-import org.apache.calcite.rel.core.TableScan;
-import org.apache.calcite.rel.core.Union;
-import org.apache.calcite.rel.core.Values;
-import org.apache.calcite.rel.logical.LogicalAggregate;
-import org.apache.calcite.rel.logical.LogicalExchange;
-import org.apache.calcite.rel.logical.LogicalFilter;
-import org.apache.calcite.rel.logical.LogicalJoin;
-import org.apache.calcite.rel.logical.LogicalProject;
-import org.apache.calcite.rel.logical.LogicalSort;
-import org.apache.calcite.rel.logical.LogicalTableScan;
-import org.apache.calcite.rel.logical.LogicalUnion;
-import org.apache.calcite.rel.logical.LogicalValues;
-import org.apache.calcite.rel.metadata.BuiltInMetadata;
-import org.apache.calcite.rel.metadata.CachingRelMetadataProvider;
-import org.apache.calcite.rel.metadata.ChainedRelMetadataProvider;
-import org.apache.calcite.rel.metadata.DefaultRelMetadataProvider;
-import org.apache.calcite.rel.metadata.JaninoRelMetadataProvider;
-import org.apache.calcite.rel.metadata.Metadata;
-import org.apache.calcite.rel.metadata.MetadataDef;
-import org.apache.calcite.rel.metadata.MetadataHandler;
-import org.apache.calcite.rel.metadata.ReflectiveRelMetadataProvider;
-import org.apache.calcite.rel.metadata.RelColumnOrigin;
-import org.apache.calcite.rel.metadata.RelMdCollation;
-import org.apache.calcite.rel.metadata.RelMdColumnUniqueness;
-import org.apache.calcite.rel.metadata.RelMdUtil;
-import org.apache.calcite.rel.metadata.RelMetadataProvider;
-import org.apache.calcite.rel.metadata.RelMetadataQuery;
-import org.apache.calcite.rel.type.RelDataType;
-import org.apache.calcite.rex.RexBuilder;
-import org.apache.calcite.rex.RexCall;
-import org.apache.calcite.rex.RexInputRef;
-import org.apache.calcite.rex.RexLiteral;
-import org.apache.calcite.rex.RexNode;
-import org.apache.calcite.rex.RexTableInputRef;
-import org.apache.calcite.rex.RexTableInputRef.RelTableRef;
-import org.apache.calcite.sql.SqlKind;
-import org.apache.calcite.sql.SqlOperator;
-import org.apache.calcite.sql.SqlSpecialOperator;
-import org.apache.calcite.sql.fun.SqlStdOperatorTable;
-import org.apache.calcite.sql.type.ReturnTypes;
-import org.apache.calcite.sql.type.SqlTypeName;
-import org.apache.calcite.tools.FrameworkConfig;
-import org.apache.calcite.tools.Frameworks;
-import org.apache.calcite.tools.RelBuilder;
-import org.apache.calcite.util.BuiltInMethod;
-import org.apache.calcite.util.ImmutableBitSet;
-import org.apache.calcite.util.ImmutableIntList;
-import org.apache.calcite.util.SaffronProperties;
+import com.qihoo.qsql.org.apache.calcite.adapter.enumerable.EnumerableMergeJoin;
+import com.qihoo.qsql.org.apache.calcite.linq4j.tree.Types;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptCluster;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptPlanner;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptPredicateList;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptTable;
+import com.qihoo.qsql.org.apache.calcite.rel.InvalidRelException;
+import com.qihoo.qsql.org.apache.calcite.rel.RelCollation;
+import com.qihoo.qsql.org.apache.calcite.rel.RelCollationTraitDef;
+import com.qihoo.qsql.org.apache.calcite.rel.RelCollations;
+import com.qihoo.qsql.org.apache.calcite.rel.RelDistribution;
+import com.qihoo.qsql.org.apache.calcite.rel.RelDistributions;
+import com.qihoo.qsql.org.apache.calcite.rel.RelFieldCollation;
+import com.qihoo.qsql.org.apache.calcite.rel.RelNode;
+import com.qihoo.qsql.org.apache.calcite.rel.RelRoot;
+import com.qihoo.qsql.org.apache.calcite.rel.core.Aggregate;
+import com.qihoo.qsql.org.apache.calcite.rel.core.AggregateCall;
+import com.qihoo.qsql.org.apache.calcite.rel.core.Correlate;
+import com.qihoo.qsql.org.apache.calcite.rel.core.Filter;
+import com.qihoo.qsql.org.apache.calcite.rel.core.Join;
+import com.qihoo.qsql.org.apache.calcite.rel.core.JoinRelType;
+import com.qihoo.qsql.org.apache.calcite.rel.core.Minus;
+import com.qihoo.qsql.org.apache.calcite.rel.core.Project;
+import com.qihoo.qsql.org.apache.calcite.rel.core.SemiJoin;
+import com.qihoo.qsql.org.apache.calcite.rel.core.Sort;
+import com.qihoo.qsql.org.apache.calcite.rel.core.TableScan;
+import com.qihoo.qsql.org.apache.calcite.rel.core.Union;
+import com.qihoo.qsql.org.apache.calcite.rel.core.Values;
+import com.qihoo.qsql.org.apache.calcite.rel.logical.LogicalAggregate;
+import com.qihoo.qsql.org.apache.calcite.rel.logical.LogicalExchange;
+import com.qihoo.qsql.org.apache.calcite.rel.logical.LogicalFilter;
+import com.qihoo.qsql.org.apache.calcite.rel.logical.LogicalJoin;
+import com.qihoo.qsql.org.apache.calcite.rel.logical.LogicalProject;
+import com.qihoo.qsql.org.apache.calcite.rel.logical.LogicalSort;
+import com.qihoo.qsql.org.apache.calcite.rel.logical.LogicalTableScan;
+import com.qihoo.qsql.org.apache.calcite.rel.logical.LogicalUnion;
+import com.qihoo.qsql.org.apache.calcite.rel.logical.LogicalValues;
+import com.qihoo.qsql.org.apache.calcite.rel.metadata.BuiltInMetadata;
+import com.qihoo.qsql.org.apache.calcite.rel.metadata.CachingRelMetadataProvider;
+import com.qihoo.qsql.org.apache.calcite.rel.metadata.ChainedRelMetadataProvider;
+import com.qihoo.qsql.org.apache.calcite.rel.metadata.DefaultRelMetadataProvider;
+import com.qihoo.qsql.org.apache.calcite.rel.metadata.JaninoRelMetadataProvider;
+import com.qihoo.qsql.org.apache.calcite.rel.metadata.Metadata;
+import com.qihoo.qsql.org.apache.calcite.rel.metadata.MetadataDef;
+import com.qihoo.qsql.org.apache.calcite.rel.metadata.MetadataHandler;
+import com.qihoo.qsql.org.apache.calcite.rel.metadata.ReflectiveRelMetadataProvider;
+import com.qihoo.qsql.org.apache.calcite.rel.metadata.RelColumnOrigin;
+import com.qihoo.qsql.org.apache.calcite.rel.metadata.RelMdCollation;
+import com.qihoo.qsql.org.apache.calcite.rel.metadata.RelMdColumnUniqueness;
+import com.qihoo.qsql.org.apache.calcite.rel.metadata.RelMdUtil;
+import com.qihoo.qsql.org.apache.calcite.rel.metadata.RelMetadataProvider;
+import com.qihoo.qsql.org.apache.calcite.rel.metadata.RelMetadataQuery;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataType;
+import com.qihoo.qsql.org.apache.calcite.rex.RexBuilder;
+import com.qihoo.qsql.org.apache.calcite.rex.RexCall;
+import com.qihoo.qsql.org.apache.calcite.rex.RexInputRef;
+import com.qihoo.qsql.org.apache.calcite.rex.RexLiteral;
+import com.qihoo.qsql.org.apache.calcite.rex.RexNode;
+import com.qihoo.qsql.org.apache.calcite.rex.RexTableInputRef;
+import com.qihoo.qsql.org.apache.calcite.rex.RexTableInputRef.RelTableRef;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlKind;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlOperator;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlSpecialOperator;
+import com.qihoo.qsql.org.apache.calcite.sql.fun.SqlStdOperatorTable;
+import com.qihoo.qsql.org.apache.calcite.sql.type.ReturnTypes;
+import com.qihoo.qsql.org.apache.calcite.sql.type.SqlTypeName;
+import com.qihoo.qsql.org.apache.calcite.tools.FrameworkConfig;
+import com.qihoo.qsql.org.apache.calcite.tools.Frameworks;
+import com.qihoo.qsql.org.apache.calcite.tools.RelBuilder;
+import com.qihoo.qsql.org.apache.calcite.util.BuiltInMethod;
+import com.qihoo.qsql.org.apache.calcite.util.ImmutableBitSet;
+import com.qihoo.qsql.org.apache.calcite.util.ImmutableIntList;
+import com.qihoo.qsql.org.apache.calcite.util.SaffronProperties;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -960,7 +960,7 @@ public class RelMetadataTest extends SqlToRelTestBase {
     } catch (IllegalArgumentException e) {
       final String value = "No handler for method [public abstract java.lang.String "
           + "org.apache.calcite.test.RelMetadataTest$ColType.getColType(int)] "
-          + "applied to argument of type [interface org.apache.calcite.rel.RelNode]; "
+          + "applied to argument of type [interface com.qihoo.qsql.org.apache.calcite.rel.RelNode]; "
           + "we recommend you create a catch-all (RelNode) handler";
       assertThat(e.getMessage(), is(value));
     }
@@ -1040,7 +1040,7 @@ public class RelMetadataTest extends SqlToRelTestBase {
   }
 
   /** Unit test for
-   * {@link org.apache.calcite.rel.metadata.RelMdCollation#project}
+   * {@link com.qihoo.qsql.org.apache.calcite.rel.metadata.RelMdCollation#project}
    * and other helper functions for deducing collations. */
   @Test public void testCollation() {
     final Project rel = (Project) convertSql("select * from emp, dept");
@@ -1158,7 +1158,7 @@ public class RelMetadataTest extends SqlToRelTestBase {
   }
 
   /** Unit test for
-   * {@link org.apache.calcite.rel.metadata.RelMdColumnUniqueness#areColumnsUnique}
+   * {@link com.qihoo.qsql.org.apache.calcite.rel.metadata.RelMdColumnUniqueness#areColumnsUnique}
    * applied to {@link Values}. */
   @Test public void testColumnUniquenessForValues() {
     Frameworks.withPlanner((cluster, relOptSchema, rootSchema) -> {
@@ -1228,8 +1228,8 @@ public class RelMetadataTest extends SqlToRelTestBase {
   }
 
   /** Unit test for
-   * {@link org.apache.calcite.rel.metadata.RelMetadataQuery#getAverageColumnSizes(org.apache.calcite.rel.RelNode)},
-   * {@link org.apache.calcite.rel.metadata.RelMetadataQuery#getAverageRowSize(org.apache.calcite.rel.RelNode)}. */
+   * {@link com.qihoo.qsql.org.apache.calcite.rel.metadata.RelMetadataQuery#getAverageColumnSizes(com.qihoo.qsql.org.apache.calcite.rel.RelNode)},
+   * {@link com.qihoo.qsql.org.apache.calcite.rel.metadata.RelMetadataQuery#getAverageRowSize(com.qihoo.qsql.org.apache.calcite.rel.RelNode)}. */
   @Test public void testAverageRowSize() {
     final Project rel = (Project) convertSql("select * from emp, dept");
     final Join join = (Join) rel.getInput();
@@ -1368,7 +1368,7 @@ public class RelMetadataTest extends SqlToRelTestBase {
   }
 
   /** Unit test for
-   * {@link org.apache.calcite.rel.metadata.RelMdPredicates#getPredicates(Join, RelMetadataQuery)}. */
+   * {@link com.qihoo.qsql.org.apache.calcite.rel.metadata.RelMdPredicates#getPredicates(Join, RelMetadataQuery)}. */
   @Test public void testPredicates() {
     final Project rel = (Project) convertSql("select * from emp, dept");
     final Join join = (Join) rel.getInput();
@@ -1485,7 +1485,7 @@ public class RelMetadataTest extends SqlToRelTestBase {
 
   /**
    * Unit test for
-   * {@link org.apache.calcite.rel.metadata.RelMdPredicates#getPredicates(Aggregate, RelMetadataQuery)}.
+   * {@link com.qihoo.qsql.org.apache.calcite.rel.metadata.RelMdPredicates#getPredicates(Aggregate, RelMetadataQuery)}.
    */
   @Test public void testPullUpPredicatesFromAggregation() {
     final String sql = "select a, max(b) from (\n"
@@ -2423,7 +2423,7 @@ public class RelMetadataTest extends SqlToRelTestBase {
     }
 
     /** Implementation of {@link ColType#getColType(int)} for
-     * {@link org.apache.calcite.rel.logical.LogicalAggregate}, called via
+     * {@link com.qihoo.qsql.org.apache.calcite.rel.logical.LogicalAggregate}, called via
      * reflection. */
     @SuppressWarnings("UnusedDeclaration")
     public String getColType(Aggregate rel, RelMetadataQuery mq, int column) {

@@ -16,14 +16,14 @@
 data: {
     parser: {
       # Generated parser implementation class package and name
-      package: "org.apache.calcite.sql.parser.parserextensiontesting",
+      package: "com.qihoo.qsql.org.apache.calcite.sql.parser.parserextensiontesting",
       class: "ExtensionSqlParserImpl",
 
       # List of import statements.
       imports: [
-        "org.apache.calcite.sql.SqlCreate",
-        "org.apache.calcite.sql.parser.parserextensiontesting.SqlCreateTable",
-        "org.apache.calcite.sql.parser.parserextensiontesting.SqlUploadJarNode"
+        "com.qihoo.qsql.org.apache.calcite.sql.SqlCreate",
+        "com.qihoo.qsql.org.apache.calcite.sql.parser.parserextensiontesting.SqlCreateTable",
+        "com.qihoo.qsql.org.apache.calcite.sql.parser.parserextensiontesting.SqlUploadJarNode"
       ]
 
       # List of keywords.

@@ -16,13 +16,13 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.adapter.clone.CloneSchema;
-import org.apache.calcite.adapter.generate.RangeTable;
-import org.apache.calcite.adapter.java.AbstractQueryableTable;
-import org.apache.calcite.adapter.java.JavaTypeFactory;
-import org.apache.calcite.adapter.java.ReflectiveSchema;
-import org.apache.calcite.adapter.jdbc.JdbcConvention;
-import org.apache.calcite.adapter.jdbc.JdbcSchema;
+import com.qihoo.qsql.org.apache.calcite.adapter.clone.CloneSchema;
+import com.qihoo.qsql.org.apache.calcite.adapter.generate.RangeTable;
+import com.qihoo.qsql.org.apache.calcite.adapter.java.AbstractQueryableTable;
+import com.qihoo.qsql.org.apache.calcite.adapter.java.JavaTypeFactory;
+import com.qihoo.qsql.org.apache.calcite.adapter.java.ReflectiveSchema;
+import com.qihoo.qsql.org.apache.calcite.adapter.jdbc.JdbcConvention;
+import com.qihoo.qsql.org.apache.calcite.adapter.jdbc.JdbcSchema;
 import org.apache.calcite.avatica.AvaticaConnection;
 import org.apache.calcite.avatica.AvaticaStatement;
 import org.apache.calcite.avatica.Handler;
@@ -30,68 +30,68 @@ import org.apache.calcite.avatica.HandlerImpl;
 import org.apache.calcite.avatica.Meta;
 import org.apache.calcite.avatica.util.Casing;
 import org.apache.calcite.avatica.util.Quoting;
-import org.apache.calcite.config.CalciteConnectionConfig;
-import org.apache.calcite.config.CalciteConnectionProperty;
-import org.apache.calcite.config.Lex;
-import org.apache.calcite.config.NullCollation;
-import org.apache.calcite.jdbc.CalciteConnection;
-import org.apache.calcite.jdbc.CalciteMetaImpl;
-import org.apache.calcite.jdbc.CalcitePrepare;
-import org.apache.calcite.jdbc.CalciteSchema;
-import org.apache.calcite.jdbc.Driver;
-import org.apache.calcite.linq4j.Enumerator;
-import org.apache.calcite.linq4j.Linq4j;
-import org.apache.calcite.linq4j.Ord;
-import org.apache.calcite.linq4j.QueryProvider;
-import org.apache.calcite.linq4j.Queryable;
-import org.apache.calcite.linq4j.function.Function0;
-import org.apache.calcite.plan.RelOptCluster;
-import org.apache.calcite.plan.RelOptPlanner;
-import org.apache.calcite.plan.RelOptTable;
-import org.apache.calcite.plan.RelOptUtil;
-import org.apache.calcite.prepare.CalcitePrepareImpl;
-import org.apache.calcite.prepare.Prepare;
-import org.apache.calcite.rel.RelNode;
-import org.apache.calcite.rel.core.TableModify;
-import org.apache.calcite.rel.logical.LogicalTableModify;
-import org.apache.calcite.rel.rules.IntersectToDistinctRule;
-import org.apache.calcite.rel.type.RelDataType;
-import org.apache.calcite.rel.type.RelDataTypeFactory;
-import org.apache.calcite.rex.RexNode;
-import org.apache.calcite.runtime.FlatLists;
-import org.apache.calcite.runtime.Hook;
-import org.apache.calcite.runtime.SqlFunctions;
-import org.apache.calcite.schema.ModifiableTable;
-import org.apache.calcite.schema.ModifiableView;
-import org.apache.calcite.schema.QueryableTable;
-import org.apache.calcite.schema.Schema;
-import org.apache.calcite.schema.SchemaFactory;
-import org.apache.calcite.schema.SchemaPlus;
-import org.apache.calcite.schema.Table;
-import org.apache.calcite.schema.TableFactory;
-import org.apache.calcite.schema.TableMacro;
-import org.apache.calcite.schema.TranslatableTable;
-import org.apache.calcite.schema.impl.AbstractSchema;
-import org.apache.calcite.schema.impl.AbstractTable;
-import org.apache.calcite.schema.impl.AbstractTableQueryable;
-import org.apache.calcite.schema.impl.TableMacroImpl;
-import org.apache.calcite.schema.impl.ViewTable;
-import org.apache.calcite.sql.SqlCall;
-import org.apache.calcite.sql.SqlDialect;
-import org.apache.calcite.sql.SqlKind;
-import org.apache.calcite.sql.SqlNode;
-import org.apache.calcite.sql.SqlOperator;
-import org.apache.calcite.sql.SqlSelect;
-import org.apache.calcite.sql.SqlSpecialOperator;
-import org.apache.calcite.sql.parser.SqlParser;
-import org.apache.calcite.sql.parser.SqlParserPos;
-import org.apache.calcite.sql.parser.impl.SqlParserImpl;
-import org.apache.calcite.util.Bug;
-import org.apache.calcite.util.JsonBuilder;
-import org.apache.calcite.util.Pair;
-import org.apache.calcite.util.Smalls;
-import org.apache.calcite.util.TryThreadLocal;
-import org.apache.calcite.util.Util;
+import com.qihoo.qsql.org.apache.calcite.config.CalciteConnectionConfig;
+import com.qihoo.qsql.org.apache.calcite.config.CalciteConnectionProperty;
+import com.qihoo.qsql.org.apache.calcite.config.Lex;
+import com.qihoo.qsql.org.apache.calcite.config.NullCollation;
+import com.qihoo.qsql.org.apache.calcite.jdbc.CalciteConnection;
+import com.qihoo.qsql.org.apache.calcite.jdbc.CalciteMetaImpl;
+import com.qihoo.qsql.org.apache.calcite.jdbc.CalcitePrepare;
+import com.qihoo.qsql.org.apache.calcite.jdbc.CalciteSchema;
+import com.qihoo.qsql.org.apache.calcite.jdbc.Driver;
+import com.qihoo.qsql.org.apache.calcite.linq4j.Enumerator;
+import com.qihoo.qsql.org.apache.calcite.linq4j.Linq4j;
+import com.qihoo.qsql.org.apache.calcite.linq4j.Ord;
+import com.qihoo.qsql.org.apache.calcite.linq4j.QueryProvider;
+import com.qihoo.qsql.org.apache.calcite.linq4j.Queryable;
+import com.qihoo.qsql.org.apache.calcite.linq4j.function.Function0;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptCluster;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptPlanner;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptTable;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptUtil;
+import com.qihoo.qsql.org.apache.calcite.prepare.CalcitePrepareImpl;
+import com.qihoo.qsql.org.apache.calcite.prepare.Prepare;
+import com.qihoo.qsql.org.apache.calcite.rel.RelNode;
+import com.qihoo.qsql.org.apache.calcite.rel.core.TableModify;
+import com.qihoo.qsql.org.apache.calcite.rel.logical.LogicalTableModify;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.IntersectToDistinctRule;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataType;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeFactory;
+import com.qihoo.qsql.org.apache.calcite.rex.RexNode;
+import com.qihoo.qsql.org.apache.calcite.runtime.FlatLists;
+import com.qihoo.qsql.org.apache.calcite.runtime.Hook;
+import com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions;
+import com.qihoo.qsql.org.apache.calcite.schema.ModifiableTable;
+import com.qihoo.qsql.org.apache.calcite.schema.ModifiableView;
+import com.qihoo.qsql.org.apache.calcite.schema.QueryableTable;
+import com.qihoo.qsql.org.apache.calcite.schema.Schema;
+import com.qihoo.qsql.org.apache.calcite.schema.SchemaFactory;
+import com.qihoo.qsql.org.apache.calcite.schema.SchemaPlus;
+import com.qihoo.qsql.org.apache.calcite.schema.Table;
+import com.qihoo.qsql.org.apache.calcite.schema.TableFactory;
+import com.qihoo.qsql.org.apache.calcite.schema.TableMacro;
+import com.qihoo.qsql.org.apache.calcite.schema.TranslatableTable;
+import com.qihoo.qsql.org.apache.calcite.schema.impl.AbstractSchema;
+import com.qihoo.qsql.org.apache.calcite.schema.impl.AbstractTable;
+import com.qihoo.qsql.org.apache.calcite.schema.impl.AbstractTableQueryable;
+import com.qihoo.qsql.org.apache.calcite.schema.impl.TableMacroImpl;
+import com.qihoo.qsql.org.apache.calcite.schema.impl.ViewTable;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlCall;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlDialect;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlKind;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlNode;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlOperator;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlSelect;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlSpecialOperator;
+import com.qihoo.qsql.org.apache.calcite.sql.parser.SqlParser;
+import com.qihoo.qsql.org.apache.calcite.sql.parser.SqlParserPos;
+import com.qihoo.qsql.org.apache.calcite.sql.parser.impl.SqlParserImpl;
+import com.qihoo.qsql.org.apache.calcite.util.Bug;
+import com.qihoo.qsql.org.apache.calcite.util.JsonBuilder;
+import com.qihoo.qsql.org.apache.calcite.util.Pair;
+import com.qihoo.qsql.org.apache.calcite.util.Smalls;
+import com.qihoo.qsql.org.apache.calcite.util.TryThreadLocal;
+import com.qihoo.qsql.org.apache.calcite.util.Util;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.LinkedListMultimap;
@@ -138,7 +138,7 @@ import java.util.regex.Pattern;
 import javax.sql.DataSource;
 
 import static org.apache.calcite.test.Matchers.isLinux;
-import static org.apache.calcite.util.Static.RESOURCE;
+import static com.qihoo.qsql.org.apache.calcite.util.Static.RESOURCE;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -401,7 +401,7 @@ public class JdbcTest {
    *
    * <p>The function ({@link Smalls#view(String)} has a return type
    * {@link Table} and the actual returned value implements
-   * {@link org.apache.calcite.schema.TranslatableTable}.
+   * {@link com.qihoo.qsql.org.apache.calcite.schema.TranslatableTable}.
    */
   @Test public void testTableMacro()
       throws SQLException, ClassNotFoundException {
@@ -821,7 +821,7 @@ public class JdbcTest {
   }
 
   /** Unit test for
-   * {@link org.apache.calcite.jdbc.CalciteMetaImpl#likeToRegex(org.apache.calcite.avatica.Meta.Pat)}. */
+   * {@link com.qihoo.qsql.org.apache.calcite.jdbc.CalciteMetaImpl#likeToRegex(org.apache.calcite.avatica.Meta.Pat)}. */
   @Test public void testLikeToRegex() {
     checkLikeToRegex(true, "%", "abc");
     checkLikeToRegex(true, "abc", "abc");
@@ -2171,9 +2171,9 @@ public class JdbcTest {
   }
 
   /** Makes sure that a projection introduced by a call to
-   * {@link org.apache.calcite.rel.rules.JoinCommuteRule} does not
+   * {@link com.qihoo.qsql.org.apache.calcite.rel.rules.JoinCommuteRule} does not
    * manifest as an
-   * {@link org.apache.calcite.adapter.enumerable.EnumerableCalc} in the
+   * {@link com.qihoo.qsql.org.apache.calcite.adapter.enumerable.EnumerableCalc} in the
    * plan.
    *
    * <p>Test case for (not yet fixed)
@@ -2206,7 +2206,7 @@ public class JdbcTest {
 
   /** Checks that a 3-way join is re-ordered so that join conditions can be
    * applied. The plan must not contain cartesian joins.
-   * {@link org.apache.calcite.rel.rules.JoinPushThroughJoinRule} makes this
+   * {@link com.qihoo.qsql.org.apache.calcite.rel.rules.JoinPushThroughJoinRule} makes this
    * possible. */
   @Ignore
   @Test public void testExplainJoin() {
@@ -2356,7 +2356,7 @@ public class JdbcTest {
             "select upper((case when \"empid\">\"deptno\"*10 then 'y' else null end)) T from \"hr\".\"emps\"")
         .planContains("static final String "
             + "$L4J$C$org_apache_calcite_runtime_SqlFunctions_upper_y_ = "
-            + "org.apache.calcite.runtime.SqlFunctions.upper(\"y\");")
+            + "com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.upper(\"y\");")
         .planContains("return current.empid <= current.deptno * 10 "
             + "? (String) null "
             + ": $L4J$C$org_apache_calcite_runtime_SqlFunctions_upper_y_;")
@@ -2375,7 +2375,7 @@ public class JdbcTest {
         .planContains("return current.empid <= current.deptno * 10 "
             + "|| inp2_ == null "
             + "? (String) null "
-            + ": org.apache.calcite.runtime.SqlFunctions.upper(inp2_);")
+            + ": com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.upper(inp2_);")
         .returns("T=null\n"
             + "T=null\n"
             + "T=SEBASTIAN\n"
@@ -2390,13 +2390,13 @@ public class JdbcTest {
             "final String inp2_ = current.name;")
         .planContains("static final boolean "
             + "$L4J$C$org_apache_calcite_runtime_SqlFunctions_ne_sa_sa_ = "
-            + "org.apache.calcite.runtime.SqlFunctions.ne(\"sa\", \"sa\");")
+            + "com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.ne(\"sa\", \"sa\");")
         .planContains("static final boolean "
             + "$L4J$C$_org_apache_calcite_runtime_SqlFunctions_ne_sa_sa_ = "
             + "!$L4J$C$org_apache_calcite_runtime_SqlFunctions_ne_sa_sa_;")
         .planContains("return inp2_ == null "
             + "|| $L4J$C$_org_apache_calcite_runtime_SqlFunctions_ne_sa_sa_ ? (String) null"
-            + " : org.apache.calcite.runtime.SqlFunctions.substring(inp2_, "
+            + " : com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.substring(inp2_, "
             + "current.deptno + 1);");
   }
 
@@ -2417,7 +2417,7 @@ public class JdbcTest {
             "final int inp1_ = current.deptno;")
         .planContains("static final boolean "
             + "$L4J$C$org_apache_calcite_runtime_SqlFunctions_eq_sa_sa_ = "
-            + "org.apache.calcite.runtime.SqlFunctions.eq(\"sa\", \"sa\");")
+            + "com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.eq(\"sa\", \"sa\");")
         .planContains("static final boolean "
             + "$L4J$C$_org_apache_calcite_runtime_SqlFunctions_eq_sa_sa_ = "
             + "!$L4J$C$org_apache_calcite_runtime_SqlFunctions_eq_sa_sa_;")
@@ -2425,9 +2425,9 @@ public class JdbcTest {
             + "|| $L4J$C$_org_apache_calcite_runtime_SqlFunctions_eq_sa_sa_ "
             + "|| !v5 && inp1_ * 8 <= 8 "
             + "? (String) null "
-            + ": org.apache.calcite.runtime.SqlFunctions.substring("
-            + "org.apache.calcite.runtime.SqlFunctions.trim(true, true, \" \", "
-            + "org.apache.calcite.runtime.SqlFunctions.substring(inp2_, "
+            + ": com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.substring("
+            + "com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.trim(true, true, \" \", "
+            + "com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.substring(inp2_, "
             + "inp1_ * 0 + 1), true), (v5 ? 4 : 5) - 2);")
         .returns("T=ill\n"
             + "T=ric\n"
@@ -2454,7 +2454,7 @@ public class JdbcTest {
             "static final int $L4J$C$5_2 = 5 - 2;")
         .planContains("static final boolean "
             + "$L4J$C$org_apache_calcite_runtime_SqlFunctions_eq_sa_sa_ = "
-            + "org.apache.calcite.runtime.SqlFunctions.eq(\"sa\", \"sa\");")
+            + "com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.eq(\"sa\", \"sa\");")
         .planContains("static final boolean "
             + "$L4J$C$_org_apache_calcite_runtime_SqlFunctions_eq_sa_sa_ = "
             + "!$L4J$C$org_apache_calcite_runtime_SqlFunctions_eq_sa_sa_;")
@@ -2462,9 +2462,9 @@ public class JdbcTest {
             + "|| $L4J$C$_org_apache_calcite_runtime_SqlFunctions_eq_sa_sa_ "
             + "|| current.empid <= inp1_ && inp1_ * 8 <= 8 "
             + "? (String) null "
-            + ": org.apache.calcite.runtime.SqlFunctions.substring("
-            + "org.apache.calcite.runtime.SqlFunctions.trim(true, true, \" \", "
-            + "org.apache.calcite.runtime.SqlFunctions.substring(inp2_, "
+            + ": com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.substring("
+            + "com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.trim(true, true, \" \", "
+            + "com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.substring(inp2_, "
             + "inp1_ * 0 + 1), true), $L4J$C$5_2);")
         .returns("T=ll\n"
             + "T=ic\n"
@@ -3064,7 +3064,7 @@ public class JdbcTest {
             + "limit 0")
         .returns("")
         .planContains(
-            "return org.apache.calcite.linq4j.Linq4j.asEnumerable(new Object[] {})");
+            "return Linq4j.asEnumerable(new Object[] {})");
   }
 
   /** Alternative formulation for {@link #testFetchStar()}. */
@@ -3506,7 +3506,7 @@ public class JdbcTest {
             + "                  current[1],\n"
             + "                  current[0],\n"
             // Float.valueOf(SqlFunctions.toFloat(current[5])) comes from SUM0
-            + "                  org.apache.calcite.runtime.SqlFunctions.toLong(current[4]) > 0L ? Float.valueOf(org.apache.calcite.runtime.SqlFunctions.toFloat(current[5])) : (Float) null,\n"
+            + "                  com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.toLong(current[4]) > 0L ? Float.valueOf(com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.toFloat(current[5])) : (Float) null,\n"
             + "                  5,\n"
             + "                  current[6],\n"
             + "                  current[7]};\n");
@@ -3545,13 +3545,13 @@ public class JdbcTest {
 
   /**
    * Tests that window aggregates work when computed over non-nullable
-   * {@link org.apache.calcite.adapter.enumerable.JavaRowFormat#SCALAR} inputs.
+   * {@link com.qihoo.qsql.org.apache.calcite.adapter.enumerable.JavaRowFormat#SCALAR} inputs.
    * Window aggregates use temporary buffers, thus need to check if
    * primitives are properly boxed and un-boxed.
    */
   @Test public void testWinAggScalarNonNullPhysType() {
     String planLine =
-        "a0s0w0 = org.apache.calcite.runtime.SqlFunctions.lesser(a0s0w0, org.apache.calcite.runtime.SqlFunctions.toFloat(_rows[j]));";
+        "a0s0w0 = com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.lesser(a0s0w0, com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.toFloat(_rows[j]));";
     if (CalcitePrepareImpl.DEBUG) {
       planLine = planLine.replaceAll("a0s0w0", "MINa0s0w0");
     }
@@ -3570,13 +3570,13 @@ public class JdbcTest {
   }
 
   /**
-   * Tests that {@link org.apache.calcite.rel.logical.LogicalCalc} is
+   * Tests that {@link com.qihoo.qsql.org.apache.calcite.rel.logical.LogicalCalc} is
    * implemented properly when input is
-   * {@link org.apache.calcite.rel.logical.LogicalWindow} and literal.
+   * {@link com.qihoo.qsql.org.apache.calcite.rel.logical.LogicalWindow} and literal.
    */
   @Test public void testWinAggScalarNonNullPhysTypePlusOne() {
     String planLine =
-        "a0s0w0 = org.apache.calcite.runtime.SqlFunctions.lesser(a0s0w0, org.apache.calcite.runtime.SqlFunctions.toFloat(_rows[j]));";
+        "a0s0w0 = com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.lesser(a0s0w0, com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.toFloat(_rows[j]));";
     if (CalcitePrepareImpl.DEBUG) {
       planLine = planLine.replaceAll("a0s0w0", "MINa0s0w0");
     }
@@ -4293,10 +4293,10 @@ public class JdbcTest {
            final Object[] current = (Object[]) inputEnumerator.current();
            final String inp0_ = current[0] == null ? (String) null : current[0].toString();
            final String inp1_ = current[1] == null ? (String) null : current[1].toString();
-           if (inp0_ != null && org.apache.calcite.runtime.SqlFunctions.eq(inp0_, "a")
-               && (inp1_ != null && org.apache.calcite.runtime.SqlFunctions.eq(inp1_, "b"))
-               || inp0_ != null && org.apache.calcite.runtime.SqlFunctions.eq(inp0_, "b")
-               && (inp1_ != null && org.apache.calcite.runtime.SqlFunctions.eq(inp1_, "c"))) {
+           if (inp0_ != null && com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.eq(inp0_, "a")
+               && (inp1_ != null && com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.eq(inp1_, "b"))
+               || inp0_ != null && com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.eq(inp0_, "b")
+               && (inp1_ != null && com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.eq(inp1_, "c"))) {
              return true;
            }
          }
@@ -5165,7 +5165,7 @@ public class JdbcTest {
   /** Connects to a JDBC schema without writing a model. */
   @Test public void testJdbcSchemaDirectConnection() throws Exception {
     checkJdbcSchemaDirectConnection(
-        "schemaFactory=org.apache.calcite.adapter.jdbc.JdbcSchema$Factory");
+        "schemaFactory=com.qihoo.qsql.org.apache.calcite.adapter.jdbc.JdbcSchema$Factory");
     checkJdbcSchemaDirectConnection("schemaType=JDBC");
   }
 
@@ -5199,7 +5199,7 @@ public class JdbcTest {
   @Test public void testMapSchemaDirectConnection() throws Exception {
     checkMapSchemaDirectConnection("schemaType=MAP");
     checkMapSchemaDirectConnection(
-        "schemaFactory=org.apache.calcite.schema.impl.AbstractSchema$Factory");
+        "schemaFactory=com.qihoo.qsql.org.apache.calcite.schema.impl.AbstractSchema$Factory");
   }
 
   private void checkMapSchemaDirectConnection(String s) throws SQLException {
@@ -5516,7 +5516,7 @@ public class JdbcTest {
         + "  \"rels\": [\n"
         + "    {\n"
         + "      \"id\": \"0\",\n"
-        + "      \"relOp\": \"org.apache.calcite.adapter.enumerable.EnumerableValues\",\n"
+        + "      \"relOp\": \"com.qihoo.qsql.org.apache.calcite.adapter.enumerable.EnumerableValues\",\n"
         + "      \"type\": [\n"
         + "        {\n"
         + "          \"type\": \"INTEGER\",\n"
@@ -6253,19 +6253,19 @@ public class JdbcTest {
   @Test public void testSimpleCalciteSchemaWithView() throws Exception {
     final SchemaPlus rootSchema = CalciteSchema.createRootSchema(false, false).plus();
 
-    final Multimap<String, org.apache.calcite.schema.Function> functionMap =
+    final Multimap<String, com.qihoo.qsql.org.apache.calcite.schema.Function> functionMap =
         LinkedListMultimap.create();
     // create schema "/a"
     final SchemaPlus aSchema = rootSchema.add("a",
         new AbstractSchema() {
-          @Override protected Multimap<String, org.apache.calcite.schema.Function>
+          @Override protected Multimap<String, com.qihoo.qsql.org.apache.calcite.schema.Function>
           getFunctionMultimap() {
             return functionMap;
           }
         });
     // add view definition
     final String viewName = "V";
-    final org.apache.calcite.schema.Function view =
+    final com.qihoo.qsql.org.apache.calcite.schema.Function view =
         ViewTable.viewMacro(rootSchema.getSubSchema("a"),
             "values('1', '2')", null, null, false);
     functionMap.put(viewName, view);
@@ -6597,7 +6597,7 @@ public class JdbcTest {
             + "  schemas: [ {\n"
             + "    name: 'SCOTT_CLONE',\n"
             + "    type: 'custom',\n"
-            + "    factory: 'org.apache.calcite.adapter.clone.CloneSchema$Factory',\n"
+            + "    factory: 'com.qihoo.qsql.org.apache.calcite.adapter.clone.CloneSchema$Factory',\n"
             + "    operand: {\n"
             + "      jdbcDriver: '" + JdbcTest.SCOTT.driver + "',\n"
             + "      jdbcUser: '" + JdbcTest.SCOTT.username + "',\n"
@@ -6742,7 +6742,7 @@ public class JdbcTest {
     public final int deptno;
     public final String name;
 
-    @org.apache.calcite.adapter.java.Array(component = Employee.class)
+    @com.qihoo.qsql.org.apache.calcite.adapter.java.Array(component = Employee.class)
     public final List<Employee> employees;
     public final Location location;
 
@@ -7006,7 +7006,7 @@ public class JdbcTest {
   /** Mock driver that has a handler that stores the results of each query in
    * a temporary table. */
   public static class AutoTempDriver
-      extends org.apache.calcite.jdbc.Driver {
+      extends com.qihoo.qsql.org.apache.calcite.jdbc.Driver {
     private final List<Object> results;
 
     AutoTempDriver(List<Object> results) {
@@ -7027,7 +7027,7 @@ public class JdbcTest {
   }
 
   /** Mock driver that a given {@link Handler}. */
-  public static class HandlerDriver extends org.apache.calcite.jdbc.Driver {
+  public static class HandlerDriver extends com.qihoo.qsql.org.apache.calcite.jdbc.Driver {
     private static final TryThreadLocal<Handler> HANDLERS =
         TryThreadLocal.of(null);
 
@@ -7040,7 +7040,7 @@ public class JdbcTest {
   }
 
   /** Mock driver that can execute a trivial DDL statement. */
-  public static class MockDdlDriver extends org.apache.calcite.jdbc.Driver {
+  public static class MockDdlDriver extends com.qihoo.qsql.org.apache.calcite.jdbc.Driver {
     public int counter;
 
     public MockDdlDriver() {

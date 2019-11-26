@@ -16,16 +16,16 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.config.CalciteConnectionProperty;
-import org.apache.calcite.jdbc.CalciteConnection;
-import org.apache.calcite.schema.ScannableTable;
-import org.apache.calcite.schema.SchemaPlus;
-import org.apache.calcite.schema.Table;
-import org.apache.calcite.schema.TableFunction;
-import org.apache.calcite.schema.impl.AbstractSchema;
-import org.apache.calcite.schema.impl.TableFunctionImpl;
-import org.apache.calcite.sql.validate.SqlConformanceEnum;
-import org.apache.calcite.util.Smalls;
+import com.qihoo.qsql.org.apache.calcite.config.CalciteConnectionProperty;
+import com.qihoo.qsql.org.apache.calcite.jdbc.CalciteConnection;
+import com.qihoo.qsql.org.apache.calcite.schema.ScannableTable;
+import com.qihoo.qsql.org.apache.calcite.schema.SchemaPlus;
+import com.qihoo.qsql.org.apache.calcite.schema.Table;
+import com.qihoo.qsql.org.apache.calcite.schema.TableFunction;
+import com.qihoo.qsql.org.apache.calcite.schema.impl.AbstractSchema;
+import com.qihoo.qsql.org.apache.calcite.schema.impl.TableFunctionImpl;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlConformanceEnum;
+import com.qihoo.qsql.org.apache.calcite.util.Smalls;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -236,7 +236,7 @@ public class TableFunctionTest {
     } catch (SQLException e) {
       assertThat(e.getMessage(),
           containsString("Wrong arguments for table function 'public static "
-              + "org.apache.calcite.schema.QueryableTable "
+              + "com.qihoo.qsql.org.apache.calcite.schema.QueryableTable "
               + "org.apache.calcite.test.JdbcTest"
               + ".multiplicationTable(int,int,java.lang.Integer)'"
               + " call. Expected '[int, int, class"

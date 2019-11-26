@@ -16,10 +16,10 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.materialize.DelegatingLatticeStatisticProvider;
-import org.apache.calcite.materialize.Lattice;
-import org.apache.calcite.materialize.LatticeStatisticProvider;
-import org.apache.calcite.materialize.Lattices;
+import com.qihoo.qsql.org.apache.calcite.materialize.DelegatingLatticeStatisticProvider;
+import com.qihoo.qsql.org.apache.calcite.materialize.Lattice;
+import com.qihoo.qsql.org.apache.calcite.materialize.LatticeStatisticProvider;
+import com.qihoo.qsql.org.apache.calcite.materialize.Lattices;
 
 import com.google.common.collect.ImmutableMap;
 

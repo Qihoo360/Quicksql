@@ -17,39 +17,39 @@
 package org.apache.calcite.test;
 
 import org.apache.calcite.avatica.util.ByteString;
-import org.apache.calcite.plan.RelOptPredicateList;
-import org.apache.calcite.plan.RelOptUtil;
-import org.apache.calcite.plan.Strong;
-import org.apache.calcite.rel.metadata.NullSentinel;
-import org.apache.calcite.rel.type.RelDataType;
-import org.apache.calcite.rel.type.RelDataTypeFactory;
-import org.apache.calcite.rex.RexCall;
-import org.apache.calcite.rex.RexDynamicParam;
-import org.apache.calcite.rex.RexInputRef;
-import org.apache.calcite.rex.RexInterpreter;
-import org.apache.calcite.rex.RexLiteral;
-import org.apache.calcite.rex.RexLocalRef;
-import org.apache.calcite.rex.RexNode;
-import org.apache.calcite.rex.RexProgram;
-import org.apache.calcite.rex.RexProgramBuilder;
-import org.apache.calcite.rex.RexSimplify;
-import org.apache.calcite.rex.RexUnknownAs;
-import org.apache.calcite.rex.RexUtil;
-import org.apache.calcite.sql.SqlKind;
-import org.apache.calcite.sql.SqlOperator;
-import org.apache.calcite.sql.SqlSpecialOperator;
-import org.apache.calcite.sql.fun.SqlStdOperatorTable;
-import org.apache.calcite.sql.type.ReturnTypes;
-import org.apache.calcite.sql.type.SqlTypeAssignmentRules;
-import org.apache.calcite.sql.type.SqlTypeName;
-import org.apache.calcite.util.DateString;
-import org.apache.calcite.util.ImmutableBitSet;
-import org.apache.calcite.util.NlsString;
-import org.apache.calcite.util.TestUtil;
-import org.apache.calcite.util.TimeString;
-import org.apache.calcite.util.TimestampString;
-import org.apache.calcite.util.TimestampWithTimeZoneString;
-import org.apache.calcite.util.Util;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptPredicateList;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptUtil;
+import com.qihoo.qsql.org.apache.calcite.plan.Strong;
+import com.qihoo.qsql.org.apache.calcite.rel.metadata.NullSentinel;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataType;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeFactory;
+import com.qihoo.qsql.org.apache.calcite.rex.RexCall;
+import com.qihoo.qsql.org.apache.calcite.rex.RexDynamicParam;
+import com.qihoo.qsql.org.apache.calcite.rex.RexInputRef;
+import com.qihoo.qsql.org.apache.calcite.rex.RexInterpreter;
+import com.qihoo.qsql.org.apache.calcite.rex.RexLiteral;
+import com.qihoo.qsql.org.apache.calcite.rex.RexLocalRef;
+import com.qihoo.qsql.org.apache.calcite.rex.RexNode;
+import com.qihoo.qsql.org.apache.calcite.rex.RexProgram;
+import com.qihoo.qsql.org.apache.calcite.rex.RexProgramBuilder;
+import com.qihoo.qsql.org.apache.calcite.rex.RexSimplify;
+import com.qihoo.qsql.org.apache.calcite.rex.RexUnknownAs;
+import com.qihoo.qsql.org.apache.calcite.rex.RexUtil;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlKind;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlOperator;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlSpecialOperator;
+import com.qihoo.qsql.org.apache.calcite.sql.fun.SqlStdOperatorTable;
+import com.qihoo.qsql.org.apache.calcite.sql.type.ReturnTypes;
+import com.qihoo.qsql.org.apache.calcite.sql.type.SqlTypeAssignmentRules;
+import com.qihoo.qsql.org.apache.calcite.sql.type.SqlTypeName;
+import com.qihoo.qsql.org.apache.calcite.util.DateString;
+import com.qihoo.qsql.org.apache.calcite.util.ImmutableBitSet;
+import com.qihoo.qsql.org.apache.calcite.util.NlsString;
+import com.qihoo.qsql.org.apache.calcite.util.TestUtil;
+import com.qihoo.qsql.org.apache.calcite.util.TimeString;
+import com.qihoo.qsql.org.apache.calcite.util.TimestampString;
+import com.qihoo.qsql.org.apache.calcite.util.TimestampWithTimeZoneString;
+import com.qihoo.qsql.org.apache.calcite.util.Util;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -77,7 +77,7 @@ import static org.junit.Assert.assertThat;
 
 /**
  * Unit tests for {@link RexProgram} and
- * {@link org.apache.calcite.rex.RexProgramBuilder}.
+ * {@link com.qihoo.qsql.org.apache.calcite.rex.RexProgramBuilder}.
  */
 public class RexProgramTest extends RexProgramBuilderBase {
   /**
@@ -472,7 +472,7 @@ public class RexProgramTest extends RexProgramBuilderBase {
     return builder;
   }
 
-  /** Unit test for {@link org.apache.calcite.plan.Strong}. */
+  /** Unit test for {@link com.qihoo.qsql.org.apache.calcite.plan.Strong}. */
   @Test public void testStrong() {
     final RelDataType intType = typeFactory.createSqlType(SqlTypeName.INTEGER);
 
@@ -617,7 +617,7 @@ public class RexProgramTest extends RexProgramBuilderBase {
         "false");
   }
 
-  /** Unit test for {@link org.apache.calcite.rex.RexUtil#isLosslessCast(RexNode)}. */
+  /** Unit test for {@link com.qihoo.qsql.org.apache.calcite.rex.RexUtil#isLosslessCast(RexNode)}. */
   @Test public void testLosslessCast() {
     final RelDataType tinyIntType = typeFactory.createSqlType(SqlTypeName.TINYINT);
     final RelDataType smallIntType = typeFactory.createSqlType(SqlTypeName.SMALLINT);
@@ -729,7 +729,7 @@ public class RexProgramTest extends RexProgramBuilderBase {
             + "COLLATE \"ISO-8859-1$en_US$primary\" NOT NULL");
   }
 
-  /** Unit test for {@link org.apache.calcite.rex.RexUtil#toCnf}. */
+  /** Unit test for {@link com.qihoo.qsql.org.apache.calcite.rex.RexUtil#toCnf}. */
   @Test public void testCnf() {
     final RelDataType booleanType =
         typeFactory.createSqlType(SqlTypeName.BOOLEAN);
@@ -954,7 +954,7 @@ public class RexProgramTest extends RexProgramBuilderBase {
     }
   }
 
-  /** Unit test for {@link org.apache.calcite.rex.RexUtil#pullFactors}. */
+  /** Unit test for {@link com.qihoo.qsql.org.apache.calcite.rex.RexUtil#pullFactors}. */
   @Test public void testPullFactors() {
     final RelDataType booleanType =
         typeFactory.createSqlType(SqlTypeName.BOOLEAN);

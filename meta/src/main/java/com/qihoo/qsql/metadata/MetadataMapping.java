@@ -11,8 +11,8 @@ import java.util.Map;
  * Provide different params adapt for type of data source.
  */
 public enum MetadataMapping {
-    Elasticsearch("org.apache.calcite.adapter.elasticsearch.ElasticsearchCustomSchemaFactory",
-        "org.apache.calcite.adapter.elasticsearch.ElasticsearchTableFactory",
+    Elasticsearch("com.qihoo.qsql.org.apache.calcite.adapter.elasticsearch.ElasticsearchCustomSchemaFactory",
+        "com.qihoo.qsql.org.apache.calcite.adapter.elasticsearch.ElasticsearchTableFactory",
         Arrays.asList(
             "dbName", "tableName", "esNodes", "esPort",
             "esUser", "esPass", "esIndex", "esScrollNum"),
@@ -20,16 +20,16 @@ public enum MetadataMapping {
     /**
      * use '%' and literal 'value' to complete mapping.
      */
-    JDBC("org.apache.calcite.adapter.custom.JdbcSchemaFactory",
-        "org.apache.calcite.adapter.custom.JdbcTableFactory",
+    JDBC("com.qihoo.qsql.org.apache.calcite.adapter.custom.JdbcSchemaFactory",
+        "com.qihoo.qsql.org.apache.calcite.adapter.custom.JdbcTableFactory",
         Arrays.asList(
             "dbName", "tableName", "dbType", "jdbcDriver",
             "jdbcUrl", "jdbcUser", "jdbcPassword"),
         Collections.emptyList()
         ),
 
-    Hive("org.apache.calcite.adapter.hive.HiveSchemaFactory",
-        "org.apache.calcite.adapter.hive.HiveTableFactory",
+    Hive("com.qihoo.qsql.org.apache.calcite.adapter.hive.HiveSchemaFactory",
+        "com.qihoo.qsql.org.apache.calcite.adapter.hive.HiveTableFactory",
         Arrays.asList(
             "dbName", "tableName", "cluster"),
         Collections.emptyList());
