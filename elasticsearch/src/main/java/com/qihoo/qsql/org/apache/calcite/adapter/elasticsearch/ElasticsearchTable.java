@@ -18,12 +18,12 @@ package com.qihoo.qsql.org.apache.calcite.adapter.elasticsearch;
 
 import java.util.function.Consumer;
 import com.qihoo.qsql.org.apache.calcite.adapter.java.AbstractQueryableTable;
-import org.apache.calcite.linq4j.Enumerable;
-import org.apache.calcite.linq4j.Enumerator;
-import org.apache.calcite.linq4j.Linq4j;
-import org.apache.calcite.linq4j.QueryProvider;
-import org.apache.calcite.linq4j.Queryable;
-import org.apache.calcite.linq4j.function.Function1;
+import com.qihoo.qsql.org.apache.calcite.linq4j.Enumerable;
+import com.qihoo.qsql.org.apache.calcite.linq4j.Enumerator;
+import com.qihoo.qsql.org.apache.calcite.linq4j.Linq4j;
+import com.qihoo.qsql.org.apache.calcite.linq4j.QueryProvider;
+import com.qihoo.qsql.org.apache.calcite.linq4j.Queryable;
+import com.qihoo.qsql.org.apache.calcite.linq4j.function.Function1;
 import com.qihoo.qsql.org.apache.calcite.plan.RelOptCluster;
 import com.qihoo.qsql.org.apache.calcite.plan.RelOptTable;
 import com.qihoo.qsql.org.apache.calcite.rel.RelFieldCollation;

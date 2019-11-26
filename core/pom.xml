@@ -60,10 +60,6 @@ limitations under the License.
         </dependency>
         <!-- qsql-->
         <dependency>
-            <groupId>org.apache.calcite</groupId>
-            <artifactId>calcite-linq4j</artifactId>
-        </dependency>
-        <dependency>
             <groupId>jline</groupId>
             <artifactId>jline</artifactId>
         </dependency>

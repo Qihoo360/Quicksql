@@ -5,10 +5,10 @@ import com.qihoo.qsql.api.SqlRunner.Builder.RunnerType;
 import com.qihoo.qsql.env.RuntimeEnv;
 import java.io.IOException;
 
-public class CsvScanByFlinkExample {
+public class SimpleQueryByFlinkExample {
     public static void main(String[] args) throws IOException {
         RuntimeEnv.init();
-        String sql = "select * from depts";
+        String sql = "select 1";
         SqlRunner.Builder.RunnerType runnerType = RunnerType.FLINK;
         SqlRunner runner = SqlRunner.builder()
             .setTransformRunner(runnerType)
@@ -17,6 +17,7 @@ public class CsvScanByFlinkExample {
             .setAcceptedResultsNum(100)
             .ok();
         runner.sql(sql).show().run();
+        RuntimeEnv.close();
         System.exit(0);
     }
 }

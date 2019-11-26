@@ -16,7 +16,7 @@
  */
 package com.qihoo.qsql.org.apache.calcite.adapter.elasticsearch;
 
-import org.apache.calcite.linq4j.tree.Types;
+import com.qihoo.qsql.org.apache.calcite.linq4j.tree.Types;
 
 import com.google.common.collect.ImmutableMap;
 

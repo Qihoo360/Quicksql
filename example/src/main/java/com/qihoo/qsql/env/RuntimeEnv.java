@@ -47,6 +47,7 @@ public class RuntimeEnv {
 
         NODE.insertBulk("student", bulk);
         System.out.println("Elasticsearch Embedded Server has started!! Your query is running...");
+
     }
 
     public static final String metadata = "inline:\n"
@@ -120,4 +121,8 @@ public class RuntimeEnv {
         + "    }\n"
         + "  ]\n"
         + "}";
+
+    public static void close() {
+        NODE.close();
+    }
 }

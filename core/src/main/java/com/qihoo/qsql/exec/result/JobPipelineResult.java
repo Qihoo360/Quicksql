@@ -37,6 +37,8 @@ public abstract class JobPipelineResult implements PipelineResult {
         LOGGER.debug("Start executing Requirement!!");
         try {
             requirement.execute();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         } finally {
             requirement.close();
         }

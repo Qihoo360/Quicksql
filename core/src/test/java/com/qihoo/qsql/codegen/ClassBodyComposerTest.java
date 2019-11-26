@@ -35,7 +35,7 @@ public class ClassBodyComposerTest {
                 + "            return (a + b).length();\n"
                 + "        }\n"
                 + "\n"
-                + "\t\tpublic void execute(){\n"
+                + "\t\tpublic void execute() throws Exception {\n"
                 + "\t\t\tDataset<Row> tmp;\n"
                 + "\t\t\tString str = \"Test\";\n"
                 + "\t\t\tSystem.out.println(str);\n"
@@ -63,7 +63,7 @@ public class ClassBodyComposerTest {
                 + "\t\t\tsuper(spark);\n"
                 + "\t\t}\n"
                 + "\n"
-                + "\t\tpublic void execute(){\n"
+                + "\t\tpublic void execute() throws Exception {\n"
                 + "\t\t\tDataset<Row> tmp;\n"
                 + "\t\t}\n"
                 + "}\n",
@@ -94,7 +94,7 @@ public class ClassBodyComposerTest {
             + "             public String color;\n"
             + "         }\n"
             + "\n"
-            + "\t\tpublic void execute(){\n"
+            + "\t\tpublic void execute() throws Exception {\n"
             + "\t\t\tDataset<Row> tmp;\n"
             + "\t\t}\n"
             + "}\n", composer.getCompleteClass());

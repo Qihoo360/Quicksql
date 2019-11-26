@@ -35,7 +35,11 @@ public class SparkPipeline extends AbstractPipeline implements Compilable {
     @Override
     public void run() {
         SparkBodyWrapper newWrapper = new SparkBodyWrapper();
-        compileRequirement(newWrapper.run(procedure), session(), SparkSession.class).execute();
+        try {
+            compileRequirement(newWrapper.run(procedure), session(), SparkSession.class).execute();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     private SparkSession session() {

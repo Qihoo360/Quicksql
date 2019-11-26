@@ -89,36 +89,40 @@ public class ProcessExecutor {
             throw new RuntimeException(ex);
         }
 
-        switch (runner.toUpperCase()) {
-            case "FLINK":
-                try {
-                    final Constructor<FlinkRequirement> constructor =
-                        ((Class<FlinkRequirement>) requirementClass).getConstructor(ExecutionEnvironment.class);
+        try {
+            switch (runner.toUpperCase()) {
+                case "FLINK":
+                    try {
+                        final Constructor<FlinkRequirement> constructor =
+                            ((Class<FlinkRequirement>) requirementClass).getConstructor(ExecutionEnvironment.class);
 
-                    ExecutionEnvironment executionEnvironment = ExecutionEnvironment.getExecutionEnvironment();
-                    constructor.newInstance(executionEnvironment).execute();
-                } catch (NoSuchMethodException | IllegalAccessException
-                    | InvocationTargetException | InstantiationException ex) {
-                    throw new RuntimeException(ex);
-                }
-                break;
-            default:
-                try {
-                    final Constructor<SparkRequirement> constructor =
-                        ((Class<SparkRequirement>) requirementClass).getConstructor(SparkSession.class);
-                    SparkSession sc = SparkSession.builder()
-                        .master(master)
-                        .appName(appName)
-                        .enableHiveSupport()
-                        .getOrCreate();
+                        ExecutionEnvironment executionEnvironment = ExecutionEnvironment.getExecutionEnvironment();
+                        constructor.newInstance(executionEnvironment).execute();
+                    } catch (NoSuchMethodException | IllegalAccessException
+                        | InvocationTargetException | InstantiationException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    break;
+                default:
+                    try {
+                        final Constructor<SparkRequirement> constructor =
+                            ((Class<SparkRequirement>) requirementClass).getConstructor(SparkSession.class);
+                        SparkSession sc = SparkSession.builder()
+                            .master(master)
+                            .appName(appName)
+                            .enableHiveSupport()
+                            .getOrCreate();
 
-                    constructor.newInstance(sc).execute();
-                    sc.stop();
-                } catch (NoSuchMethodException | IllegalAccessException
-                    | InvocationTargetException | InstantiationException ex) {
-                    throw new RuntimeException(ex);
-                }
-                break;
+                        constructor.newInstance(sc).execute();
+                        sc.stop();
+                    } catch (NoSuchMethodException | IllegalAccessException
+                        | InvocationTargetException | InstantiationException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    break;
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
         }
     }
 }

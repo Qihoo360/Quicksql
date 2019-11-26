@@ -77,8 +77,9 @@ limitations under the License.
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.apache.calcite</groupId>
-            <artifactId>calcite-linq4j</artifactId>
+            <groupId>com.qihoo.qsql</groupId>
+            <artifactId>qsql-calcite-linq4j</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>org.elasticsearch.client</groupId>

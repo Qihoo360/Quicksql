@@ -21,10 +21,10 @@ import com.qihoo.qsql.org.apache.calcite.adapter.enumerable.EnumerableRelImpleme
 import com.qihoo.qsql.org.apache.calcite.adapter.enumerable.JavaRowFormat;
 import com.qihoo.qsql.org.apache.calcite.adapter.enumerable.PhysType;
 import com.qihoo.qsql.org.apache.calcite.adapter.enumerable.PhysTypeImpl;
-import org.apache.calcite.linq4j.tree.BlockBuilder;
-import org.apache.calcite.linq4j.tree.Expression;
-import org.apache.calcite.linq4j.tree.Expressions;
-import org.apache.calcite.linq4j.tree.MethodCallExpression;
+import com.qihoo.qsql.org.apache.calcite.linq4j.tree.BlockBuilder;
+import com.qihoo.qsql.org.apache.calcite.linq4j.tree.Expression;
+import com.qihoo.qsql.org.apache.calcite.linq4j.tree.Expressions;
+import com.qihoo.qsql.org.apache.calcite.linq4j.tree.MethodCallExpression;
 import com.qihoo.qsql.org.apache.calcite.plan.ConventionTraitDef;
 import com.qihoo.qsql.org.apache.calcite.plan.RelOptCluster;
 import com.qihoo.qsql.org.apache.calcite.plan.RelOptCost;

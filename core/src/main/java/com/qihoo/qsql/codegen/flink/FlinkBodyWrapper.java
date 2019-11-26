@@ -41,12 +41,7 @@ public class FlinkBodyWrapper extends IntegratedQueryWrapper {
 
     @Override
     public IntegratedQueryWrapper show() {
-        composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE,
-            "        try {\n"
-            + "            tmp.print();\n"
-            + "        } catch (Exception e) {\n"
-            + "            e.printStackTrace();\n"
-            + "        }\n");
+        composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE, "tmp.print();\n");
         return this;
     }
 

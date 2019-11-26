@@ -17,8 +17,8 @@
 package com.qihoo.qsql.org.apache.calcite.adapter.elasticsearch;
 
 import org.apache.calcite.avatica.util.DateTimeUtils;
-import org.apache.calcite.linq4j.function.Function1;
-import org.apache.calcite.linq4j.tree.Primitive;
+import com.qihoo.qsql.org.apache.calcite.linq4j.function.Function1;
+import com.qihoo.qsql.org.apache.calcite.linq4j.tree.Primitive;
 
 import java.util.Date;
 import java.util.List;

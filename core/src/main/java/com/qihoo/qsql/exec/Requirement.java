@@ -5,7 +5,7 @@ package com.qihoo.qsql.exec;
  */
 public interface Requirement {
 
-    void execute();
+    void execute() throws Exception;
 
     void close();
 }

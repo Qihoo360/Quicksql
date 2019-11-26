@@ -18,6 +18,7 @@
         <module>example</module>
         <module>assembly</module>
         <module>meta</module>
+        <module>linq4j</module>
     </modules>
 
     <properties>
@@ -139,7 +140,6 @@
         <elasticsearch5-java-driver.version>5.5.2
         </elasticsearch5-java-driver.version>
         <calcite.version>1.17.0</calcite.version>
-        <calcite.linq4j.version>1.20.0</calcite.linq4j.version>
         <elasticsearch-hadoop.version>6.2.4</elasticsearch-hadoop.version>
         <flink.version>1.9.1</flink.version>
         <commons-csv.version>1.5</commons-csv.version>
@@ -166,13 +166,6 @@
                 <artifactId>avatica-server</artifactId>
                 <version>${avatica.version}</version>
             </dependency>
-            <!--Use high version linq4j for adapt flink calcite, need to be fixed-->
-            <dependency>
-                <groupId>org.apache.calcite</groupId>
-                <artifactId>calcite-linq4j</artifactId>
-                <version>${calcite.linq4j.version}</version>
-            </dependency>
-
             <!-- Now third-party dependencies, sorted by groupId and artifactId. -->
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -555,59 +548,61 @@
                 <groupId>org.apache.flink</groupId>
                 <artifactId>flink-java</artifactId>
                 <version>${flink.version}</version>
-                <!--<scope>provided</scope>-->
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.flink</groupId>
                 <artifactId>flink-streaming-java_${scala.version}</artifactId>
                 <version>${flink.version}</version>
-                <!--<scope>provided</scope>-->
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.flink</groupId>
-                <artifactId>flink-streaming-scala_${scala.version}
-                </artifactId>
+                <artifactId>flink-streaming-scala_${scala.version}</artifactId>
                 <version>${flink.version}</version>
-                <!--<scope>provided</scope>-->
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.flink</groupId>
                 <artifactId>flink-table-api-java-bridge_${scala.version}</artifactId>
                 <version>${flink.version}</version>
-                <!--<scope>provided</scope>-->
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.flink</groupId>
                 <artifactId>flink-table-planner_${scala.version}</artifactId>
                 <version>${flink.version}</version>
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.flink</groupId>
                 <artifactId>flink-table-api-scala-bridge_${scala.version}</artifactId>
                 <version>${flink.version}</version>
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.flink</groupId>
                 <artifactId>flink-table-common</artifactId>
                 <version>${flink.version}</version>
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.flink</groupId>
                 <artifactId>flink-clients_${scala.version}</artifactId>
                 <version>${flink.version}</version>
-                <!--<scope>provided</scope>-->
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.flink</groupId>
                 <artifactId>flink-connector-elasticsearch5_2.11</artifactId>
                 <version>${flink.version}</version>
-                <!--<scope>provided</scope>-->
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.flink</groupId>
                 <artifactId>flink-connector-hive_${scala.version}</artifactId>
                 <version>${flink.version}</version>
-                <!--<scope>provided</scope>-->
+                <scope>provided</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

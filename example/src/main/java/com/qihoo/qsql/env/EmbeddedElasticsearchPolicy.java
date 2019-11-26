@@ -177,6 +177,15 @@ public class EmbeddedElasticsearchPolicy {
     return node.httpAddress();
   }
 
+  public void close() {
+    closer.close();
+    try {
+      client.close();
+      node.close();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
 }
 
 // End EmbeddedElasticsearchPolicy.java
