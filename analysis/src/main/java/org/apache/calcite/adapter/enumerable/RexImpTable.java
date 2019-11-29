@@ -75,6 +75,7 @@ import static org.apache.calcite.sql.fun.SqlStdOperatorTable.EXP;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.EXTRACT;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.FIRST_VALUE;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.FLOOR;
+import static org.apache.calcite.sql.fun.SqlStdOperatorTable.FROM_UNIXTIME;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.FUSION;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.GREATER_THAN;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.GREATER_THAN_OR_EQUAL;
@@ -159,6 +160,7 @@ import static org.apache.calcite.sql.fun.SqlStdOperatorTable.STRING_CONCAT;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.SUBMULTISET_OF;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.SUBSTR;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.SUBSTRING;
+import static org.apache.calcite.sql.fun.SqlStdOperatorTable.SUBSTRING_INDEX;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.SUM;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.SUM0;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.SYSTEM_USER;
@@ -167,6 +169,7 @@ import static org.apache.calcite.sql.fun.SqlStdOperatorTable.TRIM;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.TRUNCATE;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.UNARY_MINUS;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.UNARY_PLUS;
+import static org.apache.calcite.sql.fun.SqlStdOperatorTable.UNIX_TIMESTAMP;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.UPPER;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.URLDECODE;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.URLENCODE;
@@ -264,6 +267,11 @@ public class RexImpTable {
     defineMethod(DATE_ADD, BuiltInMethod.DATE_ADD.method, NullPolicy.STRICT);
     defineMethod(DATE_SUB, BuiltInMethod.DATE_SUB.method, NullPolicy.STRICT);
     defineMethod(REFLECT, BuiltInMethod.REFLECT.method, NullPolicy.STRICT);
+    defineMethod(SUBSTRING_INDEX, BuiltInMethod.SUBSTRING_INDEX.method, NullPolicy.STRICT);
+    defineMethod(FROM_UNIXTIME, BuiltInMethod.FROM_UNIXTIME.method, NullPolicy.STRICT);
+    defineMethod(UNIX_TIMESTAMP, BuiltInMethod.UNIX_TIMESTAMP.method, NullPolicy.STRICT);
+
+
     //qsql end
 
     defineMethod(ROW, BuiltInMethod.ARRAY.method, NullPolicy.ANY);

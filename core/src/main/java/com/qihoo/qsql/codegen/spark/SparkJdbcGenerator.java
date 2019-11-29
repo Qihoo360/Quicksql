@@ -3,7 +3,6 @@ package com.qihoo.qsql.codegen.spark;
 import com.qihoo.qsql.codegen.ClassBodyComposer;
 import com.qihoo.qsql.codegen.QueryGenerator;
 import java.util.Properties;
-import org.apache.commons.lang.StringEscapeUtils;
 
 /**
  * Code generator, used when {@link com.qihoo.qsql.exec.spark.SparkPipeline} is chosen and source
@@ -33,7 +32,7 @@ public class SparkJdbcGenerator extends QueryGenerator {
         String invokeWrap = config.invoke(convertProperties("jdbcUser", "jdbcPassword", "jdbcDriver"));
         String invoked = String.format("tmp = spark.read().jdbc(\"%s\", \"%s\", %s);",
                 properties.getOrDefault("jdbcUrl", ""),
-            "(" + StringEscapeUtils.escapeJava(query) + ") " + tableName, invokeWrap);
+            "(" + query + ") " + tableName, invokeWrap);
         composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE, invoked);
     }
 
