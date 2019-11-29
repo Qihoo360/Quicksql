@@ -143,7 +143,7 @@ public class QueryProcedureProducer {
         final SqlParser.Config parserConfig = SqlParser.configBuilder()
             .setConformance(SqlConformanceEnum.MYSQL_5)
             .setQuoting(Quoting.BACK_TICK)
-            .setCaseSensitive(true)
+            .setCaseSensitive(false)
             .setUnquotedCasing(Casing.UNCHANGED)
             .build();
 

@@ -281,7 +281,6 @@ public class SubtreeSyncopatorTest {
                 .setQuoting(Quoting.BACK_TICK)
                 .setUnquotedCasing(Casing.UNCHANGED)
                 // .setUnquotedCasing(Casing.UNCHANGED)
-                .setCaseSensitive(true)
                 .build();
 
             this.config = Frameworks.newConfigBuilder()

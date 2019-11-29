@@ -1290,7 +1290,7 @@ public class SqlStdOperatorTable extends ReflectiveSqlOperatorTable {
           OperandTypes.CHARACTER,
           SqlFunctionCategory.NUMERIC);
 
-
+  //Updated by qsql-team start
   public static final SqlFunction URLDECODE =
       new SqlFunction(
           "URLDECODE",
@@ -1367,6 +1367,35 @@ public class SqlStdOperatorTable extends ReflectiveSqlOperatorTable {
 
   public static final SqlFunction SUBSTR = new SqlSubstrFunction();
 
+  public static final SqlFunction SUBSTRING_INDEX = new SqlFunction(
+      "SUBSTRING_INDEX",
+      SqlKind.OTHER_FUNCTION,
+      ReturnTypes.VARCHAR_2000,
+      null,
+      OperandTypes.STRING_SAME_SAME_INTEGER,
+      SqlFunctionCategory.STRING
+  );
+
+  public static final SqlFunction FROM_UNIXTIME = new SqlFunction(
+      "FROM_UNIXTIME",
+      SqlKind.OTHER_FUNCTION,
+      ReturnTypes.VARCHAR_2000,
+      null,
+      OperandTypes.NUMERIC_OPTIONAL_INTEGER,
+      SqlFunctionCategory.STRING
+  );
+  /**
+   * The <code>UNIX_TIMESTAMP [(<i>precision</i>)]</code> function.
+   */
+  public static final SqlFunction UNIX_TIMESTAMP = new SqlFunction(
+      "UNIX_TIMESTAMP",
+      SqlKind.OTHER_FUNCTION,
+      ReturnTypes.VARCHAR_2000,
+      null,
+      OperandTypes.or(
+          OperandTypes.STRING, OperandTypes.NILADIC),
+      SqlFunctionCategory.STRING
+  );
   public static final SqlFunction REGEXP_EXTRACT = new SqlRegexpExtractFunction();
 
   public static final SqlFunction REGEXP_REPLACE = new SqlRegexpReplaceFunction();
@@ -1386,6 +1415,10 @@ public class SqlStdOperatorTable extends ReflectiveSqlOperatorTable {
           ReturnTypes.cascade(ReturnTypes.ARG0, SqlTypeTransforms.TO_NULLABLE,
               SqlTypeTransforms.TO_VARYING), null,
           OperandTypes.STRING, SqlFunctionCategory.STRING);
+
+  //Updated by qsql-team end
+
+
   /**
    * The character substring function: <code>SUBSTRING(string FROM start [FOR
    * length])</code>.
