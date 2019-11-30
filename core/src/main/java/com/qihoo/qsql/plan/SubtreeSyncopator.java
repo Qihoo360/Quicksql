@@ -26,6 +26,7 @@ import org.apache.calcite.rel.core.Project;
 import org.apache.calcite.rel.core.TableScan;
 import org.apache.calcite.rel.core.Values;
 import org.apache.calcite.rel.logical.LogicalAggregate;
+import org.apache.calcite.rel.logical.LogicalCorrelate;
 import org.apache.calcite.rel.logical.LogicalFilter;
 import org.apache.calcite.rel.logical.LogicalIntersect;
 import org.apache.calcite.rel.logical.LogicalJoin;
@@ -142,7 +143,6 @@ public class SubtreeSyncopator extends RelShuttleImpl {
     @Override
     public RelNode visit(LogicalFilter filter) {
         RelNode tableScan = filter.getInput().accept(this);
-
         if (! isValues(tableScan)) {
             return neededToPullUpFunctions(filter, filter.getChildExps(), castTableScan(tableScan))
                 ? new MixedTableScan(castTableScan(tableScan)) : tableScan;
@@ -161,6 +161,11 @@ public class SubtreeSyncopator extends RelShuttleImpl {
 
     public RelNode visit(LogicalValues values) {
         return values;
+    }
+
+    @Override
+    public RelNode visit(LogicalCorrelate correlate) {
+        return completeLogicalTree(correlate);
     }
 
     private RelNode completeLogicalTree(RelNode binaryNode) {
@@ -192,7 +197,6 @@ public class SubtreeSyncopator extends RelShuttleImpl {
             pruneSubtree(parent, left, 0);
             return true;
         }
-
         if (shouldBeDivided(left.getTable(), right.getTable())) {
             pruneSubtree(parent, left, 0);
             pruneSubtree(parent, right, 1);

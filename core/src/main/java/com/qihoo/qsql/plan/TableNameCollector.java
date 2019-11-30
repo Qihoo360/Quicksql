@@ -2,7 +2,9 @@ package com.qihoo.qsql.plan;
 
 import com.qihoo.qsql.exception.ParseException;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.apache.calcite.avatica.util.Casing;
 import org.apache.calcite.avatica.util.Quoting;
 import org.apache.calcite.sql.SqlAsOperator;
@@ -32,6 +34,7 @@ import org.apache.calcite.sql.validate.SqlConformanceEnum;
  */
 public class TableNameCollector implements SqlVisitor<QueryTables> {
 
+    private Set<String> withTempTables = new HashSet<>();
     private QueryTables tableNames = new QueryTables();
     //TODO extract SqlParser to correspond with calcite-core
     private SqlConformance conformance = SqlConformanceEnum.MYSQL_5;
@@ -43,7 +46,6 @@ public class TableNameCollector implements SqlVisitor<QueryTables> {
         .setQuoting(quoting)
         .setQuotedCasing(Casing.UNCHANGED)
         .setUnquotedCasing(Casing.UNCHANGED)
-        .setCaseSensitive(true)
         .build();
 
     /**
@@ -88,6 +90,7 @@ public class TableNameCollector implements SqlVisitor<QueryTables> {
 
         if (sqlCall instanceof SqlWith) {
             ((SqlWith) sqlCall).withList.accept(this);
+            ((SqlWith) sqlCall).body.accept(this);
         }
 
         if (sqlCall instanceof SqlJoin) {
@@ -112,6 +115,11 @@ public class TableNameCollector implements SqlVisitor<QueryTables> {
             if (entry instanceof SqlSelect) {
                 entry.accept(this);
             } else if (entry instanceof SqlWithItem) {
+                //TODO caution db.table query
+                List<String> names = ((SqlWithItem) entry).name.names;
+                if (! names.isEmpty()) {
+                    withTempTables.add(names.get(names.size() - 1));
+                }
                 ((SqlWithItem) entry).query.accept(this);
             } else if (entry instanceof SqlBasicCall) {
                 String kind = ((SqlBasicCall) entry).getOperator().getName();
@@ -179,6 +187,7 @@ public class TableNameCollector implements SqlVisitor<QueryTables> {
                     + " and there is a unsupported tableName here: " + tableName);
             }
         }
+        tableNames.tableNames.removeIf((item) -> withTempTables.contains(item));
         return tableNames;
     }
 }

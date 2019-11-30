@@ -25,7 +25,6 @@ public class ExtSqlParserTest {
         .setQuoting(quoting)
         .setQuotedCasing(Casing.UNCHANGED)
         .setUnquotedCasing(Casing.UNCHANGED)
-        .setCaseSensitive(true)
         .build();
 
     @Test

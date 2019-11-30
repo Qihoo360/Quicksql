@@ -58,7 +58,8 @@ public class SqlTestFactory {
           .put("quoting", Quoting.DOUBLE_QUOTE)
           .put("quotedCasing", Casing.UNCHANGED)
           .put("unquotedCasing", Casing.TO_UPPER)
-          .put("caseSensitive", true)
+          //Updated by qsql-team
+          .put("caseSensitive", false)
           .put("conformance", SqlConformanceEnum.DEFAULT)
           .put("operatorTable", SqlStdOperatorTable.instance())
           .put("connectionFactory",

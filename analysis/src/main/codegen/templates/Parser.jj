@@ -6439,7 +6439,9 @@ String CommonNonReservedKeyWord() :
     }
 }
 
-/* LITERALS */
+/** LITERALS
+ * Updated by qsql-team
+ */
 
 <DEFAULT, DQID, BTID> TOKEN :
 {
@@ -6463,9 +6465,11 @@ String CommonNonReservedKeyWord() :
 |
     /* To improve error reporting, we allow all kinds of characters,
      * not just hexits, in a binary string literal. */
-    < BINARY_STRING_LITERAL: ["x","X"] <QUOTE> ( (~["'"]) | ("''"))* <QUOTE> >
+    < BINARY_STRING_LITERAL: (["x","X"] <QUOTE> ( (~["'"]) | ("''"))* <QUOTE>)
+    | (["x","X"] <DOUBLE_QUOTE> ( (~["'"]) | ("''"))* <DOUBLE_QUOTE>) >
 |
-    < QUOTED_STRING: <QUOTE> ( (~["'"]) | ("''"))* <QUOTE> >
+    < QUOTED_STRING: (<QUOTE> ( (~["'"]) | ("''"))* <QUOTE>)
+    | (<DOUBLE_QUOTE> ( (~["'"]) | ("''"))* <DOUBLE_QUOTE>) >
 |
     < PREFIXED_STRING_LITERAL: ("_" <CHARSETNAME> | "N") <QUOTED_STRING> >
 |
@@ -6476,12 +6480,21 @@ String CommonNonReservedKeyWord() :
     >
 }
 
+/**
+ * Updated by qsql-team
+ */
 <DEFAULT, DQID, BTID> TOKEN :
 {
-    < UNICODE_QUOTED_ESCAPE_CHAR:
+    < UNICODE_QUOTED_ESCAPE_CHAR: (
     <QUOTE>
     (~["0"-"9","a"-"f","A"-"F","+","\""," ","\t","\n","\r","\f"])
     <QUOTE>
+    ) |
+    (
+    <DOUBLE_QUOTE>
+    (~["0"-"9","a"-"f","A"-"F","+","\""," ","\t","\n","\r","\f"])
+    <DOUBLE_QUOTE>
+    )
     >
 }
 

@@ -347,7 +347,7 @@ public class ScannableTableTest {
    * In prepared statement, CsvScannableTable.scan is called twice</a>. */
   @Test public void testPrepared2() throws SQLException {
     final Properties properties = new Properties();
-    properties.setProperty("caseSensitive", "true");
+    properties.setProperty("caseSensitive", "false");
     try (Connection connection =
              DriverManager.getConnection("jdbc:calcite:", properties)) {
       final CalciteConnection calciteConnection = connection.unwrap(

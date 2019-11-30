@@ -208,11 +208,12 @@ public class SqlParser {
 
   /** Builder for a {@link Config}. */
   public static class ConfigBuilder {
-    private Casing quotedCasing = Lex.ORACLE.quotedCasing;
-    private Casing unquotedCasing = Lex.ORACLE.unquotedCasing;
-    private Quoting quoting = Lex.ORACLE.quoting;
+    //Updated by qsql-team
+    private Casing quotedCasing = Lex.MYSQL.quotedCasing;
+    private Casing unquotedCasing = Lex.MYSQL.unquotedCasing;
+    private Quoting quoting = Lex.MYSQL.quoting;
     private int identifierMaxLength = DEFAULT_IDENTIFIER_MAX_LENGTH;
-    private boolean caseSensitive = Lex.ORACLE.caseSensitive;
+    private boolean caseSensitive = Lex.MYSQL.caseSensitive;
     private SqlConformance conformance = SqlConformanceEnum.DEFAULT;
     private SqlParserImplFactory parserFactory = SqlParserImpl.FACTORY;
 

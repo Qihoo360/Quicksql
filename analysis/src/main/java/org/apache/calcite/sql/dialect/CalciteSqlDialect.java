@@ -34,7 +34,8 @@ public class CalciteSqlDialect extends SqlDialect {
   public static final SqlDialect DEFAULT =
       new CalciteSqlDialect(emptyContext()
           .withDatabaseProduct(DatabaseProduct.CALCITE)
-          .withIdentifierQuoteString("\""));
+          //updated by qsql-team
+          .withIdentifierQuoteString("`"));
 
   /** Creates a CalciteSqlDialect. */
   public CalciteSqlDialect(Context context) {
