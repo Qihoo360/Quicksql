@@ -295,6 +295,17 @@ public class SqlFunctions {
     Date date = new Date((long)time * 1000);
     return sf.format(date);
   }
+  /** SQL FROM_UNIXTIME(Long time,String s) function. */
+  public static String fromunixtime(Long time,String s) {
+    return null;
+  }
+
+  /** SQL FROM_UNIXTIME(Integer time,String s) function. */
+  public static String fromunixtime(Integer time,String s) {
+    SimpleDateFormat sf = new SimpleDateFormat(s);
+    Date date = new Date((long)time * 1000);
+    return sf.format(date);
+  }
 
 
   /** SQL {@code UNIX_TIMESTAMP} function. */

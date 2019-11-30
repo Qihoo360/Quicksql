@@ -131,7 +131,7 @@ public enum BuiltInMethod {
   REFLECT(SqlFunctions.class,"reflect",Enumerable.class),
   SUBSTRING_INDEX(SqlFunctions.class, "substringIndex", String.class,String.class,int.class),
   UNIX_TIMESTAMP(SqlFunctions.class, "unixTimestamp",String.class),
-  FROM_UNIXTIME(SqlFunctions.class, "fromunixtime",  Long.class),
+  FROM_UNIXTIME(SqlFunctions.class, "fromunixtime",  Integer.class,String.class),
 
   //qsql end
 

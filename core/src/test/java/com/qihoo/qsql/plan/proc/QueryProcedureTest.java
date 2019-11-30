@@ -714,6 +714,9 @@ public class QueryProcedureTest {
         prepareForChecking("select FROM_UNIXTIME(1574997071)");
         prepareForChecking("select FROM_UNIXTIME(1)");
         prepareForChecking("select FROM_UNIXTIME(15749970711)");
+        prepareForChecking("select FROM_UNIXTIME(1574997071,'yyyy-MM-dd')");
+        prepareForChecking("select FROM_UNIXTIME(1574997071,'yyyyMMdd')");
+        prepareForChecking("select FROM_UNIXTIME(15749970712,'yyyy-MM-dd')");
     }
 
     @Test

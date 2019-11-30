@@ -1381,7 +1381,8 @@ public class SqlStdOperatorTable extends ReflectiveSqlOperatorTable {
       SqlKind.OTHER_FUNCTION,
       ReturnTypes.VARCHAR_2000,
       null,
-      OperandTypes.NUMERIC_OPTIONAL_INTEGER,
+      OperandTypes.or(
+          OperandTypes.NUMERIC_OPTIONAL_INTEGER, OperandTypes.INTEGER_OR_STRING, OperandTypes.NUMERIC_OR_STRING),
       SqlFunctionCategory.STRING
   );
   /**

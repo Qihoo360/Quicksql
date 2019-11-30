@@ -244,6 +244,10 @@ public abstract class OperandTypes {
 
   public static final SqlSingleOperandTypeChecker INTEGER=
       family(SqlTypeFamily.INTEGER);
+
+  public static final SqlSingleOperandTypeChecker INTEGER_OR_STRING =
+      family(SqlTypeFamily.INTEGER,SqlTypeFamily.STRING);
+
   //Updated by qsql-end
 
 
