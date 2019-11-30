@@ -35,7 +35,7 @@ public class SparkCsvGenerator extends QueryGenerator {
             + "            .toDF()\n"
             + "            .createOrReplaceTempView(\"" + properties.getProperty("tableName") + "\");\n"
             + "        \n"
-            + "        tmp = spark.sql(\"" + query.replaceAll("\\.", "_") + "\");";
+            + "      tmp = spark.sql(\"" + query.replaceAll("\\.", "_") + "\");";
         composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE, invoked);
     }
 

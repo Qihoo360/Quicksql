@@ -1,13 +1,13 @@
 package com.qihoo.qsql.exec.result;
 
-import java.util.Collection;
+import java.sql.ResultSet;
 
 /**
  * Result of pipeline.
  */
 public interface PipelineResult {
 
-    Collection<String> getData();
+    ResultSet getData();
 
     void run();
 }

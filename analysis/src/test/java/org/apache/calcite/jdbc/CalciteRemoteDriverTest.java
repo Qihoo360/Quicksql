@@ -1,19 +1,3 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to you under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.apache.calcite.jdbc;
 
 import org.apache.calcite.avatica.AvaticaConnection;
@@ -213,27 +197,27 @@ public class CalciteRemoteDriverTest {
     assertThat(connection.isClosed(), is(false));
     for (Meta.DatabaseProperty p : Meta.DatabaseProperty.values()) {
       switch (p) {
-      case GET_NUMERIC_FUNCTIONS:
-        assertThat(connection.getMetaData().getNumericFunctions(),
-            not(equalTo("")));
-        break;
-      case GET_SYSTEM_FUNCTIONS:
-        assertThat(connection.getMetaData().getSystemFunctions(),
-            CoreMatchers.notNullValue());
-        break;
-      case GET_TIME_DATE_FUNCTIONS:
-        assertThat(connection.getMetaData().getTimeDateFunctions(),
-            not(equalTo("")));
-        break;
-      case GET_S_Q_L_KEYWORDS:
-        assertThat(connection.getMetaData().getSQLKeywords(),
-            not(equalTo("")));
-        break;
-      case GET_STRING_FUNCTIONS:
-        assertThat(connection.getMetaData().getStringFunctions(),
-            not(equalTo("")));
-        break;
-      default:
+        case GET_NUMERIC_FUNCTIONS:
+          assertThat(connection.getMetaData().getNumericFunctions(),
+              not(equalTo("")));
+          break;
+        case GET_SYSTEM_FUNCTIONS:
+          assertThat(connection.getMetaData().getSystemFunctions(),
+              CoreMatchers.notNullValue());
+          break;
+        case GET_TIME_DATE_FUNCTIONS:
+          assertThat(connection.getMetaData().getTimeDateFunctions(),
+              not(equalTo("")));
+          break;
+        case GET_S_Q_L_KEYWORDS:
+          assertThat(connection.getMetaData().getSQLKeywords(),
+              not(equalTo("")));
+          break;
+        case GET_STRING_FUNCTIONS:
+          assertThat(connection.getMetaData().getStringFunctions(),
+              not(equalTo("")));
+          break;
+        default:
       }
     }
     connection.close();
@@ -303,23 +287,23 @@ public class CalciteRemoteDriverTest {
     for (Map.Entry<Class, SqlType> entry : SqlType.getSetConversions()) {
       final SqlType sqlType = entry.getValue();
       switch (sqlType) {
-      case BIT:
-      case LONGVARCHAR:
-      case LONGVARBINARY:
-      case NCHAR:
-      case NVARCHAR:
-      case LONGNVARCHAR:
-      case BLOB:
-      case CLOB:
-      case NCLOB:
-      case ARRAY:
-      case REF:
-      case STRUCT:
-      case DATALINK:
-      case ROWID:
-      case JAVA_OBJECT:
-      case SQLXML:
-        continue;
+        case BIT:
+        case LONGVARCHAR:
+        case LONGVARBINARY:
+        case NCHAR:
+        case NVARCHAR:
+        case LONGNVARCHAR:
+        case BLOB:
+        case CLOB:
+        case NCLOB:
+        case ARRAY:
+        case REF:
+        case STRUCT:
+        case DATALINK:
+        case ROWID:
+        case JAVA_OBJECT:
+        case SQLXML:
+          continue;
       }
       if (!map.containsKey(sqlType)) {
         sql.append(", cast(? as ").append(sqlType).append(")");
@@ -341,10 +325,10 @@ public class CalciteRemoteDriverTest {
       Class clazz = entry.getKey();
       for (Object sampleValue : values(sqlType.boxedClass())) {
         switch (sqlType) {
-        case DATE:
-        case TIME:
-        case TIMESTAMP:
-          continue; // FIXME
+          case DATE:
+          case TIME:
+          case TIMESTAMP:
+            continue; // FIXME
         }
         if (clazz == Calendar.class) {
           continue; // FIXME
@@ -876,5 +860,3 @@ public class CalciteRemoteDriverTest {
   @Test public void testRemotePreparedStatementInsert2() throws Exception {
   }
 }
-
-// End CalciteRemoteDriverTest.java

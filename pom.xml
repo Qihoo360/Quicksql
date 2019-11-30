@@ -16,8 +16,10 @@
         <module>analysis</module>
         <module>elasticsearch</module>
         <module>example</module>
+        <module>server</module>
         <module>assembly</module>
         <module>meta</module>
+        <module>qsql-client</module>
     </modules>
 
     <properties>

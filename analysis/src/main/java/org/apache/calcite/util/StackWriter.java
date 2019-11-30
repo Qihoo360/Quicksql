@@ -35,7 +35,7 @@ import java.util.Deque;
  *    StackWriter stackw = new StackWriter(sw, StackWriter.INDENT_SPACE4);
  *    PrintWriter pw = new PrintWriter(stackw);
  *    pw.write(StackWriter.INDENT);
- *    pw.print("execute remote(link_name,");
+ *    pw.print("execute client(link_name,");
  *    pw.write(StackWriter.OPEN_SQL_STRING_LITERAL);
  *    pw.println();
  *    pw.write(StackWriter.INDENT);
@@ -51,7 +51,7 @@ import java.util.Deque;
  * <p>which produces the following output:
  *
  * <blockquote><pre><code>
- *      execute remote(link_name,'
+ *      execute client(link_name,'
  *          select * from t where c &gt; ''alabama''
  *      ');
  * </code></pre></blockquote>

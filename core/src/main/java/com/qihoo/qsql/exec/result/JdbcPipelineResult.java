@@ -5,12 +5,11 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Iterator of reading data from {@link JdbcPipelineResult}, which is the result of {@link
@@ -20,16 +19,16 @@ public abstract class JdbcPipelineResult implements PipelineResult {
 
     CloseableIterator<Object> iterator;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(JobPipelineResult.class);
+
     JdbcPipelineResult(CloseableIterator<Object> iterator) {
         this.iterator = iterator;
     }
 
     @Override
-    public Collection<String> getData() {
-        List<String> results = new ArrayList<>();
-        iterator.forEachRemaining(JdbcResultSetIterator.CONCAT_FUNC::apply);
-        close();
-        return results;
+    public ResultSet getData() {
+        ResultSet resultSet = ((JdbcResultSetIterator) iterator).getResultSet();
+        return resultSet;
     }
 
     void close() {
@@ -38,6 +37,10 @@ public abstract class JdbcPipelineResult implements PipelineResult {
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    @Override
+    public void run() {
     }
 
     public static class ShowPipelineResult extends JdbcPipelineResult {
@@ -57,6 +60,7 @@ public abstract class JdbcPipelineResult implements PipelineResult {
          */
         public void print() {
             try {
+
                 ResultSet resultSet = ((JdbcResultSetIterator) iterator).getResultSet();
                 ResultSetMetaData meta = resultSet.getMetaData();
                 int length = meta.getColumnCount();

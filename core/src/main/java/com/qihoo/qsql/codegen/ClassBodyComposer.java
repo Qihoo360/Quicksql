@@ -218,13 +218,12 @@ public class ClassBodyComposer {
         @Override
         public void compose(StringBuilder builder) {
             builder.append("\n");
-            builder.append("\t\tpublic void execute(){\n");
+            builder.append("\t\tpublic Object execute(){\n");
             builder.append("\t\t\tDataset<Row> tmp;\n");
 
             for (String sentence : sentences) {
                 builder.append("\t\t\t").append(sentence).append("\n");
             }
-
             builder.append("\t\t}\n");
         }
     }

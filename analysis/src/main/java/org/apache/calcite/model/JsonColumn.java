@@ -16,6 +16,9 @@
  */
 package org.apache.calcite.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * JSON object representing a column.
  *
@@ -23,12 +26,18 @@ package org.apache.calcite.model;
  *
  * @see JsonRoot Description of JSON schema elements
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class JsonColumn {
   /** Column name.
    *
    * <p>Required, and must be unique within the table.
    */
   public String name;
+
+  public JsonColumn(@JsonProperty("name") String name,
+      @JsonProperty("dataType") String dataType) {
+    this.name = name + ":" + dataType;
+  }
 
   public void accept(ModelHandler handler) {
     handler.visit(this);

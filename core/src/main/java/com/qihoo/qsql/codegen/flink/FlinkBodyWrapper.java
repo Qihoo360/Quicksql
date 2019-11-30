@@ -43,6 +43,12 @@ public class FlinkBodyWrapper extends IntegratedQueryWrapper {
         return this;
     }
 
+
+    @Override
+    public IntegratedQueryWrapper collect(int limit) {
+        return null;
+    }
+
     @Override
     public IntegratedQueryWrapper writeAsTextFile(String path, String deliminator) {
         return this;
