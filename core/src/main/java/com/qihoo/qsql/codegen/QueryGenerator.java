@@ -3,7 +3,7 @@ package com.qihoo.qsql.codegen;
 import com.qihoo.qsql.codegen.flink.FlinkCsvGenerator;
 import com.qihoo.qsql.codegen.flink.FlinkElasticsearchGenerator;
 import com.qihoo.qsql.codegen.flink.FlinkHiveGenerator;
-import com.qihoo.qsql.codegen.flink.FlinkMySqlGenerator;
+import com.qihoo.qsql.codegen.flink.FlinkJdbcGenerator;
 import com.qihoo.qsql.codegen.flink.FlinkVirtualGenerator;
 import com.qihoo.qsql.codegen.spark.SparkCsvGenerator;
 import com.qihoo.qsql.codegen.spark.SparkElasticsearchGenerator;
@@ -54,7 +54,8 @@ public abstract class QueryGenerator {
             return createElasticsearchQueryGenerator(procedure, composer, isSpark);
         } else if (procedure instanceof PreparedExtractProcedure.MySqlExtractor
                 || procedure instanceof PreparedExtractProcedure.OracleExtractor
-                || procedure instanceof PreparedExtractProcedure.KylinExtractor) {
+                || procedure instanceof PreparedExtractProcedure.KylinExtractor
+                || procedure instanceof PreparedExtractProcedure.HiveJdbcExtractor) {
             return createJdbcQueryGenerator(procedure, composer, isSpark);
         } else if (procedure instanceof PreparedExtractProcedure.VirtualExtractor) {
             return createVirtualQueryGenerator(procedure, composer, isSpark);
@@ -108,7 +109,7 @@ public abstract class QueryGenerator {
             if (isSpark) {
                 jdbc = new SparkJdbcGenerator();
             } else {
-                jdbc = new FlinkMySqlGenerator();
+                jdbc = new FlinkJdbcGenerator();
             }
             setSpecificState(jdbc, procedure, composer);
             jdbc.prepare();

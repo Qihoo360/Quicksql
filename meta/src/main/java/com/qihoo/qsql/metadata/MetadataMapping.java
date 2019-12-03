@@ -39,6 +39,7 @@ public enum MetadataMapping {
     public static final String KYLIN = "kylin";
     public static final String ORACLE = "oracle";
     public static final String HIVE = "hive";
+    public static final String HIVE_JDBC = "hive-jdbc";
 
     private static final String JOINT_FLAG = "%";
     String schemaClass;
@@ -60,6 +61,7 @@ public enum MetadataMapping {
                 return MetadataMapping.Elasticsearch;
             case MYSQL:
             case KYLIN:
+            case HIVE_JDBC:
             case ORACLE:
                 return MetadataMapping.JDBC;
             case HIVE:

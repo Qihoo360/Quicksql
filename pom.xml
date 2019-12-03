@@ -98,6 +98,7 @@
         <mockito.version>2.21.0</mockito.version>
         <mongo-java-driver.version>3.5.0</mongo-java-driver.version>
         <mysql-driver.version>5.1.20</mysql-driver.version>
+        <hive-driver.version>1.2.1</hive-driver.version>
         <natty.version>0.13</natty.version>
         <opencsv.version>2.3</opencsv.version>
         <owasp-dependency-check.version>3.3.1</owasp-dependency-check.version>
@@ -146,6 +147,7 @@
         <hppc.version>0.7.1</hppc.version>
         <dom4j.version>1.6.1</dom4j.version>
         <qsql.release>qsql-0.6</qsql.release>
+        <output.directory>/${qsql.release}/lib/flink</output.directory>
     </properties>
 
     <dependencyManagement>
@@ -268,6 +270,11 @@
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql-driver.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.hive</groupId>
+                <artifactId>hive-jdbc</artifactId>
+                <version>${hive-driver.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.hydromatic</groupId>

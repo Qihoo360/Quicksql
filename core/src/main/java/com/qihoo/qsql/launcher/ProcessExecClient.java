@@ -133,7 +133,13 @@ public abstract class ProcessExecClient {
 
         @Override
         protected String[] arguments() {
-            return supplier.assemblyFlinkOptions();
+            List<String> args = supplier.assemblyFlinkOptions();
+            args.add("--class_name");
+            args.add(className());
+            args.add("--source");
+            args.add(new String(Base64.getEncoder().encode(source().getBytes()),
+                StandardCharsets.UTF_8));
+            return args.toArray(new String[0]);
         }
     }
 }

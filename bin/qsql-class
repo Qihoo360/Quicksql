@@ -51,6 +51,17 @@ if [[ "$SPARK_RUNNER" ]]; then
     fi
 fi
 
+if [[ -n "$FLINK_HOME" ]] && [[ -x "$FLINK_HOME/bin/flink" ]];  then
+    FLINK_RUNNER="${FLINK_HOME}/bin/flink"
+else
+    if [ `command -v flink` ]; then
+        FLINK_RUNNER="flink run"
+    else
+        echo "ERROR: FLINK_HOME is not set" >&2
+        exit 1
+    fi
+fi
+
 QSQL_LAUNCH_CLASSPATH="${QSQL_HOME}/lib/qsql-core-0.6.jar"
 QSQL_LAUNCH_CLASSPATH="${QSQL_LAUNCH_CLASSPATH}:${QSQL_JARS}"
 

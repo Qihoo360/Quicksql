@@ -122,7 +122,54 @@ public class RuntimeEnv {
         + "  ]\n"
         + "}";
 
+
+
+    public static final String metaDataSQLIET = "inline:\n"
+        + "{\n"
+        + "  \"version\": \"1.0\",\n"
+        + "  \"defaultSchema\": \"QSql\",\n"
+        + "  \"schemas\": [{\n"
+        + "      \"type\": \"custom\",\n"
+        + "      \"name\": \"main\",\n"
+        + "      \"factory\": \"com.qihoo.qsql.org.apache.calcite.adapter.custom.JdbcSchemaFactory\",\n"
+        + "      \"operand\": {\n"
+        + "       \"dbName\": \"testdata\",\n"
+        +"         \"tableName\": \"t_test_data\",\n"
+        +"         \"dbType\": \"mysql\",\n"
+        +"         \"jdbcDriver\": \"org.sqlite.JDBC\",\n"
+        +"         \"jdbcUrl\": \"jdbc:sqlite:E://////test.db\",\n"
+        +"         \"jdbcUser\": \"xx\",\n"
+        +"         \"jdbcPassword\": \"xx\"\n"
+        + "      },\n"
+        + "      \"tables\": [{\n"
+        + "        \"name\": \"t_test_data\",\n"
+        + "        \"factory\": \"com.qihoo.qsql.org.apache.calcite.adapter.custom.JdbcTableFactory\",\n"
+        + "        \"operand\": {\n"
+        + "       \"dbName\": \"testdata\",\n"
+        +"         \"tableName\": \"t_test_data\",\n"
+        +"         \"dbType\": \"mysql\",\n"
+        +"         \"jdbcDriver\": \"org.sqlite.JDBC\",\n"
+        +"         \"jdbcUrl\": \"jdbc:sqlite:E://////test.db\",\n"
+        +"         \"jdbcUser\": \"xx\",\n"
+        +"         \"jdbcPassword\": \"xx\"\n"
+        + "        },\n"
+        + "        \"columns\": [{\n"
+        + "            \"name\": \"id:int\"\n"
+        + "          },\n"
+        + "          {\n"
+        + "            \"name\": \"dataid:int\"\n"
+        + "          },\n"
+        + "          {\n"
+        + "            \"name\": \"data:string\"\n"
+        + "          }\n"
+        + "        ]\n"
+        + "      }]\n"
+        + "    }\n"
+        + "  ]\n"
+        + "}";
+
     public static void close() {
         NODE.close();
     }
+
 }

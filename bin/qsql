@@ -195,8 +195,13 @@ fi
 
 . "${QSQL_HOME}/bin/qsql-env"
 
+if [ "${QSQL_RUNNER}"X = "FLINKX" ] ; then
+  . "${QSQL_HOME}/bin/flink-fat-jar"
+  CONF=${CONF}" --jar_name=${QSQL_HOME}/lib/flink/qsql-core-0.6.jar "
+ else
+  CONF=${CONF}" --jar_name=${QSQL_HOME}/lib/qsql-core-0.6.jar "
+fi
 
-CONF=${CONF}" --jar_name=${QSQL_HOME}/lib/qsql-core-0.6.jar "
 CONF=${CONF}" --class_name=com.qihoo.qsql.cli.QSqlSubmit "
 CONF=${CONF}" --jar=${JARS} "
 

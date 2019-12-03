@@ -9,12 +9,12 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class KylinCollector extends JdbcCollector {
+public class HiveJdbcCollector extends JdbcCollector {
 
     /**
      * .
      */
-    public KylinCollector(HiveProp prop, String filter) throws SQLException, ClassNotFoundException {
+    public HiveJdbcCollector(HiveProp prop, String filter) throws SQLException, ClassNotFoundException {
         super(filter);
         this.prop = prop;
         Class.forName(prop.getJdbcDriver());
@@ -24,7 +24,7 @@ public class KylinCollector extends JdbcCollector {
     @Override
     protected DatabaseValue convertDatabaseValue() {
         DatabaseValue value = new DatabaseValue();
-        value.setDbType("kylin");
+        value.setDbType("hive-jdbc");
         value.setDesc("Who am I");
         value.setName(getDatabasePosition());
         return value;

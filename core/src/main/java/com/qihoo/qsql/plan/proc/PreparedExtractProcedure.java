@@ -117,6 +117,9 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
                 case MetadataMapping.KYLIN:
                     return new KylinExtractor(next, ((JdbcTable) relOptTable.getTable())
                             .getProperties(), config, relNode, tableName);
+                case MetadataMapping.HIVE_JDBC:
+                    return new HiveJdbcExtractor(next, ((JdbcTable) relOptTable.getTable())
+                            .getProperties(), config, relNode, tableName);
                 case MetadataMapping.ORACLE:
                     return new OracleExtractor(next, ((JdbcTable) relOptTable.getTable())
                         .getProperties(), config, relNode, tableName);
@@ -395,6 +398,26 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
         @Override
         public String getCategory() {
             return "Kylin";
+        }
+    }
+
+
+    public static class HiveJdbcExtractor extends PreparedExtractProcedure {
+
+        public HiveJdbcExtractor(QueryProcedure next, Properties properties,
+                              FrameworkConfig config, RelNode relNode,
+                              String tableName) {
+            super(next, properties, config, relNode, tableName);
+        }
+
+        @Override
+        public String toRecognizedQuery() {
+            return sql(new HiveSqlDialect(SqlDialect.EMPTY_CONTEXT));
+        }
+
+        @Override
+        public String getCategory() {
+            return "Hive-Jdbc";
         }
     }
 
