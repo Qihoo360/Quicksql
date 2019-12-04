@@ -273,6 +273,11 @@ limitations under the License.
             <artifactId>kylin-jdbc</artifactId>
             <version>1.6.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.massisframework</groupId>
+            <artifactId>j-text-utils</artifactId>
+            <version>0.3.4</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -117,7 +117,7 @@ public class TableNameCollector implements SqlVisitor<QueryTables> {
             } else if (entry instanceof SqlWithItem) {
                 //TODO caution db.table query
                 List<String> names = ((SqlWithItem) entry).name.names;
-                if (! names.isEmpty()) {
+                if (!names.isEmpty()) {
                     withTempTables.add(names.get(names.size() - 1));
                 }
                 ((SqlWithItem) entry).query.accept(this);
@@ -189,5 +189,14 @@ public class TableNameCollector implements SqlVisitor<QueryTables> {
         }
         tableNames.tableNames.removeIf((item) -> withTempTables.contains(item));
         return tableNames;
+    }
+
+    /**
+     * generate SqlNode according sql.
+     */
+    public SqlNode parseSql(String sql) throws SqlParseException {
+        SqlParser parser = SqlParser.create(sql, config);
+        SqlNode sqlNode = parser.parseQuery();
+        return sqlNode;
     }
 }
