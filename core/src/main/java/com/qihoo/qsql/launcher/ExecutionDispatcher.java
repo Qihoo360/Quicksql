@@ -8,6 +8,7 @@ import com.qihoo.qsql.exception.EmptyMetadataException;
 import com.qihoo.qsql.exception.QsqlException;
 import com.qihoo.qsql.exec.AbstractPipeline;
 import com.qihoo.qsql.exec.JdbcPipeline;
+import com.qihoo.qsql.exec.ShowDbHandler;
 import com.qihoo.qsql.exec.result.CloseableIterator;
 import com.qihoo.qsql.exec.result.JdbcPipelineResult;
 import com.qihoo.qsql.exec.result.JdbcResultSetIterator;
@@ -55,7 +56,7 @@ public class ExecutionDispatcher {
      * @throws SQLException SQLException
      * @throws ParseException ParseException
      */
-    public static void main(String[] args)  {
+    public static void main(String[] args) {
         Date start = new Date();
         LOGGER.info("job.execute.start:" + SDF.format(start));
         try {
@@ -67,8 +68,13 @@ public class ExecutionDispatcher {
             final String sqlArg = parser.getOptionValue(SubmitOption.SQL);
             String runner = parser.getOptionValue(SubmitOption.RUNNER);
 
-            String sql = new String(Base64.getDecoder().decode(sqlArg), StandardCharsets.UTF_8);
+            String sql = new String(Base64.getDecoder().decode(sqlArg), StandardCharsets.UTF_8).trim();
             LOGGER.info("Your SQL is '{}'", sql);
+            //list tables or databases from meta-data
+            if (sql.toUpperCase().startsWith("SHOW") || sql.toUpperCase().startsWith("DESC")) {
+                ShowDbHandler.dealSql(sql);
+                return;
+            }
             QueryTables tables = SqlUtil.parseTableName(sql);
             List<String> tableNames = tables.tableNames;
 
@@ -98,7 +104,7 @@ public class ExecutionDispatcher {
             Date sqlPased = new Date();
             LOGGER.info("SQL.parsed:" + SDF.format(sqlPased));
             if (pipeline instanceof JdbcPipeline && isPointedToExecuteByJdbc(runner)) {
-                jdbcExecuter(sql,tableNames,procedure,sqlPased,start);
+                jdbcExecuter(sql, tableNames, procedure, sqlPased, start);
                 return;
             }
             LOGGER.info("It's a complex query, we need to setup computing engine, waiting...");
@@ -118,7 +124,7 @@ public class ExecutionDispatcher {
     }
 
     private static void jdbcExecuter(String sql, List<String> tableNames, QueryProcedure procedure, Date sqlPased,
-        Date start)
+                                     Date start)
         throws
         SQLException {
         try (Connection connection = JdbcPipeline.createSpecificConnection(
@@ -145,7 +151,7 @@ public class ExecutionDispatcher {
 
     private static boolean tryToExecuteQueryDirectly(String sql, List<String> tableNames, String runner)
         throws SQLException {
-        if (! isParsingCanBeIgnored(tableNames, runner)) {
+        if (!isParsingCanBeIgnored(tableNames, runner)) {
             return false;
         }
         Connection connection = null;
@@ -155,7 +161,7 @@ public class ExecutionDispatcher {
                 connection = JdbcPipeline.createCsvConnection();
             } else {
                 List<SchemaAssembler> assemblers = MetadataPostman.getAssembledSchema(tableNames);
-                if (! isSupportedJdbcDriver(assemblers)) {
+                if (!isSupportedJdbcDriver(assemblers)) {
                     return false;
                 }
                 LOGGER.info("Connecting JDBC server, please wait a moment....");
@@ -218,7 +224,7 @@ public class ExecutionDispatcher {
 
     private static void welcome() {
         String welcome =
-                  "               ____        _      __   _____ ____    __ \n"
+            "               ____        _      __   _____ ____    __ \n"
                 + "              / __ \\__  __(_)____/ /__/ ___// __ \\  / / \n"
                 + "             / / / / / / / / ___/ //_/\\__ \\/ / / / / /  \n"
                 + "            / /_/ / /_/ / / /__/ ,<  ___/ / /_/ / / /___\n"
