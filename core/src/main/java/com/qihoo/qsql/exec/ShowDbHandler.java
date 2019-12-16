@@ -19,7 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ShowDbHandler {
+public class ShowDbHandler implements DdlOperation {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MetadataPostman.class);
 
@@ -29,27 +29,6 @@ public class ShowDbHandler {
 
     private static final Integer HEAD_TAIL = 0;
 
-    /**
-     * go difference branch according sql.
-     */
-    public static void dealSql(String sql) throws SqlParseException, SQLException {
-        TableNameCollector collector = new TableNameCollector();
-        try {
-            SqlNode sqlNode = collector.parseSql(sql);
-            if (sqlNode instanceof SqlShowSchemas) {
-                showDataBase(sqlNode);
-            } else if (sqlNode instanceof SqlShowTables) {
-                showTable((SqlShowTables) sqlNode);
-            } else if (sqlNode instanceof SqlDescribeTable) {
-                describeTable((SqlDescribeTable) sqlNode);
-            } else {
-                System.out.println("No matched.");
-            }
-        } catch (SqlParseException ex) {
-            LOGGER.error("[ShowDbHandler-showTable] failed to parse sql");
-            ex.printStackTrace();
-        }
-    }
 
     /**
      * list tables from tbls of meta-data database.
@@ -137,6 +116,26 @@ public class ShowDbHandler {
             return HEAD;
         } else {
             return HEAD_TAIL;
+        }
+    }
+
+    @Override
+    public void execute(String sql) throws SQLException {
+        TableNameCollector collector = new TableNameCollector();
+        try {
+            SqlNode sqlNode = collector.parseSql(sql);
+            if (sqlNode instanceof SqlShowSchemas) {
+                showDataBase(sqlNode);
+            } else if (sqlNode instanceof SqlShowTables) {
+                showTable((SqlShowTables) sqlNode);
+            } else if (sqlNode instanceof SqlDescribeTable) {
+                describeTable((SqlDescribeTable) sqlNode);
+            } else {
+                System.out.println("No matched.");
+            }
+        } catch (SqlParseException ex) {
+            LOGGER.error("[ShowDbHandler-showTable] failed to parse sql");
+            ex.printStackTrace();
         }
     }
 }

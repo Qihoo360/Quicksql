@@ -7,8 +7,9 @@ import com.qihoo.qsql.api.SqlRunner.Builder.RunnerType;
 import com.qihoo.qsql.exception.EmptyMetadataException;
 import com.qihoo.qsql.exception.QsqlException;
 import com.qihoo.qsql.exec.AbstractPipeline;
+import com.qihoo.qsql.exec.DdlFactory;
+import com.qihoo.qsql.exec.DdlOperation;
 import com.qihoo.qsql.exec.JdbcPipeline;
-import com.qihoo.qsql.exec.ShowDbHandler;
 import com.qihoo.qsql.exec.result.CloseableIterator;
 import com.qihoo.qsql.exec.result.JdbcPipelineResult;
 import com.qihoo.qsql.exec.result.JdbcResultSetIterator;
@@ -34,6 +35,7 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,8 +73,14 @@ public class ExecutionDispatcher {
             String sql = new String(Base64.getDecoder().decode(sqlArg), StandardCharsets.UTF_8).trim();
             LOGGER.info("Your SQL is '{}'", sql);
             //list tables or databases from meta-data
-            if (sql.toUpperCase().startsWith("SHOW") || sql.toUpperCase().startsWith("DESC")) {
-                ShowDbHandler.dealSql(sql);
+            //if (sql.toUpperCase().startsWith("SHOW") || sql.toUpperCase().startsWith("DESC")) {
+            //    //ShowDbHandler.dealSql(sql);
+            //    return;
+            //}
+            String sqlType = getSqlType(sql);
+            DdlOperation ddlOperation = DdlFactory.getDdlOperation(sqlType);
+            if (ObjectUtils.anyNotNull(ddlOperation)) {
+                ddlOperation.execute(sql);
                 return;
             }
             QueryTables tables = SqlUtil.parseTableName(sql);
@@ -232,5 +240,10 @@ public class ExecutionDispatcher {
         String slogan = "   \\  Process data placed anywhere with the most flexible SQL  /";
         System.out.println(welcome);
         System.out.println(slogan);
+    }
+
+    private static String getSqlType(String sql) {
+        String sqlType = sql.split("\\s+")[0];
+        return sqlType.toUpperCase();
     }
 }
