@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,6 +63,32 @@ public class MetadataClient implements AutoCloseable {
                 }
             }
             return databaseValue;
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    /**
+     * get all databases.
+     */
+    public List<DatabaseValue> getDataBaseList() {
+        List<DatabaseValue> databaseList = new ArrayList<DatabaseValue>();
+        String sql = "select DB_ID, NAME, DB_TYPE from DBS";
+        LOGGER.debug("getBasicDatabaseInfoById sql is {}", sql);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet != null) {
+                    DatabaseValue databaseValue = null;
+                    while (resultSet.next()) {
+                        databaseValue = new DatabaseValue();
+                        databaseValue.setDbId(resultSet.getLong("DB_ID"));
+                        databaseValue.setName(resultSet.getString("NAME"));
+                        databaseValue.setDbType(resultSet.getString("DB_TYPE"));
+                        databaseList.add(databaseValue);
+                    }
+                }
+            }
+            return databaseList;
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
@@ -132,7 +159,7 @@ public class MetadataClient implements AutoCloseable {
     }
 
     /**
-     * d.
+     * get table's field information
      *
      * @param databaseId wait
      * @return wait
@@ -187,6 +214,40 @@ public class MetadataClient implements AutoCloseable {
         String sql = String.format("select DB_ID,TBL_ID,TBL_NAME from TBLS where TBL_NAME='%s'", tableName);
         LOGGER.debug("getTableSchema sql is {}", sql);
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet != null) {
+                    while (resultSet.next()) {
+                        TableValue tbl = new TableValue();
+                        tbl.setDbId(resultSet.getLong("DB_ID"));
+                        tbl.setTblId(resultSet.getLong("TBL_ID"));
+                        tbl.setTblName(resultSet.getString("TBL_NAME"));
+                        tbls.add(tbl);
+                    }
+                }
+            }
+            return tbls;
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    /**
+     * d.
+     *
+     * @param tableName wait
+     * @return wait
+     */
+    public List<TableValue> getTableSchemaByTbl(String tableName) {
+        List<TableValue> tbls = new ArrayList<>();
+        StringBuffer sql = new StringBuffer();
+        sql.append("select DB_ID,TBL_ID,TBL_NAME from TBLS ");
+        if (!StringUtils.isEmpty(tableName)) {
+            sql.append("where TBL_NAME like '%")
+                .append(tableName)
+                .append("%'");
+        }
+        LOGGER.debug("getTableSchema sql is {}", sql);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql.toString())) {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet != null) {
                     while (resultSet.next()) {
@@ -272,9 +333,9 @@ public class MetadataClient implements AutoCloseable {
     //NOT THREAD-SAFE
     private Long getLastInsertPrimaryKey() {
         try (PreparedStatement preparedStatement =
-            connection.prepareStatement(getLastInsertSql())) {
+                 connection.prepareStatement(getLastInsertSql())) {
             ResultSet resultSet = preparedStatement.executeQuery();
-            if (! resultSet.next()) {
+            if (!resultSet.next()) {
                 throw new RuntimeException("Execute `SELECT LAST_INSERT_ID()` failed!!");
             }
             return resultSet.getLong(1);
@@ -284,7 +345,7 @@ public class MetadataClient implements AutoCloseable {
     }
 
     private Connection createConnection() throws SQLException {
-        if (! MetadataUtil.isEmbeddedDatabase(properties)) {
+        if (!MetadataUtil.isEmbeddedDatabase(properties)) {
             return MetadataUtil.getExternalConnection(properties);
         }
 

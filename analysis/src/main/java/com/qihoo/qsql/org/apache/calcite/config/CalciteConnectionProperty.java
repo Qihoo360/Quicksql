@@ -75,7 +75,8 @@ public enum CalciteConnectionProperty implements ConnectionProperty {
   MODEL("model", Type.STRING, null, false),
 
   /** Lexical policy. */
-  LEX("lex", Type.ENUM, Lex.ORACLE, false),
+  //updated by qsql-team
+  LEX("lex", Type.ENUM, Lex.MYSQL, false),
 
   /** Collection of built-in functions and operators. Valid values include
    * "standard", "oracle" and "spatial", and also comma-separated lists, for

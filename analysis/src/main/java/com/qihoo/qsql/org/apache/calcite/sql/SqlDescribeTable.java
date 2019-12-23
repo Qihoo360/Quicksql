@@ -37,12 +37,12 @@ public class SqlDescribeTable extends SqlCall {
       };
 
   SqlIdentifier table;
-  SqlIdentifier column;
+  SqlNode column;
 
   /** Creates a SqlDescribeTable. */
   public SqlDescribeTable(SqlParserPos pos,
       SqlIdentifier table,
-      SqlIdentifier column) {
+      SqlNode column) {
     super(pos);
     this.table = table;
     this.column = column;
@@ -82,7 +82,7 @@ public class SqlDescribeTable extends SqlCall {
     return table;
   }
 
-  public SqlIdentifier getColumn() {
+  public SqlNode getColumn() {
     return column;
   }
 }

@@ -2,8 +2,38 @@
 
 export QSQL_HOME="$(cd "`dirname "$0"`"/..; pwd)"
 
-. "${QSQL_HOME}/bin/load-qsql-env"
-. "${QSQL_HOME}/bin/qsql-env"
+#parse args
+ARGS=`getopt -o "e:h"  -l "help:" -n "quicksql-example.sh" -- "$@"`
+
+eval set -- "${ARGS}"
+
+while true
+do
+    case "${1}" in
+        -h|--help)
+        shift;
+        HELP_ENABLE="true"
+        ;;
+        --)
+        shift
+        break
+        ;;
+    esac
+done
+
+if [ "$#"A = "0A" ] ; then
+  HELP_ENABLE="true"
+fi
+
+if [ ! -z "${HELP_ENABLE}" ] ; then
+    echo "example:
+    ./bin/quicksql-example.sh com.qihoo.qsql.CsvJoinWithEsExample
+    ./bin/quicksql-example.sh com.qihoo.qsql.CsvScanExample  "
+    exit 1
+fi
+
+. "${QSQL_HOME}/bin/commons.sh"
+#. "${QSQL_HOME}/bin/qsql-env"
 
 if [ -n "${JAVA_HOME}" ]; then
     JAVA_RUNNER="${JAVA_HOME}/bin/java"

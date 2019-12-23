@@ -122,6 +122,7 @@ public class SqlRunnerFuncTable {
             SqlStdOperatorTable.REFLECT,
 
             //window functions
+            SqlStdOperatorTable.RANK,
 
             //code functions
             SqlStdOperatorTable.URLDECODE,

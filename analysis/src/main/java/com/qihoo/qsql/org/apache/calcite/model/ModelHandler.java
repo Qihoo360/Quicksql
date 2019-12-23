@@ -19,6 +19,7 @@
  */
 package com.qihoo.qsql.org.apache.calcite.model;
 
+import com.fasterxml.jackson.core.JsonParser.Feature;
 import com.qihoo.qsql.org.apache.calcite.adapter.jdbc.JdbcSchema;
 import org.apache.calcite.avatica.AvaticaUtils;
 import com.qihoo.qsql.org.apache.calcite.jdbc.CalciteConnection;
@@ -110,6 +111,7 @@ public class ModelHandler {
             mapper = (inline.startsWith("/*") || inline.startsWith("{"))
                 ? JSON_MAPPER
                 : YAML_MAPPER;
+            mapper.configure(Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
             root = mapper.readValue(inline, JsonRoot.class);
         } else {
             mapper = uri.endsWith(".yaml") || uri.endsWith(".yml") ? YAML_MAPPER : JSON_MAPPER;

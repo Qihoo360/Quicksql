@@ -1,9 +1,10 @@
 #!/bin/bash
-
 unset QSQL_JARS
-unset JARS
 
-export QSQL_HOME="$(cd "`dirname "$0"`"/..; pwd)"
+if [ -z "${QSQL_HOME}" ]
+then
+    export QSQL_HOME="$(cd "`dirname "$0"`"/..; pwd)"
+fi
 
 for jar in `find ${QSQL_HOME}/lib -maxdepth 1 -name "*.jar"`
 do
@@ -15,14 +16,22 @@ do
     fi
 done
 
-
 for jar in `find ${QSQL_HOME}/lib/spark -name "*.jar"`
 do
-    if [  !  -n  "${JARS}"  ]   
+    if [  !  -n  "${JARS}"  ]
     then
         export JARS="${jar}"
     else
         export JARS="${JARS},${jar}"
     fi
 done
+
+user_conf_dir="${QSQL_HOME}/conf"
+if [ -f "${user_conf_dir}/quicksql-env.sh" ]
+then
+    set -a
+    . "${user_conf_dir}/quicksql-env.sh"
+    set +a
+fi
+
 

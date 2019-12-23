@@ -69,6 +69,7 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Pattern;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Helper methods to implement SQL functions in generated code.
@@ -252,6 +253,92 @@ public class SqlFunctions {
     return stringBuilder.toString();
   }
 
+  /** SQL SUBSTRING_INDEX(string FROM ... FOR ...) function. */
+  public static String substringIndex(String c, String s, int i) {
+    if (StringUtils.isBlank(c) || i == 0) {
+      return "";
+    }
+    if (s.equals(".")) {
+      s = "\\.";
+    } else if (s.equals("|")) {
+      s = "\\|";
+    } else if (s.equals("*")) {
+      s = "\\*";
+    }
+    String[] split = c.split(s);
+    if (i > split.length) {
+      return c;
+    }
+    List<String> ns = new ArrayList<String>();
+    if (i > 0) {
+      for (int n = 0; n < i && i > 0; n++) {
+        ns.add(split[n]);
+      }
+    } else {
+      i = Math.abs(i);
+      for (int n = split.length - i; n < split.length; n++) {
+        ns.add(split[n]);
+      }
+    }
+    return StringUtils.join(ns,s).replace("\\","");
+  }
+
+
+  /** SQL FROM_UNIXTIME(Long time) function. */
+  public static String fromunixtime(Long time) {
+    return null;
+  }
+
+  /** SQL FROM_UNIXTIME(Integer time) function. */
+  public static String fromunixtime(Integer time) {
+    SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    Date date = new Date((long)time * 1000);
+    return sf.format(date);
+  }
+
+
+  /** SQL {@code UNIX_TIMESTAMP} function. */
+  public static String unixTimestamp() {
+    // Cast required for JDK 1.6.
+    // return (Long) DataContext.Variable.UNIX_TIMESTAMP.get(root);
+    return String.valueOf(System.currentTimeMillis() / 1000);
+  }
+  /** SQL {@code UNIX_TIMESTAMP} function. */
+  public static String unixTimestamp(String s) {
+    if (StringUtils.isBlank(s) || s.length() < 10) {
+      return String.valueOf(0);
+    }
+    SimpleDateFormat sf = null;
+    switch (s.length()) {
+        case 4:
+         sf = new SimpleDateFormat("yyyy");
+         break;
+        case 7:
+          sf = new SimpleDateFormat("yyyy-MM");
+          break;
+        case 10:
+          sf = new SimpleDateFormat("yyyy-MM-dd");
+          break;
+        case 13:
+          sf = new SimpleDateFormat("yyyy-MM-dd HH");
+          break;
+        case 16:
+          sf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+          break;
+        case 19:
+          sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+          break;
+        default:
+          sf = new SimpleDateFormat("yyyy-MM-dd");
+          break;
+    }
+    Date date = null;
+    try {
+      date = sf.parse(s);
+      return String.valueOf(date.getTime() / 1000);
+    } catch (ParseException e) {}
+    return String.valueOf(0);
+  }
 
   //qsql-end
 

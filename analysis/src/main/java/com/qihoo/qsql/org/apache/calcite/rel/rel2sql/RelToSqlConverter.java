@@ -26,6 +26,7 @@ import com.qihoo.qsql.org.apache.calcite.rel.RelNode;
 import com.qihoo.qsql.org.apache.calcite.rel.core.Aggregate;
 import com.qihoo.qsql.org.apache.calcite.rel.core.AggregateCall;
 import com.qihoo.qsql.org.apache.calcite.rel.core.Calc;
+import com.qihoo.qsql.org.apache.calcite.rel.core.Correlate;
 import com.qihoo.qsql.org.apache.calcite.rel.core.CorrelationId;
 import com.qihoo.qsql.org.apache.calcite.rel.core.Filter;
 import com.qihoo.qsql.org.apache.calcite.rel.core.Intersect;
@@ -339,6 +340,11 @@ public class RelToSqlConverter extends SqlImplementor
       }
     }
     return result(query, clauses, e, null);
+  }
+  //Updated by qsql-team
+  /** @see #dispatch */
+  public Result visit(Correlate e) {
+    throw new RuntimeException("Unsupported Logical correlate grammar, Please use Join instead.");
   }
 
   //Modified by QSQL.

@@ -16,6 +16,7 @@
  */
 package com.qihoo.qsql.org.apache.calcite.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +49,7 @@ import java.util.List;
  * <p>See the <a href="http://calcite.apache.org/docs/model.html">JSON
  * model reference</a>.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class JsonRoot {
   /** Schema model version number. Required, must have value "1.0". */
   public String version;

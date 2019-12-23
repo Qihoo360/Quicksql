@@ -76,7 +76,7 @@ public class QueryProcedureTest {
     @Test
     public void testOnlyValue() {
         String sql = "SELECT 'Hello World' AS col1, 1010 AS col2";
-        prepareForChecking(sql).checkExtra("SELECT 'Hello World' AS \"col1\", 1010 AS \"col2\"");
+        prepareForChecking(sql).checkExtra("SELECT 'Hello World' AS `col1`, 1010 AS `col2`");
     }
 
     @Test
@@ -141,14 +141,29 @@ public class QueryProcedureTest {
     public void testValueIn() {
         String sql = "SELECT UPPER('Time') NOT IN ('Time', 'New', 'Roman') AS res";
         prepareForChecking(sql)
-            .checkExtra("SELECT UPPER('Time') NOT IN ('Time', 'New', 'Roman') AS \"res\"");
+            .checkExtra("SELECT UPPER('Time') NOT IN ('Time', 'New', 'Roman') AS `res`");
     }
+
+    @Test
+    public void testDatePlusInteger() {
+        String sql = "SELECT * FROM action_required.homework_content a join action_required.homework_content b"
+            + " on a.stu_id = b.stu_id  where a.date_time > b.date_time + 1";
+        prepareForChecking(sql).checkExtra(
+            "SELECT homework_content.stu_id, homework_content.date_time, homework_content.signature, "
+                + "homework_content.course_type, homework_content.content, homework_content0.stu_id stu_id0, "
+                + "homework_content0.date_time date_time0, homework_content0.signature signature0, "
+                + "homework_content0.course_type course_type0, homework_content0.content content0 "
+                + "FROM action_required.homework_content INNER JOIN action_required.homework_content homework_content0 "
+                + "ON homework_content.stu_id = homework_content0.stu_id "
+                + "AND homework_content.date_time > (homework_content0.date_time + 1)");
+    }
+
 
     @Test
     public void testValueWithUselessTableScan() {
         String sql = "SELECT 1 IN (SELECT dep.times FROM edu_manage.department AS dep) AS res";
-        prepareForChecking(sql).checkExtra("SELECT 1 IN (SELECT \"dep\".\"times\" "
-            + "FROM \"edu_manage\".\"department\" AS \"dep\") AS \"res\"");
+        prepareForChecking(sql).checkExtra("SELECT 1 IN (SELECT `dep`.`times` "
+            + "FROM `edu_manage`.`department` AS `dep`) AS `res`");
     }
 
     @Test
@@ -171,21 +186,21 @@ public class QueryProcedureTest {
     public void testSelectWithoutFromWithJoin() {
         String sql = "SELECT a.e1 FROM (SELECT 1 e1) as a join (SELECT 2 e2) as b ON (a.e1 = b.e2)";
         prepareForChecking(sql).checkExtra(
-            "SELECT \"a\".\"e1\" FROM (SELECT 1 AS \"e1\") AS \"a\" "
-                + "INNER JOIN (SELECT 2 AS \"e2\") AS \"b\" ON \"a\".\"e1\" = \"b\".\"e2\"");
+            "SELECT `a`.`e1` FROM (SELECT 1 AS `e1`) AS `a` "
+                + "INNER JOIN (SELECT 2 AS `e2`) AS `b` ON `a`.`e1` = `b`.`e2`");
     }
 
     @Test
     public void testSimpleArithmetic() {
         String sql = "SELECT ABS(-1) + FLOOR(1.23) % 1 AS res";
-        prepareForChecking(sql).checkExtra("SELECT ABS(-1) + FLOOR(1.23) % 1 AS \"res\"");
+        prepareForChecking(sql).checkExtra("SELECT ABS(-1) + FLOOR(1.23) % 1 AS `res`");
     }
 
     @Test
     public void testFunctionLength() {
         //original function is length
         String sql = "SELECT ABS(CHAR_LENGTH('Hello World')) AS res";
-        prepareForChecking(sql).checkExtra("SELECT ABS(CHAR_LENGTH('Hello World')) AS \"res\"");
+        prepareForChecking(sql).checkExtra("SELECT ABS(CHAR_LENGTH('Hello World')) AS `res`");
     }
 
     @Test
@@ -193,7 +208,7 @@ public class QueryProcedureTest {
     public void testFunctionConcat() {
         String sql = "SELECT SUBSTRING('Hello World', 0, 5) || SUBSTRING('Hello World', 5) AS res";
         prepareForChecking(sql)
-            .checkExtra("SELECT SUBSTRING('Hello World', 0, 5) || SUBSTRING('Hello World', 5) AS \"res\"");
+            .checkExtra("SELECT SUBSTRING('Hello World', 0, 5) || SUBSTRING('Hello World', 5) AS `res`");
     }
 
     @Test
@@ -205,14 +220,14 @@ public class QueryProcedureTest {
     @Test
     public void testComparison() {
         String sql = "SELECT (1 < 2 <> TRUE) AND TRUE AS res";
-        prepareForChecking(sql).checkExtra("SELECT 1 < 2 <> TRUE AND TRUE AS \"res\"");
+        prepareForChecking(sql).checkExtra("SELECT 1 < 2 <> TRUE AND TRUE AS `res`");
     }
 
     @Test
     public void testValueWithIn() {
         String sql = "SELECT UPPER('Time') NOT IN ('Time', 'New', 'Roman') AS res";
         prepareForChecking(sql)
-            .checkExtra("SELECT UPPER('Time') NOT IN ('Time', 'New', 'Roman') AS \"res\"");
+            .checkExtra("SELECT UPPER('Time') NOT IN ('Time', 'New', 'Roman') AS `res`");
     }
 
     @Test
@@ -293,11 +308,11 @@ public class QueryProcedureTest {
             + "GROUP BY course_type\n"
             + "HAVING ((COUNT(*) > 100) AND (1 = 2))\n"
             + "ORDER BY course_type";
-        prepareForChecking(sql).checkExtra("SELECT \"test\".\"course_type\" "
-            + "FROM \"action_required\".\"homework_content\" AS \"test\" "
-            + "WHERE \"test\".\"date_time\" = '20180820' "
-            + "GROUP BY \"test\".\"course_type\" HAVING COUNT(*) > 100 AND 1 = 2 "
-            + "ORDER BY \"course_type\" ORDER BY \"course_type\"");
+        prepareForChecking(sql).checkExtra("SELECT `test`.`course_type` "
+            + "FROM `action_required`.`homework_content` AS `test` "
+            + "WHERE `test`.`date_time` = '20180820' "
+            + "GROUP BY `test`.`course_type` HAVING COUNT(*) > 100 AND 1 = 2 "
+            + "ORDER BY `course_type` ORDER BY `course_type`");
     }
 
     @Test
@@ -534,8 +549,8 @@ public class QueryProcedureTest {
     @Test
     public void testNotExistedFunctionsInFilter() {
         prepareForChecking("SELECT type FROM edu_manage.department "
-                + "WHERE (' world ') = 'world' GROUP BY type, times "
-                + "HAVING TRIM(' hello ') = 'hello' and CEIL(times) = 1", RunnerType.SPARK)
+            + "WHERE (' world ') = 'world' GROUP BY type, times "
+            + "HAVING TRIM(' hello ') = 'hello' and CEIL(times) = 1", RunnerType.SPARK)
             .checkExtra("select type, times from edu_manage.department "
                 + "where ' world ' = 'world' group by type, times")
             .checkTrans("SELECT type FROM edu_manage_department_0 "
@@ -674,6 +689,62 @@ public class QueryProcedureTest {
             .checkExtra("SELECT REFLECT('org.apache.commons.lang.math.NumberUtils', 'isNumber', '123')");
         prepareForChecking("SELECT REFLECT('java.util.Arrays', 'asList', 'a', 'b', 'c', 'd', 'e')")
             .checkExtra("SELECT REFLECT('java.util.Arrays', 'asList', 'a', 'b', 'c', 'd', 'e')");
+    }
+
+    @Test
+    public void testWithKeyWord() {
+        String sql =
+            "with A as (SELECT * FROM action_required.homework_content),B as (select * from action_detection_in_class) "
+                + "select A.*,B.* from A,B limit 10";
+        prepareForChecking(sql).checkExtra("SELECT t.stu_id, t.date_time, t.signature, t.course_type, t.content,"
+            + " t0.stu_id stu_id0, t0.date_time date_time0, t0.action_type "
+            + "FROM (SELECT stu_id, date_time, signature, course_type, content"
+            + " FROM action_required.homework_content) t, "
+            + "(SELECT stu_id, date_time, action_type FROM action_required.action_detection_in_class) t0 LIMIT 10");
+    }
+
+    @Test
+    public void testSubStringIndexFunction() {
+        prepareForChecking( "select substring_index('12-d-d-sd-dff','-',3)");
+    }
+
+    @Test
+    public void testUnixTimeStampFunction() {
+        prepareForChecking("select UNIX_TIMESTAMP()");
+        prepareForChecking("select UNIX_TIMESTAMP('2019-11-29')");
+        prepareForChecking("select UNIX_TIMESTAMP('2019')");
+        prepareForChecking("select UNIX_TIMESTAMP('2019-11-29 11:11')");
+        prepareForChecking("select UNIX_TIMESTAMP('2019-11-29 11:11:29')");
+    }
+
+    @Test
+    public void testFromUnixTimeFunction() {
+        prepareForChecking("select FROM_UNIXTIME(1574997071)");
+        prepareForChecking("select FROM_UNIXTIME(1)");
+        prepareForChecking("select FROM_UNIXTIME(15749970711)");
+    }
+
+    @Test
+    public void testLowerAndUpperFunction() {
+        prepareForChecking("SELECT signature FROM action_required.homework_content limit 10",
+            RunnerType.DEFAULT);
+        prepareForChecking("SELECT SIGNATURE FROM action_required.homework_content limit 10",
+            RunnerType.DEFAULT);
+    }
+
+    @Test
+    public void testWhereInCountFunction() {
+        prepareForChecking("SELECT signature FROM action_required.homework_content "
+                + "WHERE signature IN ('89436','30868','65085','22977','83927', '58429','40697','80614',"
+                + "'10502','32771','32772','32773','3274','32743','327733','327724','3277235','327234','327745',"
+                + "'3277345','327345','3276','327766','32756') limit 100",
+            RunnerType.DEFAULT);
+    }
+
+    @Test
+    public void testQuote() {
+        prepareForChecking("select cast('1998-04-08' as date)",
+            RunnerType.DEFAULT);
     }
 
     private SqlHolder prepareForChecking(String sql) {

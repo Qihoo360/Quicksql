@@ -16,98 +16,36 @@
  */
 package com.qihoo.qsql.org.apache.calcite.util;
 
+import com.google.common.collect.ImmutableMap;
 import com.qihoo.qsql.org.apache.calcite.DataContext;
 import com.qihoo.qsql.org.apache.calcite.adapter.java.ReflectiveSchema;
 import com.qihoo.qsql.org.apache.calcite.adapter.jdbc.JdbcSchema;
-import org.apache.calcite.avatica.util.DateTimeUtils;
-import org.apache.calcite.avatica.util.TimeUnitRange;
 import com.qihoo.qsql.org.apache.calcite.interpreter.Context;
 import com.qihoo.qsql.org.apache.calcite.interpreter.Row;
 import com.qihoo.qsql.org.apache.calcite.interpreter.Scalar;
-import com.qihoo.qsql.org.apache.calcite.linq4j.AbstractEnumerable;
-import com.qihoo.qsql.org.apache.calcite.linq4j.CorrelateJoinType;
-import com.qihoo.qsql.org.apache.calcite.linq4j.Enumerable;
-import com.qihoo.qsql.org.apache.calcite.linq4j.EnumerableDefaults;
-import com.qihoo.qsql.org.apache.calcite.linq4j.Enumerator;
-import com.qihoo.qsql.org.apache.calcite.linq4j.ExtendedEnumerable;
-import com.qihoo.qsql.org.apache.calcite.linq4j.Linq4j;
-import com.qihoo.qsql.org.apache.calcite.linq4j.QueryProvider;
-import com.qihoo.qsql.org.apache.calcite.linq4j.Queryable;
-import com.qihoo.qsql.org.apache.calcite.linq4j.function.EqualityComparer;
-import com.qihoo.qsql.org.apache.calcite.linq4j.function.Function0;
-import com.qihoo.qsql.org.apache.calcite.linq4j.function.Function1;
-import com.qihoo.qsql.org.apache.calcite.linq4j.function.Function2;
-import com.qihoo.qsql.org.apache.calcite.linq4j.function.Functions;
-import com.qihoo.qsql.org.apache.calcite.linq4j.function.Predicate1;
-import com.qihoo.qsql.org.apache.calcite.linq4j.function.Predicate2;
+import com.qihoo.qsql.org.apache.calcite.linq4j.*;
+import com.qihoo.qsql.org.apache.calcite.linq4j.function.*;
 import com.qihoo.qsql.org.apache.calcite.linq4j.tree.FunctionExpression;
 import com.qihoo.qsql.org.apache.calcite.linq4j.tree.Primitive;
 import com.qihoo.qsql.org.apache.calcite.linq4j.tree.Types;
-import com.qihoo.qsql.org.apache.calcite.rel.metadata.BuiltInMetadata.AllPredicates;
-import com.qihoo.qsql.org.apache.calcite.rel.metadata.BuiltInMetadata.Collation;
-import com.qihoo.qsql.org.apache.calcite.rel.metadata.BuiltInMetadata.ColumnOrigin;
-import com.qihoo.qsql.org.apache.calcite.rel.metadata.BuiltInMetadata.ColumnUniqueness;
-import com.qihoo.qsql.org.apache.calcite.rel.metadata.BuiltInMetadata.CumulativeCost;
-import com.qihoo.qsql.org.apache.calcite.rel.metadata.BuiltInMetadata.DistinctRowCount;
-import com.qihoo.qsql.org.apache.calcite.rel.metadata.BuiltInMetadata.Distribution;
-import com.qihoo.qsql.org.apache.calcite.rel.metadata.BuiltInMetadata.ExplainVisibility;
-import com.qihoo.qsql.org.apache.calcite.rel.metadata.BuiltInMetadata.ExpressionLineage;
-import com.qihoo.qsql.org.apache.calcite.rel.metadata.BuiltInMetadata.MaxRowCount;
-import com.qihoo.qsql.org.apache.calcite.rel.metadata.BuiltInMetadata.Memory;
-import com.qihoo.qsql.org.apache.calcite.rel.metadata.BuiltInMetadata.MinRowCount;
-import com.qihoo.qsql.org.apache.calcite.rel.metadata.BuiltInMetadata.NodeTypes;
-import com.qihoo.qsql.org.apache.calcite.rel.metadata.BuiltInMetadata.NonCumulativeCost;
-import com.qihoo.qsql.org.apache.calcite.rel.metadata.BuiltInMetadata.Parallelism;
-import com.qihoo.qsql.org.apache.calcite.rel.metadata.BuiltInMetadata.PercentageOriginalRows;
-import com.qihoo.qsql.org.apache.calcite.rel.metadata.BuiltInMetadata.PopulationSize;
-import com.qihoo.qsql.org.apache.calcite.rel.metadata.BuiltInMetadata.Predicates;
-import com.qihoo.qsql.org.apache.calcite.rel.metadata.BuiltInMetadata.RowCount;
-import com.qihoo.qsql.org.apache.calcite.rel.metadata.BuiltInMetadata.Selectivity;
-import com.qihoo.qsql.org.apache.calcite.rel.metadata.BuiltInMetadata.Size;
-import com.qihoo.qsql.org.apache.calcite.rel.metadata.BuiltInMetadata.TableReferences;
-import com.qihoo.qsql.org.apache.calcite.rel.metadata.BuiltInMetadata.UniqueKeys;
+import com.qihoo.qsql.org.apache.calcite.rel.metadata.BuiltInMetadata.*;
 import com.qihoo.qsql.org.apache.calcite.rel.metadata.Metadata;
 import com.qihoo.qsql.org.apache.calcite.rex.RexNode;
-import com.qihoo.qsql.org.apache.calcite.runtime.ArrayBindable;
-import com.qihoo.qsql.org.apache.calcite.runtime.BinarySearch;
-import com.qihoo.qsql.org.apache.calcite.runtime.Bindable;
-import com.qihoo.qsql.org.apache.calcite.runtime.Enumerables;
-import com.qihoo.qsql.org.apache.calcite.runtime.FlatLists;
-import com.qihoo.qsql.org.apache.calcite.runtime.RandomFunction;
-import com.qihoo.qsql.org.apache.calcite.runtime.ResultSetEnumerable;
-import com.qihoo.qsql.org.apache.calcite.runtime.SortedMultiMap;
-import com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions;
+import com.qihoo.qsql.org.apache.calcite.runtime.*;
 import com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.FlatProductInputType;
-import com.qihoo.qsql.org.apache.calcite.runtime.Utilities;
-import com.qihoo.qsql.org.apache.calcite.schema.FilterableTable;
-import com.qihoo.qsql.org.apache.calcite.schema.ModifiableTable;
-import com.qihoo.qsql.org.apache.calcite.schema.ProjectableFilterableTable;
-import com.qihoo.qsql.org.apache.calcite.schema.QueryableTable;
-import com.qihoo.qsql.org.apache.calcite.schema.ScannableTable;
-import com.qihoo.qsql.org.apache.calcite.schema.Schema;
-import com.qihoo.qsql.org.apache.calcite.schema.SchemaPlus;
-import com.qihoo.qsql.org.apache.calcite.schema.Schemas;
+import com.qihoo.qsql.org.apache.calcite.schema.*;
 import com.qihoo.qsql.org.apache.calcite.sql.SqlExplainLevel;
+import org.apache.calcite.avatica.util.DateTimeUtils;
+import org.apache.calcite.avatica.util.TimeUnitRange;
 
-import com.google.common.collect.ImmutableMap;
-
+import javax.sql.DataSource;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.TimeZone;
-import javax.sql.DataSource;
+import java.util.*;
 
 /**
  * Built-in methods.
@@ -128,6 +66,10 @@ public enum BuiltInMethod {
   DATE_ADD(SqlFunctions.class,"dateadd",String.class,Integer.class),
   DATE_SUB(SqlFunctions.class,"datesub",String.class,Integer.class),
   REFLECT(SqlFunctions.class,"reflect",Enumerable.class),
+  SUBSTRING_INDEX(SqlFunctions.class, "substringIndex", String.class,String.class,int.class),
+  UNIX_TIMESTAMP(SqlFunctions.class, "unixTimestamp",String.class),
+  FROM_UNIXTIME(SqlFunctions.class, "fromunixtime",  Long.class),
+
   //qsql end
 
   QUERYABLE_SELECT(Queryable.class, "select", FunctionExpression.class),

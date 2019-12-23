@@ -40,8 +40,9 @@ public class SqlRankFunction extends SqlAggFunction {
 
   //~ Methods ----------------------------------------------------------------
 
+  //Updated by qsql-team
   @Override public boolean allowsFraming() {
-    return false;
+    return true;
   }
 
 }

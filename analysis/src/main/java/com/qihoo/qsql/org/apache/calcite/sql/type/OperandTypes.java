@@ -238,6 +238,15 @@ public abstract class OperandTypes {
   public static final SqlSingleOperandTypeChecker INTERVAL =
       family(SqlTypeFamily.DATETIME_INTERVAL);
 
+  //Updated by qsql-team
+  public static final SqlSingleOperandTypeChecker DATE =
+      family(SqlTypeFamily.DATE);
+
+  public static final SqlSingleOperandTypeChecker INTEGER=
+      family(SqlTypeFamily.INTEGER);
+  //Updated by qsql-end
+
+
   public static final SqlSingleOperandTypeChecker PERIOD =
       new PeriodOperandTypeChecker();
 
@@ -414,6 +423,10 @@ public abstract class OperandTypes {
   public static final SqlSingleOperandTypeChecker BOOLEAN_SAME_SAME =
       OperandTypes.and(BOOLEAN, SAME_SAME);
 
+  //Updated by qsql-team
+  public static final SqlSingleOperandTypeChecker DATE_INTEGER=
+      family(SqlTypeFamily.DATE,SqlTypeFamily.INTEGER);
+
   public static final SqlSingleOperandTypeChecker ANY =
       family(SqlTypeFamily.ANY);
 
@@ -458,9 +471,13 @@ public abstract class OperandTypes {
 
   // TODO: datetime+interval checking missing
   // TODO: interval+datetime checking missing
+  /**
+   * Type checking strategy for the "+" operator
+   */
+  //Updated by qsql-team
   public static final SqlSingleOperandTypeChecker PLUS_OPERATOR =
       OperandTypes.or(NUMERIC_NUMERIC, INTERVAL_SAME_SAME, DATETIME_INTERVAL,
-          INTERVAL_DATETIME);
+          INTERVAL_DATETIME,DATE_INTEGER);
 
   /**
    * Type checking strategy for the "*" operator
@@ -474,9 +491,14 @@ public abstract class OperandTypes {
   public static final SqlSingleOperandTypeChecker DIVISION_OPERATOR =
       OperandTypes.or(NUMERIC_NUMERIC, INTERVAL_NUMERIC);
 
+  /**
+   * Type checking strategy for the "-" operator
+   */
+  //Updated by qsql-team
   public static final SqlSingleOperandTypeChecker MINUS_OPERATOR =
       // TODO:  compatibility check
-      OperandTypes.or(NUMERIC_NUMERIC, INTERVAL_SAME_SAME, DATETIME_INTERVAL);
+      OperandTypes.or(NUMERIC_NUMERIC, INTERVAL_SAME_SAME, DATETIME_INTERVAL,
+          INTERVAL_DATETIME,DATE_INTEGER);
 
   public static final FamilyOperandTypeChecker MINUS_DATE_OPERATOR =
       new FamilyOperandTypeChecker(

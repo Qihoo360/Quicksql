@@ -1,9 +1,9 @@
 #!/bin/bash
 
 export QSQL_HOME="$(cd "`dirname "$0"`"/..; pwd)"
-. "${QSQL_HOME}/bin/load-qsql-env"
+. "${QSQL_HOME}/bin/commons.sh"
 
-ARGS=`getopt -o "p:d:r:h" -n "meta-extract" -- "$@"`
+ARGS=`getopt -o "p:d:r:h" -n "metadata-extract.sh" -- "$@"`
 
 eval set -- "${ARGS}"
 # eval is evil
@@ -84,15 +84,15 @@ if [[ "$JAVA_RUNNER" ]]; then
     fi
 fi
 
-for jar in `find "${QSQL_HOME}/lib" -maxdepth 1 -name "*.jar"`
-do
-    if [ ! -n "${QSQL_JARS}" ]
-    then
-        export QSQL_JARS="${jar}"
-    else
-        export QSQL_JARS="${QSQL_JARS}:${jar}"
-    fi
-done
+#for jar in `find "${QSQL_HOME}/lib" -maxdepth 1 -name "*.jar"`
+#do
+#    if [ ! -n "${QSQL_JARS}" ]
+#    then
+#        export QSQL_JARS="${jar}"
+#    else
+#        export QSQL_JARS="${QSQL_JARS}:${jar}"
+#    fi
+#done
 
 "${JAVA_RUNNER}" -cp "${QSQL_JARS}" com.qihoo.qsql.metadata.collect.MetadataCollector \
 "${PROPERTY}" "${DATA_SOURCE}" "${MATCHER}"

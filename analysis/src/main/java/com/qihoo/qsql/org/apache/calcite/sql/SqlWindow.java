@@ -227,7 +227,8 @@ public class SqlWindow extends SqlCall {
    *
    * @see com.qihoo.qsql.org.apache.calcite.rel.core.Window.Group#isAlwaysNonEmpty()
    * @see SqlOperatorBinding#getGroupCount()
-   * @see com.qihoo.qsql.org.apache.calcite.sql.validate.SqlValidatorImpl#resolveWindow(SqlNode, com.qihoo.qsql.org.apache.calcite.sql.validate.SqlValidatorScope, boolean)
+   * @see com.qihoo.qsql.org.apache.calcite.sql.validate.SqlValidatorImpl#resolveWindow(SqlNode,
+   * com.qihoo.qsql.org.apache.calcite.sql.validate.SqlValidatorScope, boolean)
    */
   public boolean isAlwaysNonEmpty() {
     final SqlWindow tmp;
@@ -858,6 +859,7 @@ public class SqlWindow extends SqlCall {
       }
     }
 
+    //Updated by qsql-team
     public void unparse(
         SqlWriter writer,
         SqlCall call,
@@ -881,24 +883,25 @@ public class SqlWindow extends SqlCall {
         window.orderList.unparse(writer, 0, 0);
         writer.endList(orderFrame);
       }
+      //TODO review logic of lower and upper bound
       if (window.lowerBound == null) {
         // No ROWS or RANGE clause
       } else if (window.upperBound == null) {
-        if (window.isRows()) {
-          writer.sep("ROWS");
-        } else {
-          writer.sep("RANGE");
-        }
-        window.lowerBound.unparse(writer, 0, 0);
+        // if (window.isRows()) {
+        //   writer.sep("ROWS");
+        // } else {
+        //   writer.sep("RANGE");
+        // }
+        // window.lowerBound.unparse(writer, 0, 0);
       } else {
-        if (window.isRows()) {
-          writer.sep("ROWS BETWEEN");
-        } else {
-          writer.sep("RANGE BETWEEN");
-        }
-        window.lowerBound.unparse(writer, 0, 0);
-        writer.keyword("AND");
-        window.upperBound.unparse(writer, 0, 0);
+        // if (window.isRows()) {
+        //   writer.sep("ROWS BETWEEN");
+        // } else {
+        //   writer.sep("RANGE BETWEEN");
+        // }
+        // window.lowerBound.unparse(writer, 0, 0);
+        // writer.keyword("AND");
+        // window.upperBound.unparse(writer, 0, 0);
       }
 
       // ALLOW PARTIAL/DISALLOW PARTIAL

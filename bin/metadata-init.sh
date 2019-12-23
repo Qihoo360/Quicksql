@@ -2,7 +2,7 @@
 
 
 export QSQL_HOME="$(cd "`dirname "$0"`"/..; pwd)"
- . "${QSQL_HOME}/bin/load-qsql-env"
+ . "${QSQL_HOME}/bin/commons.sh"
 
 #parse args
 ARGS=`getopt -o "h" -l "dbType:,action:" -n "qsql" -- "$@"`
@@ -63,8 +63,8 @@ done
 
 if [ ! -z "${HELP_ENABLE}" ] ; then
     echo "Options:
-    --dbType Set external metadata storage type. e.g., mysql
-    --action Set action for external metadata storage. including init or delete.
+    --dbType Set external metadata-init.sh storage type. e.g., mysql
+    --action Set action for external metadata-init.sh storage. including init or delete.
     "
     exit 1
 fi

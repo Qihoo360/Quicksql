@@ -1192,7 +1192,7 @@ SqlNode SqlDescribe() :
 {
    final Span s;
    final SqlIdentifier table;
-   final SqlIdentifier column;
+   final SqlNode column;
    final SqlIdentifier id;
    final SqlNode stmt;
 }
@@ -1214,7 +1214,7 @@ SqlNode SqlDescribe() :
         (<TABLE>)?
         table = CompoundIdentifier()
         (
-            column = SimpleIdentifier()
+            column = StringLiteral()
         |
             E() { column = null; }
         ) {

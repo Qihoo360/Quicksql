@@ -11,9 +11,10 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.flink.api.common.typeinfo.BasicTypeInfo;
-import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.typeutils.RowTypeInfo;
+import org.apache.flink.api.common.typeinfo.BasicTypeInfo;
+import org.apache.flink.api.common.typeinfo.SqlTimeTypeInfo;
+import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.types.Row;
 
 /**
@@ -96,16 +97,15 @@ public class FlinkJdbcGenerator extends QueryGenerator {
             case "LONGTEXT":
             case "VARCHAR2":
             case "STRING":
+            case "CHAR":
                 return BasicTypeInfo.STRING_TYPE_INFO;
             case "DOUBLE":
                 return BasicTypeInfo.DOUBLE_TYPE_INFO;
             case "FLOAT":
                 return BasicTypeInfo.FLOAT_TYPE_INFO;
-            case "CHAR":
-                return BasicTypeInfo.CHAR_TYPE_INFO;
             case "DATE":
             case "YEAR":
-                return BasicTypeInfo.DATE_TYPE_INFO;
+                return SqlTimeTypeInfo.DATE;
             case "BIGDECIMAL":
             case "DECIMAL":
                 return BasicTypeInfo.BIG_DEC_TYPE_INFO;

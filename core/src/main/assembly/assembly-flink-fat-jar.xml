@@ -32,6 +32,7 @@
             <scope>runtime</scope>
             <includes>
                 <include>mysql*:*:jar</include>
+                <include>oracle*:*:jar</include>
                 <include>com.github.picadoh*:*:jar</include>
                 <include>com.qihoo.qsql*:qsql-core:jar</include>
                 <include>org.apache.hive*:*:jar</include>
