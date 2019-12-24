@@ -379,7 +379,7 @@ public class JdbcPipeline extends AbstractPipeline {
     }
 
     enum JdbcType {
-        ELASTICSEARCH, JDBC, CSV
+        ELASTICSEARCH, JDBC, CSV,MONGO
     }
 
     public interface ConnectionPostProcessor {

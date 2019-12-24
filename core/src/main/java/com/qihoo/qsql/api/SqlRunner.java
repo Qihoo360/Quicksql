@@ -68,6 +68,9 @@ public abstract class SqlRunner {
                 case JDBC:
                     this.runner = RunnerType.JDBC;
                     break;
+                case MONGO:
+                    this.runner = RunnerType.MONGO;
+                    break;
                 default:
                     this.runner = RunnerType.DEFAULT;
             }
@@ -89,6 +92,10 @@ public abstract class SqlRunner {
 
         public boolean isJdbcMode() {
             return this.runner == RunnerType.JDBC;
+        }
+
+        public boolean isMongoMode() {
+            return this.runner == RunnerType.MONGO;
         }
 
         public Builder setProperties(Properties properties) {
@@ -164,7 +171,7 @@ public abstract class SqlRunner {
         }
 
         public enum RunnerType {
-            SPARK, FLINK, JDBC, DEFAULT;
+            SPARK, FLINK, JDBC, MONGO,DEFAULT;
 
             /**
              * convert to RunnerType from string.
@@ -180,6 +187,8 @@ public abstract class SqlRunner {
                         return FLINK;
                     case "JDBC":
                         return JDBC;
+                    case "MONGO":
+                        return MONGO;
                     default:
                         return DEFAULT;
                 }

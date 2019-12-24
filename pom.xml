@@ -120,6 +120,7 @@
         <commons-cli.version>1.3.1</commons-cli.version>
         <imc.version>0.2</imc.version>
         <commons-dbutils.version>1.7</commons-dbutils.version>
+        <mongo.version>3.12.0</mongo.version>
 
         <!-- Other properties (not version numbers) -->
         <!-- Java 1.8 does not support -html5, so override via profile for Java 1.8 -->
@@ -552,6 +553,12 @@
                         <groupId>org.apache.calcite</groupId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver -->
+            <dependency>
+                <groupId>org.mongodb</groupId>
+                <artifactId>mongo-java-driver</artifactId>
+                <version>${mongo.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

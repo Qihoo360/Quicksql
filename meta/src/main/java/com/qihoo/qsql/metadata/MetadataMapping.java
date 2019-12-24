@@ -20,13 +20,21 @@ public enum MetadataMapping {
     /**
      * use '%' and literal 'value' to complete mapping.
      */
+    MONGODB("org.apache.calcite.adapter.mongodb.MongoSchemaFactory",
+        "org.apache.calcite.adapter.custom.JdbcTableFactory",
+        Arrays.asList(
+            "dbName", "collectionName", "dbType", "host",
+            "port", "dbUser", "dbPassword","authMechanism"),
+        Collections.emptyList()
+        ),
+
     JDBC("org.apache.calcite.adapter.custom.JdbcSchemaFactory",
         "org.apache.calcite.adapter.custom.JdbcTableFactory",
         Arrays.asList(
             "dbName", "tableName", "dbType", "jdbcDriver",
             "jdbcUrl", "jdbcUser", "jdbcPassword"),
         Collections.emptyList()
-        ),
+    ),
 
     Hive("org.apache.calcite.adapter.hive.HiveSchemaFactory",
         "org.apache.calcite.adapter.hive.HiveTableFactory",
@@ -39,6 +47,7 @@ public enum MetadataMapping {
     public static final String KYLIN = "kylin";
     public static final String ORACLE = "oracle";
     public static final String HIVE = "hive";
+    public static final String MONGO = "mongo";
 
     private static final String JOINT_FLAG = "%";
     String schemaClass;
@@ -64,6 +73,8 @@ public enum MetadataMapping {
                 return MetadataMapping.JDBC;
             case HIVE:
                 return MetadataMapping.Hive;
+            case MONGO:
+                return MetadataMapping.MONGODB;
             default:
                 throw new RuntimeException("Not support given adapter name!!");
         }

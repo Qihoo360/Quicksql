@@ -24,6 +24,7 @@ import org.apache.calcite.adapter.enumerable.PhysType;
 import org.apache.calcite.adapter.enumerable.PhysTypeImpl;
 import org.apache.calcite.adapter.hive.HiveTable;
 import org.apache.calcite.adapter.custom.JdbcTable;
+import org.apache.calcite.adapter.mongodb.MongoTable;
 import org.apache.calcite.adapter.virtual.VirtualTable;
 import org.apache.calcite.plan.RelOptCluster;
 import org.apache.calcite.plan.RelOptLattice;
@@ -106,6 +107,9 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
             return new HiveExtractor(next,
                 ((HiveTable) relOptTable.getTable()).getProperties(),
                 config, relNode, tableName);
+        } else if (relOptTable.getTable() instanceof MongoTable) {
+            return new MongoExtractor(next, ((MongoTable) relOptTable.getTable())
+                .getProperties(), config, relNode, tableName);
         } else if (relOptTable.getTable() instanceof JdbcTable) {
             //TODO add more jdbc type
             String dbType = ((JdbcTable) relOptTable.getTable())
@@ -116,7 +120,7 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
                         .getProperties(), config, relNode, tableName);
                 case MetadataMapping.KYLIN:
                     return new KylinExtractor(next, ((JdbcTable) relOptTable.getTable())
-                            .getProperties(), config, relNode, tableName);
+                        .getProperties(), config, relNode, tableName);
                 case MetadataMapping.ORACLE:
                     return new OracleExtractor(next, ((JdbcTable) relOptTable.getTable())
                         .getProperties(), config, relNode, tableName);
@@ -182,7 +186,7 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
     public abstract static class NoSqlExtractor extends PreparedExtractProcedure {
 
         NoSqlExtractor(QueryProcedure next, Properties properties,
-            FrameworkConfig config, RelNode relNode, String tableName) {
+                       FrameworkConfig config, RelNode relNode, String tableName) {
             super(next, properties, config, relNode, tableName);
         }
 
@@ -220,8 +224,8 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
          * @param sql sql
          */
         public ElasticsearchExtractor(QueryProcedure next, Properties properties,
-            FrameworkConfig config, RelNode relNode,
-            String tableName, String sql) {
+                                      FrameworkConfig config, RelNode relNode,
+                                      String tableName, String sql) {
             super(next, properties, config, relNode, tableName);
             this.sql = sql;
             this.properties = properties;
@@ -294,7 +298,7 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
         private String sql;
 
         public DruidExtractor(QueryProcedure next, Properties properties,
-            FrameworkConfig config, RelNode relNode, String tableName, String sql) {
+                              FrameworkConfig config, RelNode relNode, String tableName, String sql) {
             super(next, properties, config, relNode, tableName);
             this.sql = sql;
         }
@@ -348,7 +352,7 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
             // there will be some RelNode with other type between Project and DruidQuery in Logical Tree.
             // Since I cannot find the rule for numbers of the RelNode,
             // loop is used.
-            for (child = relNode; ! (child instanceof DruidQuery); ) {
+            for (child = relNode; !(child instanceof DruidQuery); ) {
                 child = child.getInput(0);
             }
             return (DruidQuery) child;
@@ -362,8 +366,8 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
     public static class MySqlExtractor extends PreparedExtractProcedure {
 
         public MySqlExtractor(QueryProcedure next, Properties properties,
-            FrameworkConfig config, RelNode relNode,
-            String tableName) {
+                              FrameworkConfig config, RelNode relNode,
+                              String tableName) {
             super(next, properties, config, relNode, tableName);
         }
 
@@ -389,7 +393,7 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
         @Override
         public String toRecognizedQuery() {
             return sql(new AnsiSqlDialect(SqlDialect.EMPTY_CONTEXT
-                    .withDatabaseProduct(SqlDialect.DatabaseProduct.UNKNOWN).withIdentifierQuoteString("\"")));
+                .withDatabaseProduct(SqlDialect.DatabaseProduct.UNKNOWN).withIdentifierQuoteString("\"")));
         }
 
         @Override
@@ -401,8 +405,8 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
     public static class OracleExtractor extends PreparedExtractProcedure {
 
         public OracleExtractor(QueryProcedure next, Properties properties,
-            FrameworkConfig config, RelNode relNode,
-            String tableName) {
+                               FrameworkConfig config, RelNode relNode,
+                               String tableName) {
             super(next, properties, config, relNode, tableName);
         }
 
@@ -417,10 +421,30 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
         }
     }
 
+    public static class MongoExtractor extends PreparedExtractProcedure {
+
+        public MongoExtractor(QueryProcedure next, Properties properties,
+                               FrameworkConfig config, RelNode relNode,
+                               String tableName) {
+            super(next, properties, config, relNode, tableName);
+        }
+
+        @Override
+        public String toRecognizedQuery() {
+            return sql(new AnsiSqlDialect(SqlDialect.EMPTY_CONTEXT
+                .withDatabaseProduct(SqlDialect.DatabaseProduct.UNKNOWN).withIdentifierQuoteString("\"")));
+        }
+
+        @Override
+        public String getCategory() {
+            return "Mongo";
+        }
+    }
+
     public static class HiveExtractor extends PreparedExtractProcedure {
 
         public HiveExtractor(QueryProcedure next, Properties properties,
-            FrameworkConfig config, RelNode relNode, String tableName) {
+                             FrameworkConfig config, RelNode relNode, String tableName) {
             super(next, properties, config, relNode, tableName);
         }
 
@@ -440,8 +464,8 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
         private String sql;
 
         public VirtualExtractor(QueryProcedure next, Properties properties,
-            FrameworkConfig config, RelNode relNode,
-            String tableName, String sql) {
+                                FrameworkConfig config, RelNode relNode,
+                                String tableName, String sql) {
             super(next, properties, config, relNode, tableName);
             this.sql = sql;
         }
@@ -466,8 +490,8 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
          * CsvExtractor.
          */
         public CsvExtractor(QueryProcedure next, Properties properties,
-            FrameworkConfig config, RelNode relNode,
-            String tableName, String sql) {
+                            FrameworkConfig config, RelNode relNode,
+                            String tableName, String sql) {
             super(next, properties, config, relNode, tableName);
             this.sql = sql;
             this.properties = properties;
