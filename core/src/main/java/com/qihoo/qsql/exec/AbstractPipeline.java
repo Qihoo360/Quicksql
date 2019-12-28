@@ -28,6 +28,8 @@ public abstract class AbstractPipeline {
         this.procedure = procedure;
     }
 
+    public abstract void run();
+
     public abstract Object collect();
 
     public abstract void show();

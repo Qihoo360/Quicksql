@@ -51,7 +51,6 @@ public class QueryGeneratorTest {
         SparkBodyWrapper wrapper = new SparkBodyWrapper();
         wrapper.interpretProcedure(procedure);
         wrapper.importSpecificDependency();
-        wrapper.show();
         wrapper.compile();
         String clazz = wrapper.toString();
         System.out.println(clazz);

@@ -76,7 +76,7 @@ public class RuntimeEnv {
         + "          }\n"
         + "        ]\n"
         + "      }]\n"
-        + "    }\n"
+        + "    },\n"
         + "    {\n"
         + "      \"type\": \"custom\",\n"
         + "      \"name\": \"student_profile\",\n"
