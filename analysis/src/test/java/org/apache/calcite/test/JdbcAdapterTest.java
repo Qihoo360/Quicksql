@@ -16,7 +16,7 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.config.Lex;
+import com.qihoo.qsql.org.apache.calcite.config.Lex;
 import org.apache.calcite.test.CalciteAssert.AssertThat;
 import org.apache.calcite.test.CalciteAssert.DatabaseInstance;
 
@@ -38,7 +38,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 
 /**
- * Tests for the {@code org.apache.calcite.adapter.jdbc} package.
+ * Tests for the {@code com.qihoo.qsql.org.apache.calcite.adapter.jdbc} package.
  */
 public class JdbcAdapterTest {
 

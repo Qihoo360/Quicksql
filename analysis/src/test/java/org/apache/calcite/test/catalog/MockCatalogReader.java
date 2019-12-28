@@ -16,75 +16,75 @@
  */
 package org.apache.calcite.test.catalog;
 
-import org.apache.calcite.adapter.java.JavaTypeFactory;
-import org.apache.calcite.config.CalciteConnectionConfig;
-import org.apache.calcite.jdbc.CalcitePrepare;
-import org.apache.calcite.jdbc.CalciteSchema;
-import org.apache.calcite.linq4j.QueryProvider;
-import org.apache.calcite.linq4j.Queryable;
-import org.apache.calcite.linq4j.tree.Expression;
-import org.apache.calcite.plan.RelOptSchema;
-import org.apache.calcite.plan.RelOptTable;
-import org.apache.calcite.prepare.CalciteCatalogReader;
-import org.apache.calcite.prepare.Prepare;
-import org.apache.calcite.rel.RelCollation;
-import org.apache.calcite.rel.RelCollations;
-import org.apache.calcite.rel.RelDistribution;
-import org.apache.calcite.rel.RelDistributions;
-import org.apache.calcite.rel.RelFieldCollation;
-import org.apache.calcite.rel.RelNode;
-import org.apache.calcite.rel.RelReferentialConstraint;
-import org.apache.calcite.rel.logical.LogicalFilter;
-import org.apache.calcite.rel.logical.LogicalProject;
-import org.apache.calcite.rel.logical.LogicalTableScan;
-import org.apache.calcite.rel.type.DynamicRecordTypeImpl;
-import org.apache.calcite.rel.type.RelDataType;
-import org.apache.calcite.rel.type.RelDataTypeComparability;
-import org.apache.calcite.rel.type.RelDataTypeFactory;
-import org.apache.calcite.rel.type.RelDataTypeFamily;
-import org.apache.calcite.rel.type.RelDataTypeField;
-import org.apache.calcite.rel.type.RelDataTypeImpl;
-import org.apache.calcite.rel.type.RelDataTypePrecedenceList;
-import org.apache.calcite.rel.type.RelProtoDataType;
-import org.apache.calcite.rel.type.RelRecordType;
-import org.apache.calcite.rel.type.StructKind;
-import org.apache.calcite.rex.RexBuilder;
-import org.apache.calcite.rex.RexInputRef;
-import org.apache.calcite.rex.RexNode;
-import org.apache.calcite.schema.CustomColumnResolvingTable;
-import org.apache.calcite.schema.ExtensibleTable;
-import org.apache.calcite.schema.Path;
-import org.apache.calcite.schema.Schema;
-import org.apache.calcite.schema.SchemaPlus;
-import org.apache.calcite.schema.Schemas;
-import org.apache.calcite.schema.Statistic;
-import org.apache.calcite.schema.StreamableTable;
-import org.apache.calcite.schema.Table;
-import org.apache.calcite.schema.Wrapper;
-import org.apache.calcite.schema.impl.AbstractSchema;
-import org.apache.calcite.schema.impl.ModifiableViewTable;
-import org.apache.calcite.schema.impl.ViewTableMacro;
-import org.apache.calcite.sql.SqlAccessType;
-import org.apache.calcite.sql.SqlCall;
-import org.apache.calcite.sql.SqlCollation;
-import org.apache.calcite.sql.SqlIdentifier;
-import org.apache.calcite.sql.SqlIntervalQualifier;
-import org.apache.calcite.sql.SqlKind;
-import org.apache.calcite.sql.SqlNode;
-import org.apache.calcite.sql.type.SqlTypeName;
-import org.apache.calcite.sql.validate.SqlModality;
-import org.apache.calcite.sql.validate.SqlMonotonicity;
-import org.apache.calcite.sql.validate.SqlNameMatcher;
-import org.apache.calcite.sql.validate.SqlNameMatchers;
-import org.apache.calcite.sql.validate.SqlValidatorCatalogReader;
-import org.apache.calcite.sql.validate.SqlValidatorUtil;
-import org.apache.calcite.sql2rel.InitializerExpressionFactory;
-import org.apache.calcite.sql2rel.NullInitializerExpressionFactory;
+import com.qihoo.qsql.org.apache.calcite.adapter.java.JavaTypeFactory;
+import com.qihoo.qsql.org.apache.calcite.config.CalciteConnectionConfig;
+import com.qihoo.qsql.org.apache.calcite.jdbc.CalcitePrepare;
+import com.qihoo.qsql.org.apache.calcite.jdbc.CalciteSchema;
+import com.qihoo.qsql.org.apache.calcite.linq4j.QueryProvider;
+import com.qihoo.qsql.org.apache.calcite.linq4j.Queryable;
+import com.qihoo.qsql.org.apache.calcite.linq4j.tree.Expression;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptSchema;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptTable;
+import com.qihoo.qsql.org.apache.calcite.prepare.CalciteCatalogReader;
+import com.qihoo.qsql.org.apache.calcite.prepare.Prepare;
+import com.qihoo.qsql.org.apache.calcite.rel.RelCollation;
+import com.qihoo.qsql.org.apache.calcite.rel.RelCollations;
+import com.qihoo.qsql.org.apache.calcite.rel.RelDistribution;
+import com.qihoo.qsql.org.apache.calcite.rel.RelDistributions;
+import com.qihoo.qsql.org.apache.calcite.rel.RelFieldCollation;
+import com.qihoo.qsql.org.apache.calcite.rel.RelNode;
+import com.qihoo.qsql.org.apache.calcite.rel.RelReferentialConstraint;
+import com.qihoo.qsql.org.apache.calcite.rel.logical.LogicalFilter;
+import com.qihoo.qsql.org.apache.calcite.rel.logical.LogicalProject;
+import com.qihoo.qsql.org.apache.calcite.rel.logical.LogicalTableScan;
+import com.qihoo.qsql.org.apache.calcite.rel.type.DynamicRecordTypeImpl;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataType;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeComparability;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeFactory;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeFamily;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeField;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeImpl;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypePrecedenceList;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelProtoDataType;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelRecordType;
+import com.qihoo.qsql.org.apache.calcite.rel.type.StructKind;
+import com.qihoo.qsql.org.apache.calcite.rex.RexBuilder;
+import com.qihoo.qsql.org.apache.calcite.rex.RexInputRef;
+import com.qihoo.qsql.org.apache.calcite.rex.RexNode;
+import com.qihoo.qsql.org.apache.calcite.schema.CustomColumnResolvingTable;
+import com.qihoo.qsql.org.apache.calcite.schema.ExtensibleTable;
+import com.qihoo.qsql.org.apache.calcite.schema.Path;
+import com.qihoo.qsql.org.apache.calcite.schema.Schema;
+import com.qihoo.qsql.org.apache.calcite.schema.SchemaPlus;
+import com.qihoo.qsql.org.apache.calcite.schema.Schemas;
+import com.qihoo.qsql.org.apache.calcite.schema.Statistic;
+import com.qihoo.qsql.org.apache.calcite.schema.StreamableTable;
+import com.qihoo.qsql.org.apache.calcite.schema.Table;
+import com.qihoo.qsql.org.apache.calcite.schema.Wrapper;
+import com.qihoo.qsql.org.apache.calcite.schema.impl.AbstractSchema;
+import com.qihoo.qsql.org.apache.calcite.schema.impl.ModifiableViewTable;
+import com.qihoo.qsql.org.apache.calcite.schema.impl.ViewTableMacro;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlAccessType;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlCall;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlCollation;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlIdentifier;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlIntervalQualifier;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlKind;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlNode;
+import com.qihoo.qsql.org.apache.calcite.sql.type.SqlTypeName;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlModality;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlMonotonicity;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlNameMatcher;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlNameMatchers;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlValidatorCatalogReader;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlValidatorUtil;
+import com.qihoo.qsql.org.apache.calcite.sql2rel.InitializerExpressionFactory;
+import com.qihoo.qsql.org.apache.calcite.sql2rel.NullInitializerExpressionFactory;
 import org.apache.calcite.test.JdbcTest;
-import org.apache.calcite.util.ImmutableBitSet;
-import org.apache.calcite.util.ImmutableIntList;
-import org.apache.calcite.util.Pair;
-import org.apache.calcite.util.Util;
+import com.qihoo.qsql.org.apache.calcite.util.ImmutableBitSet;
+import com.qihoo.qsql.org.apache.calcite.util.ImmutableIntList;
+import com.qihoo.qsql.org.apache.calcite.util.Pair;
+import com.qihoo.qsql.org.apache.calcite.util.Util;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
@@ -281,7 +281,7 @@ public abstract class MockCatalogReader extends CalciteCatalogReader {
 
     /**
      * Mock implementation of
-     * {@link org.apache.calcite.prepare.Prepare.PreparingTable}.
+     * {@link com.qihoo.qsql.org.apache.calcite.prepare.Prepare.PreparingTable}.
      */
     public static class MockTable extends Prepare.AbstractPreparingTable {
         protected final MockCatalogReader catalogReader;
@@ -690,7 +690,7 @@ public abstract class MockCatalogReader extends CalciteCatalogReader {
 
     /**
      * Mock implementation of
-     * {@link org.apache.calcite.prepare.Prepare.PreparingTable} for views.
+     * {@link com.qihoo.qsql.org.apache.calcite.prepare.Prepare.PreparingTable} for views.
      */
     public abstract static class MockViewTable extends MockTable {
         private final MockTable fromTable;
@@ -844,7 +844,7 @@ public abstract class MockCatalogReader extends CalciteCatalogReader {
 
     /**
      * Mock implementation of
-     * {@link org.apache.calcite.prepare.Prepare.PreparingTable} with dynamic record type.
+     * {@link com.qihoo.qsql.org.apache.calcite.prepare.Prepare.PreparingTable} with dynamic record type.
      */
     public static class MockDynamicTable extends MockTable {
         public MockDynamicTable(MockCatalogReader catalogReader, String catalogName,

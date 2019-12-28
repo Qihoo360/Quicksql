@@ -16,12 +16,12 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.jdbc.CalciteConnection;
-import org.apache.calcite.linq4j.tree.Expressions;
-import org.apache.calcite.linq4j.tree.ParameterExpression;
-import org.apache.calcite.schema.SchemaPlus;
-import org.apache.calcite.schema.Schemas;
-import org.apache.calcite.util.Util;
+import com.qihoo.qsql.org.apache.calcite.jdbc.CalciteConnection;
+import com.qihoo.qsql.org.apache.calcite.linq4j.tree.Expressions;
+import com.qihoo.qsql.org.apache.calcite.linq4j.tree.ParameterExpression;
+import com.qihoo.qsql.org.apache.calcite.schema.SchemaPlus;
+import com.qihoo.qsql.org.apache.calcite.schema.Schemas;
+import com.qihoo.qsql.org.apache.calcite.util.Util;
 
 import org.junit.Test;
 

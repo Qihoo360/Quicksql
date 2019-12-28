@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
-import org.apache.calcite.util.Closer;
+import com.qihoo.qsql.org.apache.calcite.util.Closer;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.entity.ContentType;
@@ -177,6 +177,15 @@ public class EmbeddedElasticsearchPolicy {
     return node.httpAddress();
   }
 
+  public void close() {
+    closer.close();
+    try {
+      client.close();
+      node.close();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
 }
 
 // End EmbeddedElasticsearchPolicy.java

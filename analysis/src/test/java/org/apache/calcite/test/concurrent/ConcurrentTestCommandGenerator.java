@@ -16,8 +16,8 @@
  */
 package org.apache.calcite.test.concurrent;
 
-import org.apache.calcite.jdbc.SqlTimeoutException;
-import org.apache.calcite.util.Util;
+import com.qihoo.qsql.org.apache.calcite.jdbc.SqlTimeoutException;
+import com.qihoo.qsql.org.apache.calcite.util.Util;
 
 import com.google.common.collect.ImmutableList;
 

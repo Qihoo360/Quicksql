@@ -16,8 +16,8 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.util.Filterator;
-import org.apache.calcite.util.Util;
+import com.qihoo.qsql.org.apache.calcite.util.Filterator;
+import com.qihoo.qsql.org.apache.calcite.util.Util;
 
 import org.junit.Test;
 

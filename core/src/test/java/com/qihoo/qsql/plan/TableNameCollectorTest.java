@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
-import org.apache.calcite.sql.parser.SqlParseException;
+import com.qihoo.qsql.org.apache.calcite.sql.parser.SqlParseException;
 import org.junit.Assert;
 import org.junit.Test;
 

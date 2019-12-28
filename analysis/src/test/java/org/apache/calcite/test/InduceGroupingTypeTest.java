@@ -16,8 +16,8 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.rel.core.Aggregate;
-import org.apache.calcite.util.ImmutableBitSet;
+import com.qihoo.qsql.org.apache.calcite.rel.core.Aggregate;
+import com.qihoo.qsql.org.apache.calcite.util.ImmutableBitSet;
 
 import org.junit.Test;
 
@@ -29,7 +29,7 @@ import static org.junit.Assert.fail;
 
 /**
  * Unit test for
- * {@link org.apache.calcite.rel.core.Aggregate.Group#induce(ImmutableBitSet, List)}.
+ * {@link com.qihoo.qsql.org.apache.calcite.rel.core.Aggregate.Group#induce(ImmutableBitSet, List)}.
  */
 public class InduceGroupingTypeTest {
   @Test public void testInduceGroupingType() {

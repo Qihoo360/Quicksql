@@ -93,7 +93,7 @@ public class QueryProcedureTest {
             + "        ON department.times = student.city LIMIT 10)";
         prepareForChecking(sql)
             .checkExtra("{\"_source\":[\"city\",\"province\",\"digest\",\"type\",\"stu_id\"],\"size\":30}",
-                "select times from edu_manage.department group by times")
+            "select times from edu_manage.department group by times")
             .checkTrans("SELECT edu_manage_department_0.times, student_profile_student_1.city, "
                 + "student_profile_student_1.province, student_profile_student_1.digest, "
                 + "student_profile_student_1.type, student_profile_student_1.stu_id "
@@ -127,6 +127,14 @@ public class QueryProcedureTest {
                 + "from edu_manage.department inner join edu_manage.department_student_relation "
                 + "on department.dep_id = department_student_relation.stu_id, "
                 + "(select true as i from edu_manage.department group by true) as t2");
+    }
+
+    @Test
+    public void testCorrelationForProject() {
+        String sql = "SELECT MIN(digest), MAX(digest), type "
+            + "FROM student_profile.student group by type order by "
+            + "type limit 3";
+        //prepareForChecking(sql).checkExtra("");
     }
 
     @Test

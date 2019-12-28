@@ -36,15 +36,16 @@ public class FlinkProcedureVisitor extends ProcedureVisitor {
     @Override
     public void visit(TransformProcedure transformProcedure) {
         composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE,
-            "Table table = tEnv.sqlQuery(\"" + transformProcedure.sql() + "\");");
+            "Table table = tableEnv.sqlQuery(\"" + transformProcedure.sql() + "\");");
         composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE,
-            "tmp = tEnv.toDataSet(table, Row.class);");
+            "tmp = tableEnv.toDataSet(table, Row.class);");
         visitNext(transformProcedure);
     }
 
     @Override
     public void visit(LoadProcedure loadProcedure) {
         composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE, "tmp.print();\n");
+        composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE, "return null;\n");
         visitNext(loadProcedure);
     }
 

@@ -16,14 +16,14 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.plan.RelOptSchema;
-import org.apache.calcite.rel.RelNode;
-import org.apache.calcite.rel.RelShuttleImpl;
-import org.apache.calcite.rel.core.TableScan;
-import org.apache.calcite.rel.externalize.RelJsonReader;
-import org.apache.calcite.rel.externalize.RelJsonWriter;
-import org.apache.calcite.runtime.Hook;
-import org.apache.calcite.tools.Frameworks;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptSchema;
+import com.qihoo.qsql.org.apache.calcite.rel.RelNode;
+import com.qihoo.qsql.org.apache.calcite.rel.RelShuttleImpl;
+import com.qihoo.qsql.org.apache.calcite.rel.core.TableScan;
+import com.qihoo.qsql.org.apache.calcite.rel.externalize.RelJsonReader;
+import com.qihoo.qsql.org.apache.calcite.rel.externalize.RelJsonWriter;
+import com.qihoo.qsql.org.apache.calcite.runtime.Hook;
+import com.qihoo.qsql.org.apache.calcite.tools.Frameworks;
 
 import org.junit.After;
 import org.junit.Before;

@@ -16,56 +16,55 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.adapter.clone.ArrayTableTest;
-import org.apache.calcite.jdbc.CalciteRemoteDriverTest;
-import org.apache.calcite.plan.RelOptPlanReaderTest;
-import org.apache.calcite.plan.RelOptUtilTest;
-import org.apache.calcite.plan.RelTraitTest;
-import org.apache.calcite.plan.RelWriterTest;
-import org.apache.calcite.plan.volcano.CollationConversionTest;
-import org.apache.calcite.plan.volcano.ComboRuleTest;
-import org.apache.calcite.plan.volcano.TraitConversionTest;
-import org.apache.calcite.plan.volcano.TraitPropagationTest;
-import org.apache.calcite.plan.volcano.VolcanoPlannerTest;
-import org.apache.calcite.plan.volcano.VolcanoPlannerTraitTest;
-import org.apache.calcite.prepare.LookupOperatorOverloadsTest;
-import org.apache.calcite.profile.ProfilerTest;
-import org.apache.calcite.rel.RelCollationTest;
-import org.apache.calcite.rel.RelDistributionTest;
-import org.apache.calcite.rel.rel2sql.RelToSqlConverterTest;
-import org.apache.calcite.rel.rules.DateRangeRulesTest;
-import org.apache.calcite.rex.RexBuilderTest;
-import org.apache.calcite.rex.RexExecutorTest;
-import org.apache.calcite.runtime.BinarySearchTest;
-import org.apache.calcite.runtime.EnumerablesTest;
-import org.apache.calcite.sql.SqlSetOptionOperatorTest;
-import org.apache.calcite.sql.parser.SqlParserTest;
-import org.apache.calcite.sql.parser.SqlUnParserTest;
-import org.apache.calcite.sql.parser.parserextensiontesting.ExtensionSqlParserTest;
-import org.apache.calcite.sql.test.SqlAdvisorTest;
-import org.apache.calcite.sql.test.SqlOperatorTest;
-import org.apache.calcite.sql.test.SqlPrettyWriterTest;
-import org.apache.calcite.sql.test.SqlTypeNameTest;
-import org.apache.calcite.sql.type.SqlTypeFactoryTest;
-import org.apache.calcite.sql.type.SqlTypeUtilTest;
-import org.apache.calcite.sql.validate.LexCaseSensitiveTest;
-import org.apache.calcite.sql.validate.SqlValidatorUtilTest;
+import com.qihoo.qsql.org.apache.calcite.adapter.clone.ArrayTableTest;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptPlanReaderTest;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptUtilTest;
+import com.qihoo.qsql.org.apache.calcite.plan.RelTraitTest;
+import com.qihoo.qsql.org.apache.calcite.plan.RelWriterTest;
+import com.qihoo.qsql.org.apache.calcite.plan.volcano.CollationConversionTest;
+import com.qihoo.qsql.org.apache.calcite.plan.volcano.ComboRuleTest;
+import com.qihoo.qsql.org.apache.calcite.plan.volcano.TraitConversionTest;
+import com.qihoo.qsql.org.apache.calcite.plan.volcano.TraitPropagationTest;
+import com.qihoo.qsql.org.apache.calcite.plan.volcano.VolcanoPlannerTest;
+import com.qihoo.qsql.org.apache.calcite.plan.volcano.VolcanoPlannerTraitTest;
+import com.qihoo.qsql.org.apache.calcite.prepare.LookupOperatorOverloadsTest;
+import com.qihoo.qsql.org.apache.calcite.profile.ProfilerTest;
+import com.qihoo.qsql.org.apache.calcite.rel.RelCollationTest;
+import com.qihoo.qsql.org.apache.calcite.rel.RelDistributionTest;
+import com.qihoo.qsql.org.apache.calcite.rel.rel2sql.RelToSqlConverterTest;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.DateRangeRulesTest;
+import com.qihoo.qsql.org.apache.calcite.rex.RexBuilderTest;
+import com.qihoo.qsql.org.apache.calcite.rex.RexExecutorTest;
+import com.qihoo.qsql.org.apache.calcite.runtime.BinarySearchTest;
+import com.qihoo.qsql.org.apache.calcite.runtime.EnumerablesTest;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlSetOptionOperatorTest;
+import com.qihoo.qsql.org.apache.calcite.sql.parser.SqlParserTest;
+import com.qihoo.qsql.org.apache.calcite.sql.parser.SqlUnParserTest;
+import com.qihoo.qsql.org.apache.calcite.sql.parser.parserextensiontesting.ExtensionSqlParserTest;
+import com.qihoo.qsql.org.apache.calcite.sql.test.SqlAdvisorTest;
+import com.qihoo.qsql.org.apache.calcite.sql.test.SqlOperatorTest;
+import com.qihoo.qsql.org.apache.calcite.sql.test.SqlPrettyWriterTest;
+import com.qihoo.qsql.org.apache.calcite.sql.test.SqlTypeNameTest;
+import com.qihoo.qsql.org.apache.calcite.sql.type.SqlTypeFactoryTest;
+import com.qihoo.qsql.org.apache.calcite.sql.type.SqlTypeUtilTest;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.LexCaseSensitiveTest;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlValidatorUtilTest;
 import org.apache.calcite.test.enumerable.EnumerableCorrelateTest;
 import org.apache.calcite.test.fuzzer.RexProgramFuzzyTest;
-import org.apache.calcite.tools.FrameworksTest;
-import org.apache.calcite.tools.PlannerTest;
-import org.apache.calcite.util.BitSetsTest;
-import org.apache.calcite.util.ChunkListTest;
-import org.apache.calcite.util.ImmutableBitSetTest;
-import org.apache.calcite.util.PartiallyOrderedSetTest;
-import org.apache.calcite.util.PermutationTestCase;
-import org.apache.calcite.util.PrecedenceClimbingParserTest;
-import org.apache.calcite.util.ReflectVisitorTest;
-import org.apache.calcite.util.SourceTest;
-import org.apache.calcite.util.TestUtilTest;
-import org.apache.calcite.util.UtilTest;
-import org.apache.calcite.util.graph.DirectedGraphTest;
-import org.apache.calcite.util.mapping.MappingTest;
+import com.qihoo.qsql.org.apache.calcite.tools.FrameworksTest;
+import com.qihoo.qsql.org.apache.calcite.tools.PlannerTest;
+import com.qihoo.qsql.org.apache.calcite.util.BitSetsTest;
+import com.qihoo.qsql.org.apache.calcite.util.ChunkListTest;
+import com.qihoo.qsql.org.apache.calcite.util.ImmutableBitSetTest;
+import com.qihoo.qsql.org.apache.calcite.util.PartiallyOrderedSetTest;
+import com.qihoo.qsql.org.apache.calcite.util.PermutationTestCase;
+import com.qihoo.qsql.org.apache.calcite.util.PrecedenceClimbingParserTest;
+import com.qihoo.qsql.org.apache.calcite.util.ReflectVisitorTest;
+import com.qihoo.qsql.org.apache.calcite.util.SourceTest;
+import com.qihoo.qsql.org.apache.calcite.util.TestUtilTest;
+import com.qihoo.qsql.org.apache.calcite.util.UtilTest;
+import com.qihoo.qsql.org.apache.calcite.util.graph.DirectedGraphTest;
+import com.qihoo.qsql.org.apache.calcite.util.mapping.MappingTest;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -174,7 +173,6 @@ import org.junit.runners.Suite;
     SqlAdvisorJdbcTest.class,
     JdbcTest.class,
     CoreQuidemTest.class,
-    CalciteRemoteDriverTest.class,
     StreamTest.class,
 
     // test cases

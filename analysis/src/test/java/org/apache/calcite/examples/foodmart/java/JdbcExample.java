@@ -16,9 +16,9 @@
  */
 package org.apache.calcite.examples.foodmart.java;
 
-import org.apache.calcite.adapter.java.ReflectiveSchema;
-import org.apache.calcite.jdbc.CalciteConnection;
-import org.apache.calcite.schema.SchemaPlus;
+import com.qihoo.qsql.org.apache.calcite.adapter.java.ReflectiveSchema;
+import com.qihoo.qsql.org.apache.calcite.jdbc.CalciteConnection;
+import com.qihoo.qsql.org.apache.calcite.schema.SchemaPlus;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -37,7 +37,7 @@ public class JdbcExample {
   }
 
   public void run() throws ClassNotFoundException, SQLException {
-    Class.forName("org.apache.calcite.jdbc.Driver");
+    Class.forName("com.qihoo.qsql.org.apache.calcite.jdbc.Driver");
     Connection connection =
         DriverManager.getConnection("jdbc:calcite:");
     CalciteConnection calciteConnection =

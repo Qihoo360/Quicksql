@@ -16,21 +16,21 @@
  */
 package org.apache.calcite.test.catalog;
 
-import org.apache.calcite.rel.type.RelDataType;
-import org.apache.calcite.rel.type.RelDataTypeFactory;
-import org.apache.calcite.rel.type.RelDataTypeField;
-import org.apache.calcite.rex.RexBuilder;
-import org.apache.calcite.rex.RexNode;
-import org.apache.calcite.rex.RexUtil;
-import org.apache.calcite.sql.SqlIdentifier;
-import org.apache.calcite.sql.fun.SqlStdOperatorTable;
-import org.apache.calcite.sql.type.ObjectSqlType;
-import org.apache.calcite.sql.type.SqlTypeName;
-import org.apache.calcite.sql2rel.InitializerExpressionFactory;
-import org.apache.calcite.sql2rel.NullInitializerExpressionFactory;
-import org.apache.calcite.util.ImmutableIntList;
-import org.apache.calcite.util.Litmus;
-import org.apache.calcite.util.Util;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataType;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeFactory;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeField;
+import com.qihoo.qsql.org.apache.calcite.rex.RexBuilder;
+import com.qihoo.qsql.org.apache.calcite.rex.RexNode;
+import com.qihoo.qsql.org.apache.calcite.rex.RexUtil;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlIdentifier;
+import com.qihoo.qsql.org.apache.calcite.sql.fun.SqlStdOperatorTable;
+import com.qihoo.qsql.org.apache.calcite.sql.type.ObjectSqlType;
+import com.qihoo.qsql.org.apache.calcite.sql.type.SqlTypeName;
+import com.qihoo.qsql.org.apache.calcite.sql2rel.InitializerExpressionFactory;
+import com.qihoo.qsql.org.apache.calcite.sql2rel.NullInitializerExpressionFactory;
+import com.qihoo.qsql.org.apache.calcite.util.ImmutableIntList;
+import com.qihoo.qsql.org.apache.calcite.util.Litmus;
+import com.qihoo.qsql.org.apache.calcite.util.Util;
 
 import com.google.common.collect.ImmutableList;
 

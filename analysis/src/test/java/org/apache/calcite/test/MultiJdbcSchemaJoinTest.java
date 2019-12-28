@@ -16,11 +16,11 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.adapter.java.ReflectiveSchema;
-import org.apache.calcite.adapter.jdbc.JdbcSchema;
-import org.apache.calcite.jdbc.CalciteConnection;
-import org.apache.calcite.prepare.CalcitePrepareImpl;
-import org.apache.calcite.schema.SchemaPlus;
+import com.qihoo.qsql.org.apache.calcite.adapter.java.ReflectiveSchema;
+import com.qihoo.qsql.org.apache.calcite.adapter.jdbc.JdbcSchema;
+import com.qihoo.qsql.org.apache.calcite.jdbc.CalciteConnection;
+import com.qihoo.qsql.org.apache.calcite.prepare.CalcitePrepareImpl;
+import com.qihoo.qsql.org.apache.calcite.schema.SchemaPlus;
 
 import com.google.common.collect.Sets;
 

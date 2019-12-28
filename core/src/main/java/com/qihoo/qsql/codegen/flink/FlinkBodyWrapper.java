@@ -32,7 +32,9 @@ public class FlinkBodyWrapper extends IntegratedQueryWrapper {
             "import org.apache.flink.table.api.Table",
             "import org.apache.flink.table.api.TableEnvironment",
             "import org.apache.flink.table.api.java.BatchTableEnvironment",
-            "import org.apache.flink.types.Row"
+            "import org.apache.flink.types.Row",
+            "import org.apache.flink.table.api.Table",
+            "import com.qihoo.qsql.exec.flink.FlinkRequirement"
         };
         composer.handleComposition(ClassBodyComposer.CodeCategory.IMPORT, imports);
     }
@@ -40,6 +42,7 @@ public class FlinkBodyWrapper extends IntegratedQueryWrapper {
     @Override
     public IntegratedQueryWrapper show() {
         composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE, "tmp.print();\n");
+        getReturnNll();
         return this;
     }
 
@@ -61,7 +64,7 @@ public class FlinkBodyWrapper extends IntegratedQueryWrapper {
 
     @Override
     public void createTempTable(String tableName) {
-
+        //TODO to implement
     }
 
     private class SimpleFlinkProcVisitor extends FlinkProcedureVisitor {

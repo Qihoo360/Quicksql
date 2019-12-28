@@ -47,6 +47,7 @@ public class RuntimeEnv {
 
         NODE.insertBulk("student", bulk);
         System.out.println("Elasticsearch Embedded Server has started!! Your query is running...");
+
     }
 
     public static final String metadata = "inline:\n"
@@ -56,14 +57,14 @@ public class RuntimeEnv {
         + "  \"schemas\": [{\n"
         + "      \"type\": \"custom\",\n"
         + "      \"name\": \"custom_name\",\n"
-        + "      \"factory\": \"org.apache.calcite.adapter.csv.CsvSchemaFactory\",\n"
+        + "      \"factory\": \"com.qihoo.qsql.org.apache.calcite.adapter.csv.CsvSchemaFactory\",\n"
         + "      \"operand\": {\n"
         + "        \"directory\": \"\"\n"
         + "      },\n"
         + "      \"tables\": [{\n"
         + "        \"name\": \"depts\",\n"
         + "        \"type\": \"custom\",\n"
-        + "        \"factory\": \"org.apache.calcite.adapter.csv.CsvTableFactory\",\n"
+        + "        \"factory\": \"com.qihoo.qsql.org.apache.calcite.adapter.csv.CsvTableFactory\",\n"
         + "        \"operand\": {\n"
         + "          \"file\": \"" + TEST_DATA_URL + "\",\n"
         + "          \"flavor\": \"scannable\"\n"
@@ -80,7 +81,7 @@ public class RuntimeEnv {
         + "    {\n"
         + "      \"type\": \"custom\",\n"
         + "      \"name\": \"student_profile\",\n"
-        + "      \"factory\": \"org.apache.calcite.adapter.elasticsearch.ElasticsearchCustomSchemaFactory\",\n"
+        + "      \"factory\": \"com.qihoo.qsql.org.apache.calcite.adapter.elasticsearch.ElasticsearchCustomSchemaFactory\",\n"
         + "      \"operand\": {\n"
         + "        \"coordinates\": \"{'localhost': 9025}\",\n"
         + "        \"userConfig\": \"{'bulk.flush.max.actions': 10, 'bulk.flush.max.size.mb': 1,"
@@ -89,7 +90,7 @@ public class RuntimeEnv {
         + "      },\n"
         + "      \"tables\": [{\n"
         + "        \"name\": \"student\",\n"
-        + "        \"factory\": \"org.apache.calcite.adapter.elasticsearch.ElasticsearchTableFactory\",\n"
+        + "        \"factory\": \"com.qihoo.qsql.org.apache.calcite.adapter.elasticsearch.ElasticsearchTableFactory\",\n"
         + "        \"operand\": {\n"
         + "          \"dbName\": \"student_profile\",\n"
         + "          \"tableName\": \"student\",\n"
@@ -120,4 +121,55 @@ public class RuntimeEnv {
         + "    }\n"
         + "  ]\n"
         + "}";
+
+
+
+    public static final String metaDataSQLIET = "inline:\n"
+        + "{\n"
+        + "  \"version\": \"1.0\",\n"
+        + "  \"defaultSchema\": \"QSql\",\n"
+        + "  \"schemas\": [{\n"
+        + "      \"type\": \"custom\",\n"
+        + "      \"name\": \"main\",\n"
+        + "      \"factory\": \"com.qihoo.qsql.org.apache.calcite.adapter.custom.JdbcSchemaFactory\",\n"
+        + "      \"operand\": {\n"
+        + "       \"dbName\": \"testdata\",\n"
+        +"         \"tableName\": \"t_test_data\",\n"
+        +"         \"dbType\": \"mysql\",\n"
+        +"         \"jdbcDriver\": \"org.sqlite.JDBC\",\n"
+        +"         \"jdbcUrl\": \"jdbc:sqlite:E://////test.db\",\n"
+        +"         \"jdbcUser\": \"xx\",\n"
+        +"         \"jdbcPassword\": \"xx\"\n"
+        + "      },\n"
+        + "      \"tables\": [{\n"
+        + "        \"name\": \"t_test_data\",\n"
+        + "        \"factory\": \"com.qihoo.qsql.org.apache.calcite.adapter.custom.JdbcTableFactory\",\n"
+        + "        \"operand\": {\n"
+        + "       \"dbName\": \"testdata\",\n"
+        +"         \"tableName\": \"t_test_data\",\n"
+        +"         \"dbType\": \"mysql\",\n"
+        +"         \"jdbcDriver\": \"org.sqlite.JDBC\",\n"
+        +"         \"jdbcUrl\": \"jdbc:sqlite:E://////test.db\",\n"
+        +"         \"jdbcUser\": \"xx\",\n"
+        +"         \"jdbcPassword\": \"xx\"\n"
+        + "        },\n"
+        + "        \"columns\": [{\n"
+        + "            \"name\": \"id:int\"\n"
+        + "          },\n"
+        + "          {\n"
+        + "            \"name\": \"dataid:int\"\n"
+        + "          },\n"
+        + "          {\n"
+        + "            \"name\": \"data:string\"\n"
+        + "          }\n"
+        + "        ]\n"
+        + "      }]\n"
+        + "    }\n"
+        + "  ]\n"
+        + "}";
+
+    public static void close() {
+        NODE.close();
+    }
+
 }

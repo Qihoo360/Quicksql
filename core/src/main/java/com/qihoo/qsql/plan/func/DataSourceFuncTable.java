@@ -6,14 +6,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.apache.calcite.adapter.elasticsearch.ElasticsearchTable;
-import org.apache.calcite.adapter.hive.HiveTable;
-import org.apache.calcite.adapter.custom.JdbcTable;
-import org.apache.calcite.schema.Table;
-import org.apache.calcite.sql.SqlFunction;
-import org.apache.calcite.sql.SqlOperator;
-import org.apache.calcite.sql.SqlSpecialOperator;
-import org.apache.calcite.sql.fun.SqlStdOperatorTable;
+import com.qihoo.qsql.org.apache.calcite.adapter.elasticsearch.ElasticsearchTable;
+import com.qihoo.qsql.org.apache.calcite.adapter.hive.HiveTable;
+import com.qihoo.qsql.org.apache.calcite.adapter.custom.JdbcTable;
+import com.qihoo.qsql.org.apache.calcite.schema.Table;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlFunction;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlOperator;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlSpecialOperator;
+import com.qihoo.qsql.org.apache.calcite.sql.fun.SqlStdOperatorTable;
 
 /**
  * .

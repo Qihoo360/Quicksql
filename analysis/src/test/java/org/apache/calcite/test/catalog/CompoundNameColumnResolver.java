@@ -16,13 +16,13 @@
  */
 package org.apache.calcite.test.catalog;
 
-import org.apache.calcite.linq4j.Ord;
-import org.apache.calcite.rel.type.RelDataType;
-import org.apache.calcite.rel.type.RelDataTypeFactory;
-import org.apache.calcite.rel.type.RelDataTypeField;
-import org.apache.calcite.rel.type.RelDataTypeFieldImpl;
-import org.apache.calcite.rel.type.StructKind;
-import org.apache.calcite.util.Pair;
+import com.qihoo.qsql.org.apache.calcite.linq4j.Ord;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataType;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeFactory;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeField;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeFieldImpl;
+import com.qihoo.qsql.org.apache.calcite.rel.type.StructKind;
+import com.qihoo.qsql.org.apache.calcite.util.Pair;
 
 import java.util.AbstractList;
 import java.util.ArrayList;

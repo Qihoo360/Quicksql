@@ -16,9 +16,9 @@
  */
 package org.apache.calcite.test.catalog;
 
-import org.apache.calcite.rel.type.RelDataTypeFactory;
-import org.apache.calcite.schema.TableMacro;
-import org.apache.calcite.schema.TranslatableTable;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeFactory;
+import com.qihoo.qsql.org.apache.calcite.schema.TableMacro;
+import com.qihoo.qsql.org.apache.calcite.schema.TranslatableTable;
 
 import com.google.common.collect.ImmutableList;
 

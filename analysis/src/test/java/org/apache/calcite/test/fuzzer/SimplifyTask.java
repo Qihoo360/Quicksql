@@ -16,7 +16,7 @@
  */
 package org.apache.calcite.test.fuzzer;
 
-import org.apache.calcite.rex.RexNode;
+import com.qihoo.qsql.org.apache.calcite.rex.RexNode;
 
 /**
  * Tracks rex nodes used in {@link RexProgramFuzzyTest} to identify the ones

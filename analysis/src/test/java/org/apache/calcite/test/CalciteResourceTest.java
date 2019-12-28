@@ -21,13 +21,13 @@ import org.junit.Test;
 
 import java.util.Map;
 
-import static org.apache.calcite.util.Static.RESOURCE;
+import static com.qihoo.qsql.org.apache.calcite.util.Static.RESOURCE;
 
 import static org.junit.Assert.assertThat;
 
 /**
  * Tests the generated implementation of
- * {@link org.apache.calcite.runtime.CalciteResource} (mostly a sanity check for
+ * {@link com.qihoo.qsql.org.apache.calcite.runtime.CalciteResource} (mostly a sanity check for
  * the resource-generation infrastructure).
  */
 public class CalciteResourceTest {

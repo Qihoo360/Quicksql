@@ -6,7 +6,7 @@ package com.qihoo.qsql.exec;
  */
 public interface Requirement {
 
-    Object execute();
+    Object execute() throws Exception;
 
     void close();
 }

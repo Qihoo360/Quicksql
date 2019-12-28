@@ -16,26 +16,26 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.config.CalciteConnectionConfigImpl;
-import org.apache.calcite.config.CalciteConnectionProperty;
-import org.apache.calcite.config.NullCollation;
-import org.apache.calcite.plan.Contexts;
-import org.apache.calcite.plan.RelOptUtil;
-import org.apache.calcite.rel.RelNode;
-import org.apache.calcite.rel.RelRoot;
-import org.apache.calcite.rel.RelVisitor;
-import org.apache.calcite.rel.core.CorrelationId;
-import org.apache.calcite.rel.externalize.RelXmlWriter;
-import org.apache.calcite.sql.SqlExplainLevel;
-import org.apache.calcite.sql.validate.SqlConformance;
-import org.apache.calcite.sql.validate.SqlConformanceEnum;
-import org.apache.calcite.sql.validate.SqlDelegatingConformance;
-import org.apache.calcite.sql2rel.SqlToRelConverter;
+import com.qihoo.qsql.org.apache.calcite.config.CalciteConnectionConfigImpl;
+import com.qihoo.qsql.org.apache.calcite.config.CalciteConnectionProperty;
+import com.qihoo.qsql.org.apache.calcite.config.NullCollation;
+import com.qihoo.qsql.org.apache.calcite.plan.Contexts;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptUtil;
+import com.qihoo.qsql.org.apache.calcite.rel.RelNode;
+import com.qihoo.qsql.org.apache.calcite.rel.RelRoot;
+import com.qihoo.qsql.org.apache.calcite.rel.RelVisitor;
+import com.qihoo.qsql.org.apache.calcite.rel.core.CorrelationId;
+import com.qihoo.qsql.org.apache.calcite.rel.externalize.RelXmlWriter;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlExplainLevel;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlConformance;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlConformanceEnum;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlDelegatingConformance;
+import com.qihoo.qsql.org.apache.calcite.sql2rel.SqlToRelConverter;
 import org.apache.calcite.test.catalog.MockCatalogReaderExtended;
-import org.apache.calcite.util.Bug;
-import org.apache.calcite.util.Litmus;
-import org.apache.calcite.util.TestUtil;
-import org.apache.calcite.util.Util;
+import com.qihoo.qsql.org.apache.calcite.util.Bug;
+import com.qihoo.qsql.org.apache.calcite.util.Litmus;
+import com.qihoo.qsql.org.apache.calcite.util.TestUtil;
+import com.qihoo.qsql.org.apache.calcite.util.Util;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -53,7 +53,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 /**
- * Unit test for {@link org.apache.calcite.sql2rel.SqlToRelConverter}.
+ * Unit test for {@link SqlToRelConverter}.
  */
 public class SqlToRelConverterTest extends SqlToRelTestBase {
   //~ Methods ----------------------------------------------------------------
@@ -1628,7 +1628,7 @@ public class SqlToRelConverterTest extends SqlToRelTestBase {
   /**
    * Test one of the custom conversions which is recognized by the class of the
    * operator (in this case,
-   * {@link org.apache.calcite.sql.fun.SqlCaseOperator}).
+   * {@link com.qihoo.qsql.org.apache.calcite.sql.fun.SqlCaseOperator}).
    */
   @Test public void testCase() {
     sql("values (case 'a' when 'a' then 1 end)").ok();
@@ -1637,7 +1637,7 @@ public class SqlToRelConverterTest extends SqlToRelTestBase {
   /**
    * Tests one of the custom conversions which is recognized by the identity
    * of the operator (in this case,
-   * {@link org.apache.calcite.sql.fun.SqlStdOperatorTable#CHARACTER_LENGTH}).
+   * {@link com.qihoo.qsql.org.apache.calcite.sql.fun.SqlStdOperatorTable#CHARACTER_LENGTH}).
    */
   @Test public void testCharLength() {
     // Note that CHARACTER_LENGTH becomes CHAR_LENGTH.

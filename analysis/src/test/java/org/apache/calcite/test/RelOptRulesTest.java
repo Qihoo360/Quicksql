@@ -16,108 +16,108 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.config.CalciteConnectionConfigImpl;
-import org.apache.calcite.plan.Context;
-import org.apache.calcite.plan.Contexts;
-import org.apache.calcite.plan.RelOptPlanner;
-import org.apache.calcite.plan.RelOptRule;
-import org.apache.calcite.plan.RelOptUtil;
-import org.apache.calcite.plan.RelTraitDef;
-import org.apache.calcite.plan.RelTraitSet;
-import org.apache.calcite.plan.hep.HepMatchOrder;
-import org.apache.calcite.plan.hep.HepPlanner;
-import org.apache.calcite.plan.hep.HepProgram;
-import org.apache.calcite.plan.hep.HepProgramBuilder;
-import org.apache.calcite.prepare.Prepare;
-import org.apache.calcite.rel.RelCollationTraitDef;
-import org.apache.calcite.rel.RelNode;
-import org.apache.calcite.rel.RelRoot;
-import org.apache.calcite.rel.core.Aggregate;
-import org.apache.calcite.rel.core.CorrelationId;
-import org.apache.calcite.rel.core.Intersect;
-import org.apache.calcite.rel.core.JoinRelType;
-import org.apache.calcite.rel.core.Minus;
-import org.apache.calcite.rel.core.Project;
-import org.apache.calcite.rel.core.RelFactories;
-import org.apache.calcite.rel.core.Union;
-import org.apache.calcite.rel.logical.LogicalCorrelate;
-import org.apache.calcite.rel.logical.LogicalProject;
-import org.apache.calcite.rel.logical.LogicalTableModify;
-import org.apache.calcite.rel.logical.LogicalTableScan;
-import org.apache.calcite.rel.metadata.CachingRelMetadataProvider;
-import org.apache.calcite.rel.metadata.ChainedRelMetadataProvider;
-import org.apache.calcite.rel.metadata.DefaultRelMetadataProvider;
-import org.apache.calcite.rel.metadata.RelMetadataProvider;
-import org.apache.calcite.rel.rules.AggregateExpandDistinctAggregatesRule;
-import org.apache.calcite.rel.rules.AggregateExtractProjectRule;
-import org.apache.calcite.rel.rules.AggregateFilterTransposeRule;
-import org.apache.calcite.rel.rules.AggregateJoinTransposeRule;
-import org.apache.calcite.rel.rules.AggregateProjectMergeRule;
-import org.apache.calcite.rel.rules.AggregateProjectPullUpConstantsRule;
-import org.apache.calcite.rel.rules.AggregateReduceFunctionsRule;
-import org.apache.calcite.rel.rules.AggregateUnionAggregateRule;
-import org.apache.calcite.rel.rules.AggregateUnionTransposeRule;
-import org.apache.calcite.rel.rules.AggregateValuesRule;
-import org.apache.calcite.rel.rules.CalcMergeRule;
-import org.apache.calcite.rel.rules.CoerceInputsRule;
-import org.apache.calcite.rel.rules.DateRangeRules;
-import org.apache.calcite.rel.rules.FilterAggregateTransposeRule;
-import org.apache.calcite.rel.rules.FilterJoinRule;
-import org.apache.calcite.rel.rules.FilterMergeRule;
-import org.apache.calcite.rel.rules.FilterProjectTransposeRule;
-import org.apache.calcite.rel.rules.FilterRemoveIsNotDistinctFromRule;
-import org.apache.calcite.rel.rules.FilterSetOpTransposeRule;
-import org.apache.calcite.rel.rules.FilterToCalcRule;
-import org.apache.calcite.rel.rules.IntersectToDistinctRule;
-import org.apache.calcite.rel.rules.JoinAddRedundantSemiJoinRule;
-import org.apache.calcite.rel.rules.JoinCommuteRule;
-import org.apache.calcite.rel.rules.JoinExtractFilterRule;
-import org.apache.calcite.rel.rules.JoinProjectTransposeRule;
-import org.apache.calcite.rel.rules.JoinPushExpressionsRule;
-import org.apache.calcite.rel.rules.JoinPushTransitivePredicatesRule;
-import org.apache.calcite.rel.rules.JoinToMultiJoinRule;
-import org.apache.calcite.rel.rules.JoinUnionTransposeRule;
-import org.apache.calcite.rel.rules.ProjectCorrelateTransposeRule;
-import org.apache.calcite.rel.rules.ProjectFilterTransposeRule;
-import org.apache.calcite.rel.rules.ProjectJoinTransposeRule;
-import org.apache.calcite.rel.rules.ProjectMergeRule;
-import org.apache.calcite.rel.rules.ProjectRemoveRule;
-import org.apache.calcite.rel.rules.ProjectSetOpTransposeRule;
-import org.apache.calcite.rel.rules.ProjectToCalcRule;
-import org.apache.calcite.rel.rules.ProjectToWindowRule;
-import org.apache.calcite.rel.rules.ProjectWindowTransposeRule;
-import org.apache.calcite.rel.rules.PruneEmptyRules;
-import org.apache.calcite.rel.rules.PushProjector;
-import org.apache.calcite.rel.rules.ReduceExpressionsRule;
-import org.apache.calcite.rel.rules.SemiJoinFilterTransposeRule;
-import org.apache.calcite.rel.rules.SemiJoinJoinTransposeRule;
-import org.apache.calcite.rel.rules.SemiJoinProjectTransposeRule;
-import org.apache.calcite.rel.rules.SemiJoinRemoveRule;
-import org.apache.calcite.rel.rules.SemiJoinRule;
-import org.apache.calcite.rel.rules.SortJoinTransposeRule;
-import org.apache.calcite.rel.rules.SortProjectTransposeRule;
-import org.apache.calcite.rel.rules.SortRemoveConstantKeysRule;
-import org.apache.calcite.rel.rules.SortUnionTransposeRule;
-import org.apache.calcite.rel.rules.SubQueryRemoveRule;
-import org.apache.calcite.rel.rules.TableScanRule;
-import org.apache.calcite.rel.rules.UnionMergeRule;
-import org.apache.calcite.rel.rules.UnionPullUpConstantsRule;
-import org.apache.calcite.rel.rules.UnionToDistinctRule;
-import org.apache.calcite.rel.rules.ValuesReduceRule;
-import org.apache.calcite.rel.type.RelDataType;
-import org.apache.calcite.rel.type.RelDataTypeFactory;
-import org.apache.calcite.rex.RexCall;
-import org.apache.calcite.rex.RexNode;
-import org.apache.calcite.runtime.Hook;
-import org.apache.calcite.sql.SemiJoinType;
-import org.apache.calcite.sql.SqlNode;
-import org.apache.calcite.sql.fun.SqlStdOperatorTable;
-import org.apache.calcite.sql.type.SqlTypeName;
-import org.apache.calcite.sql.validate.SqlValidator;
-import org.apache.calcite.sql2rel.SqlToRelConverter;
+import com.qihoo.qsql.org.apache.calcite.config.CalciteConnectionConfigImpl;
+import com.qihoo.qsql.org.apache.calcite.plan.Context;
+import com.qihoo.qsql.org.apache.calcite.plan.Contexts;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptPlanner;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptRule;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptUtil;
+import com.qihoo.qsql.org.apache.calcite.plan.RelTraitDef;
+import com.qihoo.qsql.org.apache.calcite.plan.RelTraitSet;
+import com.qihoo.qsql.org.apache.calcite.plan.hep.HepMatchOrder;
+import com.qihoo.qsql.org.apache.calcite.plan.hep.HepPlanner;
+import com.qihoo.qsql.org.apache.calcite.plan.hep.HepProgram;
+import com.qihoo.qsql.org.apache.calcite.plan.hep.HepProgramBuilder;
+import com.qihoo.qsql.org.apache.calcite.prepare.Prepare;
+import com.qihoo.qsql.org.apache.calcite.rel.RelCollationTraitDef;
+import com.qihoo.qsql.org.apache.calcite.rel.RelNode;
+import com.qihoo.qsql.org.apache.calcite.rel.RelRoot;
+import com.qihoo.qsql.org.apache.calcite.rel.core.Aggregate;
+import com.qihoo.qsql.org.apache.calcite.rel.core.CorrelationId;
+import com.qihoo.qsql.org.apache.calcite.rel.core.Intersect;
+import com.qihoo.qsql.org.apache.calcite.rel.core.JoinRelType;
+import com.qihoo.qsql.org.apache.calcite.rel.core.Minus;
+import com.qihoo.qsql.org.apache.calcite.rel.core.Project;
+import com.qihoo.qsql.org.apache.calcite.rel.core.RelFactories;
+import com.qihoo.qsql.org.apache.calcite.rel.core.Union;
+import com.qihoo.qsql.org.apache.calcite.rel.logical.LogicalCorrelate;
+import com.qihoo.qsql.org.apache.calcite.rel.logical.LogicalProject;
+import com.qihoo.qsql.org.apache.calcite.rel.logical.LogicalTableModify;
+import com.qihoo.qsql.org.apache.calcite.rel.logical.LogicalTableScan;
+import com.qihoo.qsql.org.apache.calcite.rel.metadata.CachingRelMetadataProvider;
+import com.qihoo.qsql.org.apache.calcite.rel.metadata.ChainedRelMetadataProvider;
+import com.qihoo.qsql.org.apache.calcite.rel.metadata.DefaultRelMetadataProvider;
+import com.qihoo.qsql.org.apache.calcite.rel.metadata.RelMetadataProvider;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.AggregateExpandDistinctAggregatesRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.AggregateExtractProjectRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.AggregateFilterTransposeRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.AggregateJoinTransposeRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.AggregateProjectMergeRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.AggregateProjectPullUpConstantsRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.AggregateReduceFunctionsRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.AggregateUnionAggregateRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.AggregateUnionTransposeRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.AggregateValuesRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.CalcMergeRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.CoerceInputsRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.DateRangeRules;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.FilterAggregateTransposeRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.FilterJoinRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.FilterMergeRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.FilterProjectTransposeRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.FilterRemoveIsNotDistinctFromRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.FilterSetOpTransposeRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.FilterToCalcRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.IntersectToDistinctRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.JoinAddRedundantSemiJoinRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.JoinCommuteRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.JoinExtractFilterRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.JoinProjectTransposeRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.JoinPushExpressionsRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.JoinPushTransitivePredicatesRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.JoinToMultiJoinRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.JoinUnionTransposeRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.ProjectCorrelateTransposeRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.ProjectFilterTransposeRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.ProjectJoinTransposeRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.ProjectMergeRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.ProjectRemoveRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.ProjectSetOpTransposeRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.ProjectToCalcRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.ProjectToWindowRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.ProjectWindowTransposeRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.PruneEmptyRules;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.PushProjector;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.ReduceExpressionsRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.SemiJoinFilterTransposeRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.SemiJoinJoinTransposeRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.SemiJoinProjectTransposeRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.SemiJoinRemoveRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.SemiJoinRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.SortJoinTransposeRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.SortProjectTransposeRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.SortRemoveConstantKeysRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.SortUnionTransposeRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.SubQueryRemoveRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.TableScanRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.UnionMergeRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.UnionPullUpConstantsRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.UnionToDistinctRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.ValuesReduceRule;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataType;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeFactory;
+import com.qihoo.qsql.org.apache.calcite.rex.RexCall;
+import com.qihoo.qsql.org.apache.calcite.rex.RexNode;
+import com.qihoo.qsql.org.apache.calcite.runtime.Hook;
+import com.qihoo.qsql.org.apache.calcite.sql.SemiJoinType;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlNode;
+import com.qihoo.qsql.org.apache.calcite.sql.fun.SqlStdOperatorTable;
+import com.qihoo.qsql.org.apache.calcite.sql.type.SqlTypeName;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlValidator;
+import com.qihoo.qsql.org.apache.calcite.sql2rel.SqlToRelConverter;
 import org.apache.calcite.test.catalog.MockCatalogReader;
-import org.apache.calcite.tools.RelBuilder;
-import org.apache.calcite.util.ImmutableBitSet;
+import com.qihoo.qsql.org.apache.calcite.tools.RelBuilder;
+import com.qihoo.qsql.org.apache.calcite.util.ImmutableBitSet;
 
 import com.google.common.collect.ImmutableList;
 
@@ -130,19 +130,19 @@ import java.util.List;
 import java.util.Properties;
 import java.util.function.Predicate;
 
-import static org.apache.calcite.plan.RelOptRule.none;
-import static org.apache.calcite.plan.RelOptRule.operand;
-import static org.apache.calcite.plan.RelOptRule.operandJ;
+import static com.qihoo.qsql.org.apache.calcite.plan.RelOptRule.none;
+import static com.qihoo.qsql.org.apache.calcite.plan.RelOptRule.operand;
+import static com.qihoo.qsql.org.apache.calcite.plan.RelOptRule.operandJ;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 /**
- * Unit test for rules in {@code org.apache.calcite.rel} and subpackages.
+ * Unit test for rules in {@code com.qihoo.qsql.org.apache.calcite.rel} and subpackages.
  *
  * <p>As input, the test supplies a SQL statement and a single rule; the SQL is
  * translated into relational algebra and then fed into a
- * {@link org.apache.calcite.plan.hep.HepPlanner}. The planner fires the rule on
+ * {@link com.qihoo.qsql.org.apache.calcite.plan.hep.HepPlanner}. The planner fires the rule on
  * every
  * pattern match in a depth-first left-to-right pre-order traversal of the tree
  * for as long as the rule continues to succeed in applying its transform. (For
@@ -1498,7 +1498,7 @@ public class RelOptRulesTest extends RelOptTestBase {
     sql(sql).with(program).check();
   }
 
-  /** Tests {@link org.apache.calcite.rel.rules.IntersectToDistinctRule},
+  /** Tests {@link com.qihoo.qsql.org.apache.calcite.rel.rules.IntersectToDistinctRule},
    * which rewrites an {@link Intersect} operator with 3 inputs. */
   @Test public void testIntersectToDistinct() throws Exception {
     HepProgram program = new HepProgramBuilder()
@@ -1514,7 +1514,7 @@ public class RelOptRulesTest extends RelOptTestBase {
     sql(sql).with(program).check();
   }
 
-  /** Tests that {@link org.apache.calcite.rel.rules.IntersectToDistinctRule}
+  /** Tests that {@link com.qihoo.qsql.org.apache.calcite.rel.rules.IntersectToDistinctRule}
    * correctly ignores an {@code INTERSECT ALL}. It can only handle
    * {@code INTERSECT DISTINCT}. */
   @Test public void testIntersectToDistinctAll() throws Exception {

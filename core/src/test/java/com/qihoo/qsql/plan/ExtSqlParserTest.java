@@ -3,11 +3,11 @@ package com.qihoo.qsql.plan;
 import com.qihoo.qsql.utils.SqlUtil;
 import org.apache.calcite.avatica.util.Casing;
 import org.apache.calcite.avatica.util.Quoting;
-import org.apache.calcite.sql.SqlNode;
-import org.apache.calcite.sql.parser.SqlParseException;
-import org.apache.calcite.sql.parser.SqlParser;
-import org.apache.calcite.sql.validate.SqlConformance;
-import org.apache.calcite.sql.validate.SqlConformanceEnum;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlNode;
+import com.qihoo.qsql.org.apache.calcite.sql.parser.SqlParseException;
+import com.qihoo.qsql.org.apache.calcite.sql.parser.SqlParser;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlConformance;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlConformanceEnum;
 import org.junit.Assert;
 import org.junit.Test;
 

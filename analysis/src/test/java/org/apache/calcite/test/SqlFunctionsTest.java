@@ -18,8 +18,8 @@ package org.apache.calcite.test;
 
 import org.apache.calcite.avatica.util.ByteString;
 import org.apache.calcite.avatica.util.DateTimeUtils;
-import org.apache.calcite.runtime.SqlFunctions;
-import org.apache.calcite.runtime.Utilities;
+import com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions;
+import com.qihoo.qsql.org.apache.calcite.runtime.Utilities;
 
 import org.junit.Test;
 
@@ -30,19 +30,19 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.apache.calcite.avatica.util.DateTimeUtils.ymdToUnixDate;
-import static org.apache.calcite.runtime.SqlFunctions.addMonths;
-import static org.apache.calcite.runtime.SqlFunctions.charLength;
-import static org.apache.calcite.runtime.SqlFunctions.concat;
-import static org.apache.calcite.runtime.SqlFunctions.greater;
-import static org.apache.calcite.runtime.SqlFunctions.initcap;
-import static org.apache.calcite.runtime.SqlFunctions.lesser;
-import static org.apache.calcite.runtime.SqlFunctions.lower;
-import static org.apache.calcite.runtime.SqlFunctions.ltrim;
-import static org.apache.calcite.runtime.SqlFunctions.rtrim;
-import static org.apache.calcite.runtime.SqlFunctions.str_concat;
-import static org.apache.calcite.runtime.SqlFunctions.subtractMonths;
-import static org.apache.calcite.runtime.SqlFunctions.trim;
-import static org.apache.calcite.runtime.SqlFunctions.upper;
+import static com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.addMonths;
+import static com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.charLength;
+import static com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.concat;
+import static com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.greater;
+import static com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.initcap;
+import static com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.lesser;
+import static com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.lower;
+import static com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.ltrim;
+import static com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.rtrim;
+import static com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.str_concat;
+import static com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.subtractMonths;
+import static com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.trim;
+import static com.qihoo.qsql.org.apache.calcite.runtime.SqlFunctions.upper;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;

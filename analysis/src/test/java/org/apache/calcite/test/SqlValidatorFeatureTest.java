@@ -16,22 +16,22 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.rel.type.RelDataTypeFactory;
-import org.apache.calcite.runtime.CalciteContextException;
-import org.apache.calcite.runtime.CalciteException;
-import org.apache.calcite.runtime.Feature;
-import org.apache.calcite.sql.SqlOperatorTable;
-import org.apache.calcite.sql.parser.SqlParserPos;
-import org.apache.calcite.sql.test.SqlTestFactory;
-import org.apache.calcite.sql.test.SqlTester;
-import org.apache.calcite.sql.test.SqlValidatorTester;
-import org.apache.calcite.sql.validate.SqlConformance;
-import org.apache.calcite.sql.validate.SqlValidatorCatalogReader;
-import org.apache.calcite.sql.validate.SqlValidatorImpl;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeFactory;
+import com.qihoo.qsql.org.apache.calcite.runtime.CalciteContextException;
+import com.qihoo.qsql.org.apache.calcite.runtime.CalciteException;
+import com.qihoo.qsql.org.apache.calcite.runtime.Feature;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlOperatorTable;
+import com.qihoo.qsql.org.apache.calcite.sql.parser.SqlParserPos;
+import com.qihoo.qsql.org.apache.calcite.sql.test.SqlTestFactory;
+import com.qihoo.qsql.org.apache.calcite.sql.test.SqlTester;
+import com.qihoo.qsql.org.apache.calcite.sql.test.SqlValidatorTester;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlConformance;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlValidatorCatalogReader;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlValidatorImpl;
 
 import org.junit.Test;
 
-import static org.apache.calcite.util.Static.RESOURCE;
+import static com.qihoo.qsql.org.apache.calcite.util.Static.RESOURCE;
 
 /**
  * SqlValidatorFeatureTest verifies that features can be independently enabled

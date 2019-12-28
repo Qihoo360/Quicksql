@@ -16,18 +16,18 @@
  */
 package org.apache.calcite;
 
-import org.apache.calcite.rel.type.RelDataType;
-import org.apache.calcite.rel.type.RelDataTypeFactory;
-import org.apache.calcite.sql.SqlFunction;
-import org.apache.calcite.sql.SqlFunctionCategory;
-import org.apache.calcite.sql.SqlKind;
-import org.apache.calcite.sql.SqlOperator;
-import org.apache.calcite.sql.SqlOperatorBinding;
-import org.apache.calcite.sql.SqlOperatorTable;
-import org.apache.calcite.sql.type.OperandTypes;
-import org.apache.calcite.sql.type.SqlTypeName;
-import org.apache.calcite.sql.util.ChainedSqlOperatorTable;
-import org.apache.calcite.sql.util.ListSqlOperatorTable;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataType;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeFactory;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlFunction;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlFunctionCategory;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlKind;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlOperator;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlOperatorBinding;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlOperatorTable;
+import com.qihoo.qsql.org.apache.calcite.sql.type.OperandTypes;
+import com.qihoo.qsql.org.apache.calcite.sql.type.SqlTypeName;
+import com.qihoo.qsql.org.apache.calcite.sql.util.ChainedSqlOperatorTable;
+import com.qihoo.qsql.org.apache.calcite.sql.util.ListSqlOperatorTable;
 
 import com.google.common.collect.ImmutableList;
 

@@ -16,7 +16,7 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.config.Lex;
+import com.qihoo.qsql.org.apache.calcite.config.Lex;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -16,25 +16,25 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.adapter.enumerable.CallImplementor;
-import org.apache.calcite.adapter.java.ReflectiveSchema;
-import org.apache.calcite.jdbc.CalciteConnection;
-import org.apache.calcite.linq4j.Ord;
-import org.apache.calcite.linq4j.function.SemiStrict;
-import org.apache.calcite.linq4j.tree.Expressions;
-import org.apache.calcite.linq4j.tree.Types;
-import org.apache.calcite.rel.type.RelDataType;
-import org.apache.calcite.rel.type.RelDataTypeFactory;
-import org.apache.calcite.rel.type.RelProtoDataType;
-import org.apache.calcite.schema.FunctionParameter;
-import org.apache.calcite.schema.ImplementableFunction;
-import org.apache.calcite.schema.ScalarFunction;
-import org.apache.calcite.schema.SchemaPlus;
-import org.apache.calcite.schema.impl.AbstractSchema;
-import org.apache.calcite.schema.impl.ScalarFunctionImpl;
-import org.apache.calcite.schema.impl.ViewTable;
-import org.apache.calcite.sql.type.SqlTypeName;
-import org.apache.calcite.util.Smalls;
+import com.qihoo.qsql.org.apache.calcite.adapter.enumerable.CallImplementor;
+import com.qihoo.qsql.org.apache.calcite.adapter.java.ReflectiveSchema;
+import com.qihoo.qsql.org.apache.calcite.jdbc.CalciteConnection;
+import com.qihoo.qsql.org.apache.calcite.linq4j.Ord;
+import com.qihoo.qsql.org.apache.calcite.linq4j.function.SemiStrict;
+import com.qihoo.qsql.org.apache.calcite.linq4j.tree.Expressions;
+import com.qihoo.qsql.org.apache.calcite.linq4j.tree.Types;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataType;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeFactory;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelProtoDataType;
+import com.qihoo.qsql.org.apache.calcite.schema.FunctionParameter;
+import com.qihoo.qsql.org.apache.calcite.schema.ImplementableFunction;
+import com.qihoo.qsql.org.apache.calcite.schema.ScalarFunction;
+import com.qihoo.qsql.org.apache.calcite.schema.SchemaPlus;
+import com.qihoo.qsql.org.apache.calcite.schema.impl.AbstractSchema;
+import com.qihoo.qsql.org.apache.calcite.schema.impl.ScalarFunctionImpl;
+import com.qihoo.qsql.org.apache.calcite.schema.impl.ViewTable;
+import com.qihoo.qsql.org.apache.calcite.sql.type.SqlTypeName;
+import com.qihoo.qsql.org.apache.calcite.util.Smalls;
 
 import com.google.common.collect.ImmutableList;
 
@@ -223,7 +223,7 @@ public class UdfTest {
    * <a href="https://issues.apache.org/jira/browse/CALCITE-937">[CALCITE-937]
    * User-defined function within view</a>. */
   @Test public void testUserDefinedFunctionInView() throws Exception {
-    Class.forName("org.apache.calcite.jdbc.Driver");
+    Class.forName("com.qihoo.qsql.org.apache.calcite.jdbc.Driver");
     Connection connection = DriverManager.getConnection("jdbc:calcite:");
     CalciteConnection calciteConnection =
         connection.unwrap(CalciteConnection.class);
@@ -447,11 +447,11 @@ public class UdfTest {
   }
 
   /** Test for
-   * {@link org.apache.calcite.runtime.CalciteResource#requireDefaultConstructor(String)}. */
+   * {@link com.qihoo.qsql.org.apache.calcite.runtime.CalciteResource#requireDefaultConstructor(String)}. */
   @Test public void testUserDefinedFunction2() throws Exception {
     withBadUdf(Smalls.AwkwardFunction.class)
         .connectThrows(
-            "Declaring class 'org.apache.calcite.util.Smalls$AwkwardFunction' of non-static user-defined function must have a public constructor with zero parameters");
+            "Declaring class 'com.qihoo.qsql.org.apache.calcite.util.Smalls$AwkwardFunction' of non-static user-defined function must have a public constructor with zero parameters");
   }
 
   /** Tests user-defined function, with multiple methods per class. */
@@ -605,10 +605,10 @@ public class UdfTest {
   }
 
   /** Test for
-   * {@link org.apache.calcite.runtime.CalciteResource#firstParameterOfAdd(String)}. */
+   * {@link com.qihoo.qsql.org.apache.calcite.runtime.CalciteResource#firstParameterOfAdd(String)}. */
   @Test public void testUserDefinedAggregateFunction3() throws Exception {
     withBadUdf(Smalls.SumFunctionBadIAdd.class).connectThrows(
-        "Caused by: java.lang.RuntimeException: In user-defined aggregate class 'org.apache.calcite.util.Smalls$SumFunctionBadIAdd', first parameter to 'add' method must be the accumulator (the return type of the 'init' method)");
+        "Caused by: java.lang.RuntimeException: In user-defined aggregate class 'com.qihoo.qsql.org.apache.calcite.util.Smalls$SumFunctionBadIAdd', first parameter to 'add' method must be the accumulator (the return type of the 'init' method)");
   }
 
   /** Test case for

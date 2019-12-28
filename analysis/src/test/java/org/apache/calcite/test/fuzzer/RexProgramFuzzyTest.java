@@ -16,17 +16,17 @@
  */
 package org.apache.calcite.test.fuzzer;
 
-import org.apache.calcite.plan.Strong;
-import org.apache.calcite.rex.RexLiteral;
-import org.apache.calcite.rex.RexNode;
-import org.apache.calcite.rex.RexUnknownAs;
-import org.apache.calcite.rex.RexUtil;
-import org.apache.calcite.sql.SqlOperator;
-import org.apache.calcite.sql.fun.SqlStdOperatorTable;
-import org.apache.calcite.sql.type.SqlTypeName;
-import org.apache.calcite.sql.type.SqlTypeUtil;
+import com.qihoo.qsql.org.apache.calcite.plan.Strong;
+import com.qihoo.qsql.org.apache.calcite.rex.RexLiteral;
+import com.qihoo.qsql.org.apache.calcite.rex.RexNode;
+import com.qihoo.qsql.org.apache.calcite.rex.RexUnknownAs;
+import com.qihoo.qsql.org.apache.calcite.rex.RexUtil;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlOperator;
+import com.qihoo.qsql.org.apache.calcite.sql.fun.SqlStdOperatorTable;
+import com.qihoo.qsql.org.apache.calcite.sql.type.SqlTypeName;
+import com.qihoo.qsql.org.apache.calcite.sql.type.SqlTypeUtil;
 import org.apache.calcite.test.RexProgramBuilderBase;
-import org.apache.calcite.util.ImmutableBitSet;
+import com.qihoo.qsql.org.apache.calcite.util.ImmutableBitSet;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -51,13 +51,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 /**
- * Validates that {@link org.apache.calcite.rex.RexSimplify} is able to deal with
+ * Validates that {@link com.qihoo.qsql.org.apache.calcite.rex.RexSimplify} is able to deal with
  * randomized {@link RexNode}.
  * Note: the default fuzzing time is 5 seconds to keep overall test duration reasonable.
  * The test starts from a random point every time, so the longer it runs the more errors it detects.
  *
  * <p>Note: The test is not included to {@link org.apache.calcite.test.CalciteSuite} since it would
- * fail every build (there are lots of issues with {@link org.apache.calcite.rex.RexSimplify})
+ * fail every build (there are lots of issues with {@link com.qihoo.qsql.org.apache.calcite.rex.RexSimplify})
  */
 public class RexProgramFuzzyTest extends RexProgramBuilderBase {
   protected static final Logger LOGGER =

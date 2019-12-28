@@ -16,7 +16,7 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.jdbc.CalciteConnection;
+import com.qihoo.qsql.org.apache.calcite.jdbc.CalciteConnection;
 
 import com.google.common.collect.ImmutableMultiset;
 

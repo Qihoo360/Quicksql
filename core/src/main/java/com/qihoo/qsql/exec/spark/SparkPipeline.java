@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 public class SparkPipeline extends AbstractPipeline implements Compilable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SparkPipeline.class);
-    private Requirement requirement;
 
     /**
      * Pipeline of Spark.
@@ -37,7 +36,11 @@ public class SparkPipeline extends AbstractPipeline implements Compilable {
     @Override
     public void run() {
         wrapper.importSpecificDependency();
-        compileRequirement(wrapper.run(procedure), session(), SparkSession.class).execute();
+        try {
+            compileRequirement(wrapper.run(procedure), session(), SparkSession.class).execute();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private SparkSession session() {
@@ -71,12 +74,20 @@ public class SparkPipeline extends AbstractPipeline implements Compilable {
     public Object collect() {
         Requirement requirement = compileRequirement(buildWrapper().collect(builder.getAcceptedResultsNum()), session(),
             SparkSession.class);
-        return requirement.execute();
+        try {
+            return requirement.execute();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     @Override
     public void show() {
-        compileRequirement(buildWrapper().show(), session(), SparkSession.class).execute();
+        try {
+            compileRequirement(buildWrapper().show(), session(), SparkSession.class).execute();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override

@@ -16,16 +16,16 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.model.JsonColumn;
-import org.apache.calcite.model.JsonCustomSchema;
-import org.apache.calcite.model.JsonCustomTable;
-import org.apache.calcite.model.JsonJdbcSchema;
-import org.apache.calcite.model.JsonLattice;
-import org.apache.calcite.model.JsonMapSchema;
-import org.apache.calcite.model.JsonRoot;
-import org.apache.calcite.model.JsonTable;
-import org.apache.calcite.model.JsonTypeAttribute;
-import org.apache.calcite.model.JsonView;
+import com.qihoo.qsql.org.apache.calcite.model.JsonColumn;
+import com.qihoo.qsql.org.apache.calcite.model.JsonCustomSchema;
+import com.qihoo.qsql.org.apache.calcite.model.JsonCustomTable;
+import com.qihoo.qsql.org.apache.calcite.model.JsonJdbcSchema;
+import com.qihoo.qsql.org.apache.calcite.model.JsonLattice;
+import com.qihoo.qsql.org.apache.calcite.model.JsonMapSchema;
+import com.qihoo.qsql.org.apache.calcite.model.JsonRoot;
+import com.qihoo.qsql.org.apache.calcite.model.JsonTable;
+import com.qihoo.qsql.org.apache.calcite.model.JsonTypeAttribute;
+import com.qihoo.qsql.org.apache.calcite.model.JsonView;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;

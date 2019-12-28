@@ -48,7 +48,11 @@ public class FlinkPipeline extends AbstractPipeline implements Compilable {
     public void show() {
         startup();
         wrapper.show();
-        compileRequirement(wrapper, executionEnvironment, ExecutionEnvironment.class).execute();
+        try {
+            compileRequirement(wrapper, executionEnvironment, ExecutionEnvironment.class).execute();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override

@@ -16,20 +16,20 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.rel.type.RelDataType;
-import org.apache.calcite.sql.SqlCollation;
-import org.apache.calcite.sql.SqlNode;
-import org.apache.calcite.sql.parser.SqlParseException;
-import org.apache.calcite.sql.parser.SqlParserUtil;
-import org.apache.calcite.sql.test.AbstractSqlTester;
-import org.apache.calcite.sql.test.SqlTestFactory;
-import org.apache.calcite.sql.test.SqlTester;
-import org.apache.calcite.sql.test.SqlTests;
-import org.apache.calcite.sql.test.SqlValidatorTester;
-import org.apache.calcite.sql.validate.SqlConformance;
-import org.apache.calcite.sql.validate.SqlConformanceEnum;
-import org.apache.calcite.sql.validate.SqlMonotonicity;
-import org.apache.calcite.sql.validate.SqlValidator;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataType;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlCollation;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlNode;
+import com.qihoo.qsql.org.apache.calcite.sql.parser.SqlParseException;
+import com.qihoo.qsql.org.apache.calcite.sql.parser.SqlParserUtil;
+import com.qihoo.qsql.org.apache.calcite.sql.test.AbstractSqlTester;
+import com.qihoo.qsql.org.apache.calcite.sql.test.SqlTestFactory;
+import com.qihoo.qsql.org.apache.calcite.sql.test.SqlTester;
+import com.qihoo.qsql.org.apache.calcite.sql.test.SqlTests;
+import com.qihoo.qsql.org.apache.calcite.sql.test.SqlValidatorTester;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlConformance;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlConformanceEnum;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlMonotonicity;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlValidator;
 import org.apache.calcite.test.catalog.MockCatalogReaderExtended;
 
 import org.junit.rules.MethodRule;

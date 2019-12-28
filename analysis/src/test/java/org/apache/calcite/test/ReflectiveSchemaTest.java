@@ -16,25 +16,26 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.adapter.java.ReflectiveSchema;
+import com.qihoo.qsql.org.apache.calcite.adapter.java.ReflectiveSchema;
+import com.qihoo.qsql.org.apache.calcite.linq4j.Queryable;
 import org.apache.calcite.avatica.util.DateTimeUtils;
-import org.apache.calcite.config.Lex;
-import org.apache.calcite.jdbc.CalciteConnection;
-import org.apache.calcite.jdbc.Driver;
-import org.apache.calcite.linq4j.Enumerable;
-import org.apache.calcite.linq4j.Linq4j;
-import org.apache.calcite.linq4j.QueryProvider;
-import org.apache.calcite.linq4j.function.Function1;
-import org.apache.calcite.linq4j.tree.Expressions;
-import org.apache.calcite.linq4j.tree.ParameterExpression;
-import org.apache.calcite.linq4j.tree.Primitive;
-import org.apache.calcite.linq4j.tree.Types;
-import org.apache.calcite.schema.SchemaPlus;
-import org.apache.calcite.schema.impl.AbstractSchema;
-import org.apache.calcite.schema.impl.TableMacroImpl;
-import org.apache.calcite.schema.impl.ViewTable;
-import org.apache.calcite.util.Smalls;
-import org.apache.calcite.util.Util;
+import com.qihoo.qsql.org.apache.calcite.config.Lex;
+import com.qihoo.qsql.org.apache.calcite.jdbc.CalciteConnection;
+import com.qihoo.qsql.org.apache.calcite.jdbc.Driver;
+import com.qihoo.qsql.org.apache.calcite.linq4j.Enumerable;
+import com.qihoo.qsql.org.apache.calcite.linq4j.Linq4j;
+import com.qihoo.qsql.org.apache.calcite.linq4j.QueryProvider;
+import com.qihoo.qsql.org.apache.calcite.linq4j.function.Function1;
+import com.qihoo.qsql.org.apache.calcite.linq4j.tree.Expressions;
+import com.qihoo.qsql.org.apache.calcite.linq4j.tree.ParameterExpression;
+import com.qihoo.qsql.org.apache.calcite.linq4j.tree.Primitive;
+import com.qihoo.qsql.org.apache.calcite.linq4j.tree.Types;
+import com.qihoo.qsql.org.apache.calcite.schema.SchemaPlus;
+import com.qihoo.qsql.org.apache.calcite.schema.impl.AbstractSchema;
+import com.qihoo.qsql.org.apache.calcite.schema.impl.TableMacroImpl;
+import com.qihoo.qsql.org.apache.calcite.schema.impl.ViewTable;
+import com.qihoo.qsql.org.apache.calcite.util.Smalls;
+import com.qihoo.qsql.org.apache.calcite.util.Util;
 
 import com.google.common.collect.ImmutableList;
 
@@ -79,7 +80,7 @@ public class ReflectiveSchemaTest {
 
   /**
    * Test that uses a JDBC connection as a linq4j
-   * {@link org.apache.calcite.linq4j.QueryProvider}.
+   * {@link QueryProvider}.
    *
    * @throws Exception on error
    */
@@ -160,7 +161,7 @@ public class ReflectiveSchemaTest {
 
   /**
    * Tests a relation that is accessed via method syntax.
-   * The function returns a {@link org.apache.calcite.linq4j.Queryable}.
+   * The function returns a {@link Queryable}.
    */
   @Ignore
   @Test public void testOperator() throws SQLException, ClassNotFoundException {

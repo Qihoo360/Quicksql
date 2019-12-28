@@ -16,8 +16,8 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.linq4j.tree.Primitive;
-import org.apache.calcite.util.IntegerIntervalSet;
+import com.qihoo.qsql.org.apache.calcite.linq4j.tree.Primitive;
+import com.qihoo.qsql.org.apache.calcite.util.IntegerIntervalSet;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;

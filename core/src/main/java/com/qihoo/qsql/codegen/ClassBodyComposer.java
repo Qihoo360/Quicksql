@@ -1,5 +1,7 @@
 package com.qihoo.qsql.codegen;
 
+import com.qihoo.qsql.codegen.flink.FlinkBodyWrapper;
+import com.qihoo.qsql.codegen.spark.SparkBodyWrapper;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -19,13 +21,20 @@ public class ClassBodyComposer {
     /**
      * Collect all the generated code as long as Composer is initialized.
      */
-    public ClassBodyComposer() {
-        composer =
-            new ImportsLink(
-                new ClassesLink(
-                    new InnerClassesLink(
-                        new MethodsLink(
-                            new SentencesLink()))));
+    public ClassBodyComposer(Class clazz) {
+        InnerClassesLink innerClassesLink;
+        ClassesLink clazzLink;
+        if (clazz == SparkBodyWrapper.class) {
+            innerClassesLink = new InnerClassesLink(new MethodsLink(new SparkSentencesLink()));
+            clazzLink = new SparkClassesLink(innerClassesLink);
+        } else if (clazz == FlinkBodyWrapper.class) {
+            innerClassesLink = new InnerClassesLink(new MethodsLink(new FlinkSentencesLink()));
+            clazzLink = new FlinkClassesLink(innerClassesLink);
+        } else {
+            throw new RuntimeException("Unsupported code generate at runtime");
+        }
+
+        composer = new ImportsLink(clazzLink);
     }
 
     /**
@@ -76,8 +85,8 @@ public class ClassBodyComposer {
 
         protected abstract void decorateTrait(Class clazz, String... code);
 
-        boolean isMyResponsibility(Class clazz) {
-            return this.getClass().equals(clazz);
+        boolean isMyResponsibility(Class<?> clazz) {
+            return this.getClass().equals(clazz) || clazz.isAssignableFrom(this.getClass());
         }
 
         public abstract void compose(StringBuilder builder);
@@ -109,9 +118,9 @@ public class ClassBodyComposer {
         }
     }
 
-    class ClassesLink extends BlockLink {
+    abstract class ClassesLink extends BlockLink {
 
-        private String className = "DefaultRequirement_0";
+        String className = "DefaultRequirement_0";
 
         ClassesLink(BlockLink link) {
             super(link);
@@ -129,6 +138,13 @@ public class ClassBodyComposer {
                 successor.decorateTrait(clazz, code);
             }
         }
+    }
+
+    class SparkClassesLink extends ClassesLink {
+
+        SparkClassesLink(BlockLink link) {
+            super(link);
+        }
 
         @Override
         public void compose(StringBuilder builder) {
@@ -145,6 +161,29 @@ public class ClassBodyComposer {
             builder.append("}\n");
         }
     }
+
+    class FlinkClassesLink extends ClassesLink {
+
+        FlinkClassesLink(BlockLink link) {
+            super(link);
+        }
+
+        @Override
+        public void compose(StringBuilder builder) {
+            builder.append("\n");
+            builder.append("public class ").append(className)
+                .append(" extends FlinkRequirement { \n");
+
+            builder.append("\t\tpublic ").append(className).append("(ExecutionEnvironment environment){\n")
+                .append("\t\t\tsuper(environment);\n"
+                    + "\t\t}");
+
+            successor.compose(builder);
+
+            builder.append("}\n");
+        }
+    }
+
 
     class InnerClassesLink extends BlockLink {
 
@@ -200,9 +239,9 @@ public class ClassBodyComposer {
         }
     }
 
-    class SentencesLink extends BlockLink {
+    abstract class SentencesLink extends BlockLink {
 
-        private List<String> sentences = new ArrayList<>();
+        List<String> sentences = new ArrayList<>();
 
         SentencesLink() {
             super(new EmptyLink());
@@ -214,12 +253,31 @@ public class ClassBodyComposer {
                 sentences.addAll(Arrays.asList(code));
             }
         }
+    }
+
+    class SparkSentencesLink extends SentencesLink {
 
         @Override
         public void compose(StringBuilder builder) {
             builder.append("\n");
-            builder.append("\t\tpublic Object execute(){\n");
+            builder.append("\t\tpublic Object execute() throws Exception {\n");
             builder.append("\t\t\tDataset<Row> tmp;\n");
+
+            for (String sentence : sentences) {
+                builder.append("\t\t\t").append(sentence).append("\n");
+            }
+
+            builder.append("\t\t}\n");
+        }
+    }
+
+    class FlinkSentencesLink extends SentencesLink {
+
+        @Override
+        public void compose(StringBuilder builder) {
+            builder.append("\n");
+            builder.append("\t\tpublic Object execute() throws Exception {\n");
+            builder.append("\t\t\tDataSet<Row> tmp;\n");
 
             for (String sentence : sentences) {
                 builder.append("\t\t\t").append(sentence).append("\n");

@@ -16,23 +16,23 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.plan.RelOptListener;
-import org.apache.calcite.plan.RelOptMaterialization;
-import org.apache.calcite.plan.hep.HepMatchOrder;
-import org.apache.calcite.plan.hep.HepPlanner;
-import org.apache.calcite.plan.hep.HepProgram;
-import org.apache.calcite.plan.hep.HepProgramBuilder;
-import org.apache.calcite.rel.RelNode;
-import org.apache.calcite.rel.core.RelFactories;
-import org.apache.calcite.rel.logical.LogicalIntersect;
-import org.apache.calcite.rel.logical.LogicalUnion;
-import org.apache.calcite.rel.rules.CalcMergeRule;
-import org.apache.calcite.rel.rules.CoerceInputsRule;
-import org.apache.calcite.rel.rules.FilterToCalcRule;
-import org.apache.calcite.rel.rules.ProjectRemoveRule;
-import org.apache.calcite.rel.rules.ProjectToCalcRule;
-import org.apache.calcite.rel.rules.ReduceExpressionsRule;
-import org.apache.calcite.rel.rules.UnionToDistinctRule;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptListener;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptMaterialization;
+import com.qihoo.qsql.org.apache.calcite.plan.hep.HepMatchOrder;
+import com.qihoo.qsql.org.apache.calcite.plan.hep.HepPlanner;
+import com.qihoo.qsql.org.apache.calcite.plan.hep.HepProgram;
+import com.qihoo.qsql.org.apache.calcite.plan.hep.HepProgramBuilder;
+import com.qihoo.qsql.org.apache.calcite.rel.RelNode;
+import com.qihoo.qsql.org.apache.calcite.rel.core.RelFactories;
+import com.qihoo.qsql.org.apache.calcite.rel.logical.LogicalIntersect;
+import com.qihoo.qsql.org.apache.calcite.rel.logical.LogicalUnion;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.CalcMergeRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.CoerceInputsRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.FilterToCalcRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.ProjectRemoveRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.ProjectToCalcRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.ReduceExpressionsRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.UnionToDistinctRule;
 
 import com.google.common.collect.ImmutableList;
 

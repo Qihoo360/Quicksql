@@ -43,11 +43,11 @@ public class QueryGeneratorTest {
     }
 
     private void assertGenerateClass(String sql, String...args) {
+        QueryGenerator.close();
         List<String> tableList = SqlUtil.parseTableName(sql).tableNames;
         QueryProcedureProducer producer = new QueryProcedureProducer(
-            SqlUtil.getSchemaPath(tableList), SqlRunner.builder());
+            SqlUtil.getSchemaPath(tableList), SqlRunner.builder().setTransformRunner(RunnerType.SPARK));
         QueryProcedure procedure = producer.createQueryProcedure(sql);
-
         SparkBodyWrapper wrapper = new SparkBodyWrapper();
         wrapper.interpretProcedure(procedure);
         wrapper.importSpecificDependency();

@@ -16,7 +16,7 @@
  */
 package org.apache.calcite.test.catalog;
 
-import org.apache.calcite.rel.type.RelDataType;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataType;
 
 /** Column having names with multiple parts. */
 final class CompoundNameColumn {
