@@ -9,7 +9,9 @@ import com.qihoo.qsql.exception.QsqlException;
 import com.qihoo.qsql.exec.result.CloseableIterator;
 import com.qihoo.qsql.metadata.MetadataPostman;
 import com.qihoo.qsql.metadata.SchemaAssembler;
+import com.qihoo.qsql.plan.proc.DiskLoadProcedure;
 import com.qihoo.qsql.plan.proc.ExtractProcedure;
+import com.qihoo.qsql.plan.proc.LoadProcedure;
 import com.qihoo.qsql.plan.proc.PreparedExtractProcedure;
 import com.qihoo.qsql.plan.proc.QueryProcedure;
 import com.qihoo.qsql.api.SqlRunner;
@@ -74,12 +76,33 @@ public class JdbcPipeline extends AbstractPipeline {
     private Statement statement;
     private List<String> tableNames;
 
-
     public JdbcPipeline(QueryProcedure procedure,
         List<String> tableNames,
         SqlRunner.Builder builder) {
         super(procedure, builder);
         this.tableNames = tableNames;
+    }
+
+    @Override
+    public void run() {
+        QueryProcedure next = procedure.next();
+        ResultSet resultSet = establishStatement();
+
+        //TODO add jdbc sql translate
+        if (next.hasNext() && next.next() instanceof DiskLoadProcedure) {
+            String path = ((DiskLoadProcedure) next).path;
+            String deliminator;
+            if (((DiskLoadProcedure) next).getDataFormat() == LoadProcedure.DataFormat.DEFAULT) {
+                deliminator = "\t";
+            } else {
+                deliminator = " ";
+            }
+            new JdbcPipelineResult.TextPipelineResult(
+                new JdbcResultSetIterator<>(resultSet), path, deliminator).run();
+        } else {
+            new JdbcPipelineResult.ShowPipelineResult(
+                new JdbcResultSetIterator<>(resultSet)).run();
+        }
     }
 
     /**
