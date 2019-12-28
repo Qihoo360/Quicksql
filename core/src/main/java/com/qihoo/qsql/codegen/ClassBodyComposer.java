@@ -276,7 +276,7 @@ public class ClassBodyComposer {
         @Override
         public void compose(StringBuilder builder) {
             builder.append("\n");
-            builder.append("\t\tpublic void execute() throws Exception {\n");
+            builder.append("\t\tpublic Object execute() throws Exception {\n");
             builder.append("\t\t\tDataSet<Row> tmp;\n");
 
             for (String sentence : sentences) {

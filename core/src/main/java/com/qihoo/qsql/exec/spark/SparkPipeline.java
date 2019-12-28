@@ -64,12 +64,20 @@ public class SparkPipeline extends AbstractPipeline implements Compilable {
     public Object collect() {
         Requirement requirement = compileRequirement(wrapper.collect(builder.getAcceptedResultsNum()), session(),
             SparkSession.class);
-        return requirement.execute();
+        try {
+            return requirement.execute();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     @Override
     public void show() {
-        compileRequirement(wrapper.show(), session(), SparkSession.class).execute();
+        try {
+            compileRequirement(wrapper.show(), session(), SparkSession.class).execute();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override

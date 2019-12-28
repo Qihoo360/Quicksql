@@ -17,7 +17,6 @@
 package org.apache.calcite.test;
 
 import com.qihoo.qsql.org.apache.calcite.adapter.clone.ArrayTableTest;
-import com.qihoo.qsql.org.apache.calcite.jdbc.CalciteRemoteDriverTest;
 import com.qihoo.qsql.org.apache.calcite.plan.RelOptPlanReaderTest;
 import com.qihoo.qsql.org.apache.calcite.plan.RelOptUtilTest;
 import com.qihoo.qsql.org.apache.calcite.plan.RelTraitTest;
@@ -174,7 +173,6 @@ import org.junit.runners.Suite;
     SqlAdvisorJdbcTest.class,
     JdbcTest.class,
     CoreQuidemTest.class,
-    CalciteRemoteDriverTest.class,
     StreamTest.class,
 
     // test cases

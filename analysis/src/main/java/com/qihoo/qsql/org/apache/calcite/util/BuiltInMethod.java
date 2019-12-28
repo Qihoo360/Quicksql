@@ -66,9 +66,11 @@ public enum BuiltInMethod {
   DATE_ADD(SqlFunctions.class,"dateadd",String.class,Integer.class),
   DATE_SUB(SqlFunctions.class,"datesub",String.class,Integer.class),
   REFLECT(SqlFunctions.class,"reflect",Enumerable.class),
-  SUBSTRING_INDEX(SqlFunctions.class, "substringIndex", String.class,String.class,int.class),
-  UNIX_TIMESTAMP(SqlFunctions.class, "unixTimestamp",String.class),
-  FROM_UNIXTIME(SqlFunctions.class, "fromunixtime",  Long.class),
+  SUBSTRING_INDEX(SqlFunctions.class,"substringIndex",String.class,String.class,int.class),
+  UNIX_TIMESTAMP(SqlFunctions.class,"unixTimestamp",String.class),
+  FROM_UNIXTIME(SqlFunctions.class,"fromunixtime", Integer.class,String.class),
+  TO_DATE(SqlFunctions.class,"todate",String.class),
+  NVL(SqlFunctions.class,"nvl",String.class,String.class),
 
   //qsql end
 

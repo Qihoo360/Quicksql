@@ -45,7 +45,7 @@ public class QueryGeneratorTest {
     private void assertGenerateClass(String sql, String...args) {
         List<String> tableList = SqlUtil.parseTableName(sql).tableNames;
         QueryProcedureProducer producer = new QueryProcedureProducer(
-            SqlUtil.getSchemaPath(tableList), SqlRunner.builder());
+            SqlUtil.getSchemaPath(tableList), SqlRunner.builder().setTransformRunner(RunnerType.SPARK));
         QueryProcedure procedure = producer.createQueryProcedure(sql);
 
         SparkBodyWrapper wrapper = new SparkBodyWrapper();

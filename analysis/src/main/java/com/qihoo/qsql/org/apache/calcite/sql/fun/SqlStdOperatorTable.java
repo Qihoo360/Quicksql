@@ -1361,7 +1361,7 @@ public class SqlStdOperatorTable extends ReflectiveSqlOperatorTable {
       SqlKind.OTHER_FUNCTION,
       ReturnTypes.VARCHAR_2000,
       null,
-      OperandTypes.STRING_SAME_SAME_INTEGER,
+      OperandTypes.STRING_INTERGE,
       SqlFunctionCategory.STRING
   );
 
@@ -1381,7 +1381,8 @@ public class SqlStdOperatorTable extends ReflectiveSqlOperatorTable {
       SqlKind.OTHER_FUNCTION,
       ReturnTypes.VARCHAR_2000,
       null,
-      OperandTypes.NUMERIC_OPTIONAL_INTEGER,
+      OperandTypes.or(
+          OperandTypes.NUMERIC_OPTIONAL_INTEGER, OperandTypes.INTEGER_OR_STRING, OperandTypes.NUMERIC_OR_STRING),
       SqlFunctionCategory.STRING
   );
   /**
@@ -1396,6 +1397,23 @@ public class SqlStdOperatorTable extends ReflectiveSqlOperatorTable {
           OperandTypes.STRING, OperandTypes.NILADIC),
       SqlFunctionCategory.STRING
   );
+
+
+  public static final SqlFunction TO_DATE = new SqlFunction(
+          "TO_DATE",
+          SqlKind.OTHER_FUNCTION,
+          ReturnTypes.VARCHAR_2000,
+          null,
+          OperandTypes.STRING,
+          SqlFunctionCategory.STRING
+  );
+
+  public static final SqlFunction NVL =
+          new SqlFunction("NVL", SqlKind.NVL,
+                  ReturnTypes.cascade(ReturnTypes.LEAST_RESTRICTIVE,
+                          SqlTypeTransforms.TO_NULLABLE_ALL),
+                  null, OperandTypes.SAME_SAME, SqlFunctionCategory.SYSTEM);
+
   public static final SqlFunction REGEXP_EXTRACT = new SqlRegexpExtractFunction();
 
   public static final SqlFunction REGEXP_REPLACE = new SqlRegexpReplaceFunction();

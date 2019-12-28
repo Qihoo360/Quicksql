@@ -72,6 +72,8 @@ import static com.qihoo.qsql.org.apache.calcite.sql.fun.SqlStdOperatorTable.DIVI
 import static com.qihoo.qsql.org.apache.calcite.sql.fun.SqlStdOperatorTable.ELEMENT;
 import static com.qihoo.qsql.org.apache.calcite.sql.fun.SqlStdOperatorTable.EQUALS;
 import static com.qihoo.qsql.org.apache.calcite.sql.fun.SqlStdOperatorTable.EXP;
+import static com.qihoo.qsql.org.apache.calcite.sql.fun.SqlStdOperatorTable.NVL;
+import static com.qihoo.qsql.org.apache.calcite.sql.fun.SqlStdOperatorTable.TO_DATE;
 import static com.qihoo.qsql.org.apache.calcite.sql.fun.SqlStdOperatorTable.EXTRACT;
 import static com.qihoo.qsql.org.apache.calcite.sql.fun.SqlStdOperatorTable.FIRST_VALUE;
 import static com.qihoo.qsql.org.apache.calcite.sql.fun.SqlStdOperatorTable.FLOOR;
@@ -270,7 +272,8 @@ public class RexImpTable {
     defineMethod(SUBSTRING_INDEX, BuiltInMethod.SUBSTRING_INDEX.method, NullPolicy.STRICT);
     defineMethod(FROM_UNIXTIME, BuiltInMethod.FROM_UNIXTIME.method, NullPolicy.STRICT);
     defineMethod(UNIX_TIMESTAMP, BuiltInMethod.UNIX_TIMESTAMP.method, NullPolicy.STRICT);
-
+    defineMethod(TO_DATE, BuiltInMethod.TO_DATE.method, NullPolicy.STRICT);
+    defineMethod(NVL, BuiltInMethod.NVL.method, NullPolicy.STRICT);
 
     //qsql end
 

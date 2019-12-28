@@ -29,4 +29,9 @@ public abstract class IntegratedQueryWrapper extends ClassBodyWrapper {
 
     public abstract void createTempTable(String tableName);
 
+    protected void getReturnNll() {
+        composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE,
+                "return null;\n");
+    }
+
 }

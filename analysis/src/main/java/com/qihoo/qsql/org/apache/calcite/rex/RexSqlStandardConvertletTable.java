@@ -115,6 +115,8 @@ public class RexSqlStandardConvertletTable
     registerEquivOp(SqlStdOperatorTable.SUBSTRING_INDEX);
     registerEquivOp(SqlStdOperatorTable.FROM_UNIXTIME);
     registerEquivOp(SqlStdOperatorTable.UNIX_TIMESTAMP);
+    registerEquivOp(SqlStdOperatorTable.TO_DATE);
+    registerEquivOp(SqlStdOperatorTable.NVL);
 
     //qsql end
 

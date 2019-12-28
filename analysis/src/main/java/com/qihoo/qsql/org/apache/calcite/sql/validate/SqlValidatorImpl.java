@@ -5181,16 +5181,17 @@ public class SqlValidatorImpl implements SqlValidatorWithHints {
       SqlCall call,
       SqlValidatorScope scope) {
     final SqlOperator operator = call.getOperator();
-    if ((call.operandCount() == 0)
-        && (operator.getSyntax() == SqlSyntax.FUNCTION_ID)
-        && !call.isExpanded()
-        && !conformance.allowNiladicParentheses()) {
-      // For example, "LOCALTIME()" is illegal. (It should be
-      // "LOCALTIME", which would have been handled as a
-      // SqlIdentifier.)
-      throw handleUnresolvedFunction(call, (SqlFunction) operator,
-          ImmutableList.of(), null);
-    }
+    //Updated by qsql-team
+//    if ((call.operandCount() == 0)
+//        && (operator.getSyntax() == SqlSyntax.FUNCTION_ID)
+//        && !call.isExpanded()
+//        && !conformance.allowNiladicParentheses()) {
+//      // For example, "LOCALTIME()" is illegal. (It should be
+//      // "LOCALTIME", which would have been handled as a
+//      // SqlIdentifier.)
+//      throw handleUnresolvedFunction(call, (SqlFunction) operator,
+//          ImmutableList.of(), null);
+//    }
 
     SqlValidatorScope operandScope = scope.getOperandScope(call);
 

@@ -296,6 +296,28 @@ public class SqlFunctions {
     return sf.format(date);
   }
 
+  /** SQL FROM_UNIXTIME(Long time,String s) function. */
+  public static String fromunixtime(Long time,String s) {
+    return null;
+  }
+
+  /** SQL FROM_UNIXTIME(Integer time,String s) function. */
+  public static String fromunixtime(Integer time,String s) {
+    SimpleDateFormat sf = new SimpleDateFormat(s);
+    Date date = new Date((long)time * 1000);
+    return sf.format(date);
+  }
+
+  /** SQL TO_DATE(String s) function. */
+  public static String todate(String s) throws ParseException {
+    SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+    return String.valueOf(sf.parse(s));
+  }
+
+  /** SQL nvl(String s1,String s2) function. */
+  public static String nvl(String s1,String s2)  {
+    return s1 == null? s1 : s2;
+  }
 
   /** SQL {@code UNIX_TIMESTAMP} function. */
   public static String unixTimestamp() {

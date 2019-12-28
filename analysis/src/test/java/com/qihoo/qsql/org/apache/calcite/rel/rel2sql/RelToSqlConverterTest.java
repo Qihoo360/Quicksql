@@ -2557,7 +2557,7 @@ public class RelToSqlConverterTest {
         + "FROM \"DUAL\"\n"
         + "UNION ALL\n"
         + "SELECT 2 \"a\", 'yy' \"b\"\n"
-        + "FROM \"DUAL\")";
+        + ")";
     sql(sql)
         .withHsqldb()
         .ok(expectedHsqldb)

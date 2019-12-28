@@ -92,9 +92,4 @@ public class SparkBodyWrapper extends IntegratedQueryWrapper {
             super(composer);
         }
     }
-
-    private void getReturnNll() {
-        composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE,
-            "return null;\n");
-    }
 }

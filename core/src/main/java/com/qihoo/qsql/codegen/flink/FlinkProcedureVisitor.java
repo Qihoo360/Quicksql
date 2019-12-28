@@ -45,6 +45,7 @@ public class FlinkProcedureVisitor extends ProcedureVisitor {
     @Override
     public void visit(LoadProcedure loadProcedure) {
         composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE, "tmp.print();\n");
+        composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE, "return null;\n");
         visitNext(loadProcedure);
     }
 

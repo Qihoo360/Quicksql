@@ -16,6 +16,9 @@
  */
 package com.qihoo.qsql.org.apache.calcite.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * JSON object representing a column.
  *
@@ -23,6 +26,7 @@ package com.qihoo.qsql.org.apache.calcite.model;
  *
  * @see JsonRoot Description of JSON schema elements
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class JsonColumn {
   /** Column name.
    *
@@ -33,6 +37,12 @@ public class JsonColumn {
   public void accept(ModelHandler handler) {
     handler.visit(this);
   }
+
+  public JsonColumn(@JsonProperty("name") String name,
+                    @JsonProperty("dataType") String dataType) {
+    this.name = name + ":" + dataType;
+  }
+
 }
 
 // End JsonColumn.java
