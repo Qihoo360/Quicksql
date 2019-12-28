@@ -7,6 +7,7 @@ import com.qihoo.qsql.exec.Compilable;
 import com.qihoo.qsql.exec.Requirement;
 import com.qihoo.qsql.exec.result.JobPipelineResult;
 import com.qihoo.qsql.exec.result.PipelineResult;
+import com.qihoo.qsql.plan.proc.LoadProcedure;
 import com.qihoo.qsql.plan.proc.QueryProcedure;
 import org.apache.spark.sql.SparkSession;
 import org.slf4j.Logger;
@@ -29,16 +30,16 @@ public class SparkPipeline extends AbstractPipeline implements Compilable {
      */
     public SparkPipeline(QueryProcedure plan, SqlRunner.Builder builder) {
         super(plan, builder);
+        //TODO recode
         wrapper = new SparkBodyWrapper();
-        wrapper.interpretProcedure(plan);
-        wrapper.importSpecificDependency();
     }
 
-    // @Override
-    // public List<?> run() {
-    //     SparkBodyWrapper newWrapper = new SparkBodyWrapper();
-    //     return compileRequirement(newWrapper.run(procedure), session(), SparkSession.class).execute();
-    // }
+    @Override
+    public void run() {
+        wrapper.importSpecificDependency();
+        compileRequirement(wrapper.run(procedure), session(), SparkSession.class).execute();
+    }
+
     private SparkSession session() {
         //TODO
         if (System.getenv("SPARK_HOME") != null) {
@@ -68,26 +69,27 @@ public class SparkPipeline extends AbstractPipeline implements Compilable {
 
     @Override
     public Object collect() {
-        Requirement requirement = compileRequirement(wrapper.collect(builder.getAcceptedResultsNum()), session(),
+        Requirement requirement = compileRequirement(buildWrapper().collect(builder.getAcceptedResultsNum()), session(),
             SparkSession.class);
         return requirement.execute();
     }
 
     @Override
     public void show() {
-        compileRequirement(wrapper.show(), session(), SparkSession.class).execute();
+        compileRequirement(buildWrapper().show(), session(), SparkSession.class).execute();
     }
 
     @Override
     public PipelineResult asTextFile(String clusterPath, String deliminator) {
         return new JobPipelineResult.TextPipelineResult(clusterPath, deliminator,
-            compileRequirement(wrapper.writeAsTextFile(clusterPath, deliminator), session(), SparkSession.class));
+            compileRequirement(buildWrapper().writeAsTextFile(clusterPath, deliminator), session(),
+                SparkSession.class));
     }
 
     @Override
     public PipelineResult asJsonFile(String clusterPath) {
         return new JobPipelineResult.JsonPipelineResult(clusterPath,
-            compileRequirement(wrapper.writeAsJsonFile(clusterPath), session(), SparkSession.class));
+            compileRequirement(buildWrapper().writeAsJsonFile(clusterPath), session(), SparkSession.class));
     }
 
     @Override
@@ -102,6 +104,27 @@ public class SparkPipeline extends AbstractPipeline implements Compilable {
 
     @Override
     public String source() {
+        wrapper.importSpecificDependency();
+        wrapper.interpretProcedure(procedure);
         return wrapper.toString();
+    }
+
+    private SparkBodyWrapper buildWrapper() {
+        SparkBodyWrapper newWrapper = new SparkBodyWrapper();
+        QueryProcedure prev = procedure;
+        QueryProcedure curr = procedure;
+        while (curr != null) {
+            if (curr instanceof LoadProcedure) {
+                if (prev != procedure) {
+                    prev.resetNext(null);
+                    break;
+                }
+            }
+            prev = curr;
+            curr = curr.next();
+        }
+        newWrapper.importSpecificDependency();
+        newWrapper.run(procedure);
+        return newWrapper;
     }
 }
