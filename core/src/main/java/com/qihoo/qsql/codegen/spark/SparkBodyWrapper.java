@@ -37,8 +37,7 @@ public class SparkBodyWrapper extends IntegratedQueryWrapper {
             "import java.util.AbstractMap.SimpleEntry",
             "import java.util.Map",
             "import org.apache.spark.sql.catalyst.expressions.Attribute",
-            "import scala.collection.JavaConversions;",
-            "import org.apache.spark.sql.Row;"
+            "import scala.collection.JavaConversions"
         };
         composer.handleComposition(ClassBodyComposer.CodeCategory.IMPORT, imports);
     }
