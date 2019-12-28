@@ -23,6 +23,7 @@ public class ClassBodyComposerTest {
         composer.handleComposition(CodeCategory.CLASS, "TestRequirement");
         composer.handleComposition(CodeCategory.SENTENCE, "String str = \"Test\";");
         composer.handleComposition(CodeCategory.SENTENCE, "System.out.println(str);");
+        composer.handleComposition(CodeCategory.SENTENCE, "return null;");
 
         Assert.assertEquals("import java.util.Map;\n"
                 + "import java.util.List;\n"
@@ -35,10 +36,11 @@ public class ClassBodyComposerTest {
                 + "            return (a + b).length();\n"
                 + "        }\n"
                 + "\n"
-                + "\t\tpublic void execute() throws Exception {\n"
+                + "\t\tpublic Object execute() throws Exception {\n"
                 + "\t\t\tDataset<Row> tmp;\n"
                 + "\t\t\tString str = \"Test\";\n"
                 + "\t\t\tSystem.out.println(str);\n"
+                + "\t\t\treturn null;\n"
                 + "\t\t}\n"
                 + "}\n",
             composer.getCompleteClass());
@@ -63,7 +65,7 @@ public class ClassBodyComposerTest {
                 + "\t\t\tsuper(spark);\n"
                 + "\t\t}\n"
                 + "\n"
-                + "\t\tpublic void execute() throws Exception {\n"
+                + "\t\tpublic Object execute() throws Exception {\n"
                 + "\t\t\tDataset<Row> tmp;\n"
                 + "\t\t}\n"
                 + "}\n",
@@ -94,7 +96,7 @@ public class ClassBodyComposerTest {
             + "             public String color;\n"
             + "         }\n"
             + "\n"
-            + "\t\tpublic void execute() throws Exception {\n"
+            + "\t\tpublic Object execute() throws Exception {\n"
             + "\t\t\tDataset<Row> tmp;\n"
             + "\t\t}\n"
             + "}\n", composer.getCompleteClass());

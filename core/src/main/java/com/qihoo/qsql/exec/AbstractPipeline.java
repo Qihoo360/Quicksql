@@ -28,9 +28,9 @@ public abstract class AbstractPipeline {
         this.procedure = procedure;
     }
 
-    public abstract void run();
+    public abstract Object collect();
 
-    public abstract PipelineResult show();
+    public abstract void show();
 
     public abstract PipelineResult asTextFile(String clusterPath, String deliminator);
 

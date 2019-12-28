@@ -164,12 +164,6 @@ public class SqlRunnerTest {
         Assert.assertEquals(buildFlinkSqlRunner().sql(sql).getClass(), FlinkPipeline.class);
     }
 
-    @Test
-    public void testInsertOutput() {
-        String sql = "INSERT INTO `hello` IN HDFS SELECT 1";
-        buildSparkSqlRunner().sql(sql).show();
-    }
-
     private SqlRunner buildDynamicSqlRunner() {
         return SqlRunner.builder()
             .setTransformRunner(SqlRunner.Builder.RunnerType.DEFAULT)

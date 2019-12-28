@@ -5,6 +5,7 @@ import com.qihoo.qsql.exec.AbstractPipeline;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * SqlRunner is the main class for building and executing qsql task.
@@ -134,8 +135,8 @@ public abstract class SqlRunner {
          * @return SqlRunner builder, which holds several environment params
          */
         public Builder setAcceptedResultsNum(Integer num) {
-            if (num <= 0) {
-                this.resultsNum = 1000;
+            if (num == null || num <= 0) {
+                this.resultsNum = 100000;
             } else {
                 this.resultsNum = num;
             }
@@ -173,6 +174,7 @@ public abstract class SqlRunner {
              * @return enum RunnerType
              */
             public static RunnerType value(String value) {
+                value = StringUtils.defaultIfBlank(value,"");
                 switch (value.toUpperCase()) {
                     case "SPARK":
                         return SPARK;

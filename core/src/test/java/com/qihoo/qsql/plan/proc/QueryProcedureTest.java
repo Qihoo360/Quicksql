@@ -238,7 +238,7 @@ public class QueryProcedureTest {
         prepareForChecking(sql).checkExtra("select t1.i is not null as expr_col__0 "
             + "from (select * from edu_manage.department "
             + "where type = 'male' or type = 'female') as t left join "
-            + "(select true as i from dual) as t1 on true");
+            + "(select true as i) as t1 on true");
     }
 
     @Test
@@ -327,7 +327,7 @@ public class QueryProcedureTest {
                 + "LEFT JOIN action_required.homework_content homework_content0 "
                 + "ON homework_content.content = homework_content0.signature "
                 + "WHERE homework_content0.content IS NULL) t "
-                + "INNER JOIN (SELECT '20180713' expr_col__0 FROM DUAL) t1 "
+                + "INNER JOIN (SELECT '20180713' expr_col__0) t1 "
                 + "ON t.date_time = t1.expr_col__0");
     }
 
@@ -722,6 +722,9 @@ public class QueryProcedureTest {
         prepareForChecking("select FROM_UNIXTIME(1574997071)");
         prepareForChecking("select FROM_UNIXTIME(1)");
         prepareForChecking("select FROM_UNIXTIME(15749970711)");
+        prepareForChecking("select FROM_UNIXTIME(1574997071,'yyyy-MM-dd')");
+        prepareForChecking("select FROM_UNIXTIME(1574997071,'yyyyMMdd')");
+        prepareForChecking("select FROM_UNIXTIME(15749970712,'yyyy-MM-dd')");
     }
 
     @Test
@@ -745,6 +748,36 @@ public class QueryProcedureTest {
     public void testQuote() {
         prepareForChecking("select cast('1998-04-08' as date)",
             RunnerType.DEFAULT);
+    }
+
+    @Test
+    public void testDateSubFunction() {
+        prepareForChecking("select date_sub('2019-12-29',10)");
+    }
+
+    @Test
+    public void testToDate() {
+        prepareForChecking("select to_date('2019-12-02 10:10:10 ')");
+    }
+
+    @Test
+    public void testCurrentDate() {
+        prepareForChecking("select REGEXP_REPLACE(TO_DATE(DATE_SUB(FROM_UNIXTIME(UNIX_TIMESTAMP()), 1)), '-', '')");
+    }
+
+    @Test
+    public void testDay() {
+        prepareForChecking("select day from (select 1 as day) a");
+    }
+
+    @Test
+    public void testCurrenDate() {
+        prepareForChecking("select current_date()");
+    }
+
+    @Test
+    public void testNvl() {
+        prepareForChecking("select NVL(type,'xxx') from edu_manage.department");
     }
 
     private SqlHolder prepareForChecking(String sql) {

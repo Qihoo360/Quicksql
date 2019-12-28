@@ -4,6 +4,7 @@ import com.qihoo.qsql.api.SqlRunner;
 import com.qihoo.qsql.codegen.spark.SparkBodyWrapper;
 import com.qihoo.qsql.exec.AbstractPipeline;
 import com.qihoo.qsql.exec.Compilable;
+import com.qihoo.qsql.exec.Requirement;
 import com.qihoo.qsql.exec.result.JobPipelineResult;
 import com.qihoo.qsql.exec.result.PipelineResult;
 import com.qihoo.qsql.plan.proc.QueryProcedure;
@@ -32,16 +33,6 @@ public class SparkPipeline extends AbstractPipeline implements Compilable {
         wrapper.importSpecificDependency();
     }
 
-    @Override
-    public void run() {
-        SparkBodyWrapper newWrapper = new SparkBodyWrapper();
-        try {
-            compileRequirement(newWrapper.run(procedure), session(), SparkSession.class).execute();
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
     private SparkSession session() {
         //TODO
         if (System.getenv("SPARK_HOME") != null) {
@@ -67,13 +58,18 @@ public class SparkPipeline extends AbstractPipeline implements Compilable {
                 "Initialize SparkContext failed, the reason for which is not find spark env");
             throw new RuntimeException("No available Spark to execute. Please deploy Spark and put SPARK_HOME in env");
         }
-
     }
 
     @Override
-    public PipelineResult show() {
-        return new JobPipelineResult.ShowPipelineResult(
-            compileRequirement(wrapper.show(), session(), SparkSession.class));
+    public Object collect() {
+        Requirement requirement = compileRequirement(wrapper.collect(builder.getAcceptedResultsNum()), session(),
+            SparkSession.class);
+        return requirement.execute();
+    }
+
+    @Override
+    public void show() {
+        compileRequirement(wrapper.show(), session(), SparkSession.class).execute();
     }
 
     @Override

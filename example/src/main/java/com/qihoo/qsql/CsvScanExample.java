@@ -16,7 +16,7 @@ public class CsvScanExample {
             .setAppName("test_csv_app")
             .setAcceptedResultsNum(100)
             .ok();
-        runner.sql(sql).show().run();
+        runner.sql(sql).show();
         System.exit(0);
     }
 }
