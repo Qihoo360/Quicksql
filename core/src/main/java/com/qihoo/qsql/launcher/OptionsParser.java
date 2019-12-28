@@ -63,7 +63,8 @@ public class OptionsParser {
         RUNNER("runner", "dynamic", null, null),
         SQL("sql", "", null, null),
         APP_NAME("app_name", "", null, null),
-        FILE("file", "", null, null);
+        FILE("file", "", null, null),
+        PORT("port","5888",null,null);
         String key;
         String value;
         String sparkParam;

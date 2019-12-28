@@ -36,21 +36,22 @@ public class SparkProcedureVisitor extends ProcedureVisitor {
 
     @Override
     public void visit(TransformProcedure transformProcedure) {
+        String sql = transformProcedure.sql();
         composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE,
-            "tmp = spark.sql(\"" + transformProcedure.sql() + "\");");
+            "String sql = " + "\"" + sql + "\";");
+        composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE,
+            "tmp = spark.sql(sql);");
         visitNext(transformProcedure);
     }
 
     @Override
     public void visit(LoadProcedure loadProcedure) {
         if (loadProcedure instanceof MemoryLoadProcedure) {
-            composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE, "tmp.show();\n");
+            composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE);
         } else if (loadProcedure instanceof DiskLoadProcedure) {
             composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE,
                 String.format("tmp.write().format(\"com.databricks.spark.csv\")"
                     + ".save(\"%s\");\n", ((DiskLoadProcedure) loadProcedure).path));
-            // composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE,
-            //     String.format("tmp.write().text(\"%s\");\n", ((DiskLoadProcedure) loadProcedure).path));
         }
         visitNext(loadProcedure);
     }

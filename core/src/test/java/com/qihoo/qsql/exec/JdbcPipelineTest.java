@@ -22,7 +22,7 @@ public class JdbcPipelineTest {
             .setAcceptedResultsNum(2000)
             .ok();
 
-        runner.sql(sql).show().run();
+        runner.sql(sql).show();
     }
 
     @Test
