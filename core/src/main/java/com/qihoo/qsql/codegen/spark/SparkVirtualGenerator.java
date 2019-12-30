@@ -27,6 +27,7 @@ public class SparkVirtualGenerator extends QueryGenerator {
     protected void executeQuery() {
         String invoked = "tmp = spark.sql(\"" + query + "\");";
         composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE, invoked);
+        composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE,  "String sql = \"" + query + "\";");
 
     }
 

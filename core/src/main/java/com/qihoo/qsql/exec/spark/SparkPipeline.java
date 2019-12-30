@@ -4,8 +4,10 @@ import com.qihoo.qsql.api.SqlRunner;
 import com.qihoo.qsql.codegen.spark.SparkBodyWrapper;
 import com.qihoo.qsql.exec.AbstractPipeline;
 import com.qihoo.qsql.exec.Compilable;
+import com.qihoo.qsql.exec.Requirement;
 import com.qihoo.qsql.exec.result.JobPipelineResult;
 import com.qihoo.qsql.exec.result.PipelineResult;
+import com.qihoo.qsql.plan.proc.LoadProcedure;
 import com.qihoo.qsql.plan.proc.QueryProcedure;
 import org.apache.spark.sql.SparkSession;
 import org.slf4j.Logger;
@@ -27,15 +29,18 @@ public class SparkPipeline extends AbstractPipeline implements Compilable {
      */
     public SparkPipeline(QueryProcedure plan, SqlRunner.Builder builder) {
         super(plan, builder);
+        //TODO recode
         wrapper = new SparkBodyWrapper();
-        wrapper.interpretProcedure(plan);
-        wrapper.importSpecificDependency();
     }
 
     @Override
     public void run() {
-        SparkBodyWrapper newWrapper = new SparkBodyWrapper();
-        compileRequirement(newWrapper.run(procedure), session(), SparkSession.class).execute();
+        wrapper.importSpecificDependency();
+        try {
+            compileRequirement(wrapper.run(procedure), session(), SparkSession.class).execute();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private SparkSession session() {
@@ -63,25 +68,39 @@ public class SparkPipeline extends AbstractPipeline implements Compilable {
                 "Initialize SparkContext failed, the reason for which is not find spark env");
             throw new RuntimeException("No available Spark to execute. Please deploy Spark and put SPARK_HOME in env");
         }
-
     }
 
     @Override
-    public PipelineResult show() {
-        return new JobPipelineResult.ShowPipelineResult(
-            compileRequirement(wrapper.show(), session(), SparkSession.class));
+    public Object collect() {
+        Requirement requirement = compileRequirement(buildWrapper().collect(builder.getAcceptedResultsNum()), session(),
+            SparkSession.class);
+        try {
+            return requirement.execute();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public void show() {
+        try {
+            compileRequirement(buildWrapper().show(), session(), SparkSession.class).execute();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override
     public PipelineResult asTextFile(String clusterPath, String deliminator) {
         return new JobPipelineResult.TextPipelineResult(clusterPath, deliminator,
-            compileRequirement(wrapper.writeAsTextFile(clusterPath, deliminator), session(), SparkSession.class));
+            compileRequirement(buildWrapper().writeAsTextFile(clusterPath, deliminator), session(),
+                SparkSession.class));
     }
 
     @Override
     public PipelineResult asJsonFile(String clusterPath) {
         return new JobPipelineResult.JsonPipelineResult(clusterPath,
-            compileRequirement(wrapper.writeAsJsonFile(clusterPath), session(), SparkSession.class));
+            compileRequirement(buildWrapper().writeAsJsonFile(clusterPath), session(), SparkSession.class));
     }
 
     @Override
@@ -96,6 +115,27 @@ public class SparkPipeline extends AbstractPipeline implements Compilable {
 
     @Override
     public String source() {
+        wrapper.importSpecificDependency();
+        wrapper.interpretProcedure(procedure);
         return wrapper.toString();
+    }
+
+    private SparkBodyWrapper buildWrapper() {
+        SparkBodyWrapper newWrapper = new SparkBodyWrapper();
+        QueryProcedure prev = procedure;
+        QueryProcedure curr = procedure;
+        while (curr != null) {
+            if (curr instanceof LoadProcedure) {
+                if (prev != procedure) {
+                    prev.resetNext(null);
+                    break;
+                }
+            }
+            prev = curr;
+            curr = curr.next();
+        }
+        newWrapper.importSpecificDependency();
+        newWrapper.run(procedure);
+        return newWrapper;
     }
 }

@@ -30,7 +30,9 @@ public abstract class AbstractPipeline {
 
     public abstract void run();
 
-    public abstract PipelineResult show();
+    public abstract Object collect();
+
+    public abstract void show();
 
     public abstract PipelineResult asTextFile(String clusterPath, String deliminator);
 

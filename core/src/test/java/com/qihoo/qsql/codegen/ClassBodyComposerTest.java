@@ -1,6 +1,7 @@
 package com.qihoo.qsql.codegen;
 
 import com.qihoo.qsql.codegen.ClassBodyComposer.CodeCategory;
+import com.qihoo.qsql.codegen.spark.SparkBodyWrapper;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -8,7 +9,7 @@ public class ClassBodyComposerTest {
 
     @Test
     public void testBasicCompositionFunction() {
-        ClassBodyComposer composer = new ClassBodyComposer();
+        ClassBodyComposer composer = new ClassBodyComposer(SparkBodyWrapper.class);
 
         composer.handleComposition(CodeCategory.IMPORT,
             "import java.util.List");
@@ -22,6 +23,7 @@ public class ClassBodyComposerTest {
         composer.handleComposition(CodeCategory.CLASS, "TestRequirement");
         composer.handleComposition(CodeCategory.SENTENCE, "String str = \"Test\";");
         composer.handleComposition(CodeCategory.SENTENCE, "System.out.println(str);");
+        composer.handleComposition(CodeCategory.SENTENCE, "return null;");
 
         Assert.assertEquals("import java.util.Map;\n"
                 + "import java.util.List;\n"
@@ -34,10 +36,11 @@ public class ClassBodyComposerTest {
                 + "            return (a + b).length();\n"
                 + "        }\n"
                 + "\n"
-                + "\t\tpublic void execute(){\n"
+                + "\t\tpublic Object execute() throws Exception {\n"
                 + "\t\t\tDataset<Row> tmp;\n"
                 + "\t\t\tString str = \"Test\";\n"
                 + "\t\t\tSystem.out.println(str);\n"
+                + "\t\t\treturn null;\n"
                 + "\t\t}\n"
                 + "}\n",
             composer.getCompleteClass());
@@ -45,7 +48,7 @@ public class ClassBodyComposerTest {
 
     @Test
     public void testDuplicatedImport() {
-        ClassBodyComposer composer = new ClassBodyComposer();
+        ClassBodyComposer composer = new ClassBodyComposer(SparkBodyWrapper.class);
         composer.handleComposition(CodeCategory.IMPORT,
             "import java.util.List");
         composer.handleComposition(CodeCategory.IMPORT,
@@ -62,7 +65,7 @@ public class ClassBodyComposerTest {
                 + "\t\t\tsuper(spark);\n"
                 + "\t\t}\n"
                 + "\n"
-                + "\t\tpublic void execute(){\n"
+                + "\t\tpublic Object execute() throws Exception {\n"
                 + "\t\t\tDataset<Row> tmp;\n"
                 + "\t\t}\n"
                 + "}\n",
@@ -71,7 +74,7 @@ public class ClassBodyComposerTest {
 
     @Test
     public void testComposeMultipleInnerClass() {
-        ClassBodyComposer composer = new ClassBodyComposer();
+        ClassBodyComposer composer = new ClassBodyComposer(SparkBodyWrapper.class);
         composer.handleComposition(CodeCategory.INNER_CLASS,
             "      static class Animal { \n"
                 + "             public String name;\n"
@@ -93,7 +96,7 @@ public class ClassBodyComposerTest {
             + "             public String color;\n"
             + "         }\n"
             + "\n"
-            + "\t\tpublic void execute(){\n"
+            + "\t\tpublic Object execute() throws Exception {\n"
             + "\t\t\tDataset<Row> tmp;\n"
             + "\t\t}\n"
             + "}\n", composer.getCompleteClass());
@@ -101,7 +104,7 @@ public class ClassBodyComposerTest {
 
     @Test
     public void testNonClassNameClass() {
-        ClassBodyComposer composer = new ClassBodyComposer();
+        ClassBodyComposer composer = new ClassBodyComposer(SparkBodyWrapper.class);
         try {
             composer.handleComposition(CodeCategory.CLASS);
             Assert.assertTrue(false);

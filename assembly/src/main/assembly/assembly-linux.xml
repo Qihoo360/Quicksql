@@ -31,6 +31,14 @@
             </includes>
         </fileSet>
         <fileSet>
+            <directory>${project.parent.basedir}/core/target/</directory>
+            <outputDirectory>/${qsql.release}/lib/flink</outputDirectory>
+            <fileMode>0755</fileMode>
+            <includes>
+                <include>**/qsql-core-0.6-fat.jar</include>
+            </includes>
+        </fileSet>
+        <fileSet>
             <directory>${project.parent.basedir}/core/src/main/resources</directory>
             <outputDirectory>/${qsql.release}/conf</outputDirectory>
             <fileMode>0755</fileMode>
@@ -85,7 +93,7 @@
             <excludes>
                 <exclude>org.scala-lang:*:jar</exclude>
                 <exclude>org.apache.hadoop:*:jar</exclude>
-                <exclude>org.apache.hive:*:jar</exclude>
+                <!--<exclude>org.apache.hive:*:jar</exclude>-->
                 <exclude>org.spark-project.hive:*:jar</exclude>
                 <exclude>org.antlr:*:jar</exclude>
                 <exclude>org.apache.spark:*:jar</exclude>

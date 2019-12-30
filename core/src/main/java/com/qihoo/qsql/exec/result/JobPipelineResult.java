@@ -1,8 +1,7 @@
 package com.qihoo.qsql.exec.result;
 
 import com.qihoo.qsql.exec.Requirement;
-import java.util.Collection;
-import java.util.Collections;
+import java.sql.ResultSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,8 +27,8 @@ public abstract class JobPipelineResult implements PipelineResult {
     }
 
     @Override
-    public Collection<String> getData() {
-        return Collections.emptyList();
+    public ResultSet getData() {
+        return null;
     }
 
     @Override
@@ -37,6 +36,8 @@ public abstract class JobPipelineResult implements PipelineResult {
         LOGGER.debug("Start executing Requirement!!");
         try {
             requirement.execute();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         } finally {
             requirement.close();
         }
@@ -49,8 +50,8 @@ public abstract class JobPipelineResult implements PipelineResult {
         }
 
         @Override
-        public Collection<String> getData() {
-            return Collections.emptyList();
+        public ResultSet getData() {
+            return null;
         }
     }
 
@@ -64,8 +65,8 @@ public abstract class JobPipelineResult implements PipelineResult {
         }
 
         @Override
-        public Collection<String> getData() {
-            return Collections.emptyList();
+        public ResultSet getData() {
+            return null;
         }
     }
 
@@ -76,8 +77,8 @@ public abstract class JobPipelineResult implements PipelineResult {
         }
 
         @Override
-        public Collection<String> getData() {
-            return Collections.emptyList();
+        public ResultSet getData() {
+            return null;
         }
     }
 }

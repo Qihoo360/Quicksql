@@ -16,14 +16,14 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.adapter.java.ReflectiveSchema;
-import org.apache.calcite.jdbc.CalciteConnection;
-import org.apache.calcite.schema.SchemaPlus;
-import org.apache.calcite.schema.TableFunction;
-import org.apache.calcite.schema.impl.AbstractSchema;
-import org.apache.calcite.sql.advise.SqlAdvisorGetHintsFunction;
-import org.apache.calcite.sql.advise.SqlAdvisorGetHintsFunction2;
-import org.apache.calcite.sql.parser.SqlParserUtil;
+import com.qihoo.qsql.org.apache.calcite.adapter.java.ReflectiveSchema;
+import com.qihoo.qsql.org.apache.calcite.jdbc.CalciteConnection;
+import com.qihoo.qsql.org.apache.calcite.schema.SchemaPlus;
+import com.qihoo.qsql.org.apache.calcite.schema.TableFunction;
+import com.qihoo.qsql.org.apache.calcite.schema.impl.AbstractSchema;
+import com.qihoo.qsql.org.apache.calcite.sql.advise.SqlAdvisorGetHintsFunction;
+import com.qihoo.qsql.org.apache.calcite.sql.advise.SqlAdvisorGetHintsFunction2;
+import com.qihoo.qsql.org.apache.calcite.sql.parser.SqlParserUtil;
 
 import org.junit.Test;
 
@@ -36,7 +36,7 @@ import java.util.Properties;
 import java.util.function.Consumer;
 
 /**
- * Tests for {@link org.apache.calcite.sql.advise.SqlAdvisor}.
+ * Tests for {@link com.qihoo.qsql.org.apache.calcite.sql.advise.SqlAdvisor}.
  */
 public class SqlAdvisorJdbcTest {
 
@@ -147,7 +147,7 @@ public class SqlAdvisorJdbcTest {
   }
 
   /**
-   * Tests {@link org.apache.calcite.sql.advise.SqlAdvisorGetHintsFunction}.
+   * Tests {@link com.qihoo.qsql.org.apache.calcite.sql.advise.SqlAdvisorGetHintsFunction}.
    */
   @Test public void testSqlAdvisorSchemaNames()
       throws SQLException, ClassNotFoundException {

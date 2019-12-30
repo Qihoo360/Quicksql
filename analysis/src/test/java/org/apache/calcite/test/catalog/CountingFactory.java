@@ -16,16 +16,16 @@
  */
 package org.apache.calcite.test.catalog;
 
-import org.apache.calcite.plan.RelOptTable;
-import org.apache.calcite.rel.type.RelDataType;
-import org.apache.calcite.rel.type.RelDataTypeField;
-import org.apache.calcite.rex.RexBuilder;
-import org.apache.calcite.rex.RexNode;
-import org.apache.calcite.schema.ColumnStrategy;
-import org.apache.calcite.sql.SqlFunction;
-import org.apache.calcite.sql2rel.InitializerContext;
-import org.apache.calcite.sql2rel.InitializerExpressionFactory;
-import org.apache.calcite.sql2rel.NullInitializerExpressionFactory;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptTable;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataType;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeField;
+import com.qihoo.qsql.org.apache.calcite.rex.RexBuilder;
+import com.qihoo.qsql.org.apache.calcite.rex.RexNode;
+import com.qihoo.qsql.org.apache.calcite.schema.ColumnStrategy;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlFunction;
+import com.qihoo.qsql.org.apache.calcite.sql2rel.InitializerContext;
+import com.qihoo.qsql.org.apache.calcite.sql2rel.InitializerExpressionFactory;
+import com.qihoo.qsql.org.apache.calcite.sql2rel.NullInitializerExpressionFactory;
 
 import com.google.common.collect.ImmutableList;
 

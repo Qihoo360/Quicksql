@@ -16,11 +16,11 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.plan.RelOptUtil;
-import org.apache.calcite.rel.RelNode;
-import org.apache.calcite.tools.Frameworks;
-import org.apache.calcite.tools.PigRelBuilder;
-import org.apache.calcite.util.Util;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptUtil;
+import com.qihoo.qsql.org.apache.calcite.rel.RelNode;
+import com.qihoo.qsql.org.apache.calcite.tools.Frameworks;
+import com.qihoo.qsql.org.apache.calcite.tools.PigRelBuilder;
+import com.qihoo.qsql.org.apache.calcite.util.Util;
 
 import org.junit.Test;
 

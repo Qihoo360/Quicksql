@@ -16,10 +16,10 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.sql.test.SqlOperatorBaseTest;
+import com.qihoo.qsql.org.apache.calcite.sql.test.SqlOperatorBaseTest;
 
 /**
- * Embodiment of {@link org.apache.calcite.sql.test.SqlOperatorBaseTest}
+ * Embodiment of {@link com.qihoo.qsql.org.apache.calcite.sql.test.SqlOperatorBaseTest}
  * that generates SQL statements and executes them using Calcite.
  */
 public class CalciteSqlOperatorTest extends SqlOperatorBaseTest {

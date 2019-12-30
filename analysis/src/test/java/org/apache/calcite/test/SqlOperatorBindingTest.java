@@ -16,23 +16,23 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.adapter.java.JavaTypeFactory;
-import org.apache.calcite.jdbc.JavaTypeFactoryImpl;
-import org.apache.calcite.rel.type.RelDataType;
-import org.apache.calcite.rel.type.RelDataTypeSystem;
-import org.apache.calcite.rex.RexBuilder;
-import org.apache.calcite.rex.RexNode;
-import org.apache.calcite.rex.RexProgram;
-import org.apache.calcite.rex.RexProgramBuilder;
-import org.apache.calcite.rex.RexUtil;
-import org.apache.calcite.sql.SqlDataTypeSpec;
-import org.apache.calcite.sql.SqlLiteral;
-import org.apache.calcite.sql.SqlNode;
-import org.apache.calcite.sql.SqlUtil;
-import org.apache.calcite.sql.fun.SqlStdOperatorTable;
-import org.apache.calcite.sql.parser.SqlParserPos;
-import org.apache.calcite.sql.type.SqlTypeName;
-import org.apache.calcite.sql.type.SqlTypeUtil;
+import com.qihoo.qsql.org.apache.calcite.adapter.java.JavaTypeFactory;
+import com.qihoo.qsql.org.apache.calcite.jdbc.JavaTypeFactoryImpl;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataType;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeSystem;
+import com.qihoo.qsql.org.apache.calcite.rex.RexBuilder;
+import com.qihoo.qsql.org.apache.calcite.rex.RexNode;
+import com.qihoo.qsql.org.apache.calcite.rex.RexProgram;
+import com.qihoo.qsql.org.apache.calcite.rex.RexProgramBuilder;
+import com.qihoo.qsql.org.apache.calcite.rex.RexUtil;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlDataTypeSpec;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlLiteral;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlNode;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlUtil;
+import com.qihoo.qsql.org.apache.calcite.sql.fun.SqlStdOperatorTable;
+import com.qihoo.qsql.org.apache.calcite.sql.parser.SqlParserPos;
+import com.qihoo.qsql.org.apache.calcite.sql.type.SqlTypeName;
+import com.qihoo.qsql.org.apache.calcite.sql.type.SqlTypeUtil;
 
 import com.google.common.collect.Lists;
 
@@ -67,7 +67,7 @@ public class SqlOperatorBindingTest {
     rexBuilder = new RexBuilder(typeFactory);
   }
 
-  /** Tests {@link org.apache.calcite.sql.SqlUtil#isLiteral(SqlNode, boolean)},
+  /** Tests {@link com.qihoo.qsql.org.apache.calcite.sql.SqlUtil#isLiteral(SqlNode, boolean)},
    * which was added to enhance Calcite's public API
    * <a href="https://issues.apache.org/jira/browse/CALCITE-1219">[CALCITE-1219]
    * Add a method to SqlOperatorBinding to determine whether operand is a
@@ -94,7 +94,7 @@ public class SqlOperatorBindingTest {
     assertSame(false, SqlUtil.isLiteral(castCastLiteral, true));
   }
 
-  /** Tests {@link org.apache.calcite.rex.RexUtil#isLiteral(RexNode, boolean)},
+  /** Tests {@link com.qihoo.qsql.org.apache.calcite.rex.RexUtil#isLiteral(RexNode, boolean)},
    * which was added to enhance Calcite's public API
    * <a href="https://issues.apache.org/jira/browse/CALCITE-1219">[CALCITE-1219]
    * Add a method to SqlOperatorBinding to determine whether operand is a

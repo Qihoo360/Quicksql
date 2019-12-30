@@ -70,7 +70,37 @@ public class ArgumentsSupplier {
         return "--" + attr;
     }
 
-    public String[] assemblyFlinkOptions() {
-        return new String[0];
+    /**
+     * Assemble flink options.
+     *
+     * @return options
+     */
+    public List<String> assemblyFlinkOptions() {
+        List<String> arguments = new ArrayList<>();
+        Arrays.stream(OptionsParser.SubmitOption.values())
+            .filter(submission -> submission.flinkParam != null
+                && ! submission.flinkParam.equals("'non-opt'"))
+            .forEach(submission -> {
+                arguments.add(longSparkOpt(submission));
+                arguments.add(parser.getOptionValue(submission));
+            });
+
+        // List<String> conf = loadSparkConf();
+        // conf.forEach(attr -> {
+        //     arguments.add(longSparkOpt("conf"));
+        //     arguments.add(attr);
+        // });
+
+
+        arguments.add(longSparkOpt("class"));
+        arguments.add(ProcessExecutor.class.getCanonicalName());
+        arguments.add(parser.getOptionValue(OptionsParser.SubmitOption.JAR_NAME));
+        arguments.add(longSparkOpt("jar"));
+        arguments.add(parser.getOptionValue(SubmitOption.JAR));
+        arguments.add(longSparkOpt("master"));
+        arguments.add(parser.getOptionValue(SubmitOption.MASTER_MODE));
+        arguments.add(longSparkOpt("runner"));
+        arguments.add(parser.getOptionValue(OptionsParser.SubmitOption.RUNNER));
+        return arguments;
     }
 }

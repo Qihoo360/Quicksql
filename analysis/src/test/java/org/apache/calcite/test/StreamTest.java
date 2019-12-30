@@ -16,26 +16,26 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.DataContext;
+import com.qihoo.qsql.org.apache.calcite.DataContext;
 import org.apache.calcite.avatica.util.DateTimeUtils;
-import org.apache.calcite.config.CalciteConnectionConfig;
-import org.apache.calcite.linq4j.Enumerable;
-import org.apache.calcite.linq4j.Linq4j;
-import org.apache.calcite.rel.RelCollations;
-import org.apache.calcite.rel.type.RelDataType;
-import org.apache.calcite.rel.type.RelDataTypeFactory;
-import org.apache.calcite.rel.type.RelProtoDataType;
-import org.apache.calcite.schema.ScannableTable;
-import org.apache.calcite.schema.Schema;
-import org.apache.calcite.schema.SchemaPlus;
-import org.apache.calcite.schema.Statistic;
-import org.apache.calcite.schema.Statistics;
-import org.apache.calcite.schema.StreamableTable;
-import org.apache.calcite.schema.Table;
-import org.apache.calcite.schema.TableFactory;
-import org.apache.calcite.sql.SqlCall;
-import org.apache.calcite.sql.SqlNode;
-import org.apache.calcite.sql.type.SqlTypeName;
+import com.qihoo.qsql.org.apache.calcite.config.CalciteConnectionConfig;
+import com.qihoo.qsql.org.apache.calcite.linq4j.Enumerable;
+import com.qihoo.qsql.org.apache.calcite.linq4j.Linq4j;
+import com.qihoo.qsql.org.apache.calcite.rel.RelCollations;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataType;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeFactory;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelProtoDataType;
+import com.qihoo.qsql.org.apache.calcite.schema.ScannableTable;
+import com.qihoo.qsql.org.apache.calcite.schema.Schema;
+import com.qihoo.qsql.org.apache.calcite.schema.SchemaPlus;
+import com.qihoo.qsql.org.apache.calcite.schema.Statistic;
+import com.qihoo.qsql.org.apache.calcite.schema.Statistics;
+import com.qihoo.qsql.org.apache.calcite.schema.StreamableTable;
+import com.qihoo.qsql.org.apache.calcite.schema.Table;
+import com.qihoo.qsql.org.apache.calcite.schema.TableFactory;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlCall;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlNode;
+import com.qihoo.qsql.org.apache.calcite.sql.type.SqlTypeName;
 
 import com.google.common.collect.ImmutableList;
 

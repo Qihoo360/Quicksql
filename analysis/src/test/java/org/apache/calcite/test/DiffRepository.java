@@ -17,10 +17,10 @@
 package org.apache.calcite.test;
 
 import org.apache.calcite.avatica.util.Spaces;
-import org.apache.calcite.util.Pair;
-import org.apache.calcite.util.Sources;
-import org.apache.calcite.util.Util;
-import org.apache.calcite.util.XmlOutput;
+import com.qihoo.qsql.org.apache.calcite.util.Pair;
+import com.qihoo.qsql.org.apache.calcite.util.Sources;
+import com.qihoo.qsql.org.apache.calcite.util.Util;
+import com.qihoo.qsql.org.apache.calcite.util.XmlOutput;
 
 import org.junit.Assert;
 import org.junit.ComparisonFailure;

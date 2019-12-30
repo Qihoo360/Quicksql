@@ -16,22 +16,22 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.adapter.java.ReflectiveSchema;
+import com.qihoo.qsql.org.apache.calcite.adapter.java.ReflectiveSchema;
 import org.apache.calcite.avatica.AvaticaUtils;
-import org.apache.calcite.config.CalciteConnectionProperty;
-import org.apache.calcite.jdbc.CalciteConnection;
-import org.apache.calcite.prepare.Prepare;
-import org.apache.calcite.rel.type.RelDataType;
-import org.apache.calcite.rel.type.RelDataTypeFactory;
-import org.apache.calcite.runtime.Hook;
-import org.apache.calcite.schema.Schema;
-import org.apache.calcite.schema.impl.AbstractSchema;
-import org.apache.calcite.schema.impl.AbstractTable;
-import org.apache.calcite.sql.type.SqlTypeName;
-import org.apache.calcite.util.Bug;
-import org.apache.calcite.util.Closer;
-import org.apache.calcite.util.Sources;
-import org.apache.calcite.util.Util;
+import com.qihoo.qsql.org.apache.calcite.config.CalciteConnectionProperty;
+import com.qihoo.qsql.org.apache.calcite.jdbc.CalciteConnection;
+import com.qihoo.qsql.org.apache.calcite.prepare.Prepare;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataType;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeFactory;
+import com.qihoo.qsql.org.apache.calcite.runtime.Hook;
+import com.qihoo.qsql.org.apache.calcite.schema.Schema;
+import com.qihoo.qsql.org.apache.calcite.schema.impl.AbstractSchema;
+import com.qihoo.qsql.org.apache.calcite.schema.impl.AbstractTable;
+import com.qihoo.qsql.org.apache.calcite.sql.type.SqlTypeName;
+import com.qihoo.qsql.org.apache.calcite.util.Bug;
+import com.qihoo.qsql.org.apache.calcite.util.Closer;
+import com.qihoo.qsql.org.apache.calcite.util.Sources;
+import com.qihoo.qsql.org.apache.calcite.util.Util;
 
 import com.google.common.collect.Lists;
 import com.google.common.io.PatternFilenameFilter;
@@ -269,7 +269,7 @@ public abstract class QuidemTest {
       case "blank":
         return CalciteAssert.that()
             .with(CalciteConnectionProperty.PARSER_FACTORY,
-                "org.apache.calcite.sql.parser.parserextensiontesting"
+                "com.qihoo.qsql.org.apache.calcite.sql.parser.parserextensiontesting"
                     + ".ExtensionSqlParserImpl#FACTORY")
             .with(CalciteAssert.SchemaSpec.BLANK)
             .connect();

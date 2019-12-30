@@ -16,40 +16,40 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.jdbc.CalciteConnection;
-import org.apache.calcite.plan.RelTraitDef;
-import org.apache.calcite.rel.RelNode;
-import org.apache.calcite.rel.core.AggregateCall;
-import org.apache.calcite.rel.core.Correlate;
-import org.apache.calcite.rel.core.Exchange;
-import org.apache.calcite.rel.core.JoinRelType;
-import org.apache.calcite.rel.core.TableFunctionScan;
-import org.apache.calcite.rel.core.TableModify;
-import org.apache.calcite.rel.core.Window;
-import org.apache.calcite.rel.type.RelDataType;
-import org.apache.calcite.rel.type.RelDataTypeFactory;
-import org.apache.calcite.rel.type.RelDataTypeField;
-import org.apache.calcite.rex.RexCorrelVariable;
-import org.apache.calcite.rex.RexInputRef;
-import org.apache.calcite.rex.RexNode;
-import org.apache.calcite.runtime.CalciteException;
-import org.apache.calcite.schema.SchemaPlus;
-import org.apache.calcite.schema.impl.ViewTable;
-import org.apache.calcite.schema.impl.ViewTableMacro;
-import org.apache.calcite.sql.SqlMatchRecognize;
-import org.apache.calcite.sql.fun.SqlStdOperatorTable;
-import org.apache.calcite.sql.parser.SqlParser;
-import org.apache.calcite.sql.type.SqlTypeName;
-import org.apache.calcite.tools.FrameworkConfig;
-import org.apache.calcite.tools.Frameworks;
-import org.apache.calcite.tools.Programs;
-import org.apache.calcite.tools.RelBuilder;
-import org.apache.calcite.tools.RelRunner;
-import org.apache.calcite.tools.RelRunners;
-import org.apache.calcite.util.Holder;
-import org.apache.calcite.util.ImmutableBitSet;
-import org.apache.calcite.util.Util;
-import org.apache.calcite.util.mapping.Mappings;
+import com.qihoo.qsql.org.apache.calcite.jdbc.CalciteConnection;
+import com.qihoo.qsql.org.apache.calcite.plan.RelTraitDef;
+import com.qihoo.qsql.org.apache.calcite.rel.RelNode;
+import com.qihoo.qsql.org.apache.calcite.rel.core.AggregateCall;
+import com.qihoo.qsql.org.apache.calcite.rel.core.Correlate;
+import com.qihoo.qsql.org.apache.calcite.rel.core.Exchange;
+import com.qihoo.qsql.org.apache.calcite.rel.core.JoinRelType;
+import com.qihoo.qsql.org.apache.calcite.rel.core.TableFunctionScan;
+import com.qihoo.qsql.org.apache.calcite.rel.core.TableModify;
+import com.qihoo.qsql.org.apache.calcite.rel.core.Window;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataType;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeFactory;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeField;
+import com.qihoo.qsql.org.apache.calcite.rex.RexCorrelVariable;
+import com.qihoo.qsql.org.apache.calcite.rex.RexInputRef;
+import com.qihoo.qsql.org.apache.calcite.rex.RexNode;
+import com.qihoo.qsql.org.apache.calcite.runtime.CalciteException;
+import com.qihoo.qsql.org.apache.calcite.schema.SchemaPlus;
+import com.qihoo.qsql.org.apache.calcite.schema.impl.ViewTable;
+import com.qihoo.qsql.org.apache.calcite.schema.impl.ViewTableMacro;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlMatchRecognize;
+import com.qihoo.qsql.org.apache.calcite.sql.fun.SqlStdOperatorTable;
+import com.qihoo.qsql.org.apache.calcite.sql.parser.SqlParser;
+import com.qihoo.qsql.org.apache.calcite.sql.type.SqlTypeName;
+import com.qihoo.qsql.org.apache.calcite.tools.FrameworkConfig;
+import com.qihoo.qsql.org.apache.calcite.tools.Frameworks;
+import com.qihoo.qsql.org.apache.calcite.tools.Programs;
+import com.qihoo.qsql.org.apache.calcite.tools.RelBuilder;
+import com.qihoo.qsql.org.apache.calcite.tools.RelRunner;
+import com.qihoo.qsql.org.apache.calcite.tools.RelRunners;
+import com.qihoo.qsql.org.apache.calcite.util.Holder;
+import com.qihoo.qsql.org.apache.calcite.util.ImmutableBitSet;
+import com.qihoo.qsql.org.apache.calcite.util.Util;
+import com.qihoo.qsql.org.apache.calcite.util.mapping.Mappings;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -1974,7 +1974,7 @@ public class RelBuilderTest {
     assertThat(root2, hasTree(expected));
   }
 
-  /** Tests {@link org.apache.calcite.tools.RelRunner} for a VALUES query. */
+  /** Tests {@link com.qihoo.qsql.org.apache.calcite.tools.RelRunner} for a VALUES query. */
   @Test public void testRunValues() throws Exception {
     // Equivalent SQL:
     //   VALUES (true, 1), (false, -50) AS t(a, b)
@@ -1990,7 +1990,7 @@ public class RelBuilderTest {
     }
   }
 
-  /** Tests {@link org.apache.calcite.tools.RelRunner} for a table scan + filter
+  /** Tests {@link com.qihoo.qsql.org.apache.calcite.tools.RelRunner} for a table scan + filter
    * query. */
   @Test public void testRun() throws Exception {
     // Equivalent SQL:

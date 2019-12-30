@@ -56,6 +56,9 @@ public abstract class MetadataCollector {
                 case "kylin":
                     return new KylinCollector(
                             mapper.readValue(json, HiveProp.class), regexp);
+                case "hive-jdbc":
+                    return new HiveJdbcCollector(
+                            mapper.readValue(json, HiveProp.class), regexp);
                 case "es":
                 case "elasticsearch":
                     return new ElasticsearchCollector(

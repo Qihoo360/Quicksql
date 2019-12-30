@@ -9,7 +9,7 @@ public class SparkPipelineTest {
 
     @Test
     public void testSparkPipeline() {
-        String sql = "select * from action_required.homework_content";
+        String sql = "select 1";
         SqlRunner.Builder.RunnerType runnerType = RunnerType.SPARK;
         SqlRunner runner = SqlRunner.builder()
             .setTransformRunner(runnerType)
@@ -35,7 +35,7 @@ public class SparkPipelineTest {
 
     @Test
     public void testSparkAsTempTablePipeline() {
-        String sql = "select * from action_required.homework_content";
+        String sql = "select 1";
         SqlRunner.Builder.RunnerType runnerType = RunnerType.SPARK;
         SqlRunner runner = SqlRunner.builder()
             .setTransformRunner(runnerType)

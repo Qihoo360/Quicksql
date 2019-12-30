@@ -1,5 +1,6 @@
 package com.qihoo.qsql.codegen.flink;
 
+import com.qihoo.qsql.codegen.ClassBodyComposer;
 import com.qihoo.qsql.codegen.QueryGenerator;
 
 /**
@@ -20,12 +21,14 @@ public class FlinkVirtualGenerator extends QueryGenerator {
 
     @Override
     protected void executeQuery() {
-
+        String invoked = "tmp = tableEnv.toDataSet(tableEnv.sqlQuery(\"" + query + "\"), Row.class);";
+        composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE, invoked);
     }
 
     @Override
     public void saveToTempTable() {
-
+        String created = "tableEnv.registerTable(\"" + tableName + "\", tableEnv.sqlQuery(\"" + query + "\"));";
+        composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE, created);
     }
 
 }

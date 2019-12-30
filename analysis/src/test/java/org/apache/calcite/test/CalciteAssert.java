@@ -16,44 +16,46 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.DataContext;
-import org.apache.calcite.adapter.clone.CloneSchema;
-import org.apache.calcite.adapter.java.ReflectiveSchema;
-import org.apache.calcite.adapter.jdbc.JdbcSchema;
+import com.qihoo.qsql.org.apache.calcite.DataContext;
+import com.qihoo.qsql.org.apache.calcite.adapter.clone.CloneSchema;
+import com.qihoo.qsql.org.apache.calcite.adapter.java.ReflectiveSchema;
+import com.qihoo.qsql.org.apache.calcite.adapter.jdbc.JdbcSchema;
+import com.qihoo.qsql.org.apache.calcite.linq4j.Enumerable;
+import com.qihoo.qsql.org.apache.calcite.linq4j.function.Predicate1;
 import org.apache.calcite.avatica.ConnectionProperty;
 import org.apache.calcite.avatica.util.DateTimeUtils;
-import org.apache.calcite.config.CalciteConnectionProperty;
-import org.apache.calcite.config.Lex;
-import org.apache.calcite.jdbc.CalciteConnection;
-import org.apache.calcite.jdbc.CalciteMetaImpl;
-import org.apache.calcite.jdbc.CalcitePrepare;
-import org.apache.calcite.jdbc.CalciteSchema;
-import org.apache.calcite.materialize.Lattice;
-import org.apache.calcite.model.ModelHandler;
-import org.apache.calcite.plan.RelOptUtil;
-import org.apache.calcite.rel.RelNode;
-import org.apache.calcite.runtime.CalciteException;
-import org.apache.calcite.runtime.FlatLists;
-import org.apache.calcite.runtime.GeoFunctions;
-import org.apache.calcite.runtime.Hook;
-import org.apache.calcite.schema.Schema;
-import org.apache.calcite.schema.SchemaPlus;
-import org.apache.calcite.schema.TableFunction;
-import org.apache.calcite.schema.impl.AbstractSchema;
-import org.apache.calcite.schema.impl.TableFunctionImpl;
-import org.apache.calcite.schema.impl.ViewTable;
-import org.apache.calcite.schema.impl.ViewTableMacro;
-import org.apache.calcite.sql.validate.SqlConformanceEnum;
-import org.apache.calcite.sql.validate.SqlValidatorException;
-import org.apache.calcite.tools.FrameworkConfig;
-import org.apache.calcite.tools.RelBuilder;
-import org.apache.calcite.util.Closer;
-import org.apache.calcite.util.Holder;
-import org.apache.calcite.util.JsonBuilder;
-import org.apache.calcite.util.Pair;
-import org.apache.calcite.util.Smalls;
-import org.apache.calcite.util.Sources;
-import org.apache.calcite.util.Util;
+import com.qihoo.qsql.org.apache.calcite.config.CalciteConnectionProperty;
+import com.qihoo.qsql.org.apache.calcite.config.Lex;
+import com.qihoo.qsql.org.apache.calcite.jdbc.CalciteConnection;
+import com.qihoo.qsql.org.apache.calcite.jdbc.CalciteMetaImpl;
+import com.qihoo.qsql.org.apache.calcite.jdbc.CalcitePrepare;
+import com.qihoo.qsql.org.apache.calcite.jdbc.CalciteSchema;
+import com.qihoo.qsql.org.apache.calcite.materialize.Lattice;
+import com.qihoo.qsql.org.apache.calcite.model.ModelHandler;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptUtil;
+import com.qihoo.qsql.org.apache.calcite.rel.RelNode;
+import com.qihoo.qsql.org.apache.calcite.runtime.CalciteException;
+import com.qihoo.qsql.org.apache.calcite.runtime.FlatLists;
+import com.qihoo.qsql.org.apache.calcite.runtime.GeoFunctions;
+import com.qihoo.qsql.org.apache.calcite.runtime.Hook;
+import com.qihoo.qsql.org.apache.calcite.schema.Schema;
+import com.qihoo.qsql.org.apache.calcite.schema.SchemaPlus;
+import com.qihoo.qsql.org.apache.calcite.schema.TableFunction;
+import com.qihoo.qsql.org.apache.calcite.schema.impl.AbstractSchema;
+import com.qihoo.qsql.org.apache.calcite.schema.impl.TableFunctionImpl;
+import com.qihoo.qsql.org.apache.calcite.schema.impl.ViewTable;
+import com.qihoo.qsql.org.apache.calcite.schema.impl.ViewTableMacro;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlConformanceEnum;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlValidatorException;
+import com.qihoo.qsql.org.apache.calcite.tools.FrameworkConfig;
+import com.qihoo.qsql.org.apache.calcite.tools.RelBuilder;
+import com.qihoo.qsql.org.apache.calcite.util.Closer;
+import com.qihoo.qsql.org.apache.calcite.util.Holder;
+import com.qihoo.qsql.org.apache.calcite.util.JsonBuilder;
+import com.qihoo.qsql.org.apache.calcite.util.Pair;
+import com.qihoo.qsql.org.apache.calcite.util.Smalls;
+import com.qihoo.qsql.org.apache.calcite.util.Sources;
+import com.qihoo.qsql.org.apache.calcite.util.Util;
 
 import org.apache.commons.dbcp2.PoolableConnectionFactory;
 import org.apache.commons.dbcp2.PoolingDataSource;
@@ -1038,7 +1040,7 @@ public class CalciteAssert {
       return this;
     }
 
-    /** Creates a {@link org.apache.calcite.jdbc.CalciteConnection}
+    /** Creates a {@link com.qihoo.qsql.org.apache.calcite.jdbc.CalciteConnection}
      * and executes a callback. */
     public <T> AssertThat doWithConnection(Function<CalciteConnection, T> fn)
         throws Exception {
@@ -1049,7 +1051,7 @@ public class CalciteAssert {
       }
     }
 
-    /** Creates a {@link org.apache.calcite.jdbc.CalciteConnection}
+    /** Creates a {@link com.qihoo.qsql.org.apache.calcite.jdbc.CalciteConnection}
      * and executes a callback that returns no result. */
     public final AssertThat doWithConnection(Consumer<CalciteConnection> fn)
         throws Exception {
@@ -1664,7 +1666,7 @@ public class CalciteAssert {
      * such as "customer" and "sales_fact_1997" are available. Queries
      * are processed by generating Java that calls linq4j operators
      * such as
-     * {@link org.apache.calcite.linq4j.Enumerable#where(org.apache.calcite.linq4j.function.Predicate1)}.
+     * {@link Enumerable#where(Predicate1)}.
      */
     JDBC_FOODMART,
 

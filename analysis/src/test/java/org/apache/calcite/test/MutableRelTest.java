@@ -16,25 +16,25 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.plan.RelOptRule;
-import org.apache.calcite.plan.RelOptUtil;
-import org.apache.calcite.plan.hep.HepPlanner;
-import org.apache.calcite.plan.hep.HepProgram;
-import org.apache.calcite.plan.hep.HepProgramBuilder;
-import org.apache.calcite.rel.RelNode;
-import org.apache.calcite.rel.core.RelFactories;
-import org.apache.calcite.rel.mutable.MutableRel;
-import org.apache.calcite.rel.mutable.MutableRels;
-import org.apache.calcite.rel.rules.FilterJoinRule;
-import org.apache.calcite.rel.rules.FilterProjectTransposeRule;
-import org.apache.calcite.rel.rules.FilterToCalcRule;
-import org.apache.calcite.rel.rules.ProjectMergeRule;
-import org.apache.calcite.rel.rules.ProjectToWindowRule;
-import org.apache.calcite.rel.rules.SemiJoinRule;
-import org.apache.calcite.rel.type.RelDataType;
-import org.apache.calcite.sql2rel.RelDecorrelator;
-import org.apache.calcite.tools.RelBuilder;
-import org.apache.calcite.util.Litmus;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptRule;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptUtil;
+import com.qihoo.qsql.org.apache.calcite.plan.hep.HepPlanner;
+import com.qihoo.qsql.org.apache.calcite.plan.hep.HepProgram;
+import com.qihoo.qsql.org.apache.calcite.plan.hep.HepProgramBuilder;
+import com.qihoo.qsql.org.apache.calcite.rel.RelNode;
+import com.qihoo.qsql.org.apache.calcite.rel.core.RelFactories;
+import com.qihoo.qsql.org.apache.calcite.rel.mutable.MutableRel;
+import com.qihoo.qsql.org.apache.calcite.rel.mutable.MutableRels;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.FilterJoinRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.FilterProjectTransposeRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.FilterToCalcRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.ProjectMergeRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.ProjectToWindowRule;
+import com.qihoo.qsql.org.apache.calcite.rel.rules.SemiJoinRule;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataType;
+import com.qihoo.qsql.org.apache.calcite.sql2rel.RelDecorrelator;
+import com.qihoo.qsql.org.apache.calcite.tools.RelBuilder;
+import com.qihoo.qsql.org.apache.calcite.util.Litmus;
 
 import com.google.common.collect.ImmutableList;
 

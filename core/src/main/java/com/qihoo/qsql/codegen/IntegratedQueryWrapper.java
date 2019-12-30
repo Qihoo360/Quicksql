@@ -21,10 +21,17 @@ public abstract class IntegratedQueryWrapper extends ClassBodyWrapper {
 
     public abstract IntegratedQueryWrapper show();
 
+    public abstract IntegratedQueryWrapper collect(int limit);
+
     public abstract IntegratedQueryWrapper writeAsTextFile(String path, String deliminator);
 
     public abstract IntegratedQueryWrapper writeAsJsonFile(String path);
 
     public abstract void createTempTable(String tableName);
+
+    protected void getReturnNll() {
+        composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE,
+                "return null;\n");
+    }
 
 }

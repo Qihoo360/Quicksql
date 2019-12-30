@@ -17,15 +17,15 @@
 package org.apache.calcite.test;
 
 import org.apache.calcite.avatica.util.DateTimeUtils;
-import org.apache.calcite.jdbc.JavaTypeFactoryImpl;
-import org.apache.calcite.rel.type.RelDataType;
-import org.apache.calcite.rel.type.RelDataTypeFactory;
-import org.apache.calcite.rel.type.RelDataTypeSystem;
-import org.apache.calcite.sql.SqlLiteral;
-import org.apache.calcite.sql.dialect.AnsiSqlDialect;
-import org.apache.calcite.sql.parser.SqlParserPos;
-import org.apache.calcite.sql.type.BasicSqlType;
-import org.apache.calcite.sql.type.SqlTypeName;
+import com.qihoo.qsql.org.apache.calcite.jdbc.JavaTypeFactoryImpl;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataType;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeFactory;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeSystem;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlLiteral;
+import com.qihoo.qsql.org.apache.calcite.sql.dialect.AnsiSqlDialect;
+import com.qihoo.qsql.org.apache.calcite.sql.parser.SqlParserPos;
+import com.qihoo.qsql.org.apache.calcite.sql.type.BasicSqlType;
+import com.qihoo.qsql.org.apache.calcite.sql.type.SqlTypeName;
 
 import com.google.common.collect.ImmutableList;
 

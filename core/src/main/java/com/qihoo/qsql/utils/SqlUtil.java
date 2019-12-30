@@ -5,7 +5,7 @@ import com.qihoo.qsql.metadata.MetadataPostman;
 import com.qihoo.qsql.plan.QueryTables;
 import com.qihoo.qsql.plan.TableNameCollector;
 import java.util.List;
-import org.apache.calcite.sql.parser.SqlParseException;
+import com.qihoo.qsql.org.apache.calcite.sql.parser.SqlParseException;
 
 /**
  * Sql related utils.

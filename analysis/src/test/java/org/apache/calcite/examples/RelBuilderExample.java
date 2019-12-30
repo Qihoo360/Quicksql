@@ -16,16 +16,16 @@
  */
 package org.apache.calcite.examples;
 
-import org.apache.calcite.plan.RelOptUtil;
-import org.apache.calcite.rel.RelNode;
-import org.apache.calcite.rel.core.JoinRelType;
-import org.apache.calcite.sql.fun.SqlStdOperatorTable;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptUtil;
+import com.qihoo.qsql.org.apache.calcite.rel.RelNode;
+import com.qihoo.qsql.org.apache.calcite.rel.core.JoinRelType;
+import com.qihoo.qsql.org.apache.calcite.sql.fun.SqlStdOperatorTable;
 import org.apache.calcite.test.RelBuilderTest;
-import org.apache.calcite.tools.FrameworkConfig;
-import org.apache.calcite.tools.RelBuilder;
+import com.qihoo.qsql.org.apache.calcite.tools.FrameworkConfig;
+import com.qihoo.qsql.org.apache.calcite.tools.RelBuilder;
 
 /**
- * Example that uses {@link org.apache.calcite.tools.RelBuilder}
+ * Example that uses {@link com.qihoo.qsql.org.apache.calcite.tools.RelBuilder}
  * to create various relational expressions.
  */
 public class RelBuilderExample {

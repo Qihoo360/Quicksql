@@ -16,7 +16,7 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.plan.RelOptCost;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptCost;
 
 /**
  * MockRelOptCost is a mock implementation of the {@link RelOptCost} interface.

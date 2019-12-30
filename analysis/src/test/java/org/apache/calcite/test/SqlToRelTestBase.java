@@ -16,54 +16,54 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.config.CalciteConnectionConfig;
-import org.apache.calcite.linq4j.tree.Expression;
-import org.apache.calcite.plan.Context;
-import org.apache.calcite.plan.Contexts;
-import org.apache.calcite.plan.RelOptCluster;
-import org.apache.calcite.plan.RelOptPlanner;
-import org.apache.calcite.plan.RelOptSchema;
-import org.apache.calcite.plan.RelOptSchemaWithSampling;
-import org.apache.calcite.plan.RelOptTable;
-import org.apache.calcite.plan.RelOptUtil;
-import org.apache.calcite.prepare.Prepare;
-import org.apache.calcite.rel.RelCollation;
-import org.apache.calcite.rel.RelCollations;
-import org.apache.calcite.rel.RelDistribution;
-import org.apache.calcite.rel.RelDistributions;
-import org.apache.calcite.rel.RelFieldCollation;
-import org.apache.calcite.rel.RelNode;
-import org.apache.calcite.rel.RelReferentialConstraint;
-import org.apache.calcite.rel.RelRoot;
-import org.apache.calcite.rel.core.RelFactories;
-import org.apache.calcite.rel.logical.LogicalTableScan;
-import org.apache.calcite.rel.type.RelDataType;
-import org.apache.calcite.rel.type.RelDataTypeFactory;
-import org.apache.calcite.rel.type.RelDataTypeField;
-import org.apache.calcite.rel.type.RelDataTypeSystem;
-import org.apache.calcite.rex.RexBuilder;
-import org.apache.calcite.schema.ColumnStrategy;
-import org.apache.calcite.sql.SqlNode;
-import org.apache.calcite.sql.SqlOperatorTable;
-import org.apache.calcite.sql.fun.SqlStdOperatorTable;
-import org.apache.calcite.sql.parser.SqlParser;
-import org.apache.calcite.sql.test.SqlTestFactory;
-import org.apache.calcite.sql.type.SqlTypeFactoryImpl;
-import org.apache.calcite.sql.validate.SqlConformance;
-import org.apache.calcite.sql.validate.SqlConformanceEnum;
-import org.apache.calcite.sql.validate.SqlMonotonicity;
-import org.apache.calcite.sql.validate.SqlValidator;
-import org.apache.calcite.sql.validate.SqlValidatorCatalogReader;
-import org.apache.calcite.sql.validate.SqlValidatorImpl;
-import org.apache.calcite.sql.validate.SqlValidatorTable;
-import org.apache.calcite.sql2rel.RelFieldTrimmer;
-import org.apache.calcite.sql2rel.SqlToRelConverter;
-import org.apache.calcite.sql2rel.StandardConvertletTable;
+import com.qihoo.qsql.org.apache.calcite.config.CalciteConnectionConfig;
+import com.qihoo.qsql.org.apache.calcite.linq4j.tree.Expression;
+import com.qihoo.qsql.org.apache.calcite.plan.Context;
+import com.qihoo.qsql.org.apache.calcite.plan.Contexts;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptCluster;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptPlanner;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptSchema;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptSchemaWithSampling;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptTable;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptUtil;
+import com.qihoo.qsql.org.apache.calcite.prepare.Prepare;
+import com.qihoo.qsql.org.apache.calcite.rel.RelCollation;
+import com.qihoo.qsql.org.apache.calcite.rel.RelCollations;
+import com.qihoo.qsql.org.apache.calcite.rel.RelDistribution;
+import com.qihoo.qsql.org.apache.calcite.rel.RelDistributions;
+import com.qihoo.qsql.org.apache.calcite.rel.RelFieldCollation;
+import com.qihoo.qsql.org.apache.calcite.rel.RelNode;
+import com.qihoo.qsql.org.apache.calcite.rel.RelReferentialConstraint;
+import com.qihoo.qsql.org.apache.calcite.rel.RelRoot;
+import com.qihoo.qsql.org.apache.calcite.rel.core.RelFactories;
+import com.qihoo.qsql.org.apache.calcite.rel.logical.LogicalTableScan;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataType;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeFactory;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeField;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeSystem;
+import com.qihoo.qsql.org.apache.calcite.rex.RexBuilder;
+import com.qihoo.qsql.org.apache.calcite.schema.ColumnStrategy;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlNode;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlOperatorTable;
+import com.qihoo.qsql.org.apache.calcite.sql.fun.SqlStdOperatorTable;
+import com.qihoo.qsql.org.apache.calcite.sql.parser.SqlParser;
+import com.qihoo.qsql.org.apache.calcite.sql.test.SqlTestFactory;
+import com.qihoo.qsql.org.apache.calcite.sql.type.SqlTypeFactoryImpl;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlConformance;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlConformanceEnum;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlMonotonicity;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlValidator;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlValidatorCatalogReader;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlValidatorImpl;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlValidatorTable;
+import com.qihoo.qsql.org.apache.calcite.sql2rel.RelFieldTrimmer;
+import com.qihoo.qsql.org.apache.calcite.sql2rel.SqlToRelConverter;
+import com.qihoo.qsql.org.apache.calcite.sql2rel.StandardConvertletTable;
 import org.apache.calcite.test.catalog.MockCatalogReader;
 import org.apache.calcite.test.catalog.MockCatalogReaderDynamic;
 import org.apache.calcite.test.catalog.MockCatalogReaderSimple;
-import org.apache.calcite.tools.RelBuilder;
-import org.apache.calcite.util.ImmutableBitSet;
+import com.qihoo.qsql.org.apache.calcite.tools.RelBuilder;
+import com.qihoo.qsql.org.apache.calcite.util.ImmutableBitSet;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
@@ -173,7 +173,7 @@ public abstract class SqlToRelTestBase {
 
     /**
      * Factory method for a
-     * {@link org.apache.calcite.prepare.Prepare.CatalogReader}.
+     * {@link com.qihoo.qsql.org.apache.calcite.prepare.Prepare.CatalogReader}.
      */
     Prepare.CatalogReader createCatalogReader(
         RelDataTypeFactory typeFactory);
@@ -236,7 +236,7 @@ public abstract class SqlToRelTestBase {
 
     /** Returns a tester that optionally expands sub-queries.
      * If {@code expand} is false, the plan contains a
-     * {@link org.apache.calcite.rex.RexSubQuery} for each sub-query.
+     * {@link com.qihoo.qsql.org.apache.calcite.rex.RexSubQuery} for each sub-query.
      *
      * @see Prepare#THREAD_EXPAND */
     Tester withExpand(boolean expand);

@@ -16,9 +16,9 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.sql.test.SqlTestFactory;
-import org.apache.calcite.sql.test.SqlTester;
-import org.apache.calcite.sql.test.SqlValidatorTester;
+import com.qihoo.qsql.org.apache.calcite.sql.test.SqlTestFactory;
+import com.qihoo.qsql.org.apache.calcite.sql.test.SqlTester;
+import com.qihoo.qsql.org.apache.calcite.sql.test.SqlValidatorTester;
 import org.apache.calcite.test.catalog.MockCatalogReaderDynamic;
 
 import org.junit.BeforeClass;

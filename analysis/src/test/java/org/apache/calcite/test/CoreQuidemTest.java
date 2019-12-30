@@ -16,8 +16,8 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.prepare.Prepare;
-import org.apache.calcite.util.TryThreadLocal;
+import com.qihoo.qsql.org.apache.calcite.prepare.Prepare;
+import com.qihoo.qsql.org.apache.calcite.util.TryThreadLocal;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;

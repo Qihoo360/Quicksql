@@ -16,9 +16,9 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.util.Bug;
-import org.apache.calcite.util.Pair;
-import org.apache.calcite.util.Util;
+import com.qihoo.qsql.org.apache.calcite.util.Bug;
+import com.qihoo.qsql.org.apache.calcite.util.Pair;
+import com.qihoo.qsql.org.apache.calcite.util.Util;
 
 import org.hamcrest.Matcher;
 import org.junit.Test;

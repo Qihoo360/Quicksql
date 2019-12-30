@@ -16,7 +16,7 @@
  */
 package org.apache.calcite.test.concurrent;
 
-import org.apache.calcite.util.Unsafe;
+import com.qihoo.qsql.org.apache.calcite.util.Unsafe;
 
 import java.io.PrintStream;
 import java.sql.Connection;

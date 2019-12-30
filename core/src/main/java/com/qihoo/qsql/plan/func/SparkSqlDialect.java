@@ -1,13 +1,13 @@
 package com.qihoo.qsql.plan.func;
 
-import org.apache.calcite.config.NullCollation;
-import org.apache.calcite.sql.SqlCall;
-import org.apache.calcite.sql.SqlDialect;
-import org.apache.calcite.sql.SqlKind;
-import org.apache.calcite.sql.SqlNode;
-import org.apache.calcite.sql.SqlUtil;
-import org.apache.calcite.sql.SqlWriter;
-import org.apache.calcite.sql.fun.SqlStdOperatorTable;
+import com.qihoo.qsql.org.apache.calcite.config.NullCollation;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlCall;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlDialect;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlKind;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlNode;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlUtil;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlWriter;
+import com.qihoo.qsql.org.apache.calcite.sql.fun.SqlStdOperatorTable;
 
 public class SparkSqlDialect extends SqlDialect {
 

@@ -16,38 +16,38 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.DataContext;
+import com.qihoo.qsql.org.apache.calcite.DataContext;
 import org.apache.calcite.avatica.util.TimeUnitRange;
-import org.apache.calcite.jdbc.JavaTypeFactoryImpl;
-import org.apache.calcite.plan.RelOptCluster;
-import org.apache.calcite.plan.RelOptPredicateList;
-import org.apache.calcite.plan.RelOptSchema;
-import org.apache.calcite.plan.RexImplicationChecker;
-import org.apache.calcite.rel.type.RelDataType;
-import org.apache.calcite.rel.type.RelDataTypeFactory;
-import org.apache.calcite.rel.type.RelDataTypeSystem;
-import org.apache.calcite.rex.RexBuilder;
-import org.apache.calcite.rex.RexCall;
-import org.apache.calcite.rex.RexExecutorImpl;
-import org.apache.calcite.rex.RexInputRef;
-import org.apache.calcite.rex.RexLiteral;
-import org.apache.calcite.rex.RexNode;
-import org.apache.calcite.rex.RexSimplify;
-import org.apache.calcite.rex.RexUnknownAs;
-import org.apache.calcite.rex.RexUtil;
-import org.apache.calcite.schema.SchemaPlus;
-import org.apache.calcite.schema.Schemas;
-import org.apache.calcite.server.CalciteServerStatement;
-import org.apache.calcite.sql.SqlCollation;
-import org.apache.calcite.sql.SqlKind;
-import org.apache.calcite.sql.fun.SqlStdOperatorTable;
-import org.apache.calcite.tools.Frameworks;
-import org.apache.calcite.util.DateString;
-import org.apache.calcite.util.Holder;
-import org.apache.calcite.util.NlsString;
-import org.apache.calcite.util.TimeString;
-import org.apache.calcite.util.TimestampString;
-import org.apache.calcite.util.Util;
+import com.qihoo.qsql.org.apache.calcite.jdbc.JavaTypeFactoryImpl;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptCluster;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptPredicateList;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptSchema;
+import com.qihoo.qsql.org.apache.calcite.plan.RexImplicationChecker;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataType;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeFactory;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeSystem;
+import com.qihoo.qsql.org.apache.calcite.rex.RexBuilder;
+import com.qihoo.qsql.org.apache.calcite.rex.RexCall;
+import com.qihoo.qsql.org.apache.calcite.rex.RexExecutorImpl;
+import com.qihoo.qsql.org.apache.calcite.rex.RexInputRef;
+import com.qihoo.qsql.org.apache.calcite.rex.RexLiteral;
+import com.qihoo.qsql.org.apache.calcite.rex.RexNode;
+import com.qihoo.qsql.org.apache.calcite.rex.RexSimplify;
+import com.qihoo.qsql.org.apache.calcite.rex.RexUnknownAs;
+import com.qihoo.qsql.org.apache.calcite.rex.RexUtil;
+import com.qihoo.qsql.org.apache.calcite.schema.SchemaPlus;
+import com.qihoo.qsql.org.apache.calcite.schema.Schemas;
+import com.qihoo.qsql.org.apache.calcite.server.CalciteServerStatement;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlCollation;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlKind;
+import com.qihoo.qsql.org.apache.calcite.sql.fun.SqlStdOperatorTable;
+import com.qihoo.qsql.org.apache.calcite.tools.Frameworks;
+import com.qihoo.qsql.org.apache.calcite.util.DateString;
+import com.qihoo.qsql.org.apache.calcite.util.Holder;
+import com.qihoo.qsql.org.apache.calcite.util.NlsString;
+import com.qihoo.qsql.org.apache.calcite.util.TimeString;
+import com.qihoo.qsql.org.apache.calcite.util.TimestampString;
+import com.qihoo.qsql.org.apache.calcite.util.Util;
 
 import com.google.common.collect.ImmutableList;
 
@@ -346,7 +346,7 @@ public class RexImplicationCheckerTest {
    * <a href="https://issues.apache.org/jira/browse/CALCITE-2041">[CALCITE-2041]
    * When simplifying a nullable expression, allow the result to change type to
    * NOT NULL</a> and
-   * {@link org.apache.calcite.rex.RexUtil.ExprSimplifier#matchNullability}. */
+   * {@link com.qihoo.qsql.org.apache.calcite.rex.RexUtil.ExprSimplifier#matchNullability}. */
   @Test public void testSimplifyCastMatchNullability() {
     final Fixture f = new Fixture();
     final RexUtil.ExprSimplifier defaultSimplifier =

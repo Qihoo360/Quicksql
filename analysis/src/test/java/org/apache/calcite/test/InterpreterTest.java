@@ -16,17 +16,17 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.DataContext;
-import org.apache.calcite.adapter.java.JavaTypeFactory;
-import org.apache.calcite.interpreter.Interpreter;
-import org.apache.calcite.linq4j.QueryProvider;
-import org.apache.calcite.rel.RelNode;
-import org.apache.calcite.schema.SchemaPlus;
-import org.apache.calcite.sql.SqlNode;
-import org.apache.calcite.sql.parser.SqlParser;
-import org.apache.calcite.tools.FrameworkConfig;
-import org.apache.calcite.tools.Frameworks;
-import org.apache.calcite.tools.Planner;
+import com.qihoo.qsql.org.apache.calcite.DataContext;
+import com.qihoo.qsql.org.apache.calcite.adapter.java.JavaTypeFactory;
+import com.qihoo.qsql.org.apache.calcite.interpreter.Interpreter;
+import com.qihoo.qsql.org.apache.calcite.linq4j.QueryProvider;
+import com.qihoo.qsql.org.apache.calcite.rel.RelNode;
+import com.qihoo.qsql.org.apache.calcite.schema.SchemaPlus;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlNode;
+import com.qihoo.qsql.org.apache.calcite.sql.parser.SqlParser;
+import com.qihoo.qsql.org.apache.calcite.tools.FrameworkConfig;
+import com.qihoo.qsql.org.apache.calcite.tools.Frameworks;
+import com.qihoo.qsql.org.apache.calcite.tools.Planner;
 
 import org.junit.After;
 import org.junit.Before;
@@ -41,7 +41,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 /**
- * Unit tests for {@link org.apache.calcite.interpreter.Interpreter}.
+ * Unit tests for {@link com.qihoo.qsql.org.apache.calcite.interpreter.Interpreter}.
  */
 public class InterpreterTest {
   private SchemaPlus rootSchema;
@@ -158,7 +158,7 @@ public class InterpreterTest {
   }
 
   /** Tests executing a plan on a
-   * {@link org.apache.calcite.schema.ScannableTable} using an interpreter. */
+   * {@link com.qihoo.qsql.org.apache.calcite.schema.ScannableTable} using an interpreter. */
   @Test public void testInterpretScannableTable() throws Exception {
     rootSchema.add("beatles", new ScannableTableTest.BeatlesTable());
     SqlNode parse =
@@ -248,7 +248,7 @@ public class InterpreterTest {
   }
 
   /** Tests executing a plan on a single-column
-   * {@link org.apache.calcite.schema.ScannableTable} using an interpreter. */
+   * {@link com.qihoo.qsql.org.apache.calcite.schema.ScannableTable} using an interpreter. */
   @Test public void testInterpretSimpleScannableTable() throws Exception {
     rootSchema.add("simple", new ScannableTableTest.SimpleTable());
     SqlNode parse =

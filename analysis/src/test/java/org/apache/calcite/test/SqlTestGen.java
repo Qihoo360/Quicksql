@@ -16,13 +16,13 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.sql.SqlCollation;
-import org.apache.calcite.sql.test.SqlTestFactory;
-import org.apache.calcite.sql.test.SqlTester;
-import org.apache.calcite.sql.test.SqlValidatorTester;
-import org.apache.calcite.sql.validate.SqlValidator;
-import org.apache.calcite.util.BarfingInvocationHandler;
-import org.apache.calcite.util.Util;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlCollation;
+import com.qihoo.qsql.org.apache.calcite.sql.test.SqlTestFactory;
+import com.qihoo.qsql.org.apache.calcite.sql.test.SqlTester;
+import com.qihoo.qsql.org.apache.calcite.sql.test.SqlValidatorTester;
+import com.qihoo.qsql.org.apache.calcite.sql.validate.SqlValidator;
+import com.qihoo.qsql.org.apache.calcite.util.BarfingInvocationHandler;
+import com.qihoo.qsql.org.apache.calcite.util.Util;
 
 import java.io.File;
 import java.io.IOException;
@@ -166,7 +166,7 @@ public class SqlTestGen {
 
     /**
      * Handles the methods in
-     * {@link org.apache.calcite.sql.validate.SqlValidator} that are called
+     * {@link com.qihoo.qsql.org.apache.calcite.sql.validate.SqlValidator} that are called
      * from validator tests.
      */
     public static class MyInvocationHandler extends BarfingInvocationHandler {

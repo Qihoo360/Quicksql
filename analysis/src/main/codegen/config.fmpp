@@ -35,15 +35,15 @@
 data: {
   parser: {
     # Generated parser implementation package and class name.
-    package: "org.apache.calcite.sql.parser.impl",
+    package: "com.qihoo.qsql.org.apache.calcite.sql.parser.impl",
     class: "SqlParserImpl",
 
     # List of additional classes and packages to import.
-    # Example. "org.apache.calcite.sql.*", "java.util.List".
+    # Example. "com.qihoo.qsql.org.apache.calcite.sql.*", "java.util.List".
     imports: [
         "java.util.*",
-        "org.apache.calcite.util.*",
-        "org.apache.calcite.sql.ext.*"
+        "com.qihoo.qsql.org.apache.calcite.util.*",
+        "com.qihoo.qsql.org.apache.calcite.sql.ext.*"
     ]
 
     # List of new keywords. Example: "DATABASES", "TABLES". If the keyword is not a reserved

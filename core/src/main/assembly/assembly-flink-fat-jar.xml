@@ -1,0 +1,44 @@
+<assembly>
+    <!-- TODO: a jar format would be better -->
+    <id>fat</id>
+    <formats>
+        <format>jar</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>lib</outputDirectory>
+            <scope>runtime</scope>
+            <useProjectArtifact>true</useProjectArtifact>
+            <unpack>true</unpack>
+            <excludes>
+                <exclude>com*.*:*</exclude>
+                <exclude>org*.*:*</exclude>
+                <exclude>javax*.*:*</exclude>
+                <exclude>net*.*:*</exclude>
+                <exclude>commons*:*</exclude>
+                <exclude>dom*:*:jar</exclude>
+                <exclude>jline*:*:jar</exclude>
+                <exclude>joda*:*:jar</exclude>
+                <exclude>log4j*:*:jar</exclude>
+                <exclude>xml*:*:jar</exclude>
+            </excludes>
+        </dependencySet>
+
+        <dependencySet>
+            <!--<outputDirectory>lib</outputDirectory>-->
+            <useProjectArtifact>true</useProjectArtifact>
+            <unpack>true</unpack>
+            <scope>runtime</scope>
+            <includes>
+                <include>mysql*:*:jar</include>
+                <include>oracle*:*:jar</include>
+                <include>com.github.picadoh*:*:jar</include>
+                <include>com.qihoo.qsql*:qsql-core:jar</include>
+                <include>org.apache.hive*:*:jar</include>
+                <include>commons-logging*:*:jar</include>
+                <include>org.apache.httpcomponents*:*:jar</include>
+            </includes>
+        </dependencySet>
+    </dependencySets>
+</assembly>

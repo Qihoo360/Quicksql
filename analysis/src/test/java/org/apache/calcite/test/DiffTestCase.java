@@ -16,8 +16,8 @@
  */
 package org.apache.calcite.test;
 
-import org.apache.calcite.util.ReflectUtil;
-import org.apache.calcite.util.Util;
+import com.qihoo.qsql.org.apache.calcite.util.ReflectUtil;
+import com.qihoo.qsql.org.apache.calcite.util.Util;
 
 import org.incava.diff.Diff;
 import org.incava.diff.Difference;

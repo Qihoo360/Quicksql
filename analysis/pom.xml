@@ -43,15 +43,15 @@ limitations under the License.
             <artifactId>avatica-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.calcite</groupId>
-            <artifactId>calcite-linq4j</artifactId>
+            <groupId>com.qihoo.qsql</groupId>
+            <artifactId>qsql-calcite-linq4j</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.calcite.avatica</groupId>
             <artifactId>avatica-server</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-dbcp2</artifactId>
@@ -290,7 +290,7 @@ limitations under the License.
                             <goal>generate-sources</goal>
                         </goals>
                         <configuration>
-                            <packageName>org.apache.calcite.runtime
+                            <packageName>com.qihoo.qsql.org.apache.calcite.runtime
                             </packageName>
                         </configuration>
                     </execution>
