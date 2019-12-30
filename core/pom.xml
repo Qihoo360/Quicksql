@@ -206,6 +206,10 @@ limitations under the License.
                     <artifactId>asm-commons</artifactId>
                     <groupId>asm</groupId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>jetty-all</artifactId>
+                    <groupId>org.eclipse.jetty.aggregate</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
