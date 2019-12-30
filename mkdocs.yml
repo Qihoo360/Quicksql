@@ -50,7 +50,7 @@ nav:
   - Home: 'index.md'
   - User Guide:
       - 'Getting Started': 'user-guide/getting-started.md'
-#      - 'QuickSQL开发': 'xxx.md'
+      #      - 'QuickSQL开发': 'xxx.md'
       - 'JDBC Doc': 'user-guide/jdbc.md'
       - 'Build Doc': 'user-guide/build.md'
       - 'API Doc': 'user-guide/api.md'
@@ -63,8 +63,8 @@ nav:
   - Community:
       - Channel: 'community/channel.md'
       - Contribution:
-        - Code: 'community/contribution-code.md'
-        - Docs: 'community/contribution-docs.md'
+          - Code: 'community/contribution-code.md'
+          - Docs: 'community/contribution-docs.md'
   - About:
       - 'FAQ': 'about/faq.md'
       - 'License': 'about/license.md'
