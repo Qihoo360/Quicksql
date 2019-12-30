@@ -1,7 +1,4 @@
 site_name: 'Quick SQL'
-site_description: 'Documents'
-site_author: 'quicksql'
-site_favicon: 'favicon.ico'
 repo_url: 'https://github.com/qihoo360/Quicksql/'
 copyright: '© 2019 Qihoo360 Quick SQL'
 
