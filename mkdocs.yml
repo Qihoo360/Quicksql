@@ -42,9 +42,6 @@ markdown_extensions:
       guess_lang: false
   - toc:
       permalink: true
-  - pymdownx.emoji:
-      emoji_index: !!python/name:pymdownx.emoji.twemoji
-      emoji_generator: !!python/name:pymdownx.emoji.to_svg
 
 nav:
   - Home: 'index.md'
