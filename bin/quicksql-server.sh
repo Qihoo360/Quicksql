@@ -16,31 +16,32 @@ function start() {
         #import quicksql.sh related environment variables
         . "${QSQL_HOME}/bin/commons.sh"
 
+
         if [[ -n "$SPARK_HOME" ]] && [[ -x "$SPARK_HOME/bin/spark-submit" ]];  then
-          SPARK_RUNNER="${SPARK_HOME}/bin/spark-submit"
+            SPARK_RUNNER="${SPARK_HOME}/bin/spark-submit"
         else
-           if [ `command -v spark-submit` ]; then
-               SPARK_RUNNER="spark-submit"
-           else
-               echo "ERROR: SPARK_HOME is not set" >&2
-               exit 1
-           fi
+             if [ `command -v spark-submit` ]; then
+                 SPARK_RUNNER="spark-submit"
+             else
+                 echo "ERROR: SPARK_HOME is not set" >&2
+                 exit 1
+             fi
         fi
 
         if [[ "$SPARK_RUNNER" ]]; then
-           version=$("$SPARK_RUNNER" --version 2>&1 | awk -F 'version' '/version/ {print $2}')
-           IFS=.   read major minor extra <<< "$version";
-           if (( major >= 2));
-           then
-               if (( minor < 2));
-               then
-                   echo "ERROR: Required spark version >= 2.2"
-                   exit 1
-               fi
-           else
-               echo "ERROR: Required spark version >= 2.2"
-               exit 1
-           fi
+             version=$("$SPARK_RUNNER" --version 2>&1 | awk -F 'version' '/version/ {print $2}')
+             IFS=.   read major minor extra <<< "$version";
+             if (( major >= 2));
+             then
+                 if (( minor < 2));
+                 then
+                     echo "ERROR: Required spark version >= 2.2"
+                     exit 1
+                 fi
+             else
+                 echo "ERROR: Required spark version >= 2.2"
+                 exit 1
+             fi
         fi
 
         QSQL_JARS=${QSQL_HOME}/lib/sqlite-jdbc-3.20.0.jar,${QSQL_HOME}/lib/qsql-meta-0.6.jar,${QSQL_HOME}/lib/jackson-dataformat-cbor-2.8.10.jar,${QSQL_HOME}/lib/jackson-dataformat-smile-2.8.10.jar,${QSQL_HOME}/lib/qsql-client-0.6.jar,${QSQL_HOME}/lib/jetty-http-9.2.19.v20160908.jar,${QSQL_HOME}/lib/jetty-io-9.2.19.v20160908.jar,${QSQL_HOME}/lib/jetty-security-9.2.19.v20160908.jar,${QSQL_HOME}/lib/jetty-server-9.2.19.v20160908.jar,${QSQL_HOME}/lib/jetty-util-9.2.19.v20160908.jar,${QSQL_HOME}/lib/commons-cli-1.3.1.jar,${QSQL_HOME}/lib/avatica-core-1.12.0.jar,${QSQL_HOME}/lib/avatica-server-1.12.0.jar,${QSQL_HOME}/lib/avatica-metrics-1.12.0.jar,${QSQL_HOME}/lib/protobuf-java-3.3.0.jar,${QSQL_HOME}/lib/jackson-core-2.6.5.jar,${QSQL_HOME}/lib/jackson-annotations-2.6.5.jar,${QSQL_HOME}/lib/jackson-databind-2.6.5.jar,${QSQL_HOME}/lib/httpclient-4.5.6.jar,${QSQL_HOME}/lib/httpcore-4.4.10.jar,${QSQL_HOME}/lib/esri-geometry-api-2.2.0.jar,${QSQL_HOME}/lib/guava-19.0.jar,${QSQL_HOME}/lib/calcite-linq4j-1.17.0.jar,${QSQL_HOME}/lib/derby-10.10.2.0.jar,${QSQL_HOME}/lib/jackson-dataformat-yaml-2.6.5.jar,${QSQL_HOME}/lib/imc-0.2.jar,${QSQL_HOME}/lib/qsql-core-0.6.jar,${QSQL_HOME}/lib/qsql-calcite-analysis-0.6.jar,${QSQL_HOME}/lib/qsql-calcite-elasticsearch-0.6.jar,${QSQL_HOME}/lib/elasticsearch-rest-client-6.2.4.jar,${QSQL_HOME}/lib/httpasyncclient-4.1.2.jar,${QSQL_HOME}/lib/httpclient-4.5.6.jar,${QSQL_HOME}/lib/httpcore-4.4.10.jar,${QSQL_HOME}/lib/httpcore-nio-4.4.5.jar,${QSQL_HOME}/lib/mysql-connector-java-5.1.20.jar,${QSQL_HOME}/lib/elasticsearch-spark-20_2.11-6.2.4.jar
@@ -57,9 +58,12 @@ function start() {
         fi
         STDOUT_FILE=$LOGS_DIR/stdout.log
 
-        echo ${STDOUT_FILE}
+        PORT=""
+        if [ -n "$1" ]; then
+            PORT="--port $1"
+        fi
 
-        nohup ${SPARK_RUNNER} --jars "${QSQL_LAUNCH_CLASSPATH}" --master local[1] --executor-memory 1G --driver-memory 3G --num-executors 20 --conf spark.driver.userClassPathFirst=true --class  ${JAVA_MAIN_CLASS} ${QSQL_SERVER_JAR}  > $STDOUT_FILE 2>&1 &
+        nohup ${SPARK_RUNNER} --jars "${QSQL_LAUNCH_CLASSPATH}" --master "${2}" --executor-memory 1G --driver-memory 3G --num-executors 20 --conf spark.driver.userClassPathFirst=true --class  ${JAVA_MAIN_CLASS}  ${QSQL_SERVER_JAR} --port "${3}"  > $STDOUT_FILE 2>&1 &
 
         COUNT=0
         while [ $COUNT -lt 1 ]; do
@@ -116,16 +120,50 @@ function find_app_process() {
         fi
 }
 
+runner="spark"
+master="local[1]"
+port="5888"
+
 case "${1}" in
     start)
-        start
+        shift
+        while getopts :m:p:r: OPTION;
+        do
+            case $OPTION in
+                m) master=$OPTARG
+                ;;
+                p) port=$OPTARG
+                ;;
+                r) runner=$OPTARG
+                ;;
+                *)echo "no option -$OPTARG"
+                exit 1
+                ;;
+            esac
+        done
+        start ${runner} ${master} ${port}
         ;;
     stop)
         stop
         ;;
     restart)
         stop
-        start
+        shift
+            while getopts :m:p:r: OPTION;
+            do
+                case $OPTION in
+                    m) master=$OPTARG
+                    ;;
+                    p) port=$OPTARG
+                    ;;
+                    r) runner=$OPTARG
+                    ;;
+                    *)echo "no option -$OPTARG"
+                    exit 1
+                    ;;
+                esac
+            done
+        start ${runner} ${master} ${port}
         ;;
     status)
         find_app_process
