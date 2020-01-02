@@ -100,7 +100,7 @@
         <mockito.version>2.21.0</mockito.version>
         <mongo-java-driver.version>3.5.0</mongo-java-driver.version>
         <mysql-driver.version>5.1.20</mysql-driver.version>
-        <hive-driver.version>1.2.1</hive-driver.version>
+        <hive-driver.version>3.1.2000.7.0.3.0-79</hive-driver.version>
         <natty.version>0.13</natty.version>
         <opencsv.version>2.3</opencsv.version>
         <owasp-dependency-check.version>3.3.1</owasp-dependency-check.version>
