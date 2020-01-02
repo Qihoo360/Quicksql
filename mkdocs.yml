@@ -50,10 +50,6 @@ nav:
       - 'Getting Started': 'reference/getting-started.md'
       - 'SQL Grammar': 'reference/sql-grammar.md'
       #      - 'QuickSQL开发': 'xxx.md'
-      - 'JDBC Doc': 'reference/jdbc.md'
-      - 'Build Doc': 'reference/build.md'
-      - 'API Doc': 'reference/api.md'
-      - 'CLI Doc':  'reference/cli.md'
 
   - Use Cases:
       - 'demo': 'use-case/demo.md'
