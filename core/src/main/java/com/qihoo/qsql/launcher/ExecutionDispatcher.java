@@ -236,7 +236,7 @@ public class ExecutionDispatcher {
                 + "              / __ \\__  __(_)____/ /__/ ___// __ \\  / / \n"
                 + "             / / / / / / / / ___/ //_/\\__ \\/ / / / / /  \n"
                 + "            / /_/ / /_/ / / /__/ ,<  ___/ / /_/ / / /___\n"
-                + "Welcome to  \\___\\_\\__,_/_/\\___/_/|_|/____/\\___\\_\\/_____/  version 0.6.";
+                + "Welcome to  \\___\\_\\__,_/_/\\___/_/|_|/____/\\___\\_\\/_____/  version 0.7.0.";
         String slogan = "   \\  Process data placed anywhere with the most flexible SQL  /";
         System.out.println(welcome);
         System.out.println(slogan);

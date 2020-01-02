@@ -20,7 +20,7 @@ limitations under the License.
   <parent>
     <groupId>com.qihoo.qsql</groupId>
     <artifactId>qsql</artifactId>
-    <version>0.6</version>
+    <version>0.7.0</version>
   </parent>
 
   <artifactId>qsql-calcite-linq4j</artifactId>
