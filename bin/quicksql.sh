@@ -164,7 +164,7 @@ if [ ! -z "${HELP_ENABLE}" ] ; then
 fi
 
 function buildFatJar(){
-  JAR_FILE="${QSQL_HOME}/lib/flink/qsql-core-0.6.jar"
+  JAR_FILE="${QSQL_HOME}/lib/flink/qsql-core-"${PROJECT_VERSION}".jar"
 
  if [ ! -f "${JAR_FILE}" ]; then
     echo "INFO: Start build flink fat jar...";
@@ -174,31 +174,32 @@ function buildFatJar(){
     if [ -z "${HADOOP_HOME}" ]
      then
        echo "WARN: HADOOP_HOME is not set";
+       \cp -f -r "${QSQL_HOME}"/lib/hadoop-common*.jar  "${QSQL_HOME}"/lib/flink/tmp
     else
-       cp "`find ${HADOOP_HOME}/ -name "hadoop-common*.jar" |head -n 1`"  "${QSQL_HOME}"/lib/flink/tmp
+       \cp -f -r "`find ${HADOOP_HOME}/ -name "hadoop-common*.jar" |head -n 1`"  "${QSQL_HOME}"/lib/flink/tmp
     fi
 
     cd "${QSQL_HOME}"/lib/flink/tmp
 
-    for jarFile in "$(ls *.jar | grep -v "qsql-core-0.6-fat.jar")"; do
+    for jarFile in "$(ls *.jar | grep -v "qsql-core-${PROJECT_VERSION}-fat.jar")"; do
         jar -xf "${jarFile}"
     done
     rm -rf META-INF
 
-    jar -xf qsql-core-0.6-fat.jar
+    jar -xf qsql-core-"${PROJECT_VERSION}"-fat.jar
     if [ $? -ne 0 ]; then
-       echo "ERROR: File qsql-core-0.6-fat.jar is not exist.";
+       echo "ERROR: File qsql-core-"${PROJECT_VERSION}"-fat.jar is not exist.";
        exit 1
     fi
 
-    ls |grep -v jar$ | xargs jar cfM qsql-core-0.6.jar
+    ls |grep -v jar$ | xargs jar cfM qsql-core-"${PROJECT_VERSION}".jar
     if [ $? -ne 0 ]; then
-       echo "ERROR: Failed buid flink fat jar qsql-core-0.6.jar.";
+       echo "ERROR: Failed buid flink fat jar qsql-core-"${PROJECT_VERSION}".jar.";
        exit 1
     fi
 
-    mv qsql-core-0.6.jar "${QSQL_HOME}"/lib/flink
-    cd "${QSQL_HOME}"
+    mv qsql-core-"${PROJECT_VERSION}".jar "${QSQL_HOME}"/lib/flink
+    cd ../../
     rm -rf "${QSQL_HOME}"/lib/flink/tmp
     echo "INFO: End build flink fat jar.";
  fi
@@ -294,7 +295,7 @@ if [ "${QSQL_RUNNER}"X = "FLINKX" ] ; then
     fi
    fi
   buildFatJar
-  CONF=${CONF}" --jar_name=${QSQL_HOME}/lib/flink/qsql-core-0.6.jar "
+  CONF=${CONF}" --jar_name=${QSQL_HOME}/lib/flink/qsql-core-"${PROJECT_VERSION}".jar "
 
 elif [ "${QSQL_RUNNER}"X = "SPARKX" ] ; then
 
@@ -324,15 +325,15 @@ elif [ "${QSQL_RUNNER}"X = "SPARKX" ] ; then
            exit 1
        fi
    fi
-   CONF=${CONF}" --jar_name=${QSQL_HOME}/lib/qsql-core-0.6.jar "
+   CONF=${CONF}" --jar_name=${QSQL_HOME}/lib/qsql-core-"${PROJECT_VERSION}".jar "
 else
-   CONF=${CONF}" --jar_name=${QSQL_HOME}/lib/qsql-core-0.6.jar "
+   CONF=${CONF}" --jar_name=${QSQL_HOME}/lib/qsql-core-"${PROJECT_VERSION}".jar "
 fi
 
 CONF=${CONF}" --class_name=com.qihoo.quicksql.sh.cli.QSqlSubmit "
 CONF=${CONF}" --jar=${JARS} "
 
-QSQL_LAUNCH_CLASSPATH="${QSQL_HOME}/lib/qsql-core-0.6.jar"
+QSQL_LAUNCH_CLASSPATH="${QSQL_HOME}/lib/qsql-core-"${PROJECT_VERSION}".jar"
 QSQL_LAUNCH_CLASSPATH="${QSQL_LAUNCH_CLASSPATH}:${QSQL_JARS}"
 
 
