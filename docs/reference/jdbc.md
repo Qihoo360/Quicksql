@@ -1,4 +1,4 @@
-[English](./jdbc.md)|[中文](../zh/user-guide/jdbc.md)
+[English](./jdbc.md)|[中文](../zh/reference/jdbc.md)
 
 ## JDBC Connections
 

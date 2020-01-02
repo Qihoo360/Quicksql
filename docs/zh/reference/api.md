@@ -1,10 +1,10 @@
-[English](./api.md)|[中文](../zh/user-guide/api.md)
+[English](../../reference/api.md)|[中文](./api.md)
 
-## API Document
+## API文档
 
-### Overview 
+### 前言
 
-QSQL supports called API directly by other applications to execute queries. If you want to do this, import  QSQL dependency into your project first.
+QSQL支持在其他应用中通过API执行查询，如果你有类似场景，请在项目中导入QSQL依赖。
 
 ``` java
 <dependency>
@@ -14,11 +14,11 @@ QSQL supports called API directly by other applications to execute queries. If y
 </dependency>
 ```
 
-### Examples
+### 示例用法
 
-QSQL provides a simple API for users to query by SQL, users don't need to care about the storage which is defined in SQL from clause, only focus on data itself.
+QSQL为用户提供了很简洁的SQL查询API，用户不需要关心SQL中FROM子句对应的查询引擎类型，只需要关注数据本身即可完成查询。
 
-Example 1:  A sample without any configuration, only query and show results .
+示例 1:  一个不需要任何配置的简单查询，直接将结果打印在终端
 
 ```java
 //Create a dynamic SQL runner to execute SQL query.
@@ -31,7 +31,7 @@ runner.sql("SELECT age, stu_name, dep_name "
     .run();
 ```
 
-Example 2:  A little more custom configurations.
+示例 2:  其他自定义配置的查询，查询结果存储在本地
 
 ```java
 SqlRunner runner = SqlRunner.builder()
@@ -48,13 +48,13 @@ runner.sql("SELECT * FROM student GROUP BY age")
     .run();
 ```
 
-QSQL only supports these API currently, more API will be developed gradually.
+QSQL目前只支持以上API，后续随着功能迭代将开发更多可用的API。
 
-### Submit Job
+### 启动程序
 
-The following script templates are available when submitting API applications using spark-submit.
+使用spark-submit提交API应用时可使用以下脚本模板。
 
-``````shell
+``` shell
 #!/bin/bash
 
 export QSQL_HOME="$(cd "`dirname "$0"`"/..; pwd)"
@@ -73,6 +73,6 @@ do
     fi
 done
 
-/spark2.2/bin/spark-submit --class com.qihoo.qsql.CsvScanExample --conf "spark.driver.userClassPathFirst=true" --conf
-"spark.executor.extraClassPath=${QSQL_HOME}/lib/qsql-core-0.6.jar" --jars ${JARS} ${QSQL_HOME}/lib/qsql-core-0.6.jar
-``````
+/spark2.2/bin/spark-submit --class com.qihoo.qsql.CsvScanExample --conf "spark.driver.userClassPathFirst=true" --conf "spark.executor.extraClassPath=${QSQL_HOME}/lib/qsql-core-0.6.jar" --jars ${JARS} ${QSQL_HOME}/lib/qsql-core-0.6.jar
+
+```

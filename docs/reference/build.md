@@ -1,4 +1,4 @@
-[English](./build.md)|[中文](../zh/user-guide/build.md)
+[English](./build.md)|[中文](../zh/reference/build.md)
 
 ## Building Tutorial
 

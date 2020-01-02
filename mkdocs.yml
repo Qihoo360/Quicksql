@@ -42,23 +42,35 @@ markdown_extensions:
 
 nav:
   - Home: 'index.md'
-  - User Guide:
-      - 'Getting Started': 'user-guide/getting-started.md'
+  - Deployment:
+      - 'Deployment' : 'deployment/deployment.md'
+      - 'Docker': 'deployment/docker.md'
+
+  - Reference:
+      - 'Getting Started': 'reference/getting-started.md'
+      - 'SQL Grammar': 'reference/sql-grammar.md'
       #      - 'QuickSQL开发': 'xxx.md'
-      - 'JDBC Doc': 'user-guide/jdbc.md'
-      - 'Build Doc': 'user-guide/build.md'
-      - 'API Doc': 'user-guide/api.md'
-      - 'CLI Doc':  'user-guide/cli.md'
+      - 'JDBC Doc': 'reference/jdbc.md'
+      - 'Build Doc': 'reference/build.md'
+      - 'API Doc': 'reference/api.md'
+      - 'CLI Doc':  'reference/cli.md'
+
   - Use Cases:
       - 'demo': 'use-case/demo.md'
   #      - 'SQL交互式分析': '.md'
   #      - '结构化数据ETL': '.md'
   #      - '流批计算多维关联': '.md'
+
+  - Blog:
+      - '2019年': 'blog/2019.md'
+      - '2020年': 'blog/2020.md'
+
   - Community:
       - Channel: 'community/channel.md'
       - Contribution:
           - Code: 'community/contribution-code.md'
           - Docs: 'community/contribution-docs.md'
+
   - About:
       - 'FAQ': 'about/faq.md'
       - 'License': 'about/license.md'

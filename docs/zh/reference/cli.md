@@ -1,4 +1,4 @@
-[English](../../user-guide/cli.md)|[中文](./cli.md)
+[English](../../reference/cli.md)|[中文](./cli.md)
 
 ## 命令行
 

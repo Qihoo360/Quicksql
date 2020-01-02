@@ -1,1 +1,0 @@
-[English](../../user-guide/getting-started.md)|[中文](./getting-started.md)
