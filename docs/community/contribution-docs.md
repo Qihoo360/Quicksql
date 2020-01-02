@@ -1,3 +1,5 @@
+[English](./contribution-docs.md)|[中文](../zh/community/contribution-docs.md)
+
 # **Contributing documents**
 
 ## Installing Python
@@ -45,7 +47,7 @@ Open browser `http://127.0.0.1:8000`
 ![screenshot](../images/screenshot.png)
 
 ## Write markdown documents
-- Create a new `.md` file in the `/doc/user-guide directory`,
+- Create a new `.md` file in the `/docs directory`,
 Chinese docs under `/docs/zh`.
 
 - Edit `mkdocs.yml` and add pages.  [Tutorial](https://www.mkdocs.org/#adding-pages)

@@ -1,26 +1,28 @@
-# **Contributing documents**
+[English](../../community/contribution-docs.md)|[中文](./contribution-docs.md)
 
-## Installing Python
+# **贡献文档**
+
+## 安装 Python
 Install [Python](https://www.python.org/) or [Anaconda](https://www.anaconda.com/).
 
-[MkDocs](https://www.mkdocs.org/) supports Python versions 2.7, 3.4, 3.5, 3.6, 3.7 and pypy.
+[MkDocs](https://www.mkdocs.org/) 支持的Python版本 2.7, 3.4, 3.5, 3.6, 3.7。
 
-## Installing pip 
-- If you're using a recent version of Python, the Python package manager, pip, is most likely installed by default. However, you may need to upgrade pip to the lasted version:
+## 安装 pip 
+- 如果你本地有 pip 的环境，请升级 pip 版本：
 
 ```
 pip install --upgrade pip
 ```
 
-- If you need to install pip for the first time, download get-pip.py. Then run the following command to install it:
+- 如果本地没有 pip 环境，请下载后安装：
 
 ```shell
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 python get-pip.py
 ```
 
-## Installing MkDocs and dependencies
-Install the mkdocs package and dependencies using pip:
+## 安装 MkDocs 和其他依赖
+用 pip 安装 MkDocs 和其他依赖： 
 
 ```shell
 pip install mkdocs
@@ -29,12 +31,11 @@ pip install pygments
 pip install pymdown-extensions
 ```
 
-You should now have the mkdocs command installed on your system. Run `mkdocs
---version` to check that everything worked okay.
+执行 `mkdocs --version` 确定 MkDocs 安装成功并能运行。
 
-## Write markdown documents
-- Create a new `.md` file in the /doc/user-guide directory.
-- Edit mkdocs.yml and add pages.  [Tutorial](https://www.mkdocs.org/#adding-pages)
+## 写 Markdown 文档
+- 在 `/docs` 下创建一个新的 `.md` 文件
+- 编辑 `mkdocs.yml` 添加新页面。 [教程](https://www.mkdocs.org/#adding-pages)
 
 ```yml
 nav:
@@ -52,3 +53,7 @@ nav:
       - 'License': 'about/license.md'
       - 'Release Notes': 'about/release-notes.md'
 ```
+
+## 提交
+
+提交所有改动，Push 后在 GitHub 发起一个 PR 请求，ReadtheDocs 将会自动构建。

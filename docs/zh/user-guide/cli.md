@@ -1,3 +1,5 @@
+[English](../../user-guide/cli.md)|[中文](./cli.md)
+
 ## 命令行
 
 [TOC]

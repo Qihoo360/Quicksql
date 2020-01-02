@@ -1,3 +1,5 @@
+[English](./demo.md)|[中文](../zh/use-case/demo.md)
+
 # QuickSQL文档
 ​
 ## QuickSQL概述\Home

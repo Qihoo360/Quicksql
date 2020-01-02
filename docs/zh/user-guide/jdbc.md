@@ -1,3 +1,5 @@
+[English](../../user-guide/jdbc.md)|[中文](./jdbc.md)
+
 ## JDBC 连接
 
 [TOC]

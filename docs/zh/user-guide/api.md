@@ -1,3 +1,5 @@
+[English](../../user-guide/api.md)|[中文](./api.md)
+
 ## API文档
 
 ### 前言

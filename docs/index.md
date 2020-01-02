@@ -1,10 +1,10 @@
+[English](./index.md)|[中文](./zh/index.md)
+
 ![200_200](images/logo.jpeg)   
 
 [![license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](./LICENSE)[![Release Version](https://img.shields.io/badge/release-0.5-red.svg)]()[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)]()
 
 Quicksql is a SQL query product which can be used for specific datastore queries or multiple datastores correlated queries.  It supports relational databases, non-relational databases and even datastore which does not support SQL (such as Elasticsearch, Druid) . In addition, a SQL query can join or union data from multiple datastores in Quicksql. For example, you can perform unified SQL query on one situation that a part of data stored on Elasticsearch, but the other part of data stored on Hive. The most important is that QSQL is not dependent on any intermediate compute engine, users only need to focus on data and unified SQL grammar to finished statistics and analysis.
-
-[English](./index.md)|[中文](./zh/index.md)
 
 ### Architecture
 

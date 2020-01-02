@@ -1,3 +1,5 @@
+[English](./cli.md)|[中文](../zh/user-guide/cli.md)
+
 ## Command Line
 
 [TOC]

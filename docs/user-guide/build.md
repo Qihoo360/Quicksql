@@ -1,3 +1,5 @@
+[English](./build.md)|[中文](../zh/user-guide/build.md)
+
 ## Building Tutorial
 
 [TOC]

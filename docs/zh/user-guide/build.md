@@ -1,3 +1,5 @@
+[English](../../user-guide/build.md)|[中文](./build.md)
+
 ## 部署使用文档
 
 [TOC]

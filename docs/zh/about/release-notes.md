@@ -1,4 +1,7 @@
+[English](../../about/release-notes.md)|[中文](./release-notes.md)
+
 ## **RELEASE-0.6**
+
 **0.6版涉及的改动如下：**
 
 **[核心模块]**
