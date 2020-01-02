@@ -27,4 +27,5 @@ nbdist/
 *-journal
 
 /log/
+site/
 
