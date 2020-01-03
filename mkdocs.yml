@@ -1,0 +1,73 @@
+site_name: 'Quick SQL'
+repo_url: 'https://github.com/qihoo360/Quicksql/'
+copyright: '© 2019 Qihoo360 Quick SQL'
+
+theme:
+  name: material
+  favicon: 'images/favicon.ico'
+  palette:
+    primary: 'cyan'
+    accent: 'teal'
+  font:
+    text: 'Ubuntu'
+    code: 'Ubuntu Mono'
+    logo: 'images/logo.jpg'
+  language: 'en'
+  feature:
+    tabs: true
+
+plugins:
+  - search
+  - git-revision-date-localized
+
+extra:
+  search:
+    language: 'en'
+  social:
+    - type: 'slack'
+      link: 'https://join.slack.com/t/quicksql/shared_invite/enQtODkwMzM0Njc3NTExLWQxNjRlY2M5YTlkMTk4OTM2YzhjMjUxYTUyN2VlNzJlNzQwM2E4YjkxNzA4MDllODg5NWUxNDY4MTMyMzczMWI'
+    - type: 'github'
+      link: 'https://github.com/qihoo360/Quicksql'
+    - type: 'qq'
+      link: 'https://jq.qq.com/?_wv=1027&k=5782R6F'
+  manifest: 'manifest.webmanifest'
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - codehilite:
+      guess_lang: false
+  - toc:
+      permalink: true
+
+nav:
+  - Home: 'index.md'
+  - Deployment:
+      - 'Deployment' : 'deployment/deployment.md'
+      - 'Docker': 'deployment/docker.md'
+
+  - Reference:
+      - 'Getting Started': 'reference/getting-started.md'
+      - 'SQL Grammar': 'reference/sql-grammar.md'
+      #      - 'QuickSQL开发': 'xxx.md'
+
+  - Use Cases:
+      - 'demo': 'use-case/demo.md'
+  #      - 'SQL交互式分析': '.md'
+  #      - '结构化数据ETL': '.md'
+  #      - '流批计算多维关联': '.md'
+
+  - Blog:
+      - '2019年': 'blog/2019.md'
+      - '2020年': 'blog/2020.md'
+
+  - Community:
+      - Channel: 'community/channel.md'
+      - Contribution:
+          - Code: 'community/contribution-code.md'
+          - Docs: 'community/contribution-docs.md'
+
+  - About:
+      - 'FAQ': 'about/faq.md'
+      - 'License': 'about/license.md'
+      - 'Release Notes': 'about/release-notes.md'
