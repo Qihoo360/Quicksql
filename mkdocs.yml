@@ -11,7 +11,7 @@ nav:
   - Reference:
       - 'Getting Started': 'reference/getting-started.md'
       - 'SQL Language': 'reference/sql-language.md'
-      - 'Develop QuickSQL':'reference/develop.md'
+      - 'Develop QuickSQL': 'reference/develop.md'
 
   - Use Cases:
       - 'Case1': 'use-case/case1.md'
