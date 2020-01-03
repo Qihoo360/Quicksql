@@ -14,7 +14,7 @@ Run Quick SQL image: ` docker run -d --name quicksql francisdu/quicksql`
 Open terminal : `docker exec -it [CONTAINER NAME / ID] /bin/bash`
 
 - Step 4:
-Run example : `$QSQL_HOME/bin/run-example com.qihoo.qsql.CsvJoinWithEsExample`
+Run example : `$QSQL_HOME/bin/quicksql-example.sh --class com.qihoo.qsql.CsvJoinWithEsExample --runner spark`
 
 ## Installation location:
 

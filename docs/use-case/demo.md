@@ -65,10 +65,10 @@ $ vim ./conf/quicksql-env.sh #Set Your Basic Environment.
 ​
 ##### 运行样例查询
 ​
-进入bin目录，执行quicksql-example脚本。（这里使用了内嵌Elasticsearch Server与Csv数据源作一个关联过滤）
+进入bin目录，执行quicksql-example.sh脚本。（这里使用了内嵌Elasticsearch Server与Csv数据源作一个关联过滤）
 ​
 ``````shell
-$ ./bin/quicksql-example com.qihoo.qsql.CsvJoinWithEsExample #换成选项型，并能打印SQL语句
+$ ./bin/quicksql-example.sh --class com.qihoo.qsql.CsvJoinWithEsExample --runner spark #换成选项型，并能打印SQL语句
 ``````
 ​
 如果能够显示以下结果，说明环境构建完毕，可以尝试新的操作。
@@ -116,7 +116,7 @@ Quicksql提供了众多标准数据源的采集脚本，通过脚本批量拉取
 执行方式如下（注意：-r 参数可以使用LIKE语法，['%': 全部匹配，'_': 占位匹配，'?': 可选匹配]）
 ​
 ``````shell
-$ ./bin/metadata-extract -p "<SCHEMA-JSON>" -d "<DATA-SOURCE>" -r "<TABLE-NAME-REGEX>"
+$ ./bin/metadata-extract.sh -p "<SCHEMA-JSON>" -d "<DATA-SOURCE>" -r "<TABLE-NAME-REGEX>"
 ``````
 ​
 （详细的SCHEMA-JSON格式参考页末）
@@ -126,13 +126,13 @@ $ ./bin/metadata-extract -p "<SCHEMA-JSON>" -d "<DATA-SOURCE>" -r "<TABLE-NAME-R
 从**MySQL**数据库中采集元数据
 ​
 ``````shell
-$ ./meta-extract -p "{\"jdbcDriver\": \"com.mysql.jdbc.Driver\", \"jdbcUrl\": \"jdbc:mysql://localhost:3306/db\", \"jdbcUser\": \"user\",\"jdbcPassword\": \"pass\"}" -d "mysql" -r "my_table"
+$ ./metadata-extract.sh -p "{\"jdbcDriver\": \"com.mysql.jdbc.Driver\", \"jdbcUrl\": \"jdbc:mysql://localhost:3306/db\", \"jdbcUser\": \"user\",\"jdbcPassword\": \"pass\"}" -d "mysql" -r "my_table"
 ``````
 ​
 从**Elasticsearch**存储中采集元数据
 ​
 ``````shell
-$ ./meta-extract -p "{\"esNodes\": \"192.168.1.1\",\"esPort\": \"9090\",\"esUser\": \"user\",\"esPass\": \"pass\",\"esIndex\": \"index/type\"}" -d "es" -r "%"
+$ ./metadata-extract.sh -p "{\"esNodes\": \"192.168.1.1\",\"esPort\": \"9090\",\"esUser\": \"user\",\"esPass\": \"pass\",\"esIndex\": \"index/type\"}" -d "es" -r "%"
 ``````
 ​
 采集成功后将返回
