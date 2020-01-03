@@ -47,7 +47,7 @@ public abstract class SqlRunner {
         private String confPath = "";
         private String appName = "QSQL-" + System.currentTimeMillis();
         private String master = "local[*]";
-        private Boolean enableHive = false;
+        private Boolean enableHive = true;
 
         private Builder() {
         }
