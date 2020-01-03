@@ -2,6 +2,38 @@ site_name: 'Quick SQL'
 repo_url: 'https://github.com/qihoo360/Quicksql/'
 copyright: '© 2019 Qihoo360 Quick SQL'
 
+nav:
+  - Home: 'index.md'
+  - Deployment:
+      - 'Deployment' : 'deployment/deployment.md'
+      - 'Docker': 'deployment/docker.md'
+
+  - Reference:
+      - 'Getting Started': 'reference/getting-started.md'
+      - 'SQL Grammar': 'reference/sql-grammar.md'
+      #      - 'QuickSQL开发': 'xxx.md'
+
+  - Use Cases:
+      - 'Case1': 'use-case/case1.md'
+      - 'Case2': 'use-case/case2.md'
+      - 'Case3': 'use-case/case3.md'
+
+  - Blog:
+      - '2020年': 'blog/2020.md'
+      - '2019年': 'blog/2019.md'
+
+  - Community:
+      - Channel: 'community/channel.md'
+      - Contribution:
+          - Source Code: 'community/contribution-code.md'
+          - Documentation: 'community/contribution-docs.md'
+          - Contributors: 'community/contributors.md'
+
+  - About:
+      - 'FAQ': 'about/faq.md'
+      - 'License': 'about/license.md'
+      - 'Release Notes': 'about/release-notes.md'
+
 theme:
   name: material
   favicon: 'images/favicon.ico'
@@ -39,35 +71,3 @@ markdown_extensions:
       guess_lang: false
   - toc:
       permalink: true
-
-nav:
-  - Home: 'index.md'
-  - Deployment:
-      - 'Deployment' : 'deployment/deployment.md'
-      - 'Docker': 'deployment/docker.md'
-
-  - Reference:
-      - 'Getting Started': 'reference/getting-started.md'
-      - 'SQL Grammar': 'reference/sql-grammar.md'
-      #      - 'QuickSQL开发': 'xxx.md'
-
-  - Use Cases:
-      - 'demo': 'use-case/demo.md'
-  #      - 'SQL交互式分析': '.md'
-  #      - '结构化数据ETL': '.md'
-  #      - '流批计算多维关联': '.md'
-
-  - Blog:
-      - '2019年': 'blog/2019.md'
-      - '2020年': 'blog/2020.md'
-
-  - Community:
-      - Channel: 'community/channel.md'
-      - Contribution:
-          - Code: 'community/contribution-code.md'
-          - Docs: 'community/contribution-docs.md'
-
-  - About:
-      - 'FAQ': 'about/faq.md'
-      - 'License': 'about/license.md'
-      - 'Release Notes': 'about/release-notes.md'

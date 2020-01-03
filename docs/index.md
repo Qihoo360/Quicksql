@@ -1,21 +1,29 @@
-[English](./index.md)|[中文](./zh/index.md)
+[English](./index.md)|[中文](zh/index.md)
 
-![200_200](images/logo.jpeg)   
+![200_200](images/logo.jpeg)
 
-[![license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](./LICENSE)[![Release Version](https://img.shields.io/badge/release-0.5-red.svg)]()[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)]()
+![Language](https://img.shields.io/github/languages/top/qihoo360/quicksql?style=flat)
+![Release Version](https://img.shields.io/github/v/release/Qihoo360/quicksql)
+![license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)
+![Documentation Status](https://readthedocs.org/projects/quicksql/badge/?version=latest)
+![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 
 Quicksql is a SQL query product which can be used for specific datastore queries or multiple datastores correlated queries.  It supports relational databases, non-relational databases and even datastore which does not support SQL (such as Elasticsearch, Druid) . In addition, a SQL query can join or union data from multiple datastores in Quicksql. For example, you can perform unified SQL query on one situation that a part of data stored on Elasticsearch, but the other part of data stored on Hive. The most important is that QSQL is not dependent on any intermediate compute engine, users only need to focus on data and unified SQL grammar to finished statistics and analysis.
+
+[![Star-History](images/star-history.png)](https://star-history.t9t.io/#Qihoo360/Quicksql)
 
 ### Architecture
 
 An architecture diagram helps you access Quicksql more easily.
 
-![1540973404791](./images/p1.png)
+![1540973404791](images/p1.png)
 
 QSQL architecture consists of three layers：
 
 - Parsing  Layer: Used for parsing, validation, optimization of SQL  statements, splitting of mixed SQL and finally generating Query Plan;
+
 - Computing Layer: For routing query plan to a  specific execution plan, then interpreted to executable code for given  storage or engine(such as Elasticsearch JSON query or Hive HQL);
+
 - Storage Layer: For data prepared extraction and storage;
 
 ### Basic Features
@@ -30,15 +38,15 @@ The goal of Quicksql is to provide three functions:
 
 In Quicksql, you can query Elasticsearch like this:
 
-```sql
+``````sql
 SELECT state, pop FROM geo_mapping WHERE state = 'CA' ORDER BY state
-```
+``````
 
 Even an aggregation query:
 
-```sql
+``````sql
 SELECT approx_count_distinct(city), state FROM geo_mapping GROUP BY state LIMIT 10
-```
+``````
 
 You won't be annoyed again because the brackets in the JSON query can't match ;)
 
@@ -47,19 +55,19 @@ You won't be annoyed again because the brackets in the JSON query can't match ;)
 In the past, the same semantic statement needs to be converted to a dialect for different engines, such as:
 
 ```sql
-SELECT * FROM geo_mapping 						-- MySQL Dialect
-LIMIT 10 OFFSET 10 								
+SELECT * FROM geo_mapping                       -- MySQL Dialect
+LIMIT 10 OFFSET 10                              
 ```
 
-```sql
-SELECT * FROM geo_mapping 						-- Oracle Dialect
-OFFSET 10 ROWS FETCH NEXT 10 ROWS ONLY 			
-```
+``````sql
+SELECT * FROM geo_mapping                       -- Oracle Dialect
+OFFSET 10 ROWS FETCH NEXT 10 ROWS ONLY          
+``````
 
 In Quicksql, relational databases no longer have the concept of dialects. You can use the grammar of Quicksql to query any engine, just like this:
 
 ```sql
-SELECT * FROM geo_mapping LIMIT 10 OFFSET 10	-- Run Anywhere
+SELECT * FROM geo_mapping LIMIT 10 OFFSET 10    -- Run Anywhere
 ```
 
 ***2. Shield the isolation between different data sources***
@@ -68,19 +76,16 @@ Consider a situation where you want to join tables that are in different engines
 
 However, in Quicksql, you can query like this:
 
-```sql
+``````sql
 SELECT * FROM 
-	(SELECT * FROM es_raw.profile AS profile	//index.tpye on Elasticsearch 
-		WHERE note IS NOT NULL )AS es_profile
+    (SELECT * FROM es_raw.profile AS profile    //index.tpye on Elasticsearch 
+        WHERE note IS NOT NULL )AS es_profile
 INNER JOIN 
-	(SELECT * FROM hive_db.employee AS emp	//database.table on Hive
-	INNER JOIN hive_db.action AS act	//database.table on Hive
-	ON emp.name = act.name) AS tmp 
+    (SELECT * FROM hive_db.employee AS emp  //database.table on Hive
+    INNER JOIN hive_db.action AS act    //database.table on Hive
+    ON emp.name = act.name) AS tmp 
 ON es_profile.prefer = tmp.prefer
-```
-The following figure shows the optimization process for a mixed query:
-
-![1540973404791](./images/p2.png)
+``````
 
 ***3. Choose the most appropriate way to execute the query***
 
@@ -88,7 +93,7 @@ A query involving multiple engines can be executed in a variety of ways. Quicksq
 
 ### Getting Started
 
-For instructions on building Quicksql from source, see [Building Tutorial](./BUILD_doc.md).
+For instructions on building Quicksql from source, see [Building Tutorial](./doc/BUILD_doc.md).
 
 ### Reporting Issues
 
@@ -129,8 +134,8 @@ The pull request may need to be updated (after its submission) for two main reas
 
 In order to update the pull request, you need to commit the changes in your branch and then push the commit(s) to GitHub. You are encouraged to use regular (non-rebased) commits on top of previously existing ones.
 
-### Talks
+## Join us
 
-**QQ Group: 932439028**
-
-**WeChat Group: Posted in the QQ Group** [ P.S. Incorrect QQ Group number will raise a NPE :) ]
+[![Slack](images/slack.png)](https://join.slack.com/t/quicksql/shared_invite/enQtODkwMzM0Njc3NTExLWQxNjRlY2M5YTlkMTk4OTM2YzhjMjUxYTUyN2VlNzJlNzQwM2E4YjkxNzA4MDllODg5NWUxNDY4MTMyMzczMWI)
+[![Github](images/github.png)](https://github.com/qihoo360/Quicksql/issues)
+[![QQ](images/qq.png)](https://jq.qq.com/?_wv=1027&k=5782R6F)

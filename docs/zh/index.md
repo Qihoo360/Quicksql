@@ -1,11 +1,17 @@
 [English](../index.md)|[中文](./index.md)
 
+
 ![200_200](../images/logo.jpeg)
 
-[![license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](./LICENSE)[![Release Version](https://img.shields.io/badge/release-0.5-red.svg)]()[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)]()
+![Language](https://img.shields.io/github/languages/top/qihoo360/quicksql?style=flat)
+![Release Version](https://img.shields.io/github/v/release/Qihoo360/quicksql)
+![license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)
+![Documentation Status](https://readthedocs.org/projects/quicksql/badge/?version=latest)
+![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 
 QSQL是以SQL进行单一、混合查询的一款产品。QSQL支持标准SQL语言（SQL-2003）；QSQL支持查询关系型数据库、NoSQL式数据库、原生不支持SQL查询的存储（如ES、Druid），及借助中间计算引擎实现混合查询。QSQL最大的特点是独立于计算引擎、存储引擎本身，如此用户只需要关注于QSQL语法以及数据本身，就可完成数据计算、统计以及分析。
 
+[![Star-History](../images/star-history.png)](https://star-history.t9t.io/#Qihoo360/Quicksql)
 
 ## 架构设计
 
@@ -78,7 +84,7 @@ ON es_profile.prefer = tmp.prefer
 ```
 下图展示了Quicksql对于联邦查询的优化流程：
 
-![1540973404791](./images/p2.png)
+![1540973404791](../images/p2.png)
 
 ***3. 选择最合适的方式来执行查询***
 
@@ -111,4 +117,10 @@ Fork QSQL GitHub库，并为您的提交创建一个分支。
 
 - 最近一次的pull request的提交在10分钟之内，并且没有关于它的未决讨论
 - reviewer明确要求您执行一些需要使用`--force`选项的修改
+
+## 加入我们
+
+[![Slack](../images/slack.png)](https://join.slack.com/t/quicksql/shared_invite/enQtODkwMzM0Njc3NTExLWQxNjRlY2M5YTlkMTk4OTM2YzhjMjUxYTUyN2VlNzJlNzQwM2E4YjkxNzA4MDllODg5NWUxNDY4MTMyMzczMWI)
+[![Github](../images/github.png)](https://github.com/qihoo360/Quicksql/issues)
+[![QQ](../images/qq.png)](https://jq.qq.com/?_wv=1027&k=5782R6F)
 
