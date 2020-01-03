@@ -33,8 +33,12 @@ pip install pymdown-extensions
 
 执行 `mkdocs --version` 确定 MkDocs 安装成功并能运行。
 
+打开浏览器，访问 `http://127.0.0.1:8000`
+
+![screenshot](../../images/screenshot.png)
+
 ## 写 Markdown 文档
-- 在 `/docs` 下创建一个新的 `.md` 文件
+- 在 `/docs` 下创建一个新的 `.md` 文件，中文文档在`/docs/zh`目录下。
 - 编辑 `mkdocs.yml` 添加新页面。 [教程](https://www.mkdocs.org/#adding-pages)
 
 ```yml
@@ -56,4 +60,4 @@ nav:
 
 ## 提交
 
-提交所有改动，Push 后在 GitHub 发起一个 PR 请求，ReadtheDocs 将会自动构建。
+提交所有改动，Push 后在 GitHub 发起一个 PR 请求。
