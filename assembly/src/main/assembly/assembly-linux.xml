@@ -35,7 +35,7 @@
             <outputDirectory>/${qsql.release}/lib/flink</outputDirectory>
             <fileMode>0755</fileMode>
             <includes>
-                <include>**/qsql-core-0.6-fat.jar</include>
+                <include>**/qsql-core-0.7.0-fat.jar</include>
             </includes>
         </fileSet>
         <fileSet>
@@ -43,7 +43,7 @@
             <outputDirectory>/${qsql.release}/conf</outputDirectory>
             <fileMode>0755</fileMode>
             <includes>
-                <include>**/qsql-runner.properties</include>
+                <include>**/quicksql-runner.properties</include>
             </includes>
         </fileSet>
         <fileSet>
@@ -92,8 +92,6 @@
             <useProjectArtifact>false</useProjectArtifact>
             <excludes>
                 <exclude>org.scala-lang:*:jar</exclude>
-                <exclude>org.apache.hadoop:*:jar</exclude>
-                <!--<exclude>org.apache.hive:*:jar</exclude>-->
                 <exclude>org.spark-project.hive:*:jar</exclude>
                 <exclude>org.antlr:*:jar</exclude>
                 <exclude>org.apache.spark:*:jar</exclude>

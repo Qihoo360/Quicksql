@@ -3,8 +3,12 @@ USAGE="-e Usage: quicksql-server.sh {start|stop|restart|status}"
 export QSQL_HOME="$(cd "`dirname "$0"`"/..; pwd)"
 
 function start() {
+
+        #import quicksql.sh related environment variables
+        . "${QSQL_HOME}/bin/commons.sh"
+
         JAVA_MAIN_CLASS="com.qihoo.qsql.server.JdbcServer"
-        QSQL_SERVER_JAR="${QSQL_HOME}/lib/qsql-server-0.6.jar"
+        QSQL_SERVER_JAR="${QSQL_HOME}/lib/qsql-server-"${PROJECT_VERSION}".jar"
 
         PIDS=`ps -f | grep java | grep "$QSQL_HOME" |awk '{print $2}'`
         if [ -n "$PIDS" ]; then
@@ -12,10 +16,6 @@ function start() {
             echo "PID: $PIDS"
             exit 1
         fi
-
-        #import quicksql.sh related environment variables
-        . "${QSQL_HOME}/bin/commons.sh"
-
 
         if [[ -n "$SPARK_HOME" ]] && [[ -x "$SPARK_HOME/bin/spark-submit" ]];  then
             SPARK_RUNNER="${SPARK_HOME}/bin/spark-submit"
@@ -44,8 +44,7 @@ function start() {
              fi
         fi
 
-        QSQL_JARS=${QSQL_HOME}/lib/sqlite-jdbc-3.20.0.jar,${QSQL_HOME}/lib/qsql-meta-0.6.jar,${QSQL_HOME}/lib/jackson-dataformat-cbor-2.8.10.jar,${QSQL_HOME}/lib/jackson-dataformat-smile-2.8.10.jar,${QSQL_HOME}/lib/qsql-client-0.6.jar,${QSQL_HOME}/lib/jetty-http-9.2.19.v20160908.jar,${QSQL_HOME}/lib/jetty-io-9.2.19.v20160908.jar,${QSQL_HOME}/lib/jetty-security-9.2.19.v20160908.jar,${QSQL_HOME}/lib/jetty-server-9.2.19.v20160908.jar,${QSQL_HOME}/lib/jetty-util-9.2.19.v20160908.jar,${QSQL_HOME}/lib/commons-cli-1.3.1.jar,${QSQL_HOME}/lib/avatica-core-1.12.0.jar,${QSQL_HOME}/lib/avatica-server-1.12.0.jar,${QSQL_HOME}/lib/avatica-metrics-1.12.0.jar,${QSQL_HOME}/lib/protobuf-java-3.3.0.jar,${QSQL_HOME}/lib/jackson-core-2.6.5.jar,${QSQL_HOME}/lib/jackson-annotations-2.6.5.jar,${QSQL_HOME}/lib/jackson-databind-2.6.5.jar,${QSQL_HOME}/lib/httpclient-4.5.6.jar,${QSQL_HOME}/lib/httpcore-4.4.10.jar,${QSQL_HOME}/lib/esri-geometry-api-2.2.0.jar,${QSQL_HOME}/lib/guava-19.0.jar,${QSQL_HOME}/lib/calcite-linq4j-1.17.0.jar,${QSQL_HOME}/lib/derby-10.10.2.0.jar,${QSQL_HOME}/lib/jackson-dataformat-yaml-2.6.5.jar,${QSQL_HOME}/lib/imc-0.2.jar,${QSQL_HOME}/lib/qsql-core-0.6.jar,${QSQL_HOME}/lib/qsql-calcite-analysis-0.6.jar,${QSQL_HOME}/lib/qsql-calcite-elasticsearch-0.6.jar,${QSQL_HOME}/lib/elasticsearch-rest-client-6.2.4.jar,${QSQL_HOME}/lib/httpasyncclient-4.1.2.jar,${QSQL_HOME}/lib/httpclient-4.5.6.jar,${QSQL_HOME}/lib/httpcore-4.4.10.jar,${QSQL_HOME}/lib/httpcore-nio-4.4.5.jar,${QSQL_HOME}/lib/mysql-connector-java-5.1.20.jar,${QSQL_HOME}/lib/elasticsearch-spark-20_2.11-6.2.4.jar
-        QSQL_LAUNCH_CLASSPATH="${QSQL_JARS}"
+        QSQL_LAUNCH_CLASSPATH=${QSQL_HOME}/lib/sqlite-jdbc-3.20.0.jar,${QSQL_HOME}/lib/qsql-meta-"${PROJECT_VERSION}".jar,${QSQL_HOME}/lib/jackson-dataformat-cbor-2.8.10.jar,${QSQL_HOME}/lib/jackson-dataformat-smile-2.8.10.jar,${QSQL_HOME}/lib/qsql-client-"${PROJECT_VERSION}".jar,${QSQL_HOME}/lib/jetty-http-9.2.19.v20160908.jar,${QSQL_HOME}/lib/jetty-io-9.2.19.v20160908.jar,${QSQL_HOME}/lib/jetty-security-9.2.19.v20160908.jar,${QSQL_HOME}/lib/jetty-server-9.2.19.v20160908.jar,${QSQL_HOME}/lib/jetty-util-9.2.19.v20160908.jar,${QSQL_HOME}/lib/commons-cli-1.3.1.jar,${QSQL_HOME}/lib/avatica-core-1.12.0.jar,${QSQL_HOME}/lib/avatica-server-1.12.0.jar,${QSQL_HOME}/lib/avatica-metrics-1.12.0.jar,${QSQL_HOME}/lib/protobuf-java-3.3.0.jar,${QSQL_HOME}/lib/jackson-core-2.6.5.jar,${QSQL_HOME}/lib/jackson-annotations-2.6.5.jar,${QSQL_HOME}/lib/jackson-databind-2.6.5.jar,${QSQL_HOME}/lib/httpclient-4.5.6.jar,${QSQL_HOME}/lib/httpcore-4.4.10.jar,${QSQL_HOME}/lib/esri-geometry-api-2.2.0.jar,${QSQL_HOME}/lib/guava-19.0.jar,${QSQL_HOME}/lib/qsql-calcite-linq4j-"${PROJECT_VERSION}".jar,${QSQL_HOME}/lib/derby-10.10.2.0.jar,${QSQL_HOME}/lib/jackson-dataformat-yaml-2.6.5.jar,${QSQL_HOME}/lib/imc-0.2.jar,${QSQL_HOME}/lib/qsql-core-"${PROJECT_VERSION}".jar,${QSQL_HOME}/lib/qsql-calcite-analysis-"${PROJECT_VERSION}".jar,${QSQL_HOME}/lib/qsql-calcite-elasticsearch-"${PROJECT_VERSION}".jar,${QSQL_HOME}/lib/elasticsearch-rest-client-6.2.4.jar,${QSQL_HOME}/lib/httpasyncclient-4.1.2.jar,${QSQL_HOME}/lib/httpclient-4.5.6.jar,${QSQL_HOME}/lib/httpcore-4.4.10.jar,${QSQL_HOME}/lib/httpcore-nio-4.4.5.jar,${QSQL_HOME}/lib/mysql-connector-java-5.1.20.jar,${QSQL_HOME}/lib/elasticsearch-spark-20_2.11-6.2.4.jar
 
         LOGS_DIR=""
         if [ -n "$LOGS_FILE" ]; then

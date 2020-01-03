@@ -55,7 +55,7 @@ public class ArgumentsSupplier {
 
     private List<String> loadSparkConf() {
         Properties properties =
-            PropertiesReader.readProperties("qsql-runner.properties", this.getClass());
+            PropertiesReader.readProperties("quicksql-runner.properties", this.getClass());
         return properties.entrySet().stream()
             .filter(conf -> conf.getKey().toString().startsWith("spark"))
             .map(conf -> conf.getKey() + "=" + conf.getValue())
