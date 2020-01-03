@@ -27,7 +27,7 @@ docker exec -it [CONTAINER NAME / ID] /bin/bash
 - Run example :
  
 ```shell 
-$QSQL_HOME/bin/run-example com.qihoo.qsql.CsvJoinWithEsExample
+$QSQL_HOME/bin/quicksql-example.sh --class com.qihoo.qsql.CsvJoinWithEsExample --runner spark
 ``` 
 
 ## Installation location:

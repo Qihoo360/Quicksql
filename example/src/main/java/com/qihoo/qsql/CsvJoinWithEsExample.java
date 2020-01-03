@@ -12,13 +12,16 @@ public class CsvJoinWithEsExample {
      * @param args nothing
      */
     public static void main(String[] args) throws IOException {
+        if (args.length < 1) {
+            throw new RuntimeException("Need to specify the query engine!");
+        }
         RuntimeEnv.init();
         String sql = "SELECT * FROM depts "
             + "INNER JOIN (SELECT * FROM student " +
             "WHERE city in ('FRAMINGHAM', 'BROCKTON', 'CONCORD')) FILTERED " +
             "ON depts.name = FILTERED.type ";
         System.out.println("Iput: " + sql);
-        SqlRunner.Builder.RunnerType runnerType = RunnerType.SPARK;
+        SqlRunner.Builder.RunnerType runnerType = RunnerType.value(args[0]);
         SqlRunner runner = SqlRunner.builder()
             .setTransformRunner(runnerType)
             .setSchemaPath(RuntimeEnv.metadata)
