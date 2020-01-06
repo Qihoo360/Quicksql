@@ -1,5 +1,6 @@
-[English](../../reference/develop.md)|[中文](./develop.md)
-## QuickSQL开发
+[English](./develop.md)|[中文](../zh/reference/develop.md)
+
+# QuickSQL开发
 
 (1)  第一步找到QuickSQL项目 https://github.com/Qihoo360/Quicksql 
 

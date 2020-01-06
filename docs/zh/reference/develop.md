@@ -1,5 +1,6 @@
 [English](../../reference/develop.md)|[中文](./develop.md)
-## QuickSQL开发
+
+# QuickSQL开发
 
 (1)  第一步找到QuickSQL项目 https://github.com/Qihoo360/Quicksql 
 
@@ -7,7 +8,7 @@
 
 （2）第二步down到本地idea
 
-<img src="../../images/develop/image-20191230115105541.png" alt="image-20191230115105541" style="zoom:150%;" />
+<img src="../../../images/develop/image-20191230115105541.png" alt="image-20191230115105541" style="zoom:150%;" />
 
 (3) 第三步本地编译及打包
 
