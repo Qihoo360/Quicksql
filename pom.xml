@@ -19,7 +19,7 @@
         <module>server</module>
         <module>assembly</module>
         <module>meta</module>
-        <module>qsql-client</module>
+        <module>client</module>
         <module>linq4j</module>
     </modules>
 
