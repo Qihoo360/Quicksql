@@ -2,27 +2,27 @@
 
 # **RELEASE-0.6**
 
-**0.6版涉及的改动如下：**
+**The changes involved in version 0.6 are as follows:**
 
-**[核心模块]**
+**[Core Module]**
 
-- 优化了部署流程，增加了元数据脚本化采集，接入时间可以缩短为原先的1/20。
+-Optimized the deployment process, increased the scripted collection of metadata, and shortened the access time to the original 1/20.
 
-- 支持函数的控制，数据源不支持的函数可以推向底层引擎执行。
+-Support control of functions. Functions not supported by the data source can be pushed to the underlying engine for execution.
 
-- 支持通过INSERT INTO的方式将结果落地到HDFS。
+-Support inserting results to HDFS via INSERT INTO.
 
-- 支持表格化输出查询结果。
+-Support tabular output of query results.
 
-**[适配器模块]**
+**[Adapter Module]**
 
-- 支持Oracle查询。
+-Support Oracle query.
 
-- 支持Elasticsearch执行Join和Union操作。
+-Support Elasticsearch to perform Join and Union operations.
 
-- 支持Elasticsearch在混算场景下的聚合操作 (此前只支持JDBC查询下的聚合)。
+-Support the aggregation operation of Elasticsearch in mixed calculation scenarios (previously only supported the aggregation under JDBC query).
 
-- 支持混算模式下JDBC数据源的分布式查询。
+-Support distributed query of JDBC data source in mixed calculation mode.
 
 # **RELEASE-0.5**
-- 无
+-None
