@@ -5,7 +5,7 @@ copyright: '© 2019 Qihoo360 Quick SQL'
 nav:
   - Home: 'index.md'
   - Deployment:
-      - 'Deployment' : 'deployment/deployment.md'
+      - 'Deployment': 'deployment/deployment.md'
       - 'Docker': 'deployment/docker.md'
 
   - Reference:
