@@ -1,6 +1,6 @@
 [English](./release-notes.md)|[中文](../zh/about/release-notes.md)
 
-## **RELEASE-0.6**
+# **RELEASE-0.6**
 
 **0.6版涉及的改动如下：**
 
@@ -24,5 +24,5 @@
 
 - 支持混算模式下JDBC数据源的分布式查询。
 
-## **RELEASE-0.5**
+# **RELEASE-0.5**
 - 无

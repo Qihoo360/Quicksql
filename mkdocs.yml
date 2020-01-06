@@ -38,8 +38,8 @@ theme:
   name: material
   favicon: 'images/favicon.ico'
   palette:
-    primary: 'cyan'
-    accent: 'teal'
+    primary: 'blue'
+    accent: 'red'
   font:
     text: 'Ubuntu'
     code: 'Ubuntu Mono'
@@ -66,7 +66,6 @@ extra:
 
 markdown_extensions:
   - admonition
-  - codehilite
   - codehilite:
       guess_lang: false
   - toc:

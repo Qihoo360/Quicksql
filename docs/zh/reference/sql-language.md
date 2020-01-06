@@ -1,5 +1,8 @@
-[English](./sql-language.md)|[中文](../zh/reference/sql-language.md)
-#### SQL grammar
+[English](../../reference/sql-language.md)|[中文](./sql-language.md)
+
+# SQL grammar
+
+## SQL grammar
 
 ```sql
 select:
@@ -61,7 +64,7 @@ describe:
 
 ```
 
-#### Functions and Operators
+## Functions and Operators
 
 ```sql
 Conditional Expressions
@@ -146,7 +149,7 @@ COUNT(*|1|...) | SUM([ALL | DISTINCT]numeric) | AVG([ALL | DISTINCT]numeric)
 
 ```
 
-#### Key words
+## Key words
 
 ```sql
 support:
@@ -178,7 +181,7 @@ VALUE | VALUES | VALUE_OF | VAR_POP | VAR_SAMP | VARBINARY | VARCHAR | VARYING |
 WEEK | WHEN | WHENEVER | WHERE | WIDTH_BUCKET | WINDOW | WITH | WITHIN | WITHOUT | WORK | WRAPPER | WRITE | XML | YEAR | ZONE
 ```
 
-#### Data Types
+## Data Types
 
 ```
 lsupport:

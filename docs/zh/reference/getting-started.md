@@ -1,9 +1,10 @@
 [English](../../reference/getting-started.md)|[中文](./getting-started.md)
-### Tutorials
+
+# Tutorials
 
 包含启动项目和运行范例的流程引导
 
-#### Setup on Linux\MacOS
+## Setup on Linux\MacOS
 
 在Linux\MacOS上 运行Quicksql非常简单，但需要确保环境预置完整，依赖的环境有：
 
@@ -22,7 +23,7 @@ $ cd quicksql-realease-0.7.0
 $ vim ./conf/quicksql-env.sh #Set Your Basic Environment.
 ``````
 
-##### 运行样例查询
+## 运行样例查询
 
 进入bin目录，执行quicksql-example脚本。（这里使用了内嵌Elasticsearch Server与Csv数据源作一个关联过滤）
 
@@ -42,7 +43,7 @@ $ ./bin/quicksql-example com.qihoo.qsql.CsvJoinWithEsExample #换成选项型，
 +------+-------+----------+--------+------+-------+------+
 ```
 
-##### 运行真实查询
+## 运行真实查询
 
 在Quicksql上运行查询前需要将连接信息以及表、字段信息采集入库。
 
@@ -158,7 +159,7 @@ $ ./meta-extract -p "{\"esNodes\": \"192.168.1.1\",\"esPort\": \"9090\",\"esUser
 
 注意：Shell中双引号是特殊字符，传JSON参数时需要做转义！！
 
-##### 第二页 从命令行提交查询
+### 从命令行提交查询
 
 从命令行查询是Quicksql提供的最基本的查询方式之一。
 
@@ -210,11 +211,11 @@ $ ./bin/quicksql.sh -e  "INSERT INTO \`hdfs://cluster:9000/hello/world\` IN HDFS
 
 ​	(2) 在非分布式执行中，即使设置了master、worker_memory等参数也不会生效；
 
-##### 第三页 从应用提交查询
+### 从应用提交查询
 
 Quicksql支持使用Client/Server模式的JDBC连接进行查询，用户的应用可以通过引入Driver包与Server建立连接进行联邦查询。
 
-#### Server端
+## Server端
 
 **启动Server**
 
@@ -230,7 +231,7 @@ $ ./bin/quicksql-server.sh start -P 5888 -R spark -M yarn-client
 
 -M：指定spark任务资源调度方式，yarn-client或yarn-cluster等，默认为local[1]
 
-#### Client端
+## Client端
 
 **应用接入**
 
