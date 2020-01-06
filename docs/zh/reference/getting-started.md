@@ -1,7 +1,4 @@
-
 [English](../../reference/getting-started.md)|[中文](./getting-started.md)
-
-
 ### Tutorials
 
 包含启动项目和运行范例的流程引导
