@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 export QSQL_HOME="$(cd "`dirname "$0"`"/..; pwd)"
 
 #import quicksql.sh related environment variables
