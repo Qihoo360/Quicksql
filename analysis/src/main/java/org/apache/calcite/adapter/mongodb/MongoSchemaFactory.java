@@ -42,7 +42,7 @@ public class MongoSchemaFactory implements SchemaFactory {
       Map<String, Object> operand) {
     final String host = (String) operand.get("host");
     final Integer port = Integer.valueOf(operand.get("port").toString());
-    final String database = (String) operand.get("database");
+    final String database = (String) operand.get("dbName");
     final String authMechanismName = (String) operand.get("authMechanism");
 
     final MongoClientOptions.Builder options = MongoClientOptions.builder();
@@ -60,8 +60,8 @@ public class MongoSchemaFactory implements SchemaFactory {
     final String authMechanismName = (String) map.get("authMechanism");
     final AuthenticationMechanism authenticationMechanism =
         AuthenticationMechanism.fromMechanismName(authMechanismName);
-    final String username = (String) map.get("username");
-    final String authDatabase = (String) map.get("authDatabase");
+    final String username = (String) map.get("userName");
+    final String authDatabase = (String) map.get("dbName");
     final String password = (String) map.get("password");
 
     switch (authenticationMechanism) {

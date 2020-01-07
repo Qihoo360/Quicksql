@@ -24,6 +24,7 @@ import org.apache.calcite.adapter.enumerable.PhysType;
 import org.apache.calcite.adapter.enumerable.PhysTypeImpl;
 import org.apache.calcite.adapter.hive.HiveTable;
 import org.apache.calcite.adapter.custom.JdbcTable;
+import org.apache.calcite.adapter.mongodb.MongoRel;
 import org.apache.calcite.adapter.mongodb.MongoTable;
 import org.apache.calcite.adapter.virtual.VirtualTable;
 import org.apache.calcite.plan.RelOptCluster;
@@ -108,8 +109,9 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
                 ((HiveTable) relOptTable.getTable()).getProperties(),
                 config, relNode, tableName);
         } else if (relOptTable.getTable() instanceof MongoTable) {
+            String newSql = Util.toLinux(sqlNode.toSqlString(CalciteSqlDialect.DEFAULT).getSql());
             return new MongoExtractor(next, ((MongoTable) relOptTable.getTable())
-                .getProperties(), config, relNode, tableName);
+                .getProperties(), config, relNode, tableName, newSql);
         } else if (relOptTable.getTable() instanceof JdbcTable) {
             //TODO add more jdbc type
             String dbType = ((JdbcTable) relOptTable.getTable())
@@ -293,6 +295,85 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
         }
     }
 
+    public static class MongoExtractor extends NoSqlExtractor {
+        public Properties properties;
+        private String sql;
+
+        /**
+         * Extractor of Mongodb.
+         *
+         * @param next next procedure in DAG
+         * @param properties properties of Procedure
+         * @param config config of Procedure
+         * @param relNode relNode
+         * @param tableName tableName in Sql
+         * @param sql sql
+         */
+        public MongoExtractor(QueryProcedure next, Properties properties,
+                              FrameworkConfig config, RelNode relNode,
+                              String tableName, String sql) {
+            super(next, properties, config, relNode, tableName);
+            this.sql = sql;
+            this.properties = properties;
+        }
+
+        @Override
+        public String toRecognizedQuery() {
+            final RuleSet rules = RuleSets.ofList(
+                EnumerableRules.ENUMERABLE_PROJECT_RULE,
+                EnumerableRules.ENUMERABLE_FILTER_RULE,
+                EnumerableRules.ENUMERABLE_AGGREGATE_RULE,
+                EnumerableRules.ENUMERABLE_SORT_RULE,
+                EnumerableRules.ENUMERABLE_TABLE_SCAN_RULE
+            );
+
+            RelNode esLogicalPlan = createLogicalPlan(sql(
+                new HiveSqlDialect(SqlDialect.EMPTY_CONTEXT)));
+            RelNode mongoPhysicalPlan = toPhysicalPlan(esLogicalPlan, rules);
+            String mongoJson = toMongoQuery((EnumerableRel) mongoPhysicalPlan);
+            //TODO debug toLowerCase
+            properties.put("mongoQuery", mongoJson);
+            return mongoJson;
+        }
+
+        private String toMongoQuery(EnumerableRel root) {
+            EnumerableRelImplementor relImplementor =
+                new EnumerableRelImplementor(root.getCluster().getRexBuilder(),
+                    ImmutableMap.of());
+            final MongoRel.Implementor mongoImplementor =
+                new MongoRel.Implementor();
+            RelDataType rowType = root.getRowType();
+            final PhysType physType = PhysTypeImpl.of(relImplementor.getTypeFactory(), rowType,
+                Prefer.ARRAY.prefer(JavaRowFormat.ARRAY));
+
+            List<Pair<String, Class>> pairs = Pair
+                .zip(ElasticsearchRules.elasticsearchFieldNames(rowType),
+                    new AbstractList<Class>() {
+                        @Override
+                        public Class get(int index) {
+                            return physType.fieldClass(index);
+                        }
+
+                        @Override
+                        public int size() {
+                            return rowType.getFieldCount();
+                        }
+                    });
+
+            //return mongoImplementor.convert(root.getInput(0), pairs);
+            return "";
+        }
+
+        @Override
+        public String getCategory() {
+            return "Mongo";
+        }
+
+        public String sql() {
+            return sql;
+        }
+    }
+
     public static class DruidExtractor extends NoSqlExtractor {
 
         private String sql;
@@ -418,26 +499,6 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
         @Override
         public String getCategory() {
             return "Oracle";
-        }
-    }
-
-    public static class MongoExtractor extends PreparedExtractProcedure {
-
-        public MongoExtractor(QueryProcedure next, Properties properties,
-                               FrameworkConfig config, RelNode relNode,
-                               String tableName) {
-            super(next, properties, config, relNode, tableName);
-        }
-
-        @Override
-        public String toRecognizedQuery() {
-            return sql(new AnsiSqlDialect(SqlDialect.EMPTY_CONTEXT
-                .withDatabaseProduct(SqlDialect.DatabaseProduct.UNKNOWN).withIdentifierQuoteString("\"")));
-        }
-
-        @Override
-        public String getCategory() {
-            return "Mongo";
         }
     }
 

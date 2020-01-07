@@ -21,10 +21,10 @@ public enum MetadataMapping {
      * use '%' and literal 'value' to complete mapping.
      */
     MONGODB("org.apache.calcite.adapter.mongodb.MongoSchemaFactory",
-        "org.apache.calcite.adapter.custom.JdbcTableFactory",
+        "org.apache.calcite.adapter.mongodb.MongoTableFactory",
         Arrays.asList(
             "dbName", "collectionName", "dbType", "host",
-            "port", "dbUser", "dbPassword","authMechanism"),
+            "port", "userName", "password","authMechanism"),
         Collections.emptyList()
         ),
 

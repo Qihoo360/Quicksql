@@ -72,8 +72,8 @@ public class JdbcPipeline extends AbstractPipeline {
 
 
     public JdbcPipeline(QueryProcedure procedure,
-        List<String> tableNames,
-        SqlRunner.Builder builder) {
+                        List<String> tableNames,
+                        SqlRunner.Builder builder) {
         super(procedure, builder);
         this.tableNames = tableNames;
     }
@@ -143,6 +143,9 @@ public class JdbcPipeline extends AbstractPipeline {
                 case JDBC:
                     LOGGER.debug("Connecting to JDBC server....");
                     return createJdbcConnection(conn);
+                case MONGODB:
+                    LOGGER.debug("Connecting to Mongo server....");
+                    return createMongoConnection("inline: " + MetadataPostman.assembleSchema(assemblers));
                 default:
                     throw new RuntimeException("Unsupported jdbc type");
             }
@@ -162,17 +165,28 @@ public class JdbcPipeline extends AbstractPipeline {
         return connection;
     }
 
+    private static Connection createMongoConnection(String json) throws SQLException {
+        ConnectionFactory connectionFactory = new MapConnectionFactory(
+            ImmutableMap.of("unquotedCasing", "unchanged", "caseSensitive", "true"),
+            ImmutableList.of()
+        ).with("model", json);
+
+        Connection connection = connectionFactory.createConnection();
+        LOGGER.debug("Connect with Mongo server successfully!");
+        return connection;
+    }
+
     //TODO add zeroDateTimeBehavior=convertToNull property
     private static Connection createJdbcConnection(Map<String, String> conn)
         throws ClassNotFoundException, SQLException {
-        if (! conn.containsKey("jdbcDriver")) {
+        if (!conn.containsKey("jdbcDriver")) {
             throw new RuntimeException("The `jdbcDriver` property needed to be set.");
         }
         Class.forName(conn.get("jdbcDriver"));
         // String ip = conn.getOrDefault("jdbcNode", "");
         // String port = conn.getOrDefault("jdbcPort", "");
         // String db = conn.getOrDefault("dbName", "");
-        if (! conn.containsKey("jdbcUrl")) {
+        if (!conn.containsKey("jdbcUrl")) {
             throw new RuntimeException("The `jdbcUrl` property needed to be set.");
         }
         String url = conn.get("jdbcUrl");
@@ -333,7 +347,7 @@ public class JdbcPipeline extends AbstractPipeline {
                     CalciteConnectionProperty.CREATE_MATERIALIZATIONS.camelName(),
                     Boolean.toString(false));
 
-                if (! calciteConnection.getProperties().containsKey(
+                if (!calciteConnection.getProperties().containsKey(
                     CalciteConnectionProperty.TIME_ZONE.camelName())) {
                     calciteConnection.getProperties().setProperty(
                         CalciteConnectionProperty.TIME_ZONE.camelName(),
@@ -379,7 +393,7 @@ public class JdbcPipeline extends AbstractPipeline {
     }
 
     enum JdbcType {
-        ELASTICSEARCH, JDBC, CSV,MONGO
+        ELASTICSEARCH, JDBC, CSV, MONGO
     }
 
     public interface ConnectionPostProcessor {
@@ -406,7 +420,7 @@ public class JdbcPipeline extends AbstractPipeline {
         private final ImmutableList<ConnectionPostProcessor> postProcessors;
 
         private MapConnectionFactory(ImmutableMap<String, String> map,
-            ImmutableList<ConnectionPostProcessor> postProcessors) {
+                                     ImmutableList<ConnectionPostProcessor> postProcessors) {
             this.map = Preconditions.checkNotNull(map);
             this.postProcessors = Preconditions.checkNotNull(postProcessors);
         }
@@ -510,7 +524,7 @@ public class JdbcPipeline extends AbstractPipeline {
             }
 
             for (String part : names) {
-                if (! tableNames.containsKey(part)) {
+                if (!tableNames.containsKey(part)) {
                     break;
                 }
                 jdbcProps.add(tableNames.get(part));

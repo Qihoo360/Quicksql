@@ -67,6 +67,10 @@ public class SchemaAssembler {
             elements.add(formatObjectProperty("operand", reduceJsonSchemaOperand()));
         }
 
+        if (factory == MetadataMapping.MONGODB) {
+            elements.add(reduceSameSchemaJsonOperand(sameSchemas));
+        }
+
         elements.add(formatArrayProperty("tables", reduceSameSchemaJsonTable(sameSchemas)));
 
         String schema = elements.stream().reduce((x, y) -> x + ",\n" + y).orElse("");
@@ -81,6 +85,13 @@ public class SchemaAssembler {
             .orElse("");
     }
 
+    private String reduceSameSchemaJsonOperand(List<SchemaAssembler> sameSchemas) {
+        return sameSchemas.stream()
+            .map(schema -> reduceJsonOperand(schema))
+            .reduce((x, y) -> x + ",\n" + y)
+            .orElse("");
+    }
+
     //maybe exist same db name problem
     private String reduceJsonTable(SchemaAssembler schemaAssembler) {
         return Stream.of(
@@ -90,6 +101,14 @@ public class SchemaAssembler {
                 reduceJsonTableOperand(schemaAssembler.connProperties,
                     schemaAssembler.factory)),
             formatArrayProperty("columns", reduceJsonFields(schemaAssembler.fields))
+        ).reduce((x, y) -> x + ",\n" + y).orElse("");
+    }
+
+    private String reduceJsonOperand(SchemaAssembler schemaAssembler) {
+        return Stream.of(
+            formatObjectProperty("operand",
+                reduceJsonTableOperand(schemaAssembler.connProperties,
+                    schemaAssembler.factory))
         ).reduce((x, y) -> x + ",\n" + y).orElse("");
     }
 

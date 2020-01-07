@@ -84,6 +84,11 @@
             <version>2.2.4</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongo-java-driver</artifactId>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
