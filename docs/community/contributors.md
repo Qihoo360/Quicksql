@@ -15,6 +15,6 @@ Sort alphabetically,Show only GitHub ID without avatar.
 [![Shaofeng Shi](https://avatars3.githubusercontent.com/u/5411805?s=50&v=4)](https://github.com/shaofengshi)
 [![Shengguo Xu](https://avatars0.githubusercontent.com/u/3417214?s=50&v=4)](https://github.com/BeBetter)
 [![Siyuan Liu](https://avatars1.githubusercontent.com/u/30333597?s=50&v=4)](https://github.com/Functor10)
-[![fangyuefy](https://avatars0.githubusercontent.com/u/49482496?s=400&v=4)](https://github.com/fangyuefy)
+[![fangyuefy](https://avatars0.githubusercontent.com/u/49482496?s=50&v=4)](https://github.com/fangyuefy)
 [![sarasara100](https://avatars3.githubusercontent.com/u/48314917?s=50&v=4)](https://github.com/sarasara100)
 [![]()]()
