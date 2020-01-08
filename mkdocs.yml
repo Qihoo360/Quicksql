@@ -5,13 +5,13 @@ copyright: '© 2019 Qihoo360 Quick SQL'
 nav:
   - Home: 'index.md'
   - Deployment:
-      - 'Deployment' : 'deployment/deployment.md'
+      - 'Deployment': 'deployment/deployment.md'
       - 'Docker': 'deployment/docker.md'
 
   - Reference:
       - 'Getting Started': 'reference/getting-started.md'
-      - 'SQL Grammar': 'reference/sql-grammar.md'
-      #      - 'QuickSQL开发': 'xxx.md'
+      - 'SQL Language': 'reference/sql-language.md'
+      - 'Develop QuickSQL': 'reference/develop.md'
 
   - Use Cases:
       - 'Case1': 'use-case/case1.md'
@@ -38,8 +38,8 @@ theme:
   name: material
   favicon: 'images/favicon.ico'
   palette:
-    primary: 'cyan'
-    accent: 'teal'
+    primary: 'blue'
+    accent: 'red'
   font:
     text: 'Ubuntu'
     code: 'Ubuntu Mono'
@@ -66,7 +66,6 @@ extra:
 
 markdown_extensions:
   - admonition
-  - codehilite
   - codehilite:
       guess_lang: false
   - toc:

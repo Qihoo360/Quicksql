@@ -1,6 +1,6 @@
 [English](./contribution-docs.md)|[中文](../zh/community/contribution-docs.md)
 
-## Contributing documents
+# Contributing documents
 
 ## Installing Python
 Install [Python](https://www.python.org/) or [Anaconda](https://www.anaconda.com/).
