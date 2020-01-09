@@ -6,6 +6,12 @@ import com.qihoo.qsql.env.RuntimeEnv;
 import java.io.IOException;
 
 public class CsvScanExample {
+
+    /**
+     * If you want to execute in the IDE, adjust the scope of the spark package in the parent pom to compile.
+     * 如果希望在IDE中执行spark和flink的样例代码，请调整父pom中的spark、flink的scope值为compile。
+     * @param args nothing
+     */
     public static void main(String[] args) throws IOException {
         if (args.length < 1) {
             throw new RuntimeException("Need to specify the query engine!");
