@@ -20,7 +20,7 @@ Quicksql提供默认的数据源客户端版本，以下是版本关系表，用
 | MongoDB       | NULL                     | NULL        | NULL       |                         |
 | Druid         | NULL                     | NULL        | NULL       |                         |
 
-注：应用如需更换客户端版本请在/lib, /lib/spark目录下将相应的driver包替换为匹配的版本，如默认MySQL的Driver使用mysql-connector-java-5.1.20.jar，应用如使用的时MySQL 8的服务，可执行以下操作：
+注：应用如需更换客户端版本请在/lib, /lib/spark目录下将相应的driver包替换为匹配的版本，如默认MySQL的Driver使用mysql-connector-java-5.1.20.jar，应用如使用的是MySQL 8的服务，可执行以下操作：
 
 ``````shell
 $ cd /lib

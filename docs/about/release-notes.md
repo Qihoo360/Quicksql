@@ -16,7 +16,7 @@
 
 **[Adapter Module]**
 
--Support Oracle query.
+-Support Oracle.
 
 -Support Elasticsearch to perform Join and Union operations.
 
