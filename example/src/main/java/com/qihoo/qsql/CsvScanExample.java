@@ -13,12 +13,9 @@ public class CsvScanExample {
      * @param args nothing
      */
     public static void main(String[] args) throws IOException {
-        if (args.length < 1) {
-            throw new RuntimeException("Need to specify the query engine!");
-        }
         RuntimeEnv.init();
         String sql = "select * from depts";
-        SqlRunner.Builder.RunnerType runnerType = RunnerType.value(args[0]);
+        SqlRunner.Builder.RunnerType runnerType = RunnerType.value(args.length < 1 ? "spark" : args[0]);
         SqlRunner runner = SqlRunner.builder()
             .setTransformRunner(runnerType)
             .setSchemaPath(RuntimeEnv.metadata)
