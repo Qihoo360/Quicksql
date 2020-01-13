@@ -37,7 +37,7 @@ public class FlinkPipeline extends AbstractPipeline implements Compilable {
 
     @Override
     public Object collect() {
-        return null;
+        return new Object();
     }
 
     protected void startup() {
