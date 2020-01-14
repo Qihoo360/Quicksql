@@ -93,7 +93,7 @@ A query involving multiple engines can be executed in a variety of ways. Quicksq
 
 ### Getting Started
 
-For instructions on building Quicksql from source, see [Building Tutorial](./doc/BUILD_doc.md).
+For instructions on building Quicksql from source, see [Getting Started](./docs/reference/getting-started.md).
 
 ### Reporting Issues
 
