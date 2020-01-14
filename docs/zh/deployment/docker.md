@@ -2,7 +2,7 @@
 
 # Docker
 
-[Docker镜像地址](https://hub.docker.com/r/francisdu/quicksql)
+[Docker 镜像地址](https://hub.docker.com/r/francisdu/quicksql)
 
 ## 快速启动
 

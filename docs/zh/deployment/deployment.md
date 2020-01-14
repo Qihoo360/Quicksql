@@ -3,11 +3,11 @@
 
 # 部署指南
 
-(引言)本页面将提供Quicksql支持的数据源和引擎的配套版本和依赖包调整方式，此外，元数据的管理方式也将被提及。
+(引言)本页面将提供 Quicksql 支持的数据源和引擎的配套版本和依赖包调整方式，此外，元数据的管理方式也将被提及。
 
 ## 数据源管理
 
-Quicksql提供默认的数据源客户端版本，以下是版本关系表，用户可以自行替换Jar包更替。
+Quicksql 提供默认的数据源客户端版本，以下是版本关系表，用户可以自行替换 Jar 包更替。
 
 | 数据存储      | 连接形式                 | 支持引擎    | 客户端版本 | 备注                    |
 | ------------- | ------------------------ | ----------- | ---------- | ----------------------- |
@@ -20,7 +20,7 @@ Quicksql提供默认的数据源客户端版本，以下是版本关系表，用
 | MongoDB       | NULL                     | NULL        | NULL       |                         |
 | Druid         | NULL                     | NULL        | NULL       |                         |
 
-注：应用如需更换客户端版本请在/lib, /lib/spark目录下将相应的driver包替换为匹配的版本，如默认MySQL的Driver使用mysql-connector-java-5.1.20.jar，应用如使用的时MySQL 8的服务，可执行以下操作：
+注：应用如需更换客户端版本请在/lib, /lib/spark目录下将相应的 driver 包替换为匹配的版本，如默认 MySQL 的 Driver 使用mysql-connector-java-5.1.20.jar，应用如使用的时 MySQL 8 的服务，可执行以下操作：
 
 ``````shell
 $ cd /lib
@@ -31,9 +31,9 @@ $ ../bin/quicksql -e "SELECT * FROM TABLE_IN_MySQL8"
 
 ## 计算引擎管理
 
-Quicksql使用的计算引擎可以由用户自定义参数，参数可以在./conf/qsql-runner.properties中修改：
+Quicksql 使用的计算引擎可以由用户自定义参数，参数可以在./conf/qsql-runner.properties中修改：
 
-**Spark计算引擎参数**
+**Spark 计算引擎参数**
 
 | Property Name                     | Default            | Meaning                             |
 | --------------------------------- | ------------------ | ----------------------------------- |
@@ -46,7 +46,7 @@ Quicksql使用的计算引擎可以由用户自定义参数，参数可以在./c
 | spark.speculation                 | true               | Spark开启任务推测执行               |
 | spark.sql.files.maxPartitionBytes | 134217728（128MB） | Spark读取文件时单个分区的最大字节数 |
 
-**Flink计算引擎参数**
+**Flink 计算引擎参数**
 
 | Property Name | Default | Meaning |
 | ------------- | ------- | ------- |
