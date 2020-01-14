@@ -87,7 +87,7 @@ public class MongoRules {
     return null;
   }
 
-  static List<String> mongoFieldNames(final RelDataType rowType) {
+    public static List<String> mongoFieldNames(final RelDataType rowType) {
     return SqlValidatorUtil.uniquify(
         new AbstractList<String>() {
           @Override public String get(int index) {

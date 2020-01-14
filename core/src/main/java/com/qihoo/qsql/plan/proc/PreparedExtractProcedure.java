@@ -25,6 +25,7 @@ import org.apache.calcite.adapter.enumerable.PhysTypeImpl;
 import org.apache.calcite.adapter.hive.HiveTable;
 import org.apache.calcite.adapter.custom.JdbcTable;
 import org.apache.calcite.adapter.mongodb.MongoRel;
+import org.apache.calcite.adapter.mongodb.MongoRules;
 import org.apache.calcite.adapter.mongodb.MongoTable;
 import org.apache.calcite.adapter.virtual.VirtualTable;
 import org.apache.calcite.plan.RelOptCluster;
@@ -330,13 +331,18 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
             RelNode esLogicalPlan = createLogicalPlan(sql(
                 new HiveSqlDialect(SqlDialect.EMPTY_CONTEXT)));
             RelNode mongoPhysicalPlan = toPhysicalPlan(esLogicalPlan, rules);
-            String mongoJson = toMongoQuery((EnumerableRel) mongoPhysicalPlan);
+            String mongoJson = null;
+            try {
+                mongoJson = toMongoQuery((EnumerableRel) mongoPhysicalPlan);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
             //TODO debug toLowerCase
             properties.put("mongoQuery", mongoJson);
             return mongoJson;
         }
 
-        private String toMongoQuery(EnumerableRel root) {
+        private String toMongoQuery(EnumerableRel root) throws IOException {
             EnumerableRelImplementor relImplementor =
                 new EnumerableRelImplementor(root.getCluster().getRexBuilder(),
                     ImmutableMap.of());
@@ -347,7 +353,7 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
                 Prefer.ARRAY.prefer(JavaRowFormat.ARRAY));
 
             List<Pair<String, Class>> pairs = Pair
-                .zip(ElasticsearchRules.elasticsearchFieldNames(rowType),
+                .zip(MongoRules.mongoFieldNames(rowType),
                     new AbstractList<Class>() {
                         @Override
                         public Class get(int index) {
@@ -360,7 +366,6 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
                         }
                     });
 
-            //return mongoImplementor.convert(root.getInput(0), pairs);
             return "";
         }
 

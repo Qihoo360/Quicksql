@@ -136,17 +136,17 @@ public class MongoCollector extends MetadataCollector {
     private String convertDataType(String type) {
         switch (type) {
             case "class java.lang.Double":
-                return "Double";
+                return "double";
             case "class java.lang.String":
-                return "String";
+                return "string";
             case "class java.lang.Boolean":
-                return "Boolean";
+                return "boolean";
             case "class java.lang.Array":
-                return "Array";
+                return "array";
             case "class java.lang.Object":
-                return "Object";
+                return "object";
             default:
-                return "Undefined";
+                return "undefined";
         }
     }
 }

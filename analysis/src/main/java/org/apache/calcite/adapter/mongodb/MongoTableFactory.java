@@ -15,6 +15,6 @@ public class MongoTableFactory implements TableFactory {
 
     @Override
     public Table create(SchemaPlus schema, String name, Map operand, RelDataType rowType) {
-        return new MongoTable(operand.get("collectionName").toString());
+        return new MongoTable(operand.get("collectionName").toString(),operand);
     }
 }

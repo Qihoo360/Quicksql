@@ -143,6 +143,8 @@ public class ExecutionDispatcher {
             procedure = procedure.next();
             if (procedure instanceof PreparedExtractProcedure.ElasticsearchExtractor) {
                 sql = ((PreparedExtractProcedure.ElasticsearchExtractor) procedure).sql();
+            } else if (procedure instanceof PreparedExtractProcedure.MongoExtractor) {
+                sql = ((PreparedExtractProcedure.MongoExtractor) procedure).sql();
             } else {
                 sql = ((ExtractProcedure) procedure).toRecognizedQuery();
             }
