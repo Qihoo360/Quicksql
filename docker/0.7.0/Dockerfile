@@ -10,12 +10,12 @@ RUN yum update -y && yum install -y wget openssh vim \
     java-1.8.0-openjdk-devel  java-1.8.0-openjdk-headless
 
 # Download Qlick SQL package
-RUN  wget https://github.com/Qihoo360/Quicksql/releases/download/release-0.7.0/qsql-0.7.0.tar.gz &&  \
-     tar -xzvf qsql-0.7.0.tar.gz -C /usr/local
+RUN  wget https://github.com/Qihoo360/Quicksql/releases/download/v0.7.0/quicksql-0.7.0.tar.gz &&  \
+     tar -xzvf quicksql-0.7.0.tar.gz -C /usr/local
 
 # Download Spark package
-RUN wget http://mirrors.tuna.tsinghua.edu.cn/apache/spark/spark-2.4.4/spark-2.4.4-bin-hadoop2.7.tgz &&  \
-    tar -xzvf spark-2.4.4-bin-hadoop2.7.tgz -C /usr/local
+RUN wget https://archive.apache.org/dist/spark/spark-2.2.0/spark-2.2.0-bin-hadoop2.7.tgz &&  \
+    tar -xzvf spark-2.2.0-bin-hadoop2.7.tgz -C /usr/local
 
 # Setting environments
 ENV JAVA_HOME /usr/lib/jvm/java-1.8.0-openjdk

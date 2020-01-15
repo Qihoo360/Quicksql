@@ -1,37 +1,39 @@
 [English](../../deployment/docker.md)|[中文](./docker.md)
 
-# Docker
+# Docker 上的 Quicksql
 
-[Docker 镜像地址](https://hub.docker.com/r/francisdu/quicksql)
+[Docker Hub 地址](https://hub.docker.com/r/francisdu/quicksql)
 
-## 快速启动
+## 使用之前的准备
 
-- 安装 Docker :
- 
-```shell 
-yum update -y && yum intall docker -y
-```
+- 在 Centos 上安装 Docker: `yum update -y && yum intall docker -y`
 
-- 运行 Quick SQL: 
+- 在 Ubuntu 上安装 Docker: `apt update -y && apt-get intall docker -y`
 
-```shell
-docker run -d --name quicksql francisdu/quicksql
-```
+## 体验最新版本
 
-- 打开一个终端:
- 
-```shell
-docker exec -it [CONTAINER NAME / ID] /bin/bash
-```
+- `docker run -it --name quicksql francisdu/quicksql /bin/bash`
 
-- 运行简单的例子 :
- 
-```shell 
-$QSQL_HOME/bin/quicksql-example.sh --class com.qihoo.qsql.CsvJoinWithEsExample --runner spark
-``` 
+- Run example: quicksql-example.sh --class com.qihoo.qsql.CsvJoinWithEsExample
 
-## 安装位置
+## 体验 0.7.0 版本
+
+- `docker run -it --name quicksql francisdu/quicksql:0.7.0 /bin/bash`
+
+- Run example: quicksql-example.sh --class com.qihoo.qsql.CsvJoinWithEsExample
+
+## 体验 0.6 版本
+
+- `docker run -it --name quicksql francisdu/quicksql:0.6 /bin/bash`
+
+- Run example: `qsql -e "select 1"`
+
+## 安装位置:
 
 `QSQL_HOME = /usr/local/qsql`
 
 `Spark_HOME = /usr/local/spark`
+
+## 文档
+
+[入门教程](https://quicksql.readthedocs.io/en/latest/zh/reference/getting-started/)
