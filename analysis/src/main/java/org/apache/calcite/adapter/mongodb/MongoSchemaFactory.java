@@ -37,7 +37,7 @@ public class MongoSchemaFactory implements SchemaFactory {
   // public constructor, per factory contract
   public MongoSchemaFactory() {
   }
-
+//modify by quicksql team
   public Schema create(SchemaPlus parentSchema, String name,
       Map<String, Object> operand) {
     final String host = (String) operand.get("host");

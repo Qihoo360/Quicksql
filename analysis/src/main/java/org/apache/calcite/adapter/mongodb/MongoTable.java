@@ -47,6 +47,7 @@ import org.bson.conversions.Bson;
 /**
  * Table based on a MongoDB collection.
  */
+ //begin modify by quicksql team
 public class MongoTable extends AbstractQueryableTable
     implements TranslatableTable {
     private final String collectionName;
@@ -100,7 +101,7 @@ public class MongoTable extends AbstractQueryableTable
     public String getBaseName() {
         return null;
     }
-
+//end modify by quicksql team
     /**
      * Executes a "find" operation on the underlying collection.
      *

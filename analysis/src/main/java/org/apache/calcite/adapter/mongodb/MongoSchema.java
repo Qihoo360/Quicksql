@@ -68,7 +68,7 @@ public class MongoSchema extends AbstractSchema {
     super();
     this.mongoDb = Objects.requireNonNull(mongoDb, "mongoDb");
   }
-
+//modify by quicksql team
   @Override protected Map<String, Table> getTableMap() {
     final ImmutableMap.Builder<String, Table> builder = ImmutableMap.builder();
     for (String collectionName : mongoDb.listCollectionNames()) {

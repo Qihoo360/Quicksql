@@ -41,6 +41,7 @@ import java.util.List;
 public class MongoAggregate
     extends Aggregate
     implements MongoRel {
+	//modify by quicksql team
   public MongoAggregate(
       RelOptCluster cluster,
       RelTraitSet traitSet,
@@ -89,7 +90,6 @@ public class MongoAggregate
       throw new AssertionError(e);
     }
   }
-
   public void implement(Implementor implementor) {
     implementor.visitChild(0, getInput());
     List<String> list = new ArrayList<>();

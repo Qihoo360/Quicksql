@@ -11,6 +11,7 @@ import org.apache.calcite.schema.TableFactory;
  * Implementation of TableFactory for Hive
  * A table corresponds to what Hive calls a "data source"
  */
+ //add by quicksql team
 public class MongoTableFactory implements TableFactory {
 
     @Override

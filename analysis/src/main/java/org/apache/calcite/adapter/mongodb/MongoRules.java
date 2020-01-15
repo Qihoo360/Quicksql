@@ -86,7 +86,7 @@ public class MongoRules {
     }
     return null;
   }
-
+   //modify by quicksql team
     public static List<String> mongoFieldNames(final RelDataType rowType) {
     return SqlValidatorUtil.uniquify(
         new AbstractList<String>() {
@@ -101,7 +101,6 @@ public class MongoRules {
         },
         SqlValidatorUtil.EXPR_SUGGESTER, true);
   }
-
   static String maybeQuote(String s) {
     if (!needsQuote(s)) {
       return s;
@@ -496,6 +495,7 @@ public class MongoRules {
    * Rule to convert an {@link LogicalAggregate}
    * to an {@link MongoAggregate}.
    */
+   //modify by quicksql team
   private static class MongoAggregateRule extends MongoConverterRule {
     public static final RelOptRule INSTANCE = new MongoAggregateRule();
 
@@ -523,7 +523,6 @@ public class MongoRules {
       }
     }
   }
-
 /*
   /**
    * Rule to convert an {@link org.apache.calcite.rel.logical.Union} to a
