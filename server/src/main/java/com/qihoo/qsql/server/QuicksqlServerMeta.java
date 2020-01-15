@@ -77,7 +77,7 @@ import org.slf4j.LoggerFactory;
  */
 public class QuicksqlServerMeta implements ProtobufMeta {
 
-    private static final Logger LOG = LoggerFactory.getLogger(QuicksqlServerMeta.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(QuicksqlServerMeta.class);
 
     private static final String CONN_CACHE_KEY_BASE = "avatica.connectioncache";
 
@@ -172,7 +172,7 @@ public class QuicksqlServerMeta implements ProtobufMeta {
             .expireAfterAccess(connectionExpiryDuration, connectionExpiryUnit)
             .removalListener(new ConnectionExpiryHandler())
             .build();
-        LOG.debug("instantiated connection cache: {}", connectionCache.stats());
+        LOGGER.debug("instantiated connection cache: {}", connectionCache.stats());
 
         concurrencyLevel = Integer.parseInt(
             info.getProperty(StatementCacheSettings.CONCURRENCY_LEVEL.key(),
@@ -197,7 +197,7 @@ public class QuicksqlServerMeta implements ProtobufMeta {
             .removalListener(new StatementExpiryHandler())
             .build();
 
-        LOG.debug("instantiated statement cache: {}", statementCache.stats());
+        LOGGER.debug("instantiated statement cache: {}", statementCache.stats());
 
         // Register some metrics
         this.metrics.register(concat(
@@ -453,7 +453,7 @@ public class QuicksqlServerMeta implements ProtobufMeta {
 
     public MetaResultSet getBestRowIdentifier(ConnectionHandle ch, String catalog, String schema,
         String table, int scope, boolean nullable) {
-        LOG.trace("getBestRowIdentifier catalog:{} schema:{} table:{} scope:{} nullable:{}", catalog,
+        LOGGER.trace("getBestRowIdentifier catalog:{} schema:{} table:{} scope:{} nullable:{}", catalog,
             schema, table, scope, nullable);
         try {
             final ResultSet rs =
@@ -468,7 +468,7 @@ public class QuicksqlServerMeta implements ProtobufMeta {
 
     public MetaResultSet getVersionColumns(ConnectionHandle ch, String catalog, String schema,
         String table) {
-        LOG.trace("getVersionColumns catalog:{} schema:{} table:{}", catalog, schema, table);
+        LOGGER.trace("getVersionColumns catalog:{} schema:{} table:{}", catalog, schema, table);
         try {
             final ResultSet rs =
                 getConnection(ch.id).getMetaData().getVersionColumns(catalog, schema, table);
@@ -481,7 +481,7 @@ public class QuicksqlServerMeta implements ProtobufMeta {
 
     public MetaResultSet getPrimaryKeys(ConnectionHandle ch, String catalog, String schema,
         String table) {
-        LOG.trace("getPrimaryKeys catalog:{} schema:{} table:{}", catalog, schema, table);
+        LOGGER.trace("getPrimaryKeys catalog:{} schema:{} table:{}", catalog, schema, table);
         try {
             final ResultSet rs =
                 getConnection(ch.id).getMetaData().getPrimaryKeys(catalog, schema, table);
@@ -586,7 +586,7 @@ public class QuicksqlServerMeta implements ProtobufMeta {
             final int id = statementIdGenerator.getAndIncrement();
             statementCache.put(id, new StatementInfo(statement));
             StatementHandle h = new StatementHandle(ch.id, id, null);
-            LOG.trace("created statement {}", h);
+            LOGGER.trace("created statement {}", h);
             return h;
         } catch (SQLException e) {
             throw propagate(e);
@@ -597,10 +597,10 @@ public class QuicksqlServerMeta implements ProtobufMeta {
     public void closeStatement(StatementHandle h) {
         StatementInfo info = statementCache.getIfPresent(h.id);
         if (info == null || info.statement == null) {
-            LOG.debug("client requested close unknown statement {}", h);
+            LOGGER.debug("client requested close unknown statement {}", h);
             return;
         }
-        LOG.trace("closing statement {}", h);
+        LOGGER.trace("closing statement {}", h);
         try {
             ResultSet results = info.getResultSet();
             if (info.isResultSetInitialized() && null != results) {
@@ -654,10 +654,10 @@ public class QuicksqlServerMeta implements ProtobufMeta {
     public void closeConnection(ConnectionHandle ch) {
         Connection conn = connectionCache.getIfPresent(ch.id);
         if (conn == null) {
-            LOG.debug("client requested close unknown connection {}", ch);
+            LOGGER.debug("client requested close unknown connection {}", ch);
             return;
         }
-        LOG.trace("closing connection {}", ch);
+        LOGGER.trace("closing connection {}", ch);
         try {
             conn.close();
         } catch (SQLException e) {
@@ -689,7 +689,7 @@ public class QuicksqlServerMeta implements ProtobufMeta {
     @Override
     public ConnectionProperties connectionSync(ConnectionHandle ch,
         ConnectionProperties connProps) {
-        LOG.trace("syncing properties for connection {}", ch);
+        LOGGER.trace("syncing properties for connection {}", ch);
         try {
             Connection conn = getConnection(ch.id);
             // ConnectionPropertiesImpl props = new ConnectionPropertiesImpl(conn).merge(connProps);
@@ -728,7 +728,7 @@ public class QuicksqlServerMeta implements ProtobufMeta {
             StatementHandle h = new StatementHandle(ch.id, id,
                 signature(statement.getMetaData(), statement.getParameterMetaData(),
                     sql, statementType));
-            LOG.trace("prepared statement {}", h);
+            LOGGER.trace("prepared statement {}", h);
             return h;
         } catch (SQLException e) {
             throw propagate(e);
@@ -744,45 +744,27 @@ public class QuicksqlServerMeta implements ProtobufMeta {
 
     public ExecuteResult prepareAndExecute(StatementHandle h, String sql, long maxRowCount,
         int maxRowsInFirstFrame, PrepareCallback callback) {
-        return getExecuteResultSet(h,sql);
+        return getExecuteResultSet(h, sql);
     }
 
-    private ExecuteResult getExecuteResultSet(StatementHandle h,String sql){
+    private ExecuteResult getExecuteResultSet(StatementHandle h, String sql) {
         final List<MetaResultSet> resultSets = new ArrayList<>();
         try {
             QuicksqlConnectionImpl connection = (QuicksqlConnectionImpl) getConnection(h.connectionId);
-            RunnerType runnerType = RunnerType.value(connection.getInfoByName("runner"));
+            int maxResNum = Integer
+                .parseInt(StringUtils.defaultIfBlank(connection.getInfoByName("acceptedResultsNum"), "100000"));
             SqlRunner runner = SqlRunner.builder()
-                .setTransformRunner(runnerType)
+                .setTransformRunner(RunnerType.value(connection.getInfoByName("runner")))
                 .setSchemaPath(SqlUtil.getSchemaPath(SqlUtil.parseTableName(sql).tableNames))
                 .setAppName(StringUtils.defaultIfBlank(connection.getInfoByName("appName"), ""))
-                .setAcceptedResultsNum(
-                    Integer.parseInt(StringUtils.defaultIfBlank(connection.getInfoByName("acceptedResultsNum"), "0")))
+                .setAcceptedResultsNum(maxResNum)
                 .ok();
-            QuicksqlServerResultSet resultSet = null;
-            switch (runnerType) {
-                case DEFAULT:
-                    resultSet = getJDBCResultSet(h, runner, sql);
-                    break;
-                case JDBC:
-                    resultSet = getJDBCResultSet(h, runner, sql);
-                    break;
-                case SPARK:
-                    resultSet = getSparkResultSet(h, runner, sql);
-                    break;
-                case FLINK:
-                    resultSet = getFlinkResultSet(h, runner, sql);
-                    break;
-            }
-            resultSets.add(resultSet);
-        } catch (SQLException e) {
-            e.printStackTrace();
+            resultSets.add(getResultSet(h, runner, sql, maxResNum));
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage());
         }
         return new ExecuteResult(resultSets);
     }
-
 
     /**
      * Sets the provided maximum number of rows on the given statement.
@@ -803,15 +785,25 @@ public class QuicksqlServerMeta implements ProtobufMeta {
         return true;
     }
 
-    private QuicksqlServerResultSet getJDBCResultSet(StatementHandle h, SqlRunner runner, String sql) {
-        ResultSet resultSet = (ResultSet) runner.sql(sql).collect();
-        return QuicksqlServerResultSet.create(h.connectionId, h.id, resultSet, 100);
+    private QuicksqlServerResultSet getResultSet(StatementHandle h, SqlRunner runner, String sql, int maxResNum)
+        throws Exception {
+        Object collect = runner.sql(sql).collect();
+        if (collect instanceof ResultSet) {
+            return getJDBCResultSet(h, collect, maxResNum);
+        } else if (collect instanceof Map.Entry) {
+            return getSparkResultSet(h, sql, collect, maxResNum);
+        } else {
+            throw new RuntimeException("not matching result type");
+        }
     }
 
-    protected QuicksqlServerResultSet getSparkResultSet(StatementHandle h, SqlRunner runner, String sql)
+    private QuicksqlServerResultSet getJDBCResultSet(StatementHandle h, Object collect, int maxResNum) {
+        return QuicksqlServerResultSet.create(h.connectionId, h.id, (ResultSet) collect, maxResNum);
+    }
+
+    protected QuicksqlServerResultSet getSparkResultSet(StatementHandle h, String sql, Object collect, int maxResNum)
         throws Exception {
-        Map.Entry<List<Attribute>, List<GenericRowWithSchema>> sparkData = (Entry<List<Attribute>, List<GenericRowWithSchema>>) runner
-            .sql(sql).collect();
+        Map.Entry<List<Attribute>, List<GenericRowWithSchema>> sparkData = (Entry<List<Attribute>, List<GenericRowWithSchema>>) collect;
 
         QueryResult result = executeQuery(sparkData);
         final List<ColumnMetaData> columnMetaDataList = new ArrayList<>();
@@ -823,11 +815,10 @@ public class QuicksqlServerMeta implements ProtobufMeta {
             new AvaticaResultSetMetaData((AvaticaStatement) info.statement, null, signature), TimeZone.getDefault(),
             null);
         quickSqlResultSet.execute2(cursor, columnMetaDataList);
-        return QuicksqlServerResultSet.create(h.connectionId, h.id, quickSqlResultSet, signature, 100);
+        return QuicksqlServerResultSet.create(h.connectionId, h.id, quickSqlResultSet, signature, maxResNum);
     }
 
-    protected QuicksqlServerResultSet getFlinkResultSet(StatementHandle h, SqlRunner runner, String sql)
-        throws SQLException {
+    protected QuicksqlServerResultSet getFlinkResultSet(StatementHandle h, SqlRunner runner, String sql) {
         return null;
     }
 
@@ -854,7 +845,6 @@ public class QuicksqlServerMeta implements ProtobufMeta {
         }
         List<Attribute> attributes = sparkData.getKey();
         List<GenericRowWithSchema> value = sparkData.getValue();
-
         List<Object> data = new ArrayList<>();
         List<ColumnMetaData> meta = new ArrayList<>();
         value.stream().forEach(column -> {
@@ -863,7 +853,7 @@ public class QuicksqlServerMeta implements ProtobufMeta {
         attributes.stream().forEach(attribute -> {
             ScalarType columnType = getColumnType(attribute.dataType());
             meta.add(new ColumnMetaData(0, false, true, false, false,
-                1, true, -1, (String) null, attribute.name(), (String) null, -1, -1, (String) null, (String) null,
+                1, true, -1,  null, attribute.name(), null, -1, -1,  null,  null,
                 columnType, true, false, false, columnType.columnClassName()));
         });
         return new QueryResult(meta, data);
@@ -904,7 +894,7 @@ public class QuicksqlServerMeta implements ProtobufMeta {
 
     public Frame fetch(StatementHandle h, long offset, int fetchMaxRowCount) throws
         NoSuchStatementException, MissingResultsException {
-        LOG.trace("fetching {} offset:{} fetchMaxRowCount:{}", h, offset, fetchMaxRowCount);
+        LOGGER.trace("fetching {} offset:{} fetchMaxRowCount:{}", h, offset, fetchMaxRowCount);
         try {
             final StatementInfo statementInfo = statementCache.getIfPresent(h.id);
             if (null == statementInfo) {
@@ -948,12 +938,12 @@ public class QuicksqlServerMeta implements ProtobufMeta {
         for (TypedValue value : parameterValues) {
             if (value.type == Rep.BYTE || value.type == Rep.SHORT || value.type == Rep.LONG || value.type == Rep.DOUBLE
                 || value.type == Rep.INTEGER || value.type == Rep.FLOAT) {
-                sql = sql.replaceFirst("\\?",value.value.toString());
-            }else {
-                sql = sql.replaceFirst("\\?","'" + value.value.toString() + "'");
+                sql = sql.replaceFirst("\\?", value.value.toString());
+            } else {
+                sql = sql.replaceFirst("\\?", "'" + value.value.toString() + "'");
             }
         }
-        return getExecuteResultSet(h,sql);
+        return getExecuteResultSet(h, sql);
     }
 
     @Override
@@ -1173,13 +1163,13 @@ public class QuicksqlServerMeta implements ProtobufMeta {
         public void onRemoval(RemovalNotification<String, Connection> notification) {
             String connectionId = notification.getKey();
             Connection doomed = notification.getValue();
-            LOG.debug("Expiring connection {} because {}", connectionId, notification.getCause());
+            LOGGER.debug("Expiring connection {} because {}", connectionId, notification.getCause());
             try {
                 if (doomed != null) {
                     doomed.close();
                 }
             } catch (Throwable t) {
-                LOG.info("Exception thrown while expiring connection {}", connectionId, t);
+                LOGGER.info("Exception thrown while expiring connection {}", connectionId, t);
             }
         }
     }
@@ -1197,7 +1187,7 @@ public class QuicksqlServerMeta implements ProtobufMeta {
                 // log/throw?
                 return;
             }
-            LOG.debug("Expiring statement {} because {}", stmtId, notification.getCause());
+            LOGGER.debug("Expiring statement {} because {}", stmtId, notification.getCause());
             try {
                 if (doomed.getResultSet() != null) {
                     doomed.getResultSet().close();
@@ -1206,7 +1196,7 @@ public class QuicksqlServerMeta implements ProtobufMeta {
                     doomed.statement.close();
                 }
             } catch (Throwable t) {
-                LOG.info("Exception thrown while expiring statement {}", stmtId, t);
+                LOGGER.info("Exception thrown while expiring statement {}", stmtId, t);
             }
         }
     }
