@@ -61,3 +61,7 @@ nav:
 ## 提交
 
 提交所有改动，Push 后在 GitHub 发起一个 PR 请求。
+
+## 文档翻译规范
+
+请参考 [Apache Pulsar 文档翻译手册](https://github.com/apache/pulsar-translation/blob/master/README_zh-CN.md)  
