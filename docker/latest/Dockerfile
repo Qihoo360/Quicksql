@@ -18,7 +18,7 @@ RUN cd ~/Quicksql && tar -xzvf target/$(awk -v RS='\r\n' '/<qsql.release>[^<]+<\
 # Download Spark package
 RUN cd ~ && wget https://archive.apache.org/dist/spark/spark-2.2.0/spark-2.2.0-bin-hadoop2.7.tgz &&  \
     tar -xzvf spark-2.2.0-bin-hadoop2.7.tgz -C /usr/local && \
-    ln -s /usr/local/spark-2.2.0-bin-hadoop2.7.tgz /usr/local/spark
+    ln -s /usr/local/spark-2.2.0-bin-hadoop2.7 /usr/local/spark
 
 # TODO : Add other services such as ES,Flink,etc...
 

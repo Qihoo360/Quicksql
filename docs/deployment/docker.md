@@ -14,13 +14,13 @@
 
 - `docker run -it --name quicksql francisdu/quicksql /bin/bash`
 
-- Run example: quicksql-example.sh --class com.qihoo.qsql.CsvJoinWithEsExample
+- Run example: `quicksql-example.sh --class com.qihoo.qsql.CsvJoinWithEsExample`
 
 ## Start version 0.7.0
 
 - `docker run -it --name quicksql francisdu/quicksql:0.7.0 /bin/bash`
 
-- Run example: quicksql-example.sh --class com.qihoo.qsql.CsvJoinWithEsExample
+- Run example: `quicksql-example.sh --class com.qihoo.qsql.CsvJoinWithEsExample`
 
 ## Start version 0.6
 
@@ -28,7 +28,7 @@
 
 - Run example: `qsql -e "select 1"`
 
-## Installation location:
+## Installation location
 
 `QSQL_HOME = /usr/local/qsql`
 

@@ -20,7 +20,7 @@ RUN wget https://archive.apache.org/dist/spark/spark-2.2.0/spark-2.2.0-bin-hadoo
 # Setting environments
 ENV JAVA_HOME /usr/lib/jvm/java-1.8.0-openjdk
 ENV QSQL_HOME /usr/local/qsql-0.7.0
-ENV SPARK_HOME /usr/local/spark-2.4.4-bin-hadoop2.7
+ENV SPARK_HOME /usr/local/spark-2.2.0-bin-hadoop2.7
 ENV PATH $JAVA_HOME/bin:$SPARK_HOME/bin:$SPARK_HOME/sbin:$QSQL_HOME/bin:$PATH
 RUN export PATH QSQL_HOME SPARK_HOME
 
