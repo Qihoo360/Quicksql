@@ -1,22 +1,32 @@
-# Dockerfile for QuickSQL
+# Quicksql on Docker
 
-[Docker Image](https://hub.docker.com/r/francisdu/quicksql)
+[Docker Hub Link](https://hub.docker.com/r/francisdu/quicksql)
 
-## Easy to use:(Based on Centos7)
+## Preparation before use
 
-- Step 1:
-Install Docker service : `yum update -y && yum intall docker -y`
+- Install Docker on Cenots: `yum update -y && yum intall docker -y`
 
-- Step 2:
-Run Quick SQL image: ` docker run -d --name quicksql francisdu/quicksql`
+- Install Docker on Ubuntu: `apt update -y && apt-get intall docker -y`
 
-- Step 3:
-Open terminal : `docker exec -it [CONTAINER NAME / ID] /bin/bash`
+## Start the latest version
 
-- Step 4:
-Run example : `$QSQL_HOME/bin/quicksql-example.sh --class com.qihoo.qsql.CsvJoinWithEsExample --runner spark`
+- `docker run -it --name quicksql francisdu/quicksql /bin/bash`
 
-## Installation location:
+- Run example: `quicksql-example.sh --class com.qihoo.qsql.CsvJoinWithEsExample --runner spark`
+
+## Start version 0.7.0
+
+- `docker run -it --name quicksql francisdu/quicksql:0.7.0 /bin/bash`
+
+- Run example: `quicksql-example.sh --class com.qihoo.qsql.CsvJoinWithEsExample --runner spark`
+
+## Start version 0.6
+
+- `docker run -it --name quicksql francisdu/quicksql:0.6 /bin/bash`
+
+- Run example: `qsql -e "select 1"`
+
+## Installation location
 
 `QSQL_HOME = /usr/local/qsql`
 
@@ -24,4 +34,4 @@ Run example : `$QSQL_HOME/bin/quicksql-example.sh --class com.qihoo.qsql.CsvJoin
 
 ## Documents
 
-[架构介绍](../doc/README文档.md) | [部署文档](../doc/BUILD文档.md) | [命令行文档](../doc/CLI文档.md) | [JDBC文档](../doc/JDBC文档.md) | [API文档](../doc/API文档.md)
+[Getting started](https://quicksql.readthedocs.io/en/latest/reference/getting-started/)
