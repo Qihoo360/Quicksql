@@ -9,19 +9,17 @@ public class CsvJoinWithEsExample {
 
     /**
      * If you want to execute in the IDE, adjust the scope of the spark package in the parent pom to compile.
+     * 如果希望在IDE中执行spark和flink的样例代码，请调整父pom中的spark、flink的scope值为compile。
      * @param args nothing
      */
     public static void main(String[] args) throws IOException {
-        if (args.length < 1) {
-            throw new RuntimeException("Need to specify the query engine!");
-        }
         RuntimeEnv.init();
         String sql = "SELECT * FROM depts "
             + "INNER JOIN (SELECT * FROM student " +
             "WHERE city in ('FRAMINGHAM', 'BROCKTON', 'CONCORD')) FILTERED " +
             "ON depts.name = FILTERED.type ";
         System.out.println("Iput: " + sql);
-        SqlRunner.Builder.RunnerType runnerType = RunnerType.value(args[0]);
+        SqlRunner.Builder.RunnerType runnerType = RunnerType.value(args.length < 1 ? "spark" : args[0]);
         SqlRunner runner = SqlRunner.builder()
             .setTransformRunner(runnerType)
             .setSchemaPath(RuntimeEnv.metadata)

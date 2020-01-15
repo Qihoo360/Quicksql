@@ -330,7 +330,6 @@ else
    CONF=${CONF}" --jar_name=${QSQL_HOME}/lib/qsql-core-"${PROJECT_VERSION}".jar "
 fi
 
-CONF=${CONF}" --class_name=com.qihoo.quicksql.sh.cli.QSqlSubmit "
 CONF=${CONF}" --jar=${JARS} "
 
 QSQL_LAUNCH_CLASSPATH="${QSQL_HOME}/lib/qsql-core-"${PROJECT_VERSION}".jar"
