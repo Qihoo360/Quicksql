@@ -92,7 +92,7 @@
         <jsoup.version>1.11.3</jsoup.version>
         <junit.version>4.12</junit.version>
         <kotlin.version>1.2.71</kotlin.version>
-        <checkstyle.version>8.12</checkstyle.version>
+        <checkstyle.version>8.29</checkstyle.version>
         <maven-checkstyle-plugin.version>3.0.0</maven-checkstyle-plugin.version>
         <maven-dependency-plugin.version>3.1.1</maven-dependency-plugin.version>
         <maven-enforcer-plugin.version>3.0.0-M2</maven-enforcer-plugin.version>
