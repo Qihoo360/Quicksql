@@ -20,6 +20,14 @@ public enum MetadataMapping {
     /**
      * use '%' and literal 'value' to complete mapping.
      */
+    MONGODB("com.qihoo.qsql.org.apache.calcite.adapter.mongodb.MongoSchemaFactory",
+        "com.qihoo.qsql.org.apache.calcite.adapter.mongodb.MongoTableFactory",
+        Arrays.asList(
+            "dbName", "collectionName", "dbType", "host",
+            "port", "userName", "password","authMechanism"),
+        Collections.emptyList()
+    ),
+
     JDBC("com.qihoo.qsql.org.apache.calcite.adapter.custom.JdbcSchemaFactory",
         "com.qihoo.qsql.org.apache.calcite.adapter.custom.JdbcTableFactory",
         Arrays.asList(
@@ -40,6 +48,7 @@ public enum MetadataMapping {
     public static final String ORACLE = "oracle";
     public static final String HIVE = "hive";
     public static final String HIVE_JDBC = "hive-jdbc";
+    public static final String MONGO = "mongo";
 
     private static final String JOINT_FLAG = "%";
     String schemaClass;
@@ -66,6 +75,8 @@ public enum MetadataMapping {
                 return MetadataMapping.JDBC;
             case HIVE:
                 return MetadataMapping.Hive;
+            case MONGO:
+                return MetadataMapping.MONGODB;
             default:
                 throw new RuntimeException("Not support given adapter name!!");
         }
@@ -81,7 +92,7 @@ public enum MetadataMapping {
     }
 
     private String extractAssetMetadata(String key, Map<String, String> parameters) {
-        if (! key.contains(JOINT_FLAG)) {
+        if (!key.contains(JOINT_FLAG)) {
             return parameters.getOrDefault(key, "");
         }
 

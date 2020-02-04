@@ -35,7 +35,6 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import org.apache.commons.cli.ParseException;
-import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,7 +78,7 @@ public class ExecutionDispatcher {
             //}
             String sqlType = getSqlType(sql);
             DdlOperation ddlOperation = DdlFactory.getDdlOperation(sqlType);
-            if (ObjectUtils.anyNotNull(ddlOperation)) {
+            if (null != ddlOperation) {
                 ddlOperation.execute(sql);
                 return;
             }
@@ -143,6 +142,8 @@ public class ExecutionDispatcher {
             procedure = procedure.next();
             if (procedure instanceof PreparedExtractProcedure.ElasticsearchExtractor) {
                 sql = ((PreparedExtractProcedure.ElasticsearchExtractor) procedure).sql();
+            } else if (procedure instanceof PreparedExtractProcedure.MongoExtractor) {
+                sql = ((PreparedExtractProcedure.MongoExtractor) procedure).sql();
             } else {
                 sql = ((ExtractProcedure) procedure).toRecognizedQuery();
             }
