@@ -170,6 +170,9 @@ public class JdbcPipeline extends AbstractPipeline {
                 case JDBC:
                     LOGGER.debug("Connecting to JDBC server....");
                     return createJdbcConnection(conn);
+                case MONGODB:
+                    LOGGER.debug("Connecting to Mongo server....");
+                    return createMongoConnection("inline: " + MetadataPostman.assembleSchema(assemblers));
                 default:
                     throw new RuntimeException("Unsupported jdbc type");
             }
@@ -186,6 +189,17 @@ public class JdbcPipeline extends AbstractPipeline {
 
         Connection connection = connectionFactory.createConnection();
         LOGGER.debug("Connect with Elasticsearch server successfully!");
+        return connection;
+    }
+
+    private static Connection createMongoConnection(String json) throws SQLException {
+        ConnectionFactory connectionFactory = new MapConnectionFactory(
+            ImmutableMap.of("unquotedCasing", "unchanged", "caseSensitive", "true"),
+            ImmutableList.of()
+        ).with("model", json);
+
+        Connection connection = connectionFactory.createConnection();
+        LOGGER.debug("Connect with Mongo server successfully!");
         return connection;
     }
 
@@ -391,7 +405,7 @@ public class JdbcPipeline extends AbstractPipeline {
     }
 
     enum JdbcType {
-        ELASTICSEARCH, JDBC, CSV
+        ELASTICSEARCH, JDBC, CSV,MONGO
     }
 
     public interface ConnectionPostProcessor {

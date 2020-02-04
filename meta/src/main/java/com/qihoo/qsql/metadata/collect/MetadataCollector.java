@@ -6,6 +6,7 @@ import com.qihoo.qsql.metadata.MetadataClient;
 import com.qihoo.qsql.metadata.collect.dto.ElasticsearchProp;
 import com.qihoo.qsql.metadata.collect.dto.HiveProp;
 import com.qihoo.qsql.metadata.collect.dto.JdbcProp;
+import com.qihoo.qsql.metadata.collect.dto.MongoPro;
 import com.qihoo.qsql.metadata.entity.DatabaseParamValue;
 import com.qihoo.qsql.metadata.entity.DatabaseValue;
 import com.qihoo.qsql.metadata.entity.TableValue;
@@ -63,6 +64,10 @@ public abstract class MetadataCollector {
                 case "elasticsearch":
                     return new ElasticsearchCollector(
                         mapper.readValue(json, ElasticsearchProp.class), regexp);
+                case "mongo":
+                    return new MongoCollector(
+                        mapper.readValue(json, MongoPro.class), regexp) {
+                    };
                 default:
                     throw new RuntimeException("Unsupported datasource.");
             }
