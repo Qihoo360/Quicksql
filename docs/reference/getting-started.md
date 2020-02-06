@@ -95,6 +95,12 @@ $ ./meta-extract -p "{\"jdbcDriver\": \"com.mysql.jdbc.Driver\", \"jdbcUrl\": \"
 $ ./meta-extract -p "{\"esNodes\": \"192.168.1.1\",\"esPort\": \"9090\",\"esUser\": \"user\",\"esPass\": \"pass\",\"esIndex\": \"index/type\"}" -d "es" -r "%"
 ``````
 
+从**Mongodb**存储中采集元数据
+
+``````shell
+$ ./meta-extract -p "{\"host\": \"192.168.1.1\", \"port\": \"27017\", \"authMechanism\": \"SCRAM-SHA-1\",\"userName\": \"admin\",\"password\": \"admin\",\"dataBaseName\": \"test\",\"collectionName\":\"products\"}" -d "mongo" -r "products"
+``````
+
 采集成功后将返回
 
 ```shell
