@@ -155,6 +155,16 @@ $ ./meta-extract -p "{\"esNodes\": \"192.168.1.1\",\"esPort\": \"9090\",\"esUser
 	"jdbcPassword": "KYLIN",
 	"dbName": "default"
 }
+##Mongodb
+{
+	"host": "192.168.1.1",
+	"port": "27017",
+	"dataBaseName": "test",
+	"authMechanism": "SCRAM-SHA-1",
+	"userName": "admin",
+	"password": "admin",
+	"collectionName": "products"
+}
 ``````
 
 注意：Shell中双引号是特殊字符，传JSON参数时需要做转义！！
