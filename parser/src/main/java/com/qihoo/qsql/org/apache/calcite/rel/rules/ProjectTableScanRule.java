@@ -1,0 +1,133 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to you under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.qihoo.qsql.org.apache.calcite.rel.rules;
+
+import com.qihoo.qsql.org.apache.calcite.adapter.enumerable.EnumerableInterpreter;
+import com.qihoo.qsql.org.apache.calcite.interpreter.Bindables;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptRule;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptRuleCall;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptRuleOperand;
+import com.qihoo.qsql.org.apache.calcite.plan.RelOptTable;
+import com.qihoo.qsql.org.apache.calcite.rel.core.Project;
+import com.qihoo.qsql.org.apache.calcite.rel.core.RelFactories;
+import com.qihoo.qsql.org.apache.calcite.rel.core.TableScan;
+import com.qihoo.qsql.org.apache.calcite.rex.RexNode;
+import com.qihoo.qsql.org.apache.calcite.schema.ProjectableFilterableTable;
+import com.qihoo.qsql.org.apache.calcite.tools.RelBuilderFactory;
+import com.qihoo.qsql.org.apache.calcite.util.ImmutableIntList;
+import com.qihoo.qsql.org.apache.calcite.util.mapping.Mapping;
+import com.qihoo.qsql.org.apache.calcite.util.mapping.Mappings;
+
+import com.google.common.collect.ImmutableList;
+
+import java.util.List;
+
+/**
+ * Planner rule that converts a {@link Project}
+ * on a {@link com.qihoo.qsql.org.apache.calcite.rel.core.TableScan}
+ * of a {@link com.qihoo.qsql.org.apache.calcite.schema.ProjectableFilterableTable}
+ * to a {@link com.qihoo.qsql.org.apache.calcite.interpreter.Bindables.BindableTableScan}.
+ *
+ * <p>The {@link #INTERPRETER} variant allows an intervening
+ * {@link com.qihoo.qsql.org.apache.calcite.adapter.enumerable.EnumerableInterpreter}.
+ *
+ * @see FilterTableScanRule
+ */
+public abstract class ProjectTableScanRule extends RelOptRule {
+  @SuppressWarnings("Guava")
+  @Deprecated // to be removed before 2.0
+  public static final com.google.common.base.Predicate<TableScan> PREDICATE =
+      ProjectTableScanRule::test;
+
+  /** Rule that matches Project on TableScan. */
+  public static final ProjectTableScanRule INSTANCE =
+      new ProjectTableScanRule(
+          operand(Project.class,
+              operandJ(TableScan.class, null, ProjectTableScanRule::test,
+                  none())),
+          RelFactories.LOGICAL_BUILDER,
+          "ProjectScanRule") {
+        @Override public void onMatch(RelOptRuleCall call) {
+          final Project project = call.rel(0);
+          final TableScan scan = call.rel(1);
+          apply(call, project, scan);
+        }
+      };
+
+  /** Rule that matches Project on EnumerableInterpreter on TableScan. */
+  public static final ProjectTableScanRule INTERPRETER =
+      new ProjectTableScanRule(
+          operand(Project.class,
+              operand(EnumerableInterpreter.class,
+                  operandJ(TableScan.class, null, ProjectTableScanRule::test,
+                      none()))),
+          RelFactories.LOGICAL_BUILDER,
+          "ProjectScanRule:interpreter") {
+        @Override public void onMatch(RelOptRuleCall call) {
+          final Project project = call.rel(0);
+          final TableScan scan = call.rel(2);
+          apply(call, project, scan);
+        }
+      };
+
+  //~ Constructors -----------------------------------------------------------
+
+  /** Creates a ProjectTableScanRule. */
+  public ProjectTableScanRule(RelOptRuleOperand operand,
+      RelBuilderFactory relBuilderFactory, String description) {
+    super(operand, relBuilderFactory, description);
+  }
+
+  //~ Methods ----------------------------------------------------------------
+
+  protected static boolean test(TableScan scan) {
+    // We can only push projects into a ProjectableFilterableTable.
+    final RelOptTable table = scan.getTable();
+    return table.unwrap(ProjectableFilterableTable.class) != null;
+  }
+
+  protected void apply(RelOptRuleCall call, Project project, TableScan scan) {
+    final RelOptTable table = scan.getTable();
+    assert table.unwrap(ProjectableFilterableTable.class) != null;
+    if (!project.isMapping()) {
+      return;
+    }
+    final Mappings.TargetMapping mapping = Project.getPartialMapping(
+            project.getInput().getRowType().getFieldCount(),
+            project.getProjects());
+
+    final ImmutableIntList projects;
+    final ImmutableList<RexNode> filters;
+    if (scan instanceof Bindables.BindableTableScan) {
+      final Bindables.BindableTableScan bindableScan =
+          (Bindables.BindableTableScan) scan;
+      filters = bindableScan.filters;
+      projects = bindableScan.projects;
+    } else {
+      filters = ImmutableList.of();
+      projects = scan.identity();
+    }
+
+    final List<Integer> projects2 =
+        Mappings.apply((Mapping) mapping, projects);
+    call.transformTo(
+        Bindables.BindableTableScan.create(scan.getCluster(), scan.getTable(),
+            filters, projects2));
+  }
+}
+
+// End ProjectTableScanRule.java

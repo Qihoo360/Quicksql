@@ -11,13 +11,14 @@ import com.qihoo.qsql.org.apache.calcite.sql.SqlOperator;
 import com.qihoo.qsql.org.apache.calcite.sql.SqlSpecialOperator;
 import com.qihoo.qsql.org.apache.calcite.sql.SqlSyntax;
 import com.qihoo.qsql.org.apache.calcite.sql.fun.SqlStdOperatorTable;
-import com.qihoo.qsql.org.apache.calcite.sql.util.ReflectiveSqlOperatorTable.Key;
+import com.qihoo.qsql.org.apache.calcite.sql.util.ReflectiveSqlOperatorTable;
 
 /**
  * .
  */
 public class SqlRunnerFuncTable {
-    private final Multimap<Key, SqlOperator> operators = HashMultimap.create();
+    private final Multimap<ReflectiveSqlOperatorTable.CaseInsensitiveKey, SqlOperator> operators =
+        HashMultimap.create();
 
     private static SqlRunnerFuncTable INSTANCE = null;
     private RunnerType runner = null;
@@ -51,7 +52,7 @@ public class SqlRunnerFuncTable {
     }
 
     interface RunnerFunctionsHolder {
-        void registerAll(Multimap<Key, SqlOperator> operators);
+        void registerAll(Multimap<ReflectiveSqlOperatorTable.CaseInsensitiveKey, SqlOperator> operators);
     }
 
     static class SparkFunctionsHolder implements RunnerFunctionsHolder {
@@ -139,18 +140,20 @@ public class SqlRunnerFuncTable {
         };
 
         @Override
-        public void registerAll(Multimap<Key, SqlOperator> operators) {
+        public void registerAll(Multimap<ReflectiveSqlOperatorTable.CaseInsensitiveKey, SqlOperator> operators) {
             Arrays.stream(FUNCTIONS).forEach(func ->
-                operators.put(new Key(func.getName(), SqlSyntax.FUNCTION), func));
+                operators.put(new ReflectiveSqlOperatorTable.CaseInsensitiveKey(
+                    func.getName(), SqlSyntax.FUNCTION), func));
             Arrays.stream(SPECIALS).forEach(spec ->
-                operators.put(new Key(spec.getName(), SqlSyntax.SPECIAL), spec));
+                operators.put(new ReflectiveSqlOperatorTable.CaseInsensitiveKey(
+                    spec.getName(), SqlSyntax.SPECIAL), spec));
         }
     }
 
     static class JdbcFunctionHolder implements RunnerFunctionsHolder {
         //contains all of Calcite operators
         @Override
-        public void registerAll(Multimap<Key, SqlOperator> operators) {
+        public void registerAll(Multimap<ReflectiveSqlOperatorTable.CaseInsensitiveKey, SqlOperator> operators) {
             SqlStdOperatorTable.instance()
                 .getOperators().entries()
                 .forEach(op -> operators.put(op.getKey(), op.getValue()));
@@ -159,7 +162,7 @@ public class SqlRunnerFuncTable {
 
     public boolean contains(SqlOperator operator) {
         return operators.containsKey(
-            new Key(operator.getName(), SqlSyntax.FUNCTION));
+            new ReflectiveSqlOperatorTable.CaseInsensitiveKey(operator.getName(), SqlSyntax.FUNCTION));
     }
 
     public RunnerType getRunner() {

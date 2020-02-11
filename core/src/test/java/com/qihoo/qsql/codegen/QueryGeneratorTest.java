@@ -38,7 +38,7 @@ public class QueryGeneratorTest {
                 + "edu_manage_department_0\", "
                 + "SparkJdbcGenerator.config(\"username\", \"password\", \"\"))",
             "createOrReplaceTempView(\"edu_manage_department_0\")",
-            "String sql = \"SELECT REGEXP_EXTRACT(type, '.*', 0) AS expr_col__0 FROM edu_manage_department_0\"",
+            "String sql = \"SELECT REGEXP_EXTRACT(type, '.*', 0) AS expr_idx_0 FROM edu_manage_department_0\"",
             "spark.sql(sql)");
     }
 

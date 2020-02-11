@@ -27,7 +27,7 @@
         </dependency>
         <dependency>
             <groupId>com.qihoo.qsql</groupId>
-            <artifactId>qsql-calcite-analysis</artifactId>
+            <artifactId>qsql-calcite-parser</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

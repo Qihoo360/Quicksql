@@ -18,7 +18,7 @@
         <dependency>
             <groupId>org.apache.calcite.avatica</groupId>
             <artifactId>avatica-server</artifactId>
-            <version>1.12.0</version>
+            <version>${avatica.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

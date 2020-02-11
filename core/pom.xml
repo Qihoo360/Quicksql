@@ -40,12 +40,7 @@ limitations under the License.
         <!-- qsql-->
         <dependency>
             <groupId>com.qihoo.qsql</groupId>
-            <artifactId>qsql-calcite-analysis</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.qihoo.qsql</groupId>
-            <artifactId>qsql-calcite-elasticsearch</artifactId>
+            <artifactId>qsql-calcite-parser</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
@@ -61,7 +56,7 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>com.qihoo.qsql</groupId>
-            <artifactId>qsql-calcite-analysis</artifactId>
+            <artifactId>qsql-calcite-parser</artifactId>
             <version>${project.parent.version}</version>
             <type>test-jar</type>
             <scope>test</scope>
@@ -350,6 +345,29 @@ limitations under the License.
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
+        </dependency>
+        <dependency>
+            <!-- log4j2 is default logging framework for ES server -->
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j2.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j2.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-core</artifactId>
+            <version>${hamcrest.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
         </dependency>
     </dependencies>
 

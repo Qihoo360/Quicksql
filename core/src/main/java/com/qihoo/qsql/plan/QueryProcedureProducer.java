@@ -174,6 +174,7 @@ public class QueryProcedureProducer {
         } catch (ValidationException | RelConversionException ev) {
             throw new ParseException("Error When Validating: " + ev.getMessage(), ev);
         } catch (Throwable ex) {
+            ex.printStackTrace();
             throw new ParseException(
                 "Unknown Parse Exception, Concrete Message is: " + ex.getMessage(), ex);
         }
