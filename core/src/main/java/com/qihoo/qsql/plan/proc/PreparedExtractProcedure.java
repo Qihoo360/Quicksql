@@ -19,8 +19,6 @@ import com.qihoo.qsql.org.apache.calcite.adapter.enumerable.JavaRowFormat;
 import com.qihoo.qsql.org.apache.calcite.adapter.enumerable.PhysType;
 import com.qihoo.qsql.org.apache.calcite.adapter.enumerable.PhysTypeImpl;
 import com.qihoo.qsql.org.apache.calcite.adapter.hive.HiveTable;
-import com.qihoo.qsql.org.apache.calcite.adapter.mongodb.MongoRel;
-import com.qihoo.qsql.org.apache.calcite.adapter.mongodb.MongoRules;
 import com.qihoo.qsql.org.apache.calcite.adapter.mongodb.MongoTable;
 import com.qihoo.qsql.org.apache.calcite.adapter.virtual.VirtualTable;
 import com.qihoo.qsql.org.apache.calcite.plan.RelOptCluster;
@@ -300,7 +298,6 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
     }
 
     public static class MongoExtractor extends NoSqlExtractor {
-        public Properties properties;
         private String sql;
 
         /**
@@ -318,59 +315,11 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
                               String tableName, String sql) {
             super(next, properties, config, relNode, tableName);
             this.sql = sql;
-            this.properties = properties;
         }
 
         @Override
         public String toRecognizedQuery() {
-            final RuleSet rules = RuleSets.ofList(
-                EnumerableRules.ENUMERABLE_PROJECT_RULE,
-                EnumerableRules.ENUMERABLE_FILTER_RULE,
-                EnumerableRules.ENUMERABLE_AGGREGATE_RULE,
-                EnumerableRules.ENUMERABLE_SORT_RULE,
-                EnumerableRules.ENUMERABLE_TABLE_SCAN_RULE
-            );
-
-            RelNode esLogicalPlan = createLogicalPlan(sql(
-                new HiveSqlDialect(SqlDialect.EMPTY_CONTEXT)));
-            RelNode mongoPhysicalPlan = toPhysicalPlan(esLogicalPlan, rules);
-            String mongoJson = null;
-            try {
-                mongoJson = toMongoQuery((EnumerableRel) mongoPhysicalPlan);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-            //TODO debug toLowerCase
-            properties.put("mongoQuery", mongoJson);
-            return mongoJson;
-        }
-
-        private String toMongoQuery(EnumerableRel root) throws IOException {
-            EnumerableRelImplementor relImplementor =
-                new EnumerableRelImplementor(root.getCluster().getRexBuilder(),
-                    ImmutableMap.of());
-            final MongoRel.Implementor mongoImplementor =
-                new MongoRel.Implementor();
-            RelDataType rowType = root.getRowType();
-            final PhysType physType = PhysTypeImpl.of(relImplementor.getTypeFactory(), rowType,
-                Prefer.ARRAY.prefer(JavaRowFormat.ARRAY));
-
-            List<Pair<String, Class>> pairs = Pair
-                .zip(MongoRules.mongoFieldNames(rowType),
-                    new AbstractList<Class>() {
-                        @Override
-                        public Class get(int index) {
-                            return physType.fieldClass(index);
-                        }
-
-                        @Override
-                        public int size() {
-                            return rowType.getFieldCount();
-                        }
-                    });
-
-            //return mongoImplementor.convert(root.getInput(0), pairs);
-            return "";
+            return sql(new HiveSqlDialect(SqlDialect.EMPTY_CONTEXT)).toLowerCase();
         }
 
         @Override

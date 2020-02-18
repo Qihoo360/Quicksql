@@ -3,6 +3,7 @@ package com.qihoo.qsql.plan;
 import com.qihoo.qsql.api.SqlRunner.Builder;
 import com.qihoo.qsql.api.SqlRunner.Builder.RunnerType;
 import com.qihoo.qsql.exception.ParseException;
+import com.qihoo.qsql.org.apache.calcite.adapter.mongodb.MongoTable;
 import com.qihoo.qsql.plan.func.SqlRunnerFuncTable;
 import com.qihoo.qsql.plan.proc.DataSetTransformProcedure;
 import com.qihoo.qsql.plan.proc.DiskLoadProcedure;
@@ -109,12 +110,18 @@ public class QueryProcedureProducer {
                 entry.getValue().getKey(),
                 (output instanceof SqlInsertOutput)
                     ? ((SqlInsertOutput) output).getSelect() : output));
+            //if table is mongo table and set connection information properties to builder object so as to set
+            // parameters when do spark-submit job
+            if (((RelOptTableImpl) entry.getValue().getValue()).getTable() instanceof MongoTable) {
+                builder.setProperties(((MongoTable) ((RelOptTableImpl) entry.getValue().getValue()).getTable())
+                    .getProperties());
+            }
         }
         return new ProcedurePortFire(extractProcedures).optimize();
     }
 
     private LoadProcedure createLoadProcedure() {
-        if (! (output instanceof SqlInsertOutput)) {
+        if (!(output instanceof SqlInsertOutput)) {
             return new MemoryLoadProcedure();
         }
 

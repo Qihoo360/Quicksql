@@ -31,7 +31,6 @@ public class ProcessExecutor {
         if (args.length < 2) {
             throw new RuntimeException("Need to given a Requirement class hand its class name!");
         }
-
         Option optionSourceCode = Option.builder().longOpt("source").hasArg().desc("source code").build();
         Option optionClassName = Option.builder().longOpt("class_name").hasArg().desc("class Name").build();
         Option optionJars = Option.builder().longOpt("jar").hasArg().desc("jars").build();
@@ -80,7 +79,7 @@ public class ProcessExecutor {
 
     @SuppressWarnings("unchecked")
     private void execute(String source, String className,
-        String runner, String appName, String extraJars, String master) {
+                         String runner, String appName, String extraJars, String master) {
         Class requirementClass;
         try {
             requirementClass = ClassBodyWrapper.compileSourceAndLoadClass(
@@ -112,7 +111,6 @@ public class ProcessExecutor {
                             .appName(appName)
                             .enableHiveSupport()
                             .getOrCreate();
-
                         constructor.newInstance(sc).execute();
                         sc.stop();
                     } catch (NoSuchMethodException | IllegalAccessException

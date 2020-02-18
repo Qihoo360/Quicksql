@@ -52,11 +52,11 @@ public class MongoTable extends AbstractQueryableTable
     implements TranslatableTable {
     private final String collectionName;
 
-    public Properties properties;
-
     private Map<String, Object> operand;
 
     public Properties getProperties() {
+        Properties properties = new Properties();
+        operand.forEach((key, value) -> properties.put(key, value.toString()));
         return properties;
     }
 
@@ -210,7 +210,7 @@ public class MongoTable extends AbstractQueryableTable
         /**
          * Called via code-generation.
          *
-         * @see org.apache.calcite.adapter.mongodb.MongoMethod#MONGO_QUERYABLE_AGGREGATE
+         * @see com.qihoo.qsql.org.apache.calcite.adapter.mongodb.MongoMethod#MONGO_QUERYABLE_AGGREGATE
          */
         @SuppressWarnings("UnusedDeclaration")
         public Enumerable<Object> aggregate(List<Map.Entry<String, Class>> fields,
@@ -225,7 +225,7 @@ public class MongoTable extends AbstractQueryableTable
          * @param projectJson Projection document
          * @param fields List of expected fields (and their types)
          * @return result of mongo query
-         * @see org.apache.calcite.adapter.mongodb.MongoMethod#MONGO_QUERYABLE_FIND
+         * @see com.qihoo.qsql.org.apache.calcite.adapter.mongodb.MongoMethod#MONGO_QUERYABLE_FIND
          */
         @SuppressWarnings("UnusedDeclaration")
         public Enumerable<Object> find(String filterJson,
