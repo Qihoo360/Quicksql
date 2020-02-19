@@ -94,10 +94,10 @@ public class QueryProcedureTest {
         prepareForChecking(sql)
             .checkExtra("{\"_source\":[\"city\",\"province\",\"digest\",\"type\",\"stu_id\"],\"size\":30}",
             "select times from edu_manage.department group by times")
-            .checkTrans("SELECT edu_manage_department_1.times, t.city, t.province, t.digest, t.type, t.stu_id " +
-                "FROM edu_manage_department_1 INNER JOIN (SELECT city, province, digest, type, stu_id, " +
-                "CAST(city AS INTEGER) AS city0 FROM student_profile_student_0) " +
-                "AS t ON edu_manage_department_1.times = t.city0 LIMIT 10");
+            .checkTrans("SELECT edu_manage_department_1.times, t.city, t.province, t.digest, t.type, t.stu_id "
+                + "FROM edu_manage_department_1 INNER JOIN (SELECT city, province, digest, type, stu_id, "
+                + "CAST(city AS INTEGER) AS city0 FROM student_profile_student_0) "
+                + "AS t ON edu_manage_department_1.times = t.city0 LIMIT 10");
     }
 
     @Test
@@ -426,13 +426,13 @@ public class QueryProcedureTest {
                 "SELECT stu_id, date_time, signature, course_type, content "
                     + "FROM action_required.homework_content "
                     + "WHERE date_time >= '20180810' AND date_time <= '20180830'",
-                "{\"query\":{\"constant_score\":{\"filter\":" +
-                    "{\"term\":{\"province\":\"hunan\"}}}},\"_source\":[\"digest\"]}")
-            .checkTrans("SELECT t.expr_idx_0, CASE WHEN action_required_homework_content_1.signature = 'abc' " +
-                "THEN 'cde' ELSE 'def' END AS expr_idx_1, " +
-                "CASE WHEN action_required_homework_content_1.date_time <> '20180820' " +
-                "THEN 'Hello' ELSE 'WORLD' END AS col FROM action_required_homework_content_1 " +
-                "LEFT JOIN (SELECT MAX(digest) AS expr_idx_0 FROM student_profile_student_0) AS t ON TRUE")
+                "{\"query\":{\"constant_score\":{\"filter\":"
+                    + "{\"term\":{\"province\":\"hunan\"}}}},\"_source\":[\"digest\"]}")
+            .checkTrans("SELECT t.expr_idx_0, CASE WHEN action_required_homework_content_1.signature = 'abc' "
+                + "THEN 'cde' ELSE 'def' END AS expr_idx_1, "
+                + "CASE WHEN action_required_homework_content_1.date_time <> '20180820' "
+                + "THEN 'Hello' ELSE 'WORLD' END AS col FROM action_required_homework_content_1 "
+                + "LEFT JOIN (SELECT MAX(digest) AS expr_idx_0 FROM student_profile_student_0) AS t ON TRUE")
             .checkArchitect(("[E]->[E]->[T]->[L]"));
     }
 
@@ -490,11 +490,11 @@ public class QueryProcedureTest {
         prepareForChecking(sql).checkExtra(
             "SELECT stu_id, date_time, signature, course_type, content FROM action_required.homework_content",
             "{\"_source\":[\"type\"]}")
-            .checkTrans("SELECT COUNT(*) AS expr_idx_0, COUNT(*) AS expr_idx_1 " +
-                "FROM action_required_homework_content_1 " +
-                "INNER JOIN (SELECT type FROM student_profile_student_0 GROUP BY type) AS t " +
-                "ON action_required_homework_content_1.date_time = t.type " +
-                "GROUP BY action_required_homework_content_1.date_time, action_required_homework_content_1.signature")
+            .checkTrans("SELECT COUNT(*) AS expr_idx_0, COUNT(*) AS expr_idx_1 "
+                + "FROM action_required_homework_content_1 "
+                + "INNER JOIN (SELECT type FROM student_profile_student_0 GROUP BY type) AS t "
+                + "ON action_required_homework_content_1.date_time = t.type "
+                + "GROUP BY action_required_homework_content_1.date_time, action_required_homework_content_1.signature")
             .checkArchitect("[E]->[E]->[T]->[L]");
     }
 

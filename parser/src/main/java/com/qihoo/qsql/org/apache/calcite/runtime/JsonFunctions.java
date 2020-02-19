@@ -738,7 +738,7 @@ public class JsonFunctions {
    * The Java output of {@link com.qihoo.qsql.org.apache.calcite.sql.fun.SqlJsonValueExpressionOperator}.
    */
   public static class JsonValueContext {
-    @JsonValue
+//    @JsonValue
     public final Object obj;
     public final Exception exc;
 
