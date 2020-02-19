@@ -59,11 +59,8 @@ This change added tests and can be verified as follows:
 
   - Dependencies (does it add or upgrade a dependency): (yes / no)
   - The public API: (yes / no)
-  - The schema: (yes / no / don't know)
   - The default values of configurations: (yes / no)
   - The wire protocol: (yes / no)
-  - The rest endpoints: (yes / no)
-  - The admin cli options: (yes / no)
   - Anything that affects deployment: (yes / no / don't know)
 
 ### Documentation
