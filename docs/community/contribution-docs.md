@@ -27,10 +27,7 @@ python get-pip.py
 Install the mkdocs package and dependencies using pip:
 
 ```shell
-pip install mkdocs
-pip install mkdocs-material
-pip install pygments
-pip install pymdown-extensions
+pip install -r docs/requirements.txt
 ```
 
 You should now have the mkdocs command installed on your system. Run `mkdocs
@@ -47,7 +44,7 @@ Open browser `http://127.0.0.1:8000`
 ![screenshot](../images/screenshot.png)
 
 ## Write markdown documents
-- Create a new `.md` file in the `/docs directory`,
+- Create a new `.md` file in the `/docs` directory,
 Chinese docs under `/docs/zh`.
 
 - Edit `mkdocs.yml` and add pages.  [Tutorial](https://www.mkdocs.org/#adding-pages)
