@@ -1,4 +1,4 @@
-mkdocs-material==4.6.0
-Pygments==2.2.0
-pymdown-extensions==6.2.1
-mkdocs-git-revision-date-localized-plugin==0.4.5
+mkdocs-material
+Pygments
+pymdown-extensions
+mkdocs-git-revision-date-localized-plugin

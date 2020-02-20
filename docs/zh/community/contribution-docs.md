@@ -25,10 +25,7 @@ python get-pip.py
 用 pip 安装 MkDocs 和其他依赖： 
 
 ```shell
-pip install mkdocs
-pip install mkdocs-material
-pip install pygments
-pip install pymdown-extensions
+pip install -r docs/requirements.txt
 ```
 
 执行 `mkdocs --version` 确定 MkDocs 安装成功并能运行。
