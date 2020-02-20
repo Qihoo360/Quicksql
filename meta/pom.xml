@@ -126,7 +126,7 @@
                             <!-- ignore "unused but declared" warnings -->
                             <ignoredUnusedDeclaredDependencies>
                                 <ignoredUnusedDeclaredDependency>
-                                    org.apache.calcite.avatica:avatica
+                                    org.apache.com.qihoo.qsql.org.apache.calcite.avatica:avatica
                                 </ignoredUnusedDeclaredDependency>
                                 <ignoredUnusedDeclaredDependency>
                                     org.slf4j:slf4j-api

@@ -13,14 +13,12 @@
 
     <modules>
         <module>core</module>
-        <module>analysis</module>
-        <module>elasticsearch</module>
+        <module>parser</module>
         <module>example</module>
         <module>server</module>
         <module>assembly</module>
         <module>meta</module>
         <module>client</module>
-        <module>linq4j</module>
     </modules>
 
     <properties>
@@ -43,17 +41,15 @@
 
         <!-- This list is in alphabetical order. -->
         <airlift-tpch.version>0.1</airlift-tpch.version>
-        <avatica.version>1.12.0</avatica.version>
+        <avatica.version>1.15.0</avatica.version>
         <build-helper-maven-plugin.version>3.0.0
         </build-helper-maven-plugin.version>
-        <cassandra-driver-core.version>3.4.0</cassandra-driver-core.version>
-        <cassandra-unit.version>3.5.0.1</cassandra-unit.version>
-        <cassandra.version>3.11.2</cassandra.version>
         <checksum-maven-plugin.version>1.2</checksum-maven-plugin.version>
         <chinook-data-hsqldb.version>0.1</chinook-data-hsqldb.version>
-        <commons-dbcp2.version>2.5.0</commons-dbcp2.version>
+        <commons-codec.version>1.12</commons-codec.version>
+        <commons-dbcp2.version>2.6.0</commons-dbcp2.version>
         <commons-lang3.version>3.8</commons-lang3.version>
-        <commons-pool2.version>2.6.0</commons-pool2.version>
+        <commons-pool2.version>2.6.2</commons-pool2.version>
         <elasticsearch.version>6.2.4</elasticsearch.version>
         <esri-geometry-api.version>2.2.0</esri-geometry-api.version>
         <findbugs.version>3.0.1</findbugs.version>
@@ -62,7 +58,7 @@
         <foodmart-data-hsqldb.version>0.3</foodmart-data-hsqldb.version>
         <foodmart-queries.version>0.4.1</foodmart-queries.version>
         <forbiddenapis.version>2.6</forbiddenapis.version>
-        <freemarker.version>2.3.25-incubating</freemarker.version>
+        <freemarker.version>2.3.28</freemarker.version>
         <git-commit-id-plugin.version>2.1.9</git-commit-id-plugin.version>
         <geode.version>1.6.0</geode.version>
         <fongo.version>2.1.1</fongo.version>
@@ -83,7 +79,7 @@
         <hydromatic-toolbox.version>0.3</hydromatic-toolbox.version>
         <hydromatic-tpcds.version>0.4</hydromatic-tpcds.version>
         <jackson.version>2.6.5</jackson.version>
-        <janino.version>3.0.9</janino.version>
+        <janino.version>3.0.11</janino.version>
         <java-diff.version>1.1.2</java-diff.version>
         <javacc-maven-plugin.version>2.4</javacc-maven-plugin.version>
         <jcip-annotations.version>1.0-1</jcip-annotations.version>
@@ -126,17 +122,20 @@
         <flink-shaded-hadoop2-uber.version>2.7.5-1.8.2</flink-shaded-hadoop2-uber.version>
         <gson.version>2.8.5</gson.version>
         <mongo.version>3.12.0</mongo.version>
+        <jsonpath.version>2.4.0</jsonpath.version>
+        <!--Delete reduplicate dependencies-->
+
 
         <!-- Other properties (not version numbers) -->
         <!-- Java 1.8 does not support -html5, so override via profile for Java 1.8 -->
         <maven-javadoc-html5>-html5</maven-javadoc-html5>
         <maven-javadoc-plugin.excludePackageNames>
-            org.apache.calcite.benchmarks.generated,
+            org.apache.com.qihoo.qsql.org.apache.calcite.benchmarks.generated,
             com.qihoo.qsql.org.apache.calcite.sql.parser.babel,
             com.qihoo.qsql.org.apache.calcite.sql.parser.ddl,
             com.qihoo.qsql.org.apache.calcite.sql.parser.impl,
             com.qihoo.qsql.org.apache.calcite.sql.parser.parserextensiontesting,
-            org.apache.calcite.piglet.parser,
+            org.apache.com.qihoo.qsql.org.apache.calcite.piglet.parser,
             org.openjdk.jmh
         </maven-javadoc-plugin.excludePackageNames>
         <maven-javadoc-plugin.link>https://docs.oracle.com/javase/9/docs/api/
@@ -616,6 +615,17 @@
                 <artifactId>mongo-java-driver</artifactId>
                 <version>${mongo.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.jayway.jsonpath</groupId>
+                <artifactId>json-path</artifactId>
+                <version>${jsonpath.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>net.minidev</groupId>
+                        <artifactId>json-smart</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -767,6 +777,29 @@
 
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.apache.drill.tools</groupId>
+                    <artifactId>drill-fmpp-maven-plugin</artifactId>
+                    <version>${drill-fmpp-maven-plugin.version}</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.freemarker</groupId>
+                            <artifactId>freemarker</artifactId>
+                            <version>${freemarker.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>net.sourceforge.fmpp</groupId>
+                            <artifactId>fmpp</artifactId>
+                            <version>${fmpp.version}</version>
+                            <exclusions>
+                                <exclusion>
+                                    <groupId>org.freemarker</groupId>
+                                    <artifactId>freemarker</artifactId>
+                                </exclusion>
+                            </exclusions>
+                        </dependency>
+                    </dependencies>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-enforcer-plugin</artifactId>

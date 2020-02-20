@@ -70,7 +70,7 @@ public class QueryProcedureTest {
         NODE.insertBulk("student", bulk);
 
         producer = new QueryProcedureProducer(
-            "inline: " + MetadataPostman.getCalciteModelSchema(tableNames));
+            "inline: " + MetadataPostman.getCalciteModelSchema(tableNames), SqlRunner.builder());
     }
 
     @Test
@@ -94,11 +94,10 @@ public class QueryProcedureTest {
         prepareForChecking(sql)
             .checkExtra("{\"_source\":[\"city\",\"province\",\"digest\",\"type\",\"stu_id\"],\"size\":30}",
             "select times from edu_manage.department group by times")
-            .checkTrans("SELECT edu_manage_department_0.times, student_profile_student_1.city, "
-                + "student_profile_student_1.province, student_profile_student_1.digest, "
-                + "student_profile_student_1.type, student_profile_student_1.stu_id "
-                + "FROM edu_manage_department_0 INNER JOIN student_profile_student_1 "
-                + "ON edu_manage_department_0.times = student_profile_student_1.city LIMIT 10");
+            .checkTrans("SELECT edu_manage_department_1.times, t.city, t.province, t.digest, t.type, t.stu_id "
+                + "FROM edu_manage_department_1 INNER JOIN (SELECT city, province, digest, type, stu_id, "
+                + "CAST(city AS INTEGER) AS city0 FROM student_profile_student_0) "
+                + "AS t ON edu_manage_department_1.times = t.city0 LIMIT 10");
     }
 
     @Test
@@ -110,7 +109,7 @@ public class QueryProcedureTest {
     @Test
     public void testQuoting() {
         String sql = "SELECT \"double-quote\", 'quote', times as `c` FROM department as `dep`";
-        prepareForChecking(sql).checkExtra("select 'double-quote' as expr_col__0, 'quote' as expr_col__1, times as c "
+        prepareForChecking(sql).checkExtra("select 'double-quote' as expr_idx_0, 'quote' as expr_idx_1, times as c "
             + "from edu_manage.department");
     }
 
@@ -235,7 +234,7 @@ public class QueryProcedureTest {
         String sql = "SELECT EXISTS (SELECT 1) "
             + "FROM edu_manage.department AS test "
             + "WHERE test.type IN ('male', 'female')";
-        prepareForChecking(sql).checkExtra("select t1.i is not null as expr_col__0 "
+        prepareForChecking(sql).checkExtra("select t1.i is not null as expr_idx_0 "
             + "from (select * from edu_manage.department "
             + "where type = 'male' or type = 'female') as t left join "
             + "(select true as i) as t1 on true");
@@ -327,8 +326,8 @@ public class QueryProcedureTest {
                 + "LEFT JOIN action_required.homework_content homework_content0 "
                 + "ON homework_content.content = homework_content0.signature "
                 + "WHERE homework_content0.content IS NULL) t "
-                + "INNER JOIN (SELECT '20180713' expr_col__0) t1 "
-                + "ON t.date_time = t1.expr_col__0");
+                + "INNER JOIN (SELECT '20180713' expr_idx_0) t1 "
+                + "ON t.date_time = t1.expr_idx_0");
     }
 
     @Test
@@ -351,7 +350,7 @@ public class QueryProcedureTest {
             + "USING(stu_id) \n"
             + "GROUP BY test1.date_time, test2.date_time\n"
             + "HAVING test1.date_time > '20180713' AND test2.date_time > '20180731'";
-        prepareForChecking(sql).checkExtra("SELECT COUNT(*) expr_col__0 "
+        prepareForChecking(sql).checkExtra("SELECT COUNT(*) expr_idx_0 "
             + "FROM action_required.homework_content LEFT JOIN "
             + "action_required.homework_content homework_content0 "
             + "ON homework_content.stu_id = homework_content0.stu_id "
@@ -378,7 +377,7 @@ public class QueryProcedureTest {
                 "select min(times) as m, count(*) as c, count(times) as d from edu_manage.department",
                 "{\"_source\":[\"city\",\"province\",\"digest\",\"type\",\"stu_id\"]}");
         // .checkTrans("SELECT CONCAT(TRIM(student_profile_student_0.city),"
-        //     + " TRIM(action_required_homework_content_1.course_type)) AS expr_col__0"
+        //     + " TRIM(action_required_homework_content_1.course_type)) AS expr_idx_0"
         //     + " FROM student_profile_student_0 INNER JOIN action_required_homework_content_1"
         //     + " ON student_profile_student_0.stu_id = action_required_homework_content_1.stu_id,"
         //     + " edu_manage_department_2 WHERE CASE WHEN edu_manage_department_2.c = 0"
@@ -400,14 +399,12 @@ public class QueryProcedureTest {
             + "\tFROM edu_manage.department) AS msql\n"
             + "\tON hve.pmonth = msql.pday";
         prepareForChecking(sql)
-            .checkExtra("SELECT reved, pmonth FROM "
-                    + "(SELECT signature reved, CURRENT_TIMESTAMP pmonth,"
-                    + " date_time FROM action_required.homework_content "
-                    + "ORDER BY date_time) t0",
-                "select trim(type) as expr_col__0, '20180101' as pday from edu_manage.department")
+            .checkExtra("SELECT signature reved, CURRENT_TIMESTAMP pmonth "
+                    + "FROM action_required.homework_content",
+                "select trim(type) as expr_idx_0, '20180101' as pday from edu_manage.department")
             .checkTrans("SELECT action_required_homework_content_0.reved, "
                 + "action_required_homework_content_0.pmonth, "
-                + "edu_manage_department_1.expr_col__0, edu_manage_department_1.pday "
+                + "edu_manage_department_1.expr_idx_0, edu_manage_department_1.pday "
                 + "FROM action_required_homework_content_0 "
                 + "FULL JOIN edu_manage_department_1 "
                 + "ON action_required_homework_content_0.pmonth = edu_manage_department_1.pday")
@@ -429,15 +426,13 @@ public class QueryProcedureTest {
                 "SELECT stu_id, date_time, signature, course_type, content "
                     + "FROM action_required.homework_content "
                     + "WHERE date_time >= '20180810' AND date_time <= '20180830'",
-                "{\"query\":{\"constant_score\":{\"filter\":{\"term\":{\"province\":\"hunan\"}}}},"
-                    + "\"_source\":false,\"size\":0,"
-                    + "\"aggregations\":{\"expr_col__0\":{\"max\":{\"field\":\"digest\"}}}}")
-            .checkTrans("SELECT student_profile_student_1.expr_col__0, "
-                + "CASE WHEN action_required_homework_content_0.signature = 'abc' "
-                + "THEN 'cde' ELSE 'def' END AS expr_col__1, "
-                + "CASE WHEN action_required_homework_content_0.date_time <> '20180820' "
-                + "THEN 'Hello' ELSE 'WORLD' END AS col FROM action_required_homework_content_0 "
-                + "LEFT JOIN student_profile_student_1 ON TRUE")
+                "{\"query\":{\"constant_score\":{\"filter\":"
+                    + "{\"term\":{\"province\":\"hunan\"}}}},\"_source\":[\"digest\"]}")
+            .checkTrans("SELECT t.expr_idx_0, CASE WHEN action_required_homework_content_1.signature = 'abc' "
+                + "THEN 'cde' ELSE 'def' END AS expr_idx_1, "
+                + "CASE WHEN action_required_homework_content_1.date_time <> '20180820' "
+                + "THEN 'Hello' ELSE 'WORLD' END AS col FROM action_required_homework_content_1 "
+                + "LEFT JOIN (SELECT MAX(digest) AS expr_idx_0 FROM student_profile_student_0) AS t ON TRUE")
             .checkArchitect(("[E]->[E]->[T]->[L]"));
     }
 
@@ -463,7 +458,7 @@ public class QueryProcedureTest {
             + "group by province order by province limit 10";
         prepareForChecking(sql, RunnerType.DEFAULT)
             .checkExtra("{\"_source\":[\"province\",\"city\"]}")
-            .checkTrans("SELECT COUNT(*) AS expr_col__0, province "
+            .checkTrans("SELECT COUNT(*) AS expr_idx_0, province "
                 + "FROM student_profile_student_0 GROUP BY province ORDER BY province LIMIT 10")
             .checkArchitect("[D]->[E]->[T]->[L]");
 
@@ -495,10 +490,11 @@ public class QueryProcedureTest {
         prepareForChecking(sql).checkExtra(
             "SELECT stu_id, date_time, signature, course_type, content FROM action_required.homework_content",
             "{\"_source\":[\"type\"]}")
-            .checkTrans("SELECT COUNT(*) AS expr_col__0, COUNT(*) AS expr_col__1 "
-                + "FROM action_required_homework_content_0 INNER JOIN student_profile_student_1 "
-                + "ON action_required_homework_content_0.date_time = student_profile_student_1.type "
-                + "GROUP BY action_required_homework_content_0.date_time, action_required_homework_content_0.signature")
+            .checkTrans("SELECT COUNT(*) AS expr_idx_0, COUNT(*) AS expr_idx_1 "
+                + "FROM action_required_homework_content_1 "
+                + "INNER JOIN (SELECT type FROM student_profile_student_0 GROUP BY type) AS t "
+                + "ON action_required_homework_content_1.date_time = t.type "
+                + "GROUP BY action_required_homework_content_1.date_time, action_required_homework_content_1.signature")
             .checkArchitect("[E]->[E]->[T]->[L]");
     }
 
@@ -568,13 +564,13 @@ public class QueryProcedureTest {
     @Test
     public void testCaseWhen() {
         prepareForChecking("SELECT CASE type WHEN 'a' THEN 'b' ELSE 'c' END FROM edu_manage.department")
-            .checkExtra("select case when type = 'a' then 'b' else 'c' end as expr_col__0 from edu_manage.department");
+            .checkExtra("select case when type = 'a' then 'b' else 'c' end as expr_idx_0 from edu_manage.department");
     }
 
     @Test
     public void testIf() {
         prepareForChecking("SELECT IF(10 > 1, 'hello', 2) FROM action_required.homework_content")
-            .checkExtra("SELECT IF(10 > 1, 'hello', 2) expr_col__0 FROM action_required.homework_content");
+            .checkExtra("SELECT IF(TRUE, 'hello', 2) expr_idx_0 FROM action_required.homework_content");
     }
 
     @Test
@@ -596,21 +592,21 @@ public class QueryProcedureTest {
     @Test
     public void testRegexpOperation() {
         prepareForChecking("SELECT regexp_extract(signature, '[0-9]*', 1) FROM action_required.homework_content")
-            .checkExtra("SELECT REGEXP_EXTRACT(signature, '[0-9]*', 1) expr_col__0 "
+            .checkExtra("SELECT REGEXP_EXTRACT(signature, '[0-9]*', 1) expr_idx_0 "
                 + "FROM action_required.homework_content");
 
         prepareForChecking("SELECT regexp_extract("
             + "regexp_replace(signature, '[0-9]+', 'hello'), '[0-9]*', 1) "
             + "FROM action_required.homework_content WHERE LENGTH(signature) > 10")
             .checkExtra("SELECT REGEXP_EXTRACT("
-                + "REGEXP_REPLACE(signature, '[0-9]+', 'hello'), '[0-9]*', 1) expr_col__0 "
+                + "REGEXP_REPLACE(signature, '[0-9]+', 'hello'), '[0-9]*', 1) expr_idx_0 "
                 + "FROM action_required.homework_content WHERE LENGTH(signature) > 10");
     }
 
     @Test
     public void testConcatTranslate() {
         prepareForChecking("SELECT signature || 'hello' || 'world' FROM action_required.homework_content")
-            .checkExtra("SELECT CONCAT(CONCAT(signature, 'hello'), 'world') expr_col__0 "
+            .checkExtra("SELECT CONCAT(CONCAT(signature, 'hello'), 'world') expr_idx_0 "
                 + "FROM action_required.homework_content");
     }
 
@@ -633,13 +629,13 @@ public class QueryProcedureTest {
     @Test
     public void testDateFunction() {
         prepareForChecking("SELECT YEAR(date_time) FROM action_required.homework_content", RunnerType.DEFAULT)
-            .checkExtra("SELECT YEAR(date_time) expr_col__0 FROM action_required.homework_content");
+            .checkExtra("SELECT YEAR(date_time) expr_idx_0 FROM action_required.homework_content");
         prepareForChecking("SELECT MONTH(date_time) FROM action_required.homework_content", RunnerType.DEFAULT)
-            .checkExtra("SELECT MONTH(date_time) expr_col__0 FROM action_required.homework_content");
+            .checkExtra("SELECT MONTH(date_time) expr_idx_0 FROM action_required.homework_content");
         prepareForChecking("SELECT DAYOFYEAR(date_time) FROM action_required.homework_content", RunnerType.DEFAULT)
-            .checkExtra("SELECT DAYOFYEAR(date_time) expr_col__0 FROM action_required.homework_content");
+            .checkExtra("SELECT DAYOFYEAR(date_time) expr_idx_0 FROM action_required.homework_content");
         prepareForChecking("SELECT DAYOFWEEK(date_time) FROM action_required.homework_content", RunnerType.DEFAULT)
-            .checkExtra("SELECT DAYOFWEEK(date_time) expr_col__0 FROM action_required.homework_content");
+            .checkExtra("SELECT DAYOFWEEK(date_time) expr_idx_0 FROM action_required.homework_content");
     }
 
     @Test
@@ -656,7 +652,7 @@ public class QueryProcedureTest {
     public void testTrimFunction() {
         prepareForChecking("SELECT TRIM(BOTH ' ' FROM 'hello') FROM student_profile.student", RunnerType.DEFAULT)
             .checkExtra("{\"_source\":[\"city\",\"province\",\"digest\",\"type\",\"stu_id\"]}")
-            .checkTrans("SELECT TRIM('hello') AS expr_col__0 FROM student_profile_student_0");
+            .checkTrans("SELECT TRIM('hello') AS expr_idx_0 FROM student_profile_student_0");
     }
 
     //TODO add collection type
@@ -667,9 +663,9 @@ public class QueryProcedureTest {
             + "FROM student_profile.student group by type order by "
             + "type limit 3", RunnerType.DEFAULT)
             .checkExtra("{\"_source\":[\"type\"]}")
-            .checkTrans("SELECT LENGTH('ddd') AS expr_col__0,"
-                + " TRIM('bbb') AS expr_col__1,"
-                + " LOWER(type) AS expr_col__2, type"
+            .checkTrans("SELECT LENGTH('ddd') AS expr_idx_0,"
+                + " TRIM('bbb') AS expr_idx_1,"
+                + " LOWER(type) AS expr_idx_2, type"
                 + " FROM student_profile_student_0 GROUP BY type ORDER BY type LIMIT 3");
     }
 
