@@ -6,7 +6,6 @@ import com.qihoo.qsql.utils.PropertiesReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Properties;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
@@ -63,7 +62,9 @@ public class ArgumentsSupplier {
         Properties properties =
             PropertiesReader.readProperties("quicksql-runner.properties", this.getClass());
         //only mongo query job need set 'spark.mongodb.input.uri' parameter.
-        if (!Objects.isNull(builder) && builder.getRunnerProperties().getProperty("dbType").equalsIgnoreCase("mongo")) {
+        if (builder.getRunnerProperties().size() > 0 && builder.getRunnerProperties().getProperty("dbType")
+            .equalsIgnoreCase
+            ("mongo")) {
             properties.put("spark.mongodb.input.uri", constructMongoUrl(builder.getRunnerProperties()));
         }
         return properties.entrySet().stream()
