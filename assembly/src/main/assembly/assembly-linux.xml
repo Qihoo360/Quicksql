@@ -112,5 +112,20 @@
             <outputDirectory>/${qsql.release}/lib/spark</outputDirectory>
             <scope>runtime</scope>
         </dependencySet>
+        <dependencySet>
+            <useProjectArtifact>false</useProjectArtifact>
+            <includes>
+                <include>com.qihoo.qsql:qsql-core:jar</include>
+                <include>com.qihoo.qsql:qsql-server:jar</include>
+                <include>com.qihoo.qsql:qsql-client:jar</include>
+                <include>org.apache.calcite.avatica:avatica*:jar</include>
+                <include>org.eclipse.jetty:jetty*:jar</include>
+                <include>com.google.guava:guava*:jar</include>
+                <include>org.apache.spark:spark-core*:jar</include>
+                <include>javax.servlet:servlet-api*:jar</include>
+            </includes>
+            <outputDirectory>/${qsql.release}/lib/server</outputDirectory>
+            <scope>runtime</scope>
+        </dependencySet>
     </dependencySets>
 </assembly>

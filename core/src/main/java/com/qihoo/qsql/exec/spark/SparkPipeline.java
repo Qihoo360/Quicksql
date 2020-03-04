@@ -39,7 +39,7 @@ public class SparkPipeline extends AbstractPipeline implements Compilable {
         try {
             compileRequirement(wrapper.run(procedure), session(), SparkSession.class).execute();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            throw new RuntimeException(ex);
         }
     }
 

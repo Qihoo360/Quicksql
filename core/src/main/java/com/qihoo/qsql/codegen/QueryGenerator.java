@@ -157,7 +157,7 @@ public abstract class QueryGenerator {
         ExtractProcedure procedure,
         ClassBodyComposer composer) {
         generator.setComposer(composer);
-        generator.setQuery(procedure.toRecognizedQuery());
+        generator.setQuery(procedure.toRecognizedQuery().replaceAll("\"","\\\\\""));
         generator.setTableName(procedure.getTableName());
         generator.setProperties(procedure.getConnProperties());
     }

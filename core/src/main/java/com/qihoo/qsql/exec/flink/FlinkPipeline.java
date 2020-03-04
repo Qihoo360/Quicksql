@@ -1,5 +1,6 @@
 package com.qihoo.qsql.exec.flink;
 
+import com.qihoo.qsql.exec.Requirement;
 import com.qihoo.qsql.plan.proc.QueryProcedure;
 import com.qihoo.qsql.api.SqlRunner;
 import com.qihoo.qsql.exec.AbstractPipeline;
@@ -37,7 +38,14 @@ public class FlinkPipeline extends AbstractPipeline implements Compilable {
 
     @Override
     public Object collect() {
-        return new Object();
+        startup();
+        wrapper.collect(100000);
+        Requirement requirement = compileRequirement(wrapper, executionEnvironment, ExecutionEnvironment.class);
+        try {
+            return requirement.execute();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     protected void startup() {
@@ -51,7 +59,7 @@ public class FlinkPipeline extends AbstractPipeline implements Compilable {
         try {
             compileRequirement(wrapper, executionEnvironment, ExecutionEnvironment.class).execute();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            throw new RuntimeException(ex);
         }
     }
 

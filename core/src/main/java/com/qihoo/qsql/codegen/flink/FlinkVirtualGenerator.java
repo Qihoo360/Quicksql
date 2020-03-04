@@ -27,7 +27,9 @@ public class FlinkVirtualGenerator extends QueryGenerator {
 
     @Override
     public void saveToTempTable() {
-        String created = "tableEnv.registerTable(\"" + tableName + "\", tableEnv.sqlQuery(\"" + query + "\"));";
+        String table = "Table table = tableEnv.sqlQuery(\"" + query + "\");";
+        composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE, table);
+        String created = "tableEnv.registerTable(\"" + tableName + "\", table);";
         composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE, created);
     }
 
