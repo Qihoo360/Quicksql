@@ -181,7 +181,7 @@ function buildFatJar(){
 
     cd "${QSQL_HOME}"/lib/flink/tmp
 
-    for jarFile in "$(ls *.jar | grep -v "qsql-core-${PROJECT_VERSION}-fat.jar")"; do
+    for jarFile in $(ls *.jar | grep -v "qsql-core-${PROJECT_VERSION}-fat.jar"); do
         jar -xf "${jarFile}"
     done
     rm -rf META-INF

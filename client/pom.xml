@@ -19,6 +19,17 @@
             <groupId>org.apache.calcite.avatica</groupId>
             <artifactId>avatica-server</artifactId>
             <version>${avatica.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>jetty-http</artifactId>
+                    <groupId>org.eclipse.jetty</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-http</artifactId>
+            <version>${jetty.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

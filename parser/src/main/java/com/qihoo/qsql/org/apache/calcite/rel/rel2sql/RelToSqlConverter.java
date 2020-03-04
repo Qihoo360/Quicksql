@@ -54,6 +54,7 @@ import com.qihoo.qsql.org.apache.calcite.rex.RexNode;
 import com.qihoo.qsql.org.apache.calcite.rex.RexProgram;
 import com.qihoo.qsql.org.apache.calcite.sql.JoinConditionType;
 import com.qihoo.qsql.org.apache.calcite.sql.JoinType;
+import com.qihoo.qsql.org.apache.calcite.sql.SqlBasicCall;
 import com.qihoo.qsql.org.apache.calcite.sql.SqlCall;
 import com.qihoo.qsql.org.apache.calcite.sql.SqlDelete;
 import com.qihoo.qsql.org.apache.calcite.sql.SqlDialect;
@@ -69,6 +70,7 @@ import com.qihoo.qsql.org.apache.calcite.sql.SqlNodeList;
 import com.qihoo.qsql.org.apache.calcite.sql.SqlSelect;
 import com.qihoo.qsql.org.apache.calcite.sql.SqlUpdate;
 import com.qihoo.qsql.org.apache.calcite.sql.SqlUtil;
+import com.qihoo.qsql.org.apache.calcite.sql.dialect.OracleSqlDialect;
 import com.qihoo.qsql.org.apache.calcite.sql.fun.SqlRowOperator;
 import com.qihoo.qsql.org.apache.calcite.sql.fun.SqlSingleValueAggFunction;
 import com.qihoo.qsql.org.apache.calcite.sql.fun.SqlStdOperatorTable;
@@ -637,9 +639,27 @@ public class RelToSqlConverter extends SqlImplementor
 
   Result offsetFetch(Sort e, Result x) {
     if (e.fetch != null) {
-      final Builder builder = x.builder(e, Clause.FETCH);
-      builder.setFetch(builder.context.toSql(null, e.fetch));
-      x = builder.result();
+      if (this.dialect instanceof OracleSqlDialect) {
+        SqlNode [] sqlNodes = new SqlNode[2];
+        sqlNodes[0] = new SqlIdentifier(new ArrayList<String>() {{ add("rownum"); }}, SqlParserPos.ZERO);
+        sqlNodes[1] = SqlLiteral.createExactNumeric(((RexLiteral)e.fetch).getValue().toString(), SqlParserPos.ZERO);
+        SqlNode limitWhere = new SqlBasicCall(SqlStdOperatorTable.LESS_THAN_OR_EQUAL,sqlNodes,SqlParserPos.ZERO);
+        SqlNode oldWhere = ((SqlSelect) x.node).getWhere();
+        if (oldWhere == null) {
+          ((SqlSelect) x.node).setWhere(limitWhere);
+        }else {
+          SqlNode [] newSqlNodes= new SqlNode[2];
+          newSqlNodes[0] = oldWhere;
+          newSqlNodes[1] = limitWhere;
+          SqlNode newwhere = new SqlBasicCall(SqlStdOperatorTable.AND,newSqlNodes,SqlParserPos.ZERO);
+          ((SqlSelect) x.node).setWhere(newwhere);
+        }
+        ((SqlSelect) x.node).setFetch(null);
+      }else {
+        final Builder builder = x.builder(e, Clause.FETCH);
+        builder.setFetch(builder.context.toSql(null, e.fetch));
+        x = builder.result();
+      }
     }
     if (e.offset != null) {
       final Builder builder = x.builder(e, Clause.OFFSET);

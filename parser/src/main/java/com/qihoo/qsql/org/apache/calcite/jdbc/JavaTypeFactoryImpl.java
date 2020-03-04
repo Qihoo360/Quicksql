@@ -241,26 +241,23 @@ public class JavaTypeFactoryImpl
   //Modified by QSQL
   public RelDataType getDataType(RelDataTypeFactory relDataTypeFactory, String javaType) {
     switch (javaType.toUpperCase()) {
+      case "SMALLINT":
+      case "TINYINT":
+      case "BIGINT":
+      case "MEDIUMINT":
       case "INT":
       case "INTEGER":
+      case "LONG":
         return relDataTypeFactory.createSqlType(SqlTypeName.INTEGER);
       case "STRING":
       case "VARCHAR":
         return relDataTypeFactory.createSqlType(SqlTypeName.VARCHAR);
-      case "TINYINT":
-        return relDataTypeFactory.createSqlType(SqlTypeName.TINYINT);
-      case "SMALLINT":
-        return relDataTypeFactory.createSqlType(SqlTypeName.SMALLINT);
-      case "BIGINT":
-        return relDataTypeFactory.createSqlType(SqlTypeName.BIGINT);
       case "FLOAT":
         return relDataTypeFactory.createSqlType(SqlTypeName.FLOAT);
       case "DOUBLE":
         return relDataTypeFactory.createSqlType(SqlTypeName.DOUBLE);
       case "DECIMAL":
         return relDataTypeFactory.createSqlType(SqlTypeName.DECIMAL);
-      case "LONG":
-        return relDataTypeFactory.createSqlType(SqlTypeName.BIGINT);
       case "BOOLEAN":
         return relDataTypeFactory.createSqlType(SqlTypeName.BOOLEAN);
       case "ARRAY":

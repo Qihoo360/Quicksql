@@ -22,7 +22,7 @@ public class JdbcServer {
         final int port = Integer.parseInt(parser.getOptionValue(SubmitOption.PORT));
         final String[] mainArgs = new String[]{FullyRemoteJdbcMetaFactory.class.getName()};
 
-        HttpServer jsonServer = Main.start(mainArgs, port, new HandlerFactory() {
+        HttpServer server = Main.start(mainArgs, port, new HandlerFactory() {
             @Override
             public AbstractHandler createHandler(Service service) {
                 return new AvaticaJsonHandler(service);
@@ -34,9 +34,9 @@ public class JdbcServer {
              hostName = StringUtils.isNotBlank(address.getHostName()) ? address.getHostName() : address
                 .getHostAddress();
         }
-        String url = Driver.CONNECT_STRING_PREFIX + "url=http://" + hostName + ":" + jsonServer.getPort();
+        String url = Driver.CONNECT_STRING_PREFIX + "url=http://" + hostName + ":" + server.getPort();
         System.out.println("Quicksql server started, Please connect : " + url);
-        jsonServer.join();
+        server.join();
     }
     public static class FullyRemoteJdbcMetaFactory implements Meta.Factory {
 

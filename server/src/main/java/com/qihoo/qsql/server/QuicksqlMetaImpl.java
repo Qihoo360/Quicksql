@@ -100,11 +100,9 @@ public class QuicksqlMetaImpl extends MetaImpl {
     }
 
     @Override public void commit(ConnectionHandle ch) {
-        throw new UnsupportedOperationException();
     }
 
     @Override public void rollback(ConnectionHandle ch) {
-        throw new UnsupportedOperationException();
     }
 
 }

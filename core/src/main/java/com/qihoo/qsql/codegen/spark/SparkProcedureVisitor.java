@@ -51,7 +51,7 @@ public class SparkProcedureVisitor extends ProcedureVisitor {
             composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE, "return null;\n");
         } else if (loadProcedure instanceof DiskLoadProcedure) {
             composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE,
-                String.format("tmp.write().format(\"com.databricks.spark.csv\")"
+                String.format("tmp.write().format(\"com.databricks.spark.csv\").mode(\"overwrite\")"
                     + ".save(\"%s\");\n", ((DiskLoadProcedure) loadProcedure).path));
             composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE, "return null;\n");
         }
