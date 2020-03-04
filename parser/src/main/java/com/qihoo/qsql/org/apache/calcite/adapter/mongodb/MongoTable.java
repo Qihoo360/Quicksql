@@ -19,8 +19,17 @@ package com.qihoo.qsql.org.apache.calcite.adapter.mongodb;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.qihoo.qsql.org.apache.calcite.linq4j.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import com.qihoo.qsql.org.apache.calcite.adapter.java.AbstractQueryableTable;
+import com.qihoo.qsql.org.apache.calcite.linq4j.AbstractEnumerable;
+import com.qihoo.qsql.org.apache.calcite.linq4j.Enumerable;
+import com.qihoo.qsql.org.apache.calcite.linq4j.Enumerator;
+import com.qihoo.qsql.org.apache.calcite.linq4j.QueryProvider;
+import com.qihoo.qsql.org.apache.calcite.linq4j.Queryable;
 import com.qihoo.qsql.org.apache.calcite.linq4j.function.Function1;
 import com.qihoo.qsql.org.apache.calcite.plan.RelOptCluster;
 import com.qihoo.qsql.org.apache.calcite.plan.RelOptTable;
@@ -35,12 +44,10 @@ import org.bson.BsonDocument;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
-import java.util.*;
-
 /**
  * Table based on a MongoDB collection.
  */
- //begin modify by quicksql team
+//begin modify by quicksql team
 public class MongoTable extends AbstractQueryableTable
     implements TranslatableTable {
     private final String collectionName;
@@ -78,7 +85,7 @@ public class MongoTable extends AbstractQueryableTable
     }
 
     public <T> Queryable<T> asQueryable(QueryProvider queryProvider,
-                                        SchemaPlus schema, String tableName) {
+        SchemaPlus schema, String tableName) {
         return new MongoQueryable<>(queryProvider, schema, this, tableName);
     }
 
@@ -108,7 +115,7 @@ public class MongoTable extends AbstractQueryableTable
      * @return Enumerator of results
      */
     private Enumerable<Object> find(MongoDatabase mongoDb, String filterJson,
-                                    String projectJson, List<Map.Entry<String, Class>> fields) {
+        String projectJson, List<Map.Entry<String, Class>> fields) {
         final MongoCollection collection =
             mongoDb.getCollection(collectionName);
         final Bson filter =
@@ -123,7 +130,7 @@ public class MongoTable extends AbstractQueryableTable
                 return new MongoEnumerator(cursor.iterator(), getter);
             }
         };
-}
+    }
 
     /**
      * Executes an "aggregate" operation on the underlying collection.
@@ -140,8 +147,8 @@ public class MongoTable extends AbstractQueryableTable
      * @return Enumerator of results
      */
     private Enumerable<Object> aggregate(final MongoDatabase mongoDb,
-                                         final List<Map.Entry<String, Class>> fields,
-                                         final List<String> operations) {
+        final List<Map.Entry<String, Class>> fields,
+        final List<String> operations) {
         final List<Bson> list = new ArrayList<>();
         for (String operation : operations) {
             list.add(BsonDocument.parse(operation));
@@ -181,7 +188,7 @@ public class MongoTable extends AbstractQueryableTable
      */
     public static class MongoQueryable<T> extends AbstractTableQueryable<T> {
         MongoQueryable(QueryProvider queryProvider, SchemaPlus schema,
-                       MongoTable table, String tableName) {
+            MongoTable table, String tableName) {
             super(queryProvider, schema, table, tableName);
         }
 
@@ -203,11 +210,11 @@ public class MongoTable extends AbstractQueryableTable
         /**
          * Called via code-generation.
          *
-         * @see com.qihoo.qsql.org.apache.calcite.adapter.mongodb.MongoMethod#MONGO_QUERYABLE_AGGREGATE
+         * @see org.apache.calcite.adapter.mongodb.MongoMethod#MONGO_QUERYABLE_AGGREGATE
          */
         @SuppressWarnings("UnusedDeclaration")
         public Enumerable<Object> aggregate(List<Map.Entry<String, Class>> fields,
-                                            List<String> operations) {
+            List<String> operations) {
             return getTable().aggregate(getMongoDb(), fields, operations);
         }
 
@@ -218,11 +225,11 @@ public class MongoTable extends AbstractQueryableTable
          * @param projectJson Projection document
          * @param fields List of expected fields (and their types)
          * @return result of mongo query
-         * @see com.qihoo.qsql.org.apache.calcite.adapter.mongodb.MongoMethod#MONGO_QUERYABLE_FIND
+         * @see org.apache.calcite.adapter.mongodb.MongoMethod#MONGO_QUERYABLE_FIND
          */
         @SuppressWarnings("UnusedDeclaration")
         public Enumerable<Object> find(String filterJson,
-                                       String projectJson, List<Map.Entry<String, Class>> fields) {
+            String projectJson, List<Map.Entry<String, Class>> fields) {
             return getTable().find(getMongoDb(), filterJson, projectJson, fields);
         }
     }

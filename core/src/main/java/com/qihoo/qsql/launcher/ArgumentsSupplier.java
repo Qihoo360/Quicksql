@@ -63,8 +63,7 @@ public class ArgumentsSupplier {
             PropertiesReader.readProperties("quicksql-runner.properties", this.getClass());
         //only mongo query job need set 'spark.mongodb.input.uri' parameter.
         if (builder.getRunnerProperties().size() > 0 && builder.getRunnerProperties().getProperty("dbType")
-            .equalsIgnoreCase
-            ("mongo")) {
+            .equalsIgnoreCase("mongo")) {
             properties.put("spark.mongodb.input.uri", constructMongoUrl(builder.getRunnerProperties()));
         }
         return properties.entrySet().stream()
