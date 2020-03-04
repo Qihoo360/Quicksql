@@ -9,6 +9,7 @@ import com.qihoo.qsql.codegen.spark.SparkCsvGenerator;
 import com.qihoo.qsql.codegen.spark.SparkElasticsearchGenerator;
 import com.qihoo.qsql.codegen.spark.SparkHiveGenerator;
 import com.qihoo.qsql.codegen.spark.SparkJdbcGenerator;
+import com.qihoo.qsql.codegen.spark.SparkMongoGenerator;
 import com.qihoo.qsql.codegen.spark.SparkVirtualGenerator;
 import com.qihoo.qsql.plan.proc.ExtractProcedure;
 import com.qihoo.qsql.plan.proc.PreparedExtractProcedure;
@@ -29,6 +30,7 @@ public abstract class QueryGenerator {
     private static QueryGenerator jdbc = null;
     private static QueryGenerator virtual = null;
     private static QueryGenerator csv = null;
+    private static QueryGenerator mongo = null;
 
     protected ClassBodyComposer composer;
     protected String query;
@@ -47,28 +49,30 @@ public abstract class QueryGenerator {
      * @return suitable QueryGenerator
      */
     public static QueryGenerator getQueryGenerator(ExtractProcedure procedure, ClassBodyComposer composer,
-            boolean isSpark) {
+                                                   boolean isSpark) {
         if (procedure instanceof PreparedExtractProcedure.HiveExtractor) {
             return createHiveQueryGenerator(procedure, composer, isSpark);
         } else if (procedure instanceof PreparedExtractProcedure.ElasticsearchExtractor) {
             return createElasticsearchQueryGenerator(procedure, composer, isSpark);
         } else if (procedure instanceof PreparedExtractProcedure.MySqlExtractor
-                || procedure instanceof PreparedExtractProcedure.OracleExtractor
-                || procedure instanceof PreparedExtractProcedure.KylinExtractor
-                || procedure instanceof PreparedExtractProcedure.HiveJdbcExtractor) {
+            || procedure instanceof PreparedExtractProcedure.OracleExtractor
+            || procedure instanceof PreparedExtractProcedure.KylinExtractor
+            || procedure instanceof PreparedExtractProcedure.HiveJdbcExtractor) {
             return createJdbcQueryGenerator(procedure, composer, isSpark);
         } else if (procedure instanceof PreparedExtractProcedure.VirtualExtractor) {
             return createVirtualQueryGenerator(procedure, composer, isSpark);
         } else if (procedure instanceof PreparedExtractProcedure.CsvExtractor) {
             return createCsvQueryGenerator(procedure, composer, isSpark);
+        } else if (procedure instanceof PreparedExtractProcedure.MongoExtractor) {
+            return createMongoQueryGenerator(procedure, composer, isSpark);
         } else {
             throw new RuntimeException("Unsupported Engine");
         }
     }
 
     private static QueryGenerator createHiveQueryGenerator(ExtractProcedure procedure,
-        ClassBodyComposer composer,
-        boolean isSpark) {
+                                                           ClassBodyComposer composer,
+                                                           boolean isSpark) {
         if (hive == null) {
             if (isSpark) {
                 hive = new SparkHiveGenerator();
@@ -83,9 +87,24 @@ public abstract class QueryGenerator {
         return hive;
     }
 
+    private static QueryGenerator createMongoQueryGenerator(ExtractProcedure procedure,
+                                                            ClassBodyComposer composer,
+                                                            boolean isSpark) {
+        if (mongo == null) {
+            if (isSpark) {
+                mongo = new SparkMongoGenerator();
+            }
+            setSpecificState(mongo, procedure, composer);
+            mongo.prepare();
+        } else {
+            setSpecificState(mongo, procedure, composer);
+        }
+        return mongo;
+    }
+
     private static QueryGenerator createElasticsearchQueryGenerator(ExtractProcedure procedure,
-        ClassBodyComposer composer,
-        boolean isSpark) {
+                                                                    ClassBodyComposer composer,
+                                                                    boolean isSpark) {
         if (elasticSearch == null) {
             if (isSpark) {
                 elasticSearch =
@@ -103,8 +122,8 @@ public abstract class QueryGenerator {
     }
 
     private static QueryGenerator createJdbcQueryGenerator(ExtractProcedure procedure,
-        ClassBodyComposer composer,
-        boolean isSpark) {
+                                                           ClassBodyComposer composer,
+                                                           boolean isSpark) {
         if (jdbc == null) {
             if (isSpark) {
                 jdbc = new SparkJdbcGenerator();
@@ -120,8 +139,8 @@ public abstract class QueryGenerator {
     }
 
     private static QueryGenerator createVirtualQueryGenerator(ExtractProcedure procedure,
-        ClassBodyComposer composer,
-        boolean isSpark) {
+                                                              ClassBodyComposer composer,
+                                                              boolean isSpark) {
         if (virtual == null) {
             if (isSpark) {
                 virtual = new SparkVirtualGenerator();
@@ -137,8 +156,8 @@ public abstract class QueryGenerator {
     }
 
     private static QueryGenerator createCsvQueryGenerator(ExtractProcedure procedure,
-        ClassBodyComposer composer,
-        boolean isSpark) {
+                                                          ClassBodyComposer composer,
+                                                          boolean isSpark) {
         if (csv == null) {
             if (isSpark) {
                 csv = new SparkCsvGenerator();
@@ -154,8 +173,8 @@ public abstract class QueryGenerator {
     }
 
     private static void setSpecificState(QueryGenerator generator,
-        ExtractProcedure procedure,
-        ClassBodyComposer composer) {
+                                         ExtractProcedure procedure,
+                                         ClassBodyComposer composer) {
         generator.setComposer(composer);
         generator.setQuery(procedure.toRecognizedQuery().replaceAll("\"","\\\\\""));
         generator.setTableName(procedure.getTableName());
