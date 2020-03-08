@@ -115,7 +115,7 @@ public class ExecutionDispatcher {
                 return;
             }
             LOGGER.info("It's a complex query, we need to setup computing engine, waiting...");
-            ProcessExecClient execClient = ProcessExecClient.createProcessClient(pipeline, parser);
+            ProcessExecClient execClient = ProcessExecClient.createProcessClient(pipeline, parser,builder);
             Date apply = new Date();
             LOGGER.info("apply.resource:" + SDF.format(apply));
             execClient.exec();

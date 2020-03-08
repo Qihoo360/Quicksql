@@ -374,10 +374,10 @@ public class QueryProcedureTest {
         prepareForChecking(sql)
             .checkExtra(
                 "SELECT stu_id, date_time, signature, course_type, content FROM action_required.homework_content",
-                "select min(times) as m, count(*) as c, count(times) as d from edu_manage.department",
+                "SELECT MIN(times) AS m, COUNT(*) AS c, COUNT(times) AS d FROM edu_manage.department",
                 "{\"_source\":[\"city\",\"province\",\"digest\",\"type\",\"stu_id\"]}");
         // .checkTrans("SELECT CONCAT(TRIM(student_profile_student_0.city),"
-        //     + " TRIM(action_required_homework_content_1.course_type)) AS expr_idx_0"
+        //     + " TRIM(action_required_homework_content_1.course_type)) AS expr_col__0"
         //     + " FROM student_profile_student_0 INNER JOIN action_required_homework_content_1"
         //     + " ON student_profile_student_0.stu_id = action_required_homework_content_1.stu_id,"
         //     + " edu_manage_department_2 WHERE CASE WHEN edu_manage_department_2.c = 0"
@@ -401,7 +401,7 @@ public class QueryProcedureTest {
         prepareForChecking(sql)
             .checkExtra("SELECT signature reved, CURRENT_TIMESTAMP pmonth "
                     + "FROM action_required.homework_content",
-                "select trim(type) as expr_idx_0, '20180101' as pday from edu_manage.department")
+                "SELECT TRIM(type) AS expr_idx_0, '20180101' AS pday FROM edu_manage.department")
             .checkTrans("SELECT action_required_homework_content_0.reved, "
                 + "action_required_homework_content_0.pmonth, "
                 + "edu_manage_department_1.expr_idx_0, edu_manage_department_1.pday "
@@ -527,10 +527,10 @@ public class QueryProcedureTest {
         prepareForChecking(sql)
             .checkExtra("SELECT stu_id, date_time, signature, course_type, content "
                     + "FROM action_required.homework_content WHERE date_time = '20180901'",
-                "select department_student_relation.stu_id, department.times "
-                    + "from edu_manage.department inner join "
+                "SELECT department_student_relation.stu_id, department.times "
+                    + "FROM edu_manage.department inner join "
                     + "edu_manage.department_student_relation "
-                    + "on department.dep_id = department_student_relation.dep_id")
+                    + "ON department.dep_id = department_student_relation.dep_id")
             .checkTrans("SELECT edu_manage_department_0.stu_id, edu_manage_department_0.times,"
                 + " action_required_homework_content_1.stu_id AS stu_id0, "
                 + "action_required_homework_content_1.date_time, "
@@ -819,7 +819,7 @@ public class QueryProcedureTest {
                 .collect(Collectors.toList());
             Assert.assertEquals(expectedSentences.size(), sentences.size());
             for (int i = 0; i < sentences.size(); i++) {
-                Assert.assertEquals(expectedSentences.get(i), sentences.get(i));
+                Assert.assertEquals(expectedSentences.get(i).toLowerCase(), sentences.get(i).toLowerCase());
             }
 
             return this;

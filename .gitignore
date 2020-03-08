@@ -29,3 +29,4 @@ nbdist/
 /log/
 site/
 
+metastore_db/

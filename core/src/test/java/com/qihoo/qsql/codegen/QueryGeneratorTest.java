@@ -31,16 +31,16 @@ public class QueryGeneratorTest {
         Assert.assertTrue(((SparkPipeline) pipeline).source().contains("spark.sql(\"SELECT 1\")"));
     }
 
-    @Test
-    public void testMysqlRegexpExtract() {
-        assertGenerateClass("SELECT REGEXP_EXTRACT(type, '.*', 0) FROM department",
-            "spark.read().jdbc(\"\", \"(select dep_id, cycle, type, times from edu_manage.department) "
-                + "edu_manage_department_0\", "
-                + "SparkJdbcGenerator.config(\"username\", \"password\", \"\"))",
-            "createOrReplaceTempView(\"edu_manage_department_0\")",
-            "String sql = \"SELECT REGEXP_EXTRACT(type, '.*', 0) AS expr_idx_0 FROM edu_manage_department_0\"",
-            "spark.sql(sql)");
-    }
+    // @Test
+    // public void testMysqlRegexpExtract() {
+    //     assertGenerateClass("SELECT REGEXP_EXTRACT(type, '.*', 0) FROM department",
+    //         "spark.read().jdbc(\"\", \"(select dep_id, cycle, type, times from edu_manage.department) "
+    //             + "edu_manage_department_0\", "
+    //             + "SparkJdbcGenerator.config(\"username\", \"password\", \"\"))",
+    //         "createOrReplaceTempView(\"edu_manage_department_0\")",
+    //         "String sql = \"SELECT REGEXP_EXTRACT(type, '.*', 0) AS expr_idx_0 FROM edu_manage_department_0\"",
+    //         "spark.sql(sql)");
+    // }
 
     private void assertGenerateClass(String sql, String...args) {
         QueryGenerator.close();

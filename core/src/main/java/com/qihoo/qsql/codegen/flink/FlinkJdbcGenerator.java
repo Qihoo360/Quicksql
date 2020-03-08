@@ -55,7 +55,7 @@ public class FlinkJdbcGenerator extends QueryGenerator {
         Invoker config = Invoker.registerMethod("FlinkJdbcGenerator.query");
 
         String invokeWrap = config.invoke(insertArray(convertProperties("jdbcUrl", "jdbcUser", "jdbcPassword",
-            "jdbcDriver"), query.toLowerCase()));
+            "jdbcDriver"), query));
         String wrapper = with("wrapper", "tmp");
         String invokedStatement = "DataSetListWrapper" + " " + wrapper + " = " + invokeWrap + ";";
         composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE, invokedStatement);
