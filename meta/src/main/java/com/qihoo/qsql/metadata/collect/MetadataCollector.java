@@ -10,9 +10,11 @@ import com.qihoo.qsql.metadata.collect.dto.MongoPro;
 import com.qihoo.qsql.metadata.entity.DatabaseParamValue;
 import com.qihoo.qsql.metadata.entity.DatabaseValue;
 import com.qihoo.qsql.metadata.entity.TableValue;
+import com.qihoo.qsql.org.apache.calcite.tools.YmlUtils;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
@@ -25,7 +27,7 @@ public abstract class MetadataCollector {
 
     static {
         String logProp;
-        if (((logProp = System.getenv("QSQL_HOME")) != null) && ! logProp.isEmpty()) {
+        if (((logProp = System.getenv("QSQL_HOME")) != null) && !logProp.isEmpty()) {
             PropertyConfigurator.configure(logProp
                 + File.separator + "conf" + File.separator + "log4j.properties");
         }
@@ -44,22 +46,21 @@ public abstract class MetadataCollector {
     public static MetadataCollector create(String json, String dataSource, String regexp) {
         try {
             LOGGER.info("Connecting server.....");
+            dataSource = dataSource.toLowerCase();
+            Map<String, Map<String, String>> sourceMap = YmlUtils.getSourceMap();
+            if (sourceMap.containsKey(dataSource)) {
+                String collectorClassName = sourceMap.get(dataSource).get("collectorClass");
+                if ("hive".equals(collectorClassName)) {
+                    return new HIveJdbcCollector(mapper.readValue(json, HiveProp.class),regexp,dataSource);
+                }else {
+                    return new JdbcCollector(mapper.readValue(json, JdbcProp.class),regexp, sourceMap.get(dataSource),
+                        dataSource);
+                }
+            }
             switch (dataSource.toLowerCase()) {
-                case "oracle":
-                    return new OracleCollector(
-                        mapper.readValue(json, JdbcProp.class), regexp);
                 case "hive":
                     return new HiveCollector(
                         mapper.readValue(json, HiveProp.class), regexp);
-                case "mysql":
-                    return new MysqlCollector(
-                        mapper.readValue(json, JdbcProp.class), regexp);
-                case "kylin":
-                    return new KylinCollector(
-                            mapper.readValue(json, HiveProp.class), regexp);
-                case "hive-jdbc":
-                    return new HiveJdbcCollector(
-                            mapper.readValue(json, HiveProp.class), regexp);
                 case "es":
                 case "elasticsearch":
                     return new ElasticsearchCollector(
@@ -83,7 +84,6 @@ public abstract class MetadataCollector {
         if (args.length < 2) {
             throw new RuntimeException("Required conn info and type at least");
         }
-
         LOGGER.info("Input params: properties({}), type({}), filter regex({})",
             args[0], args[1], args[2]);
         MetadataCollector.create(args[0], args[1], args[2]).execute();
@@ -153,4 +153,5 @@ public abstract class MetadataCollector {
     protected abstract List<ColumnValue> convertColumnValue(Long tbId, String tableName, String dbName);
 
     protected abstract List<String> getTableNameList();
+
 }

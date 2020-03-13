@@ -2,29 +2,28 @@ package com.qihoo.qsql.metadata.collect;
 
 import com.qihoo.qsql.metadata.collect.dto.HiveProp;
 import com.qihoo.qsql.metadata.entity.DatabaseValue;
-import org.apache.commons.dbutils.DbUtils;
-
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import org.apache.commons.dbutils.DbUtils;
 
-public class KylinCollector extends JdbcCollector {
+public class HIveJdbcCollector extends BaseJdbcCollector{
+    private String dbType;
 
-    /**
-     * .
-     */
-    public KylinCollector(HiveProp prop, String filter) throws SQLException, ClassNotFoundException {
+    public HIveJdbcCollector(HiveProp prop, String filter,String dbType) throws
+        SQLException, ClassNotFoundException {
         super(filter);
         this.prop = prop;
         Class.forName(prop.getJdbcDriver());
         connection = DriverManager.getConnection(prop.getJdbcUrl(), prop.getJdbcUser(), prop.getJdbcPassword());
+        this.dbType = dbType;
     }
 
     @Override
     protected DatabaseValue convertDatabaseValue() {
         DatabaseValue value = new DatabaseValue();
-        value.setDbType("kylin");
+        value.setDbType(dbType);
         value.setDesc("Who am I");
         value.setName(getDatabasePosition());
         return value;
@@ -46,7 +45,6 @@ public class KylinCollector extends JdbcCollector {
         } finally {
             DbUtils.closeQuietly(resultSet);
         }
-
         throw new RuntimeException("Please add db_name in `jdbcUrl`");
     }
 }

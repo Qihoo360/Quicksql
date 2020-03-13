@@ -1,0 +1,34 @@
+mysql:
+    driver : com.mysql.jdbc.Driver
+    dialect : MysqlSqlDialect
+    showDatabaseSql : SELECT DATABASE()
+    columnValueSql : SELECT COLUMN_NAME, DATA_TYPE, ORDINAL_POSITION FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '%s' AND TABLE_SCHEMA = '%s'
+    showTableSql : SHOW TABLES LIKE '%s'
+oracle:
+    driver : oracle.jdbc.driver.OracleDriver
+    dialect : OracleSqlDialect
+    quote : '"'
+    replaceAll : '"rownum",rownum'
+    showDatabaseSql : SELECT sys_context( 'userenv', 'current_schema' ) FROM dual
+    columnValueSql : SELECT COLUMN_NAME, DATA_TYPE, COLUMN_ID FROM USER_TAB_COLUMNS WHERE TABLE_NAME = '%s'
+    showTableSql : SELECT table_name FROM all_tables WHERE table_name LIKE '%s'
+gbase-8s:
+    driver : com.gbase.jdbc.Driver
+    dialect : MysqlSqlDialect
+    showDatabaseSql : SELECT DATABASE()
+    columnValueSql : SELECT COLUMN_NAME, DATA_TYPE, ORDINAL_POSITION FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '%s' AND TABLE_SCHEMA = '%s'
+    showTableSql : SHOW TABLES LIKE '%s'
+postgresql:
+    driver : org.postgresql.Driver
+    dialect : PostgresqlSqlDialect
+    showDatabaseSql : select current_schema()
+    columnValueSql : SELECT COLUMN_NAME, DATA_TYPE, ORDINAL_POSITION FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '%s' AND TABLE_SCHEMA = '%s'
+    showTableSql : SELECT distinct(table_name) from information_schema.columns WHERE table_name LIKE '%s';
+
+hive-jdbc:
+    dialect : HiveSqlDialect
+    collectorClass : hive
+kylin:
+    dialect : AnsiSqlDialect
+    quote : '"'
+    collectorClass : hive

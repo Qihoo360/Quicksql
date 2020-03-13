@@ -308,7 +308,7 @@ public class JdbcPipeline extends AbstractPipeline {
 
     @Override
     public AbstractPipeline asTempTable(String tempTableName) {
-        assert (procedure instanceof PreparedExtractProcedure.MySqlExtractor)
+        assert (procedure instanceof PreparedExtractProcedure.JdbcExtractor)
             : "Only support MySQL as temporary table";
 
         try {
@@ -317,7 +317,6 @@ public class JdbcPipeline extends AbstractPipeline {
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
-
         return this;
     }
 

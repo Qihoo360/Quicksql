@@ -1,5 +1,6 @@
 package com.qihoo.qsql.metadata;
 
+import com.qihoo.qsql.org.apache.calcite.tools.YmlUtils;
 import java.util.AbstractMap;
 import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.Arrays;
@@ -42,13 +43,9 @@ public enum MetadataMapping {
             "dbName", "tableName", "cluster"),
         Collections.emptyList());
 
-    public static final String ELASTICSEARCH = "es";
-    public static final String MYSQL = "mysql";
-    public static final String KYLIN = "kylin";
-    public static final String ORACLE = "oracle";
     public static final String HIVE = "hive";
-    public static final String HIVE_JDBC = "hive-jdbc";
     public static final String MONGO = "mongo";
+    public static final String ELASTICSEARCH = "es";
 
     private static final String JOINT_FLAG = "%";
     String schemaClass;
@@ -65,14 +62,13 @@ public enum MetadataMapping {
     }
 
     static MetadataMapping convertToAdapter(String name) {
+        Map<String, Map<String,String>> sourceMap = YmlUtils.getSourceMap();
+        if (sourceMap.containsKey(name.toLowerCase())) {
+            return MetadataMapping.JDBC;
+        }
         switch (name.toLowerCase()) {
             case ELASTICSEARCH:
                 return MetadataMapping.Elasticsearch;
-            case MYSQL:
-            case KYLIN:
-            case HIVE_JDBC:
-            case ORACLE:
-                return MetadataMapping.JDBC;
             case HIVE:
                 return MetadataMapping.Hive;
             case MONGO:
