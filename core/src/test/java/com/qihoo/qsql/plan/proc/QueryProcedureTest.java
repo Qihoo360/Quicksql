@@ -766,6 +766,13 @@ public class QueryProcedureTest {
         prepareForChecking("select day from (select 1 as day) a");
     }
 
+
+    @Test
+    public void testDayKeyWord() {
+        String sql = "select date '2012-08-08' + interval '2' day";
+        prepareForChecking(sql).checkExtra("SELECT DATE '2012-08-08' + INTERVAL '2' DAY");
+    }
+
     @Test
     public void testCurrenDate() {
         prepareForChecking("select current_date()");
