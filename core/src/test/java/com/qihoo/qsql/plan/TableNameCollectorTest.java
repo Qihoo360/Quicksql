@@ -202,5 +202,14 @@ public class TableNameCollectorTest {
         Assert.assertEquals(Collections.singletonList("B"), parseTableName(sql));
     }
 
+    @Test
+    public void testCaseWhenSubQueryTableName() {
+        String sql = "select case when (select count(*) from store_sales where ss_quantity between 1 and 20) > 25437 "
+            + "then (select avg(ss_ext_discount_amt) "
+            + "from store_sales where ss_quantity between 1 and 20) else (select avg(ss_net_profit) "
+            + "from test.store_sales where ss_quantity between 1 and 20) end bucket1  from reason where r_reason_sk ="
+            + " 1";
+        Assert.assertEquals(Arrays.asList("store_sales","reason"), parseTableName(sql));
+    }
 
 }

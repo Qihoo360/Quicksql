@@ -108,6 +108,8 @@ data: {
         "CONTINUE"
         "CURSOR_NAME"
         "DATA"
+        "DAY"
+        "DAYS"
         "DATABASE"
         "DATETIME_INTERVAL_CODE"
         "DATETIME_INTERVAL_PRECISION"
