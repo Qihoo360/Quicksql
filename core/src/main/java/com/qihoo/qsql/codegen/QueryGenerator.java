@@ -54,10 +54,7 @@ public abstract class QueryGenerator {
             return createHiveQueryGenerator(procedure, composer, isSpark);
         } else if (procedure instanceof PreparedExtractProcedure.ElasticsearchExtractor) {
             return createElasticsearchQueryGenerator(procedure, composer, isSpark);
-        } else if (procedure instanceof PreparedExtractProcedure.MySqlExtractor
-            || procedure instanceof PreparedExtractProcedure.OracleExtractor
-            || procedure instanceof PreparedExtractProcedure.KylinExtractor
-            || procedure instanceof PreparedExtractProcedure.HiveJdbcExtractor) {
+        } else if (procedure instanceof PreparedExtractProcedure.JdbcExtractor) {
             return createJdbcQueryGenerator(procedure, composer, isSpark);
         } else if (procedure instanceof PreparedExtractProcedure.VirtualExtractor) {
             return createVirtualQueryGenerator(procedure, composer, isSpark);

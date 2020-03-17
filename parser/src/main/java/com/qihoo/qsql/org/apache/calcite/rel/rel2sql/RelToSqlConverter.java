@@ -655,7 +655,7 @@ public class RelToSqlConverter extends SqlImplementor
           ((SqlSelect) x.node).setWhere(newwhere);
         }
         ((SqlSelect) x.node).setFetch(null);
-      }else {
+      } else {
         final Builder builder = x.builder(e, Clause.FETCH);
         builder.setFetch(builder.context.toSql(null, e.fetch));
         x = builder.result();

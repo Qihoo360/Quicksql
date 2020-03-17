@@ -7,7 +7,7 @@ import com.qihoo.qsql.plan.proc.DirectQueryProcedure;
 import com.qihoo.qsql.plan.proc.EmbeddedElasticsearchPolicy;
 import com.qihoo.qsql.plan.proc.PreparedExtractProcedure.ElasticsearchExtractor;
 import com.qihoo.qsql.plan.proc.PreparedExtractProcedure.HiveExtractor;
-import com.qihoo.qsql.plan.proc.PreparedExtractProcedure.MySqlExtractor;
+import com.qihoo.qsql.plan.proc.PreparedExtractProcedure.JdbcExtractor;
 import com.qihoo.qsql.plan.proc.QueryProcedure;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -68,7 +68,7 @@ public class QueryProcedureProducerTest {
                 .createQueryProcedure(sql);
         List<Class> extractorList = getExtractorList(queryProcedure);
         if (extractorList.contains(HiveExtractor.class)
-            && extractorList.contains(MySqlExtractor.class)
+            && extractorList.contains(JdbcExtractor.class)
             && extractorList.contains(DataSetTransformProcedure.class)) {
             Assert.assertTrue(true);
         }
@@ -84,7 +84,7 @@ public class QueryProcedureProducerTest {
                 .createQueryProcedure(sql);
         List<Class> extractorList = getExtractorList(queryProcedure);
         if (extractorList.contains(ElasticsearchExtractor.class)
-            && extractorList.contains(MySqlExtractor.class)
+            && extractorList.contains(JdbcExtractor.class)
             && extractorList.contains(DataSetTransformProcedure.class)) {
             Assert.assertTrue(true);
         }
@@ -115,7 +115,7 @@ public class QueryProcedureProducerTest {
                 .createQueryProcedure(sql);
         List<Class> extractorList = getExtractorList(queryProcedure);
         if (extractorList.contains(HiveExtractor.class)
-            && extractorList.contains(MySqlExtractor.class)
+            && extractorList.contains(JdbcExtractor.class)
             && extractorList.contains(DataSetTransformProcedure.class)) {
             Assert.assertTrue(true);
         }
@@ -131,7 +131,7 @@ public class QueryProcedureProducerTest {
             new QueryProcedureProducer(getSchemaPath(Arrays.asList(MYSQL_TABLE_NAME)))
                 .createQueryProcedure(sql);
         List<Class> extractorList = getExtractorList(queryProcedure);
-        if (extractorList.contains(MySqlExtractor.class)) {
+        if (extractorList.contains(JdbcExtractor.class)) {
             Assert.assertTrue(true);
         }
     }
