@@ -9,9 +9,19 @@
 ![Documentation Status](https://readthedocs.org/projects/quicksql/badge/?version=latest)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 
-Quicksql 是以 SQL 进行单一、混合查询的一款产品。Quicksql 支持标准 SQL 语言（SQL-2003）；Quicksql 支持查询关系型数据库、NoSQL 式数据库、原生不支持 SQL 查询的存储（如ES、Druid），及借助中间计算引擎实现混合查询。Quicksql 最大的特点是独立于计算引擎、存储引擎本身，如此用户只需要关注于 Quicksql 语法以及数据本身，就可完成数据计算、统计以及分析。
+Quicksql 是一个安全且快速的跨数据源统一SQL查询引擎，提供多数据引擎SQL语义适配功能，支持常见的结构化数据存储和NoSQL存储查询。帮助用户减少在使用不同数据引擎时需要的学习成本和切换成本，忽略不同数据引擎底层存储和数据查询方式的差异，使用户仅需要关注查询的业务逻辑和数据本身。大幅度提高整体数据分析的效率，降低新员工的培训成本，更快速更高效的帮助组织使用数据促进发展。
 
 [![Star-History](../images/star-history.png)](https://star-history.t9t.io/#Qihoo360/Quicksql)
+
+## 功能特性：
+
+- 支持8种数据源查询：Hive, MySQL, Kylin, Elasticsearch, Oracle, MongoDB，PostgreSQL，Gbase-8s。
+- 支持Spark、flink双计算引擎灵活配置。
+- 支持基础CLI命令行查询，也支持使用 Client/Server 模式的 JDBC 连接进行查询，用户应用可通过引入Quicksql Driver ，与启动的Server 建立连接进行联邦查询，并支持灵活的参数配置。
+- 提供数据源的采集脚本，通过脚本批量拉取元数据，也可在应用端通过jdbc api进行动态拼接元数据，参数传递查询。
+- 支持落地HDFS，支持可配置的异步响应机制。
+- JDBC类型数据源可通过Yml配置快速接入，无需修改代码。
+- 提供应用端无感知传递查询。
 
 ## 架构设计
 
