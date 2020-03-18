@@ -13,6 +13,7 @@ import com.qihoo.qsql.api.SqlRunner.Builder.RunnerType;
 import com.qihoo.qsql.client.QuicksqlConnectionImpl;
 import com.qihoo.qsql.client.QuicksqlResultSet;
 import com.qihoo.qsql.client.QuicksqlResultSet.QueryResult;
+import com.qihoo.qsql.org.apache.calcite.tools.YmlUtils;
 import com.qihoo.qsql.utils.HttpUtils;
 import com.qihoo.qsql.utils.SqlUtil;
 import java.lang.reflect.InvocationTargetException;
@@ -926,16 +927,13 @@ public class QuicksqlServerMeta implements ProtobufMeta {
     }
 
     private String matchDriver(String jdbcUrl) {
-        switch (jdbcUrl){
-            case "mysql":
-                return "com.mysql.jdbc.Driver";
-            case "oracle":
-                return "oracle.jdbc.driver.OracleDriver";
-            case "postgresql":
-                return "org.postgresql.Driver";
-            default:
-                throw new RuntimeException("not match driver");
+        Map<String, Map<String, String>> sourceMap = YmlUtils.getSourceMap();
+        for (String driverName : sourceMap.keySet()) {
+            if (jdbcUrl.contains(driverName)) {
+                return sourceMap.get(driverName).get("driver");
+            }
         }
+        throw new RuntimeException("not match driver");
     }
 
     /**

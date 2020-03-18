@@ -1,6 +1,7 @@
 package com.qihoo.qsql.plan;
 
 import com.qihoo.qsql.exception.ParseException;
+import com.qihoo.qsql.org.apache.calcite.sql.fun.SqlCase;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -41,12 +42,12 @@ public class TableNameCollector implements SqlVisitor<QueryTables> {
     private Quoting quoting = Quoting.BACK_TICK;
 
     private SqlParser.Config config = SqlParser
-            .configBuilder()
-            .setConformance(conformance)
-            .setQuoting(quoting)
-            .setQuotedCasing(Casing.UNCHANGED)
-            .setUnquotedCasing(Casing.UNCHANGED)
-            .build();
+        .configBuilder()
+        .setConformance(conformance)
+        .setQuoting(quoting)
+        .setQuotedCasing(Casing.UNCHANGED)
+        .setUnquotedCasing(Casing.UNCHANGED)
+        .build();
 
     /**
      * Get table names from sql.
@@ -72,6 +73,10 @@ public class TableNameCollector implements SqlVisitor<QueryTables> {
             ((SqlInsertOutput) sqlCall).getSelect().accept(this);
         }
 
+        if (sqlCall instanceof SqlCase) {
+            ((SqlCase) sqlCall).getWhenOperands().accept(this);
+        }
+
         if (sqlCall instanceof SqlSelect) {
             ((SqlSelect) sqlCall).getSelectList().accept(this);
             if (((SqlSelect) sqlCall).getFrom() != null) {
@@ -79,7 +84,7 @@ public class TableNameCollector implements SqlVisitor<QueryTables> {
             }
             if (((SqlSelect) sqlCall).getWhere() instanceof SqlBasicCall) {
                 List<SqlNode> operands =
-                        ((SqlBasicCall) ((SqlSelect) sqlCall).getWhere()).getOperandList();
+                    ((SqlBasicCall) ((SqlSelect) sqlCall).getWhere()).getOperandList();
                 for (SqlNode operand : operands) {
                     if (!(operand instanceof SqlIdentifier)) {
                         operand.accept(this);
@@ -122,9 +127,12 @@ public class TableNameCollector implements SqlVisitor<QueryTables> {
                 }
                 ((SqlWithItem) entry).query.accept(this);
             } else if (entry instanceof SqlBasicCall) {
+                if (((SqlBasicCall) entry).operand(0) instanceof SqlCall) {
+                    entry.accept(this);
+                }
                 String kind = ((SqlBasicCall) entry).getOperator().getName();
                 if ("AS".equalsIgnoreCase(kind)
-                        && ((SqlBasicCall) entry).operand(0) instanceof SqlSelect) {
+                    && ((SqlBasicCall) entry).operand(0) instanceof SqlSelect) {
                     entry.accept(this);
                 }
             }
@@ -160,7 +168,7 @@ public class TableNameCollector implements SqlVisitor<QueryTables> {
     private void visitBasicCall(SqlBasicCall sqlCall) {
         if (sqlCall.getOperator() instanceof SqlAsOperator && (sqlCall).operands.length == 2) {
             if ((sqlCall).operands[0] instanceof SqlIdentifier
-                    && (sqlCall).operands[1] instanceof SqlIdentifier) {
+                && (sqlCall).operands[1] instanceof SqlIdentifier) {
                 (sqlCall).operands[0].accept(this);
             } else if (!((sqlCall).operands[0] instanceof SqlIdentifier)) {
                 (sqlCall).operands[0].accept(this);
@@ -184,7 +192,7 @@ public class TableNameCollector implements SqlVisitor<QueryTables> {
         for (String tableName : tableNames.tableNames) {
             if (tableName.split("\\.", -1).length > 2) {
                 throw new ParseException("Qsql only support structure like dbName.tableName,"
-                        + " and there is a unsupported tableName here: " + tableName);
+                    + " and there is a unsupported tableName here: " + tableName);
             }
         }
         tableNames.tableNames.removeIf((item) -> withTempTables.contains(item));

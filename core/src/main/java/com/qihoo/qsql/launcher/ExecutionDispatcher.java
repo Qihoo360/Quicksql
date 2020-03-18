@@ -76,8 +76,7 @@ public class ExecutionDispatcher {
             //    //ShowDbHandler.dealSql(sql);
             //    return;
             //}
-            String sqlType = getSqlType(sql);
-            DdlOperation ddlOperation = DdlFactory.getDdlOperation(sqlType);
+            DdlOperation ddlOperation = DdlFactory.getDdlOperation(getSqlType(sql));
             if (null != ddlOperation) {
                 ddlOperation.execute(sql);
                 return;
@@ -115,18 +114,19 @@ public class ExecutionDispatcher {
                 return;
             }
             LOGGER.info("It's a complex query, we need to setup computing engine, waiting...");
-            ProcessExecClient execClient = ProcessExecClient.createProcessClient(pipeline, parser,builder);
             Date apply = new Date();
             LOGGER.info("apply.resource:" + SDF.format(apply));
-            execClient.exec();
+            ProcessExecClient.createProcessClient(pipeline, parser, builder).exec();
             Date executed = new Date();
             LOGGER.info("job.execute.final:" + SDF.format(executed));
             LOGGER.info("SQL.parsed.time:" + String.valueOf(sqlPased.getTime() - start.getTime()));
             LOGGER.info("resource.apply.time:" + String.valueOf(apply.getTime() - sqlPased.getTime()));
             LOGGER.info("job.query.time:" + String.valueOf(executed.getTime() - apply.getTime()));
+            System.exit(0);
         } catch (Exception ex) {
             ex.printStackTrace();
             LOGGER.error("execution.error:" + ex.getMessage());
+            System.exit(1);
         }
     }
 

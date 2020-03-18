@@ -9,9 +9,19 @@
 ![Documentation Status](https://readthedocs.org/projects/quicksql/badge/?version=latest)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 
-Quicksql 是以 SQL 进行单一、混合查询的一款产品。Quicksql 支持标准 SQL 语言（SQL-2003）；Quicksql 支持查询关系型数据库、NoSQL 式数据库、原生不支持 SQL 查询的存储（如ES、Druid），及借助中间计算引擎实现混合查询。Quicksql 最大的特点是独立于计算引擎、存储引擎本身，如此用户只需要关注于 Quicksql 语法以及数据本身，就可完成数据计算、统计以及分析。
+Quicksql是一款跨计算引擎的统一联邦查询中间件，用户可以使用标准SQL语法对各类数据源进行联合分析查询。其目标是构建实时\离线全数据源统一的数据处理范式，屏蔽底层物理存储和计算层，最大化业务处理数据的效率。同时能够提供给开发人员可插拔接口，由开发人员自行对接新数据源。
 
 [![Star-History](../images/star-history.png)](https://star-history.t9t.io/#Qihoo360/Quicksql)
+
+## 功能特性：
+
+- 支持8种数据源查询：Hive, MySQL, Kylin, Elasticsearch, Oracle, MongoDB, PostgreSQL, GBase-8s；
+- 支持Spark、Flink双计算引擎；
+- 支持基础CLI命令行查询和JDBC远程连接查询；
+- JDBC类型数据源可通过YAML配置快速接入，无需修改代码；
+- 提供方言/语法对接模板，支持用户对新数据源的语法自定义；
+- 提供元数据采集功能，批量拉取预置元数据；
+- 支持落地HDFS，支持可配置的异步响应机制；
 
 ## 架构设计
 

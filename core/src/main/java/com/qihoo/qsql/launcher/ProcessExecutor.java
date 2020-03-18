@@ -119,7 +119,7 @@ public class ProcessExecutor {
                     }
                     break;
             }
-        } catch (Exception ex) {
+        } catch (Throwable ex) {
             throw new RuntimeException(ex);
         }
     }

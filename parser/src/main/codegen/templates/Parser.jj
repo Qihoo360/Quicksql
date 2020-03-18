@@ -4166,6 +4166,12 @@ SqlIntervalQualifier IntervalQualifier() :
         <MONTH> [ <LPAREN> startPrec = UnsignedIntLiteral() <RPAREN> ]
         { start = TimeUnit.MONTH; }
     |
+        <DAY> [ <LPAREN> startPrec = UnsignedIntLiteral() <RPAREN> ]
+        { start = TimeUnit.DAY; }
+    |
+        <DAYS> [ <LPAREN> startPrec = UnsignedIntLiteral() <RPAREN> ]
+        { start = TimeUnit.DAY; }
+    |
         <DAY_TIME> [ <LPAREN> startPrec = UnsignedIntLiteral() <RPAREN> ]
         [ LOOKAHEAD(2) <TO>
             (
@@ -4226,6 +4232,8 @@ TimeUnit TimeUnit() :
 |   <SECOND> { return TimeUnit.SECOND; }
 |   <MINUTE> { return TimeUnit.MINUTE; }
 |   <HOUR> { return TimeUnit.HOUR; }
+|   <DAY> { return TimeUnit.DAY; }
+|   <DAYS> { return TimeUnit.DAY; }
 |   <DAY_TIME> { return TimeUnit.DAY; }
 |   <DOW> { return TimeUnit.DOW; }
 |   <DOY> { return TimeUnit.DOY; }
@@ -4255,6 +4263,8 @@ TimeUnit TimestampInterval() :
 |   <SQL_TSI_MINUTE> { return TimeUnit.MINUTE; }
 |   <HOUR> { return TimeUnit.HOUR; }
 |   <SQL_TSI_HOUR> { return TimeUnit.HOUR; }
+|   <DAY> { return TimeUnit.DAY; }
+|   <DAYS> { return TimeUnit.DAY; }
 |   <DAY_TIME> { return TimeUnit.DAY; }
 |   <SQL_TSI_DAY> { return TimeUnit.DAY; }
 |   <WEEK> { return TimeUnit.WEEK; }
@@ -6573,6 +6583,8 @@ SqlPostfixOperator PostfixRowOperator() :
 |   < DATE: "DATE" >
 |   < DATETIME_INTERVAL_CODE: "DATETIME_INTERVAL_CODE" >
 |   < DATETIME_INTERVAL_PRECISION: "DATETIME_INTERVAL_PRECISION" >
+|   < DAY: "DAY" >
+|   < DAYS: "DAYS" >
 |   < DAY_TIME: "DAY_TIME" >
 |   < DEALLOCATE: "DEALLOCATE" >
 |   < DEC: "DEC" >

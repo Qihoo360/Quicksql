@@ -8,7 +8,6 @@ import com.qihoo.qsql.exec.flink.FlinkPipeline;
 import com.qihoo.qsql.exec.spark.SparkPipeline;
 import com.qihoo.qsql.utils.PropertiesReader;
 import java.io.File;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -71,7 +70,8 @@ public abstract class ProcessExecClient {
         executor.setStreamHandler(new PumpStreamHandler(System.out));
         try {
             executor.execute(commandLine);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
+            ex.printStackTrace();
             LOGGER.error("Process executing failed!! Caused by: " + ex.getMessage());
             throw new RuntimeException(ex);
         }
