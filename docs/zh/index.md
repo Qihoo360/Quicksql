@@ -15,7 +15,7 @@ Quicksql是一款跨计算引擎的统一联邦查询中间件，用户可以使
 
 ## 功能特性：
 
-- 支持8种数据源查询：Hive, MySQL, Kylin, Elasticsearch, Oracle, MongoDB，PostgreSQL，GBase-8s；
+- 支持8种数据源查询：Hive, MySQL, Kylin, Elasticsearch, Oracle, MongoDB, PostgreSQL, GBase-8s；
 - 支持Spark、Flink双计算引擎；
 - 支持基础CLI命令行查询和JDBC远程连接查询；
 - JDBC类型数据源可通过YAML配置快速接入，无需修改代码；
