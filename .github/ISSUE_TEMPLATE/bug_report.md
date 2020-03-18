@@ -1,30 +1,28 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-title: ''
-labels: type/bug
-assignees: ''
-
 ---
 
-**Describe the bug**
+**1. Versions**
+
+**2. Describe the bug**
 A clear and concise description of what the bug is.
 
-**To Reproduce**
+**3. To Reproduce**
 Steps to reproduce the behavior:
 1. Go to '...'
 2. Click on '....'
 3. Scroll down to '....'
 4. See error
 
-**Expected behavior**
+**4. Expected behavior**
 A clear and concise description of what you expected to happen.
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+**5. Actual behavior**
+If applicable, add screenshots to help explain your problem. But do not paste log screenshots here.
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
+**6. Full Output Logs**
+Please paste your log here
 
 **Additional context**
 Add any other context about the problem here.

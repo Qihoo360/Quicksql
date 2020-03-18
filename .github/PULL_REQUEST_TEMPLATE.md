@@ -1,71 +1,28 @@
-<!--
-### Contribution Checklist
-  
-  - Name the pull request in the form "[Issue XYZ][component] Title of the pull request", where *XYZ* should be replaced by the actual issue number.
-    Skip *Issue XYZ* if there is no associated github issue for this pull request.
-    Skip *component* if you are unsure about which is the best component. E.g. `[docs] Fix typo in produce method`.
+## I'm submitting a...
 
-  - Fill out the template below to describe the changes contributed by the pull request. That will give reviewers the context they need to do the review.
-  
-  - Each pull request should address only one issue, not mix up code from multiple issues.
-  
-  - Each commit in the pull request has a meaningful commit message
+- [ ] Bug fix
+- [ ] Feature
+- [ ] Refactoring
+- [ ] Added tests
+- [ ] Documentation
+- [ ] Other (`Please describe in detail here`)
 
-  - Once all items of the checklist are addressed, remove the above text and this checklist, leaving only the filled out template below.
+## Checklist
 
-**(The sections below can be removed for hotfixes of typos)**
--->
+- [ ] Commit Messages follow the [Conventional Commits](https://www.conventionalcommits.org/zh-hans/v1.0.0-beta.4/) pattern
+  - A feature commit message is prefixed "feat:"
+  - A bug fix commit message is prefixed "fix:"
+- [ ] Tests for the changes have been added
 
-*(If this PR fixes a github issue, please add `Fixes #<xyz>`.)*
+## Description
 
-Fixes #<xyz>
+_please describe the changes that you are making_
 
-*(or if this PR is one task of a github issue, please add `Master Issue: #<xyz>` to link to the master issue.)*
+_for features, please describe how to use the new feature_
 
-Master Issue: #<xyz>
+_please include a reference to an existing issue, if applicable_
 
-### Motivation
+## Does this PR introduce a breaking change?
 
-
-*Explain here the context, and why you're making that change. What is the problem you're trying to solve.*
-
-### Modifications
-
-*Describe the modifications you've done.*
-
-### Verifying this change
-
-- [ ] Make sure that the change passes the CI checks.
-
-*(Please pick either of the following options)*
-
-This change is a trivial rework / code cleanup without any test coverage.
-
-*(or)*
-
-This change is already covered by existing tests, such as *(please describe tests)*.
-
-*(or)*
-
-This change added tests and can be verified as follows:
-
-*(example:)*
-  - *Added integration tests for end-to-end deployment with large payloads (10MB)*
-  - *Extended integration test for recovery after broker failure*
-
-### Does this pull request potentially affect one of the following parts:
-
-*If `yes` was chosen, please highlight the changes*
-
-  - Dependencies (does it add or upgrade a dependency): (yes / no)
-  - The public API: (yes / no)
-  - The default values of configurations: (yes / no)
-  - The wire protocol: (yes / no)
-  - Anything that affects deployment: (yes / no / don't know)
-
-### Documentation
-
-  - Does this pull request introduce a new feature? (yes / no)
-  - If yes, how is the feature documented? (not applicable / docs / JavaDocs / not documented)
-  - If a feature is not applicable for documentation, explain why?
-  - If a feature is not documented yet in this PR, please create a followup issue for adding the documentation
+- [ ] Yes
+- [ ] No
