@@ -1,6 +1,6 @@
 site_name: 'Quick SQL'
 repo_url: 'https://github.com/qihoo360/Quicksql/'
-copyright: '© 2019 Qihoo360 Quick SQL'
+copyright: '© 2019-2020 Qihoo360 Quick SQL'
 
 nav:
   - Home: 'index.md'
@@ -54,7 +54,7 @@ plugins:
 
 extra:
   search:
-    language: 'en'
+    language: 'en,zh'
   social:
     - type: 'slack'
       link: 'https://join.slack.com/t/quicksql/shared_invite/enQtODkwMzM0Njc3NTExLWQxNjRlY2M5YTlkMTk4OTM2YzhjMjUxYTUyN2VlNzJlNzQwM2E4YjkxNzA4MDllODg5NWUxNDY4MTMyMzczMWI'
