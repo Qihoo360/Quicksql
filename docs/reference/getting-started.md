@@ -101,6 +101,14 @@ $ ./metadata-extract.sh -p "{\"esNodes\": \"192.168.1.1\",\"esPort\": \"9090\",\
 $ ./metadata-extract.sh -p "{\"host\": \"192.168.1.1\", \"port\": \"27017\", \"authMechanism\": \"SCRAM-SHA-1\",
 \"userName\": \"admin\",\"password\": \"admin\",\"dataBaseName\": \"test\",\"collectionName\":\"products\"}" -d "mongo" -r "products"
 ``````
+
+从**PostgreSQL**存储中采集元数据
+
+``````shell
+$ ./memetadata-extract.sh -p "{\"jdbcDriver\": \"org.postgresql.Driver\", \"jdbcUrl\": \"jdbc:postgresql://localhost:5432/testDb/qsql_test?currentSchema=testSchema\",
+ \"jdbcUser\": \"user\",\"jdbcPassword\": \"pass\"}" -d "postgresql" -r "my_table"
+``````
+
 采集成功后将返回
 
 ```shell
@@ -170,6 +178,13 @@ $ ./metadata-extract.sh -p "{\"host\": \"192.168.1.1\", \"port\": \"27017\", \"a
 	"userName": "admin",
 	"password": "admin",
 	"collectionName": "products"
+}
+##PostgreSQL
+{
+	"jdbcDriver": "org.postgresql.Driver",
+	"jdbcUrl": "jdbc:postgresql://localhost:3306/testDb?currentSchema=testSchema",
+	"jdbcUser": "USER",
+	"jdbcPassword": "PASSWORD"
 }
 ``````
 

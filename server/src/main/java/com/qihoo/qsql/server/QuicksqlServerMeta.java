@@ -752,12 +752,6 @@ public class QuicksqlServerMeta implements ProtobufMeta {
         if (null == statementInfo) {
             throw new NoSuchStatementException(h);
         }
-        // if (parameterValues != null) {
-        //     for (int i = 0; i < parameterValues.size(); i++) {
-        //         TypedValue o = parameterValues.get(i);
-        //         preparedStatement.setObject(i + 1, o.toJdbc(calendar));
-        //     }
-        // }
         String sql = h.signature.sql;
         for (TypedValue value : parameterValues) {
             if (value.type == Rep.BYTE || value.type == Rep.SHORT || value.type == Rep.LONG || value.type == Rep.DOUBLE
@@ -777,10 +771,9 @@ public class QuicksqlServerMeta implements ProtobufMeta {
             } else {
                 executeResult = getExecuteResultSet(h, connection, sql);
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return executeResult;
     }
@@ -806,6 +799,7 @@ public class QuicksqlServerMeta implements ProtobufMeta {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return executeResult;
     }
@@ -854,12 +848,14 @@ public class QuicksqlServerMeta implements ProtobufMeta {
         } catch (Exception e) {
             e.printStackTrace();
             setHttpResponse(responseUrl, 0, "Quicksql error :" + e.getCause());
+            throw new RuntimeException(e);
         }
         return new ExecuteResult(Collections.singletonList(resultSet));
     }
 
     private ExecuteResult jdbcExecute(StatementHandle h, String jdbcUrl, String user, String password, String sql)
         throws SQLException, ClassNotFoundException {
+        final StatementInfo info = getStatementCache().getIfPresent(h.id);
         Class.forName(matchDriver(jdbcUrl));
         Connection conn = null;
         Statement statement = null;
@@ -874,6 +870,7 @@ public class QuicksqlServerMeta implements ProtobufMeta {
                 resultSets.add(
                     QuicksqlServerResultSet.count(h.connectionId, h.id, AvaticaUtils.getLargeUpdateCount(statement)));
             } else {
+                info.setResultSet(statement.getResultSet());
                 resultSets.add(
                     QuicksqlServerResultSet.create(h.connectionId, h.id, statement.getResultSet(), 100));
             }
@@ -882,6 +879,7 @@ public class QuicksqlServerMeta implements ProtobufMeta {
             if (conn != null) {
                 conn.rollback();
             }
+            throw new RuntimeException(e);
         } finally {
             if (statement != null) {
                 statement.close();
@@ -922,6 +920,7 @@ public class QuicksqlServerMeta implements ProtobufMeta {
                 System.out.println(response);
             } catch (Exception e) {
                 e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
     }
@@ -982,10 +981,15 @@ public class QuicksqlServerMeta implements ProtobufMeta {
             new AvaticaResultSetMetaData((AvaticaStatement) info.statement, null, signature), TimeZone.getDefault(),
             null);
         quickSqlResultSet.execute2(cursor, columnMetaDataList);
+        info.setResultSet(quickSqlResultSet);
         return QuicksqlServerResultSet.create(h.connectionId, h.id, quickSqlResultSet, signature, maxResNum);
     }
 
     private QuicksqlServerResultSet getJDBCResultSet(StatementHandle h, Object collect, int maxResNum) {
+        final StatementInfo info = getStatementCache().getIfPresent(h.id);
+        if (info != null) {
+            info.setResultSet((ResultSet)collect);
+        }
         return QuicksqlServerResultSet.create(h.connectionId, h.id, (ResultSet) collect, maxResNum);
     }
 

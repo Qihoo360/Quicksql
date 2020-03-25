@@ -18,6 +18,7 @@ import com.qihoo.qsql.api.SqlRunner;
 import com.qihoo.qsql.exec.result.JdbcPipelineResult;
 import com.qihoo.qsql.exec.result.JdbcResultSetIterator;
 import com.qihoo.qsql.exec.result.PipelineResult;
+import java.sql.PreparedStatement;
 import java.sql.ResultSetMetaData;
 import java.sql.Types;
 import java.util.Arrays;
@@ -41,7 +42,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -73,7 +73,7 @@ public class JdbcPipeline extends AbstractPipeline {
         + "}";
     private static final Logger LOGGER = LoggerFactory.getLogger(JdbcPipeline.class);
     private Connection connection;
-    private Statement statement;
+    private PreparedStatement statement;
     private List<String> tableNames;
 
     public JdbcPipeline(QueryProcedure procedure,
@@ -367,8 +367,7 @@ public class JdbcPipeline extends AbstractPipeline {
                 }
             }
 
-            statement = connection.createStatement();
-
+            statement = connection.prepareStatement(sql);
             int limit = builder.getAcceptedResultsNum();
             int maxRowsLimit;
             if (limit <= 0) {
@@ -380,7 +379,7 @@ public class JdbcPipeline extends AbstractPipeline {
 
             LOGGER.debug("Max rows limit is: {}", maxRowsLimit);
 
-            return statement.executeQuery(sql);
+            return statement.executeQuery();
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }

@@ -92,6 +92,10 @@ class EmptyScope implements SqlValidatorScope {
     final List<Resolve> imperfectResolves = new ArrayList<>();
     final List<Resolve> resolves = ((ResolvedImpl) resolved).resolves;
 
+    if (names.size() == 3) {
+      List<String> finalNames = names;
+      names = new ArrayList<String>() {{ add(finalNames.get(0) + "." + finalNames.get(1)); add(finalNames.get(2)); }};
+    }
     // Look in the default schema, then default catalog, then root schema.
     for (List<String> schemaPath : validator.catalogReader.getSchemaPaths()) {
       resolve_(validator.catalogReader.getRootSchema(), names, schemaPath,

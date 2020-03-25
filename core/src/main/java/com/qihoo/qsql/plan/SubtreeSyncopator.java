@@ -423,7 +423,7 @@ public class SubtreeSyncopator extends RelShuttleImpl {
         if (originalNames == null) {
             newNames.add("tempTable" + THE_SAME_TABLE_SEPARATOR + aliasIndex);
         } else {
-            newNames.add(originalNames.get(0) + THE_SAME_TABLE_SEPARATOR
+            newNames.add(originalNames.get(0).replaceAll("\\.",THE_SAME_TABLE_SEPARATOR) + THE_SAME_TABLE_SEPARATOR
                 + originalNames.get(1) + THE_SAME_TABLE_SEPARATOR + aliasIndex);
         }
         aliasIndex++;
