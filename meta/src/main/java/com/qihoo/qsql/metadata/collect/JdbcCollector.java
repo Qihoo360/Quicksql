@@ -41,6 +41,13 @@ public class JdbcCollector extends BaseJdbcCollector  {
 
     @Override
     protected List<ColumnValue> convertColumnValue(Long tbId, String tableName, String dbName) {
+        if (StringUtils.isNotBlank(dbName) && dbName.contains(".")) {
+            String[] split = dbName.split("\\.");
+            if (split.length != 2) {
+                throw new RuntimeException("convertColumnValue tableName error");
+            }
+            dbName = split[1];
+        }
         String sql = String.format(params.get("columnValueSql"), tableName, dbName);
         List<ColumnValue> columns = new ArrayList<>();
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
