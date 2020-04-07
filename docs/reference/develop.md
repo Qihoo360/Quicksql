@@ -8,7 +8,7 @@
 
 （2）第二步down到本地idea
 
-<img src="../../images/develop/image-20191230115105541.png" alt="image-20191230115105541" style="zoom:150%;" />
+![image-20191230115105541](../images/develop/image-20191230115105541.png)
 
 (3) 第三步本地编译及打包
 
