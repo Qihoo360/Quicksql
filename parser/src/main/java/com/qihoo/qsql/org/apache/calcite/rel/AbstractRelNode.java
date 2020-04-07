@@ -265,6 +265,9 @@ public abstract class AbstractRelNode implements RelNode {
       visitor.visit(inputs.get(i), i, this);
     }
   }
+  public TreeNode accept(RelViewShuttle shuttle){
+    return shuttle.visit(this);
+  }
 
   public RelNode accept(RelShuttle shuttle) {
     // Call fall-back method. Specific logical types (such as LogicalProject

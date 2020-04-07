@@ -22,6 +22,8 @@ import com.qihoo.qsql.org.apache.calcite.plan.RelTraitSet;
 import com.qihoo.qsql.org.apache.calcite.rel.RelCollation;
 import com.qihoo.qsql.org.apache.calcite.rel.RelNode;
 import com.qihoo.qsql.org.apache.calcite.rel.RelShuttle;
+import com.qihoo.qsql.org.apache.calcite.rel.RelViewShuttle;
+import com.qihoo.qsql.org.apache.calcite.rel.TreeNode;
 import com.qihoo.qsql.org.apache.calcite.rel.core.Match;
 import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataType;
 import com.qihoo.qsql.org.apache.calcite.rex.RexNode;
@@ -109,6 +111,10 @@ public class LogicalMatch extends Match {
   }
 
   @Override public RelNode accept(RelShuttle shuttle) {
+    return shuttle.visit(this);
+  }
+
+  @Override public TreeNode accept(RelViewShuttle shuttle){
     return shuttle.visit(this);
   }
 }

@@ -87,6 +87,10 @@ public abstract class SingleRel extends AbstractRelNode {
   protected RelDataType deriveRowType() {
     return input.getRowType();
   }
+
+  @Override public TreeNode accept(RelViewShuttle shuttle){
+    return shuttle.visit(this);
+  }
 }
 
 // End SingleRel.java

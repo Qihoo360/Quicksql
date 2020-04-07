@@ -24,6 +24,8 @@ import com.qihoo.qsql.org.apache.calcite.rel.RelCollations;
 import com.qihoo.qsql.org.apache.calcite.rel.RelInput;
 import com.qihoo.qsql.org.apache.calcite.rel.RelNode;
 import com.qihoo.qsql.org.apache.calcite.rel.RelShuttle;
+import com.qihoo.qsql.org.apache.calcite.rel.RelViewShuttle;
+import com.qihoo.qsql.org.apache.calcite.rel.TreeNode;
 import com.qihoo.qsql.org.apache.calcite.rel.core.Project;
 import com.qihoo.qsql.org.apache.calcite.rel.metadata.RelMdCollation;
 import com.qihoo.qsql.org.apache.calcite.rel.metadata.RelMetadataQuery;
@@ -118,6 +120,10 @@ public final class LogicalProject extends Project {
   }
 
   @Override public RelNode accept(RelShuttle shuttle) {
+    return shuttle.visit(this);
+  }
+
+  @Override public TreeNode accept(RelViewShuttle shuttle){
     return shuttle.visit(this);
   }
 }
