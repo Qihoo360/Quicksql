@@ -24,7 +24,9 @@ import com.qihoo.qsql.org.apache.calcite.rel.RelDistributionTraitDef;
 import com.qihoo.qsql.org.apache.calcite.rel.RelInput;
 import com.qihoo.qsql.org.apache.calcite.rel.RelNode;
 import com.qihoo.qsql.org.apache.calcite.rel.RelShuttle;
+import com.qihoo.qsql.org.apache.calcite.rel.RelViewShuttle;
 import com.qihoo.qsql.org.apache.calcite.rel.RelWriter;
+import com.qihoo.qsql.org.apache.calcite.rel.TreeNode;
 import com.qihoo.qsql.org.apache.calcite.rel.core.CorrelationId;
 import com.qihoo.qsql.org.apache.calcite.rel.core.Filter;
 import com.qihoo.qsql.org.apache.calcite.rel.metadata.RelMdCollation;
@@ -130,6 +132,11 @@ public final class LogicalFilter extends Filter {
   @Override public RelNode accept(RelShuttle shuttle) {
     return shuttle.visit(this);
   }
+
+  @Override public TreeNode accept(RelViewShuttle shuttle){
+    return shuttle.visit(this);
+  }
+
 
   @Override public RelWriter explainTerms(RelWriter pw) {
     return super.explainTerms(pw)

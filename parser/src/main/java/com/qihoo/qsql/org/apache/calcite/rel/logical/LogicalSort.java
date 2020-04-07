@@ -24,6 +24,8 @@ import com.qihoo.qsql.org.apache.calcite.rel.RelCollationTraitDef;
 import com.qihoo.qsql.org.apache.calcite.rel.RelInput;
 import com.qihoo.qsql.org.apache.calcite.rel.RelNode;
 import com.qihoo.qsql.org.apache.calcite.rel.RelShuttle;
+import com.qihoo.qsql.org.apache.calcite.rel.RelViewShuttle;
+import com.qihoo.qsql.org.apache.calcite.rel.TreeNode;
 import com.qihoo.qsql.org.apache.calcite.rel.core.Sort;
 import com.qihoo.qsql.org.apache.calcite.rex.RexNode;
 
@@ -74,6 +76,11 @@ public final class LogicalSort extends Sort {
   @Override public RelNode accept(RelShuttle shuttle) {
     return shuttle.visit(this);
   }
+
+  @Override public TreeNode accept(RelViewShuttle shuttle){
+    return shuttle.visit(this);
+  }
+
 }
 
 // End LogicalSort.java

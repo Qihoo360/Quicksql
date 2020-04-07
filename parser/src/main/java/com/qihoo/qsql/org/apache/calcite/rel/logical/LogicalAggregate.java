@@ -22,6 +22,8 @@ import com.qihoo.qsql.org.apache.calcite.plan.RelTraitSet;
 import com.qihoo.qsql.org.apache.calcite.rel.RelInput;
 import com.qihoo.qsql.org.apache.calcite.rel.RelNode;
 import com.qihoo.qsql.org.apache.calcite.rel.RelShuttle;
+import com.qihoo.qsql.org.apache.calcite.rel.RelViewShuttle;
+import com.qihoo.qsql.org.apache.calcite.rel.TreeNode;
 import com.qihoo.qsql.org.apache.calcite.rel.core.Aggregate;
 import com.qihoo.qsql.org.apache.calcite.rel.core.AggregateCall;
 import com.qihoo.qsql.org.apache.calcite.util.ImmutableBitSet;
@@ -127,6 +129,10 @@ public final class LogicalAggregate extends Aggregate {
   }
 
   @Override public RelNode accept(RelShuttle shuttle) {
+    return shuttle.visit(this);
+  }
+
+  @Override public TreeNode accept(RelViewShuttle shuttle){
     return shuttle.visit(this);
   }
 }

@@ -26,7 +26,9 @@ import com.qihoo.qsql.org.apache.calcite.rel.RelCollation;
 import com.qihoo.qsql.org.apache.calcite.rel.RelInput;
 import com.qihoo.qsql.org.apache.calcite.rel.RelNode;
 import com.qihoo.qsql.org.apache.calcite.rel.RelShuttle;
+import com.qihoo.qsql.org.apache.calcite.rel.RelViewShuttle;
 import com.qihoo.qsql.org.apache.calcite.rel.RelWriter;
+import com.qihoo.qsql.org.apache.calcite.rel.TreeNode;
 import com.qihoo.qsql.org.apache.calcite.rel.metadata.RelMetadataQuery;
 import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataType;
 import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataTypeField;
@@ -162,6 +164,11 @@ public abstract class TableScan extends AbstractRelNode {
   @Override public RelNode accept(RelShuttle shuttle) {
     return shuttle.visit(this);
   }
+
+  @Override public TreeNode accept(RelViewShuttle shuttle){
+    return shuttle.visit(this);
+  }
+
 }
 
 // End TableScan.java

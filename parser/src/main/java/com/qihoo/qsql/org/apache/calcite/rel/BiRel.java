@@ -79,6 +79,10 @@ public abstract class BiRel extends AbstractRelNode {
         .input("left", left)
         .input("right", right);
   }
+
+  @Override public TreeNode accept(RelViewShuttle shuttle){
+    return shuttle.visit(this);
+  }
 }
 
 // End BiRel.java

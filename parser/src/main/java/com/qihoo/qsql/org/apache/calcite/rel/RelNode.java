@@ -443,6 +443,15 @@ public interface RelNode extends RelOptNode, Cloneable {
    */
   RelNode accept(RexShuttle shuttle);
 
+  /**
+   * Accepts a visit from a shuttle.
+   *
+   * @param shuttle Shuttle
+   * @return A copy of this node incorporating changes made by the shuttle to
+   * this node's children
+   */
+  TreeNode accept(RelViewShuttle shuttle);
+
   /** Context of a relational expression, for purposes of checking validity. */
   interface Context {
     Set<CorrelationId> correlationIds();

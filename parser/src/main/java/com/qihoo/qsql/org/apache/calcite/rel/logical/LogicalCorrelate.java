@@ -23,6 +23,8 @@ import com.qihoo.qsql.org.apache.calcite.plan.RelTraitSet;
 import com.qihoo.qsql.org.apache.calcite.rel.RelInput;
 import com.qihoo.qsql.org.apache.calcite.rel.RelNode;
 import com.qihoo.qsql.org.apache.calcite.rel.RelShuttle;
+import com.qihoo.qsql.org.apache.calcite.rel.RelViewShuttle;
+import com.qihoo.qsql.org.apache.calcite.rel.TreeNode;
 import com.qihoo.qsql.org.apache.calcite.rel.core.Correlate;
 import com.qihoo.qsql.org.apache.calcite.rel.core.CorrelationId;
 import com.qihoo.qsql.org.apache.calcite.rel.core.JoinRelType;
@@ -106,6 +108,10 @@ public final class LogicalCorrelate extends Correlate {
   }
 
   @Override public RelNode accept(RelShuttle shuttle) {
+    return shuttle.visit(this);
+  }
+
+  @Override public TreeNode accept(RelViewShuttle shuttle){
     return shuttle.visit(this);
   }
 }

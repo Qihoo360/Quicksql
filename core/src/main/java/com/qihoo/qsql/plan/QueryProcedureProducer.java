@@ -4,6 +4,7 @@ import com.qihoo.qsql.api.SqlRunner.Builder;
 import com.qihoo.qsql.api.SqlRunner.Builder.RunnerType;
 import com.qihoo.qsql.exception.ParseException;
 import com.qihoo.qsql.org.apache.calcite.adapter.mongodb.MongoTable;
+import com.qihoo.qsql.org.apache.calcite.rel.TreeNode;
 import com.qihoo.qsql.org.apache.calcite.tools.YmlUtils;
 import com.qihoo.qsql.plan.func.SqlRunnerFuncTable;
 import com.qihoo.qsql.plan.proc.DataSetTransformProcedure;
@@ -92,6 +93,7 @@ public class QueryProcedureProducer {
     public QueryProcedure createQueryProcedure(String sql) {
         RelNode originalLogicalPlan = buildLogicalPlan(sql);
         RelNode optimizedPlan = optimizeLogicalPlan(originalLogicalPlan);
+        TreeNode treeNode = optimizedPlan.accept(new LogicalViewShuttle());
 
         SubtreeSyncopator subtreeSyncopator = new SubtreeSyncopator(optimizedPlan, funcTable, builder);
         Map<RelNode, AbstractMap.SimpleEntry<String, RelOptTable>> resultRelNode =
@@ -118,7 +120,9 @@ public class QueryProcedureProducer {
                     .getProperties());
             }
         }
-        return new ProcedurePortFire(extractProcedures).optimize();
+        QueryProcedure queryProcedure = new ProcedurePortFire(extractProcedures).optimize();
+        queryProcedure.setTreeNode(treeNode);
+        return queryProcedure;
     }
 
     private LoadProcedure createLoadProcedure() {
