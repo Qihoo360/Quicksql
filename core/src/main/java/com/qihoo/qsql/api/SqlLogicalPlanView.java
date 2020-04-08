@@ -25,7 +25,7 @@ public class SqlLogicalPlanView {
     protected Builder environment;
 
 
-    SqlLogicalPlanView() {
+    public SqlLogicalPlanView() {
         this.environment = SqlRunner.builder();
     }
 
