@@ -8,6 +8,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
 import com.google.gson.JsonObject;
+import com.qihoo.qsql.api.SqlLogicalPlanView;
 import com.qihoo.qsql.api.SqlRunner;
 import com.qihoo.qsql.api.SqlRunner.Builder.RunnerType;
 import com.qihoo.qsql.client.QuicksqlConnectionImpl;
@@ -807,13 +808,17 @@ public class QuicksqlServerMeta implements ProtobufMeta {
     private ExecuteResult getExecuteResultSet(StatementHandle h, QuicksqlConnectionImpl connection, String sql) {
         MetaResultSet resultSet = null;
         String responseUrl = "";
+        System.out.println("sql:" + sql);
         try {
+            if (sql.toLowerCase().startsWith("explain")) {
+                String logicalPlanView = new SqlLogicalPlanView().getLogicalPlanView(sql.replaceAll("explain ",""));
+                resultSet = getResultSet(h, sql, 1, getExplainResult(logicalPlanView));
+                return new ExecuteResult(Collections.singletonList(resultSet));
+            }
+
             int maxResNum = Integer
                 .parseInt(StringUtils.defaultIfBlank(connection.getInfoByName("acceptedResultsNum"), "100000"));
             responseUrl = connection.getInfoByName("responseUrl");
-            System.out.println("sql:" + sql);
-            System.out.println("responseUrl:" + responseUrl);
-            System.out.println("schemaPath:" + connection.getInfoByName("schemaPath"));
 
             SqlRunner runner = SqlRunner.builder()
                 .setTransformRunner(RunnerType.value(connection.getInfoByName("runner")))
@@ -1043,6 +1048,21 @@ public class QuicksqlServerMeta implements ProtobufMeta {
                 1, true, -1, null, fieldNames[i], null, -1, -1, null, null,
                 columnType, true, false, false, columnType.columnClassName()));
         }
+        return new QueryResult(meta, data);
+    }
+
+    public QueryResult getExplainResult(String explainResult) {
+        if (StringUtils.isBlank(explainResult)) {
+            throw new RuntimeException("explain result is empty");
+        }
+        List<Object> data = new ArrayList<>();
+        Object[] objects = new Object[1];
+        objects[0] = explainResult;
+        data.add(Arrays.asList(objects));
+        List<ColumnMetaData> meta = new ArrayList<>();
+        meta.add(new ColumnMetaData(0, false, true, false, false,
+            1, true, -1, null, "explain", null, -1, -1, null, null,
+            ColumnMetaData.scalar(Types.VARCHAR, "varchar", Rep.STRING), true, false, false, ColumnMetaData.scalar(Types.VARCHAR, "varchar", Rep.STRING).columnClassName()));
         return new QueryResult(meta, data);
     }
 
