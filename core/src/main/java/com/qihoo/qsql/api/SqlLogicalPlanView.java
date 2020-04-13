@@ -66,9 +66,7 @@ public class SqlLogicalPlanView {
         if (schema.equals("inline: ")) {
             schema = JdbcPipeline.CSV_DEFAULT_SCHEMA;
         }
-
-        QueryProcedure queryProcedure = new QueryProcedureProducer(schema, environment).createQueryProcedure(sql);
-        return queryProcedure;
+        return new QueryProcedureProducer(schema, environment).createQueryProcedure(sql);
     }
 
     private String getFullSchemaFromAssetDataSource() {
