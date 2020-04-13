@@ -114,7 +114,7 @@ public class RuntimeEnv {
         + "            \"name\": \"type:string\"\n"
         + "          },\n"
         + "          {\n"
-        + "            \"name\": \"stu_id:string\"\n"
+        + "            \"name\": \"stuid:string\"\n"
         + "          }\n"
         + "        ]\n"
         + "      }]\n"

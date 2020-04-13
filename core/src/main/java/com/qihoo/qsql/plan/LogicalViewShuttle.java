@@ -64,7 +64,17 @@ public class LogicalViewShuttle implements RelViewShuttle {
 
     @Override
     public TreeNode visit(TableScan scan) {
+        TreeNode child = null;
         TreeNode result = new TreeNode();
+        List<TreeNode> childList = new ArrayList<>();
+        if (scan.getInputs().size() > 0) {
+
+            for (RelNode relNode : scan.getInputs()) {
+                child = relNode.accept(this);
+                childList.add(child);
+            }
+        }
+        result.setChild(childList);
         Map<String, String> map = new HashMap<>();
         map.put(scan.getRelTypeName(), StringUtils.join(scan.getTable().getQualifiedName(), "."));
         List<String> list = new ArrayList<>();
@@ -138,9 +148,16 @@ public class LogicalViewShuttle implements RelViewShuttle {
 
     @Override
     public TreeNode visit(LogicalJoin join) {
+        TreeNode rightNode = join.getRight().accept(this);
+        TreeNode leftNode = join.getLeft().accept(this);
         TreeNode result = new TreeNode();
+        List<TreeNode> childList = new ArrayList<>();
+        childList.add(rightNode);
+        childList.add(leftNode);
+        result.setChild(childList);
         Map<String, String> map = new HashMap<>();
-        map.put(join.getJoinType().toString(), join.getJoinType().toString());
+        map.put(join.getJoinType().toString(), join.getRight().toString() + join
+            .getRight().toString());
         List<String> list = new ArrayList<>();
         list.add(join.getJoinType().toString());
         result.setKeySet(list);
@@ -164,9 +181,18 @@ public class LogicalViewShuttle implements RelViewShuttle {
 
     @Override
     public TreeNode visit(LogicalUnion union) {
+        TreeNode child = null;
         TreeNode result = new TreeNode();
         Map<String, String> map = new HashMap<>();
-        map.put(union.getRelTypeName(), union.getChildExps().toString());
+        List<TreeNode> childList = new ArrayList<>();
+        if (union.getInputs().size() > 0) {
+            for (RelNode relNode : union.getInputs()) {
+                child = relNode.accept(this);
+                childList.add(child);
+            }
+        }
+        result.setChild(childList);
+        map.put(union.getRelTypeName(), union.getInputs().toString());
         List<String> list = new ArrayList<>();
         list.add(union.getRelTypeName());
         result.setKeySet(list);
