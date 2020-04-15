@@ -34,6 +34,7 @@ public class SparkJdbcGenerator extends QueryGenerator {
             "import org.apache.spark.sql.RowFactory",
             "import org.apache.spark.sql.SparkSession",
             "import org.apache.spark.sql.types.DataTypes",
+            "import org.apache.spark.sql.types.DataType",
             "import org.apache.spark.sql.types.StructField",
             "import org.apache.spark.sql.types.StructType",
             "import java.sql.*",
@@ -68,6 +69,8 @@ public class SparkJdbcGenerator extends QueryGenerator {
         composer.handleComposition(ClassBodyComposer.CodeCategory.METHOD,
             declareGetDataTypesMethod());
         composer.handleComposition(ClassBodyComposer.CodeCategory.METHOD,
+            declareDataTypeFormat());
+        composer.handleComposition(ClassBodyComposer.CodeCategory.METHOD,
             declarePersistMethod());
         composer.handleComposition(ClassBodyComposer.CodeCategory.METHOD,
             declareTransferContentsMethod());
@@ -77,7 +80,7 @@ public class SparkJdbcGenerator extends QueryGenerator {
     @Override
     public void executeQuery() {
         Invoker config = Invoker.registerMethod("persist");
-        String invokeWrap = config.invoke(add(convertProperties("jdbcUrl", "jdbcUser", "jdbcPassword","jdbcDriver"),
+        String invokeWrap = config.invoke(add(convertProperties("jdbcUrl", "jdbcUser", "jdbcPassword", "jdbcDriver"),
             query));
         String wrapper = with("wrapper", "tmp");
         String invokedStatement = "ResultSetWrapper" + " " + wrapper + " = " + invokeWrap + ";";
@@ -130,13 +133,46 @@ public class SparkJdbcGenerator extends QueryGenerator {
             + "\n"
             + "            for (int index = 1; index <= n; index++) {\n"
             + "                labelName = resultSet.getMetaData().getColumnLabel(index);\n"
-            + "                columns.add(DataTypes.createStructField(labelName, DataTypes.StringType, true));\n"
+            + "                columns.add(DataTypes.createStructField(labelName, "
+            + "getColumnType(resultSet.getMetaData().getColumnType(index)), true));\n"
             + "            }\n"
             + "        } catch (SQLException e) {\n"
             + "            throw new RuntimeException(e.getMessage());\n"
             + "        }\n"
             + "\n"
             + "        return columns;\n"
+            + "    }";
+    }
+
+    private String declareDataTypeFormat() {
+        return "    private DataType getColumnType(int dataType) {\n"
+            + "        switch (dataType) {\n"
+            + "            case Types.VARCHAR:\n"
+            + "                return DataTypes.StringType;\n"
+            + "            case Types.BINARY:\n"
+            + "                return DataTypes.BinaryType;\n"
+            + "            case Types.BIT:\n"
+            + "            case Types.BOOLEAN:\n"
+            + "                return DataTypes.BooleanType;\n"
+            + "            case Types.DATE:\n"
+            + "                return DataTypes.DateType;\n"
+            + "            case Types.TIMESTAMP:\n"
+            + "                return DataTypes.TimestampType;\n"
+            + "            case Types.DOUBLE:\n"
+            + "                return DataTypes.DoubleType;\n"
+            + "            case Types.FLOAT:\n"
+            + "                return DataTypes.FloatType;\n"
+            + "            case Types.TINYINT:\n"
+            + "                return DataTypes.ByteType;\n"
+            + "            case Types.BIGINT:\n"
+            + "                return DataTypes.LongType;\n"
+            + "            case Types.INTEGER:\n"
+            + "                return DataTypes.IntegerType;\n"
+            + "            case Types.NULL:\n"
+            + "                return DataTypes.NullType;\n"
+            + "            default:\n"
+            + "                return DataTypes.StringType;\n"
+            + "        }\n"
             + "    }";
     }
 
@@ -161,7 +197,7 @@ public class SparkJdbcGenerator extends QueryGenerator {
             + "\n"
             + "        long partitionStamp = System.currentTimeMillis();\n"
             + "\n"
-            + "        BlockingQueue<List<String[]>> queue = new ArrayBlockingQueue<List<String[]>>"
+            + "        BlockingQueue<List<Object[]>> queue = new ArrayBlockingQueue<List<Object[]>>"
             + "(CONCURRENT_PACKAGE_NUM);\n"
             + "        Queue<String> partitionQueue = new ArrayDeque<String>();\n"
             + "\n"
@@ -172,8 +208,8 @@ public class SparkJdbcGenerator extends QueryGenerator {
             + "        if (!queue.isEmpty()) {\n"
             + "            List<Row> rows = new ArrayList<Row>(queue.size() * rowPartition);\n"
             + "\n"
-            + "            for (List<String[]> rowSet : queue) {\n"
-            + "                for (String[] rowFields : rowSet)\n"
+            + "            for (List<Object[]> rowSet : queue) {\n"
+            + "                for (Object[] rowFields : rowSet)\n"
             + "                    rows.add(RowFactory.create((Object[]) rowFields));\n"
             + "                rowSet.clear();\n"
             + "            }\n"
@@ -202,7 +238,7 @@ public class SparkJdbcGenerator extends QueryGenerator {
             + "\n"
             + "            schema = DataTypes.createStructType(getDataTypes(resultSet));\n"
             + "\n"
-            + "            List<String[]> rows = new ArrayList<String[]>();\n"
+            + "            List<Object[]> rows = new ArrayList<Object[]>();\n"
             + "            int n = resultSet.getMetaData().getColumnCount();\n"
             + "\n"
             + getWhileCodeInMethod()
@@ -215,7 +251,7 @@ public class SparkJdbcGenerator extends QueryGenerator {
             + "                if (rowPartition * BUFFER_SIZE > THRESHOLD) {\n"
             + "                    while (!queue.isEmpty()) {\n"
             + "                        try {\n"
-            + "                            transferContents((List<String[]>) queue.take(), (String) partitionQueue.poll"
+            + "                            transferContents((List<Object[]>) queue.take(), (String) partitionQueue.poll"
             + "(), executor);\n"
             + "                        } catch (InterruptedException e) {\n"
             + "                            e.printStackTrace();\n"
@@ -242,12 +278,11 @@ public class SparkJdbcGenerator extends QueryGenerator {
 
     private String getWhileCodeInMethod() {
         return "            while (resultSet.next()) {\n"
-            + "                String[] rowValue = new String[n];\n"
+            + "                Object[] rowValue = new Object[n];\n"
             + "\n"
             + "                for (int index = 1; index <= n; index++)\n"
             // + "                    rowValue[index - 1] = resultSet.getObject(index).toString();\n"
-            + "                    rowValue[index - 1] = resultSet.getObject(index) != null ? resultSet.getObject"
-            + "(index).toString() : \"null\";\n"
+            + "                    rowValue[index - 1] = resultSet.getObject(index);\n"
             + "\n"
             + "                rows.add(rowValue);\n"
             + "                rowCount++;\n"
@@ -260,11 +295,11 @@ public class SparkJdbcGenerator extends QueryGenerator {
             + "\n"
             + "                    if (rowPartition * BUFFER_SIZE > THRESHOLD) {\n"
             + "                        while (!queue.isEmpty()) {\n"
-            + "                            transferContents((List<String[]>) queue.poll(), (String) partitionQueue.poll"
+            + "                            transferContents((List<Object[]>) queue.poll(), (String) partitionQueue.poll"
             + "(), executor);\n"
             + "                        }\n"
             + "                    }\n"
-            + "                    rows = new ArrayList<String[]>();\n"
+            + "                    rows = new ArrayList<Object[]>();\n"
             + "\n"
             + "                    rowCount = 0;\n"
             + "                    rowPartition++;\n"
@@ -274,7 +309,7 @@ public class SparkJdbcGenerator extends QueryGenerator {
 
 
     private String declareTransferContentsMethod() {
-        return "    private void transferContents(List<String[]> rows,\n"
+        return "    private void transferContents(List<Object[]> rows,\n"
             + "                                  String url,\n"
             + "                                  ExecutorService executor) {\n"
             + "        Configuration conf = new Configuration();\n"
@@ -317,7 +352,7 @@ public class SparkJdbcGenerator extends QueryGenerator {
         }
     }
 
-    public static class ResultSetInMemoryWrapper extends SparkJdbcGenerator.ResultSetWrapper {
+    public static class ResultSetInMemoryWrapper extends ResultSetWrapper {
 
         private List<Row> rows;
 
@@ -331,7 +366,7 @@ public class SparkJdbcGenerator extends QueryGenerator {
         }
     }
 
-    public static class ResultSetInFileSystemWrapper extends SparkJdbcGenerator.ResultSetWrapper {
+    public static class ResultSetInFileSystemWrapper extends ResultSetWrapper {
 
         private String path;
 
@@ -360,7 +395,7 @@ public class SparkJdbcGenerator extends QueryGenerator {
 
         private String url;
         private Configuration conf;
-        private List<String[]> content;
+        private List<Object[]> content;
         private char separator = '\u0006';
 
         /**
@@ -370,7 +405,7 @@ public class SparkJdbcGenerator extends QueryGenerator {
          * @param content result of query
          * @param conf config of the calculation
          */
-        public ResultsTransporter(String url, List<String[]> content, Configuration conf) {
+        public ResultsTransporter(String url, List<Object[]> content, Configuration conf) {
             this.url = url;
             this.content = content;
             this.conf = conf;
@@ -383,7 +418,7 @@ public class SparkJdbcGenerator extends QueryGenerator {
                     URI.create(QSQL_CLUSTER_URL), conf)) {
                     FSDataOutputStream out = fs.create(new Path(url));
                     try {
-                        for (String[] arrayContent : content) {
+                        for (Object[] arrayContent : content) {
                             StringBuilder builder = new StringBuilder();
 
                             for (int j = 0; j < arrayContent.length; j++) {
