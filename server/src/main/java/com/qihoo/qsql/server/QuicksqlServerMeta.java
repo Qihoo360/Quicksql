@@ -254,11 +254,11 @@ public class QuicksqlServerMeta implements ProtobufMeta {
             }
             String columnClassName = metaData.getColumnClassName(i);
             final SqlType sqlType = SqlType.valueOf(typeId);
-            final ColumnMetaData.Rep rep = ColumnMetaData.Rep.of(sqlType.internal);
+            final Rep rep = Rep.of(sqlType.internal);
             final ColumnMetaData.AvaticaType t;
             if (sqlType == SqlType.ARRAY || sqlType == SqlType.STRUCT || sqlType == SqlType.MULTISET) {
                 ColumnMetaData.AvaticaType arrayValueType = ColumnMetaData.scalar(Types.JAVA_OBJECT,
-                    metaData.getColumnTypeName(i), ColumnMetaData.Rep.OBJECT);
+                    metaData.getColumnTypeName(i), Rep.OBJECT);
                 t = ColumnMetaData.array(arrayValueType, metaData.getColumnTypeName(i), rep);
             } else {
                 t = ColumnMetaData.scalar(typeId, metaData.getColumnTypeName(i), rep);
@@ -300,7 +300,7 @@ public class QuicksqlServerMeta implements ProtobufMeta {
 
     protected static Signature signature(ResultSetMetaData metaData,
         ParameterMetaData parameterMetaData, String sql,
-        Meta.StatementType statementType) throws SQLException {
+        StatementType statementType) throws SQLException {
         final CursorFactory cf = CursorFactory.LIST;  // because QuicksqlServerResultSet#frame
         return new Signature(columns(metaData), sql, parameters(parameterMetaData),
             null, cf, statementType);
@@ -720,7 +720,7 @@ public class QuicksqlServerMeta implements ProtobufMeta {
             QuicksqlConnectionImpl qsqlConn = (QuicksqlConnectionImpl) getConnection(ch.id);
             PreparedStatement statement = qsqlConn.prepareStatement(sql);
             final int id = getStatementIdGenerator().getAndIncrement();
-            Meta.StatementType statementType = null;
+            StatementType statementType = null;
             if (statement.isWrapperFor(AvaticaPreparedStatement.class)) {
                 final AvaticaPreparedStatement avaticaPreparedStatement;
                 avaticaPreparedStatement =
@@ -838,11 +838,11 @@ public class QuicksqlServerMeta implements ProtobufMeta {
                         resultSet = getJDBCResultSet(h, collect, maxResNum);
                         break;
                     case SPARK:
-                        Map.Entry<List<Attribute>, List<GenericRowWithSchema>> sparkData = (Entry<List<Attribute>, List<GenericRowWithSchema>>) collect;
+                        Entry<List<Attribute>, List<GenericRowWithSchema>> sparkData = (Entry<List<Attribute>, List<GenericRowWithSchema>>) collect;
                         resultSet = getResultSet(h, sql, maxResNum, getSparkQueryResult(sparkData));
                         break;
                     case FLINK:
-                        Map.Entry<TableSchema, List<Row>> flinkData = (Entry<TableSchema, List<Row>>) collect;
+                        Entry<TableSchema, List<Row>> flinkData = (Entry<TableSchema, List<Row>>) collect;
                         resultSet = getResultSet(h, sql, maxResNum, getFlinkQueryResult(flinkData));
                         break;
                     case DEFAULT:
@@ -965,7 +965,7 @@ public class QuicksqlServerMeta implements ProtobufMeta {
             return getJDBCResultSet(h, collect, maxResNum);
         } else if (collect instanceof Map.Entry) {
             try {
-                Map.Entry<List<Attribute>, List<GenericRowWithSchema>> sparkData = (Entry<List<Attribute>, List<GenericRowWithSchema>>) collect;
+                Entry<List<Attribute>, List<GenericRowWithSchema>> sparkData = (Entry<List<Attribute>, List<GenericRowWithSchema>>) collect;
                 return getResultSet(h, sql, maxResNum, getSparkQueryResult(sparkData));
             } catch (Exception e) {
                 throw new RuntimeException("result type error " + e.getMessage());
@@ -998,7 +998,7 @@ public class QuicksqlServerMeta implements ProtobufMeta {
         return QuicksqlServerResultSet.create(h.connectionId, h.id, (ResultSet) collect, maxResNum);
     }
 
-    public QueryResult getSparkQueryResult(Map.Entry<List<Attribute>, List<GenericRowWithSchema>> sparkData)
+    public QueryResult getSparkQueryResult(Entry<List<Attribute>, List<GenericRowWithSchema>> sparkData)
         throws Exception {
         if (sparkData == null) {
             return new QueryResult(new ArrayList<>(), new ArrayList<>());
@@ -1013,16 +1013,17 @@ public class QuicksqlServerMeta implements ProtobufMeta {
         value.stream().forEach(column -> {
             data.add(column.values());
         });
-        attributes.stream().forEach(attribute -> {
+        for (int index = 0; index < sparkData.getKey().size(); index++) {
+            Attribute attribute = sparkData.getKey().get(index);
             ScalarType columnType = getColumnType(attribute.dataType());
-            meta.add(new ColumnMetaData(0, false, true, false, false,
-                1, true, -1, null, attribute.name(), null, -1, -1, null, null,
+            meta.add(new ColumnMetaData(index, false, true, false, false,
+                attribute.nullable() ? 1 : 0, true, -1, attribute.name(), attribute.name(), null, -1, -1, null, null,
                 columnType, true, false, false, columnType.columnClassName()));
-        });
+        }
         return new QueryResult(meta, data);
     }
 
-    public QueryResult getFlinkQueryResult(Map.Entry<TableSchema, List<Row>> sparkData) throws Exception {
+    public QueryResult getFlinkQueryResult(Entry<TableSchema, List<Row>> sparkData) throws Exception {
         if (sparkData == null) {
             return new QueryResult(new ArrayList<>(), new ArrayList<>());
         }
@@ -1042,10 +1043,10 @@ public class QuicksqlServerMeta implements ProtobufMeta {
             }
             data.add(Arrays.asList(objects));
         });
-        for (int i = 0; i < fieldNames.length; i++) {
-            ScalarType columnType = getColumnType2(fieldDataTypes[i]);
-            meta.add(new ColumnMetaData(0, false, true, false, false,
-                1, true, -1, null, fieldNames[i], null, -1, -1, null, null,
+        for (int index = 0; index < fieldNames.length; index++) {
+            ScalarType columnType = getColumnType2(fieldDataTypes[index]);
+            meta.add(new ColumnMetaData(index, false, true, false, false,
+                1, true, -1, fieldNames[index], fieldNames[index], null, -1, -1, null, null,
                 columnType, true, false, false, columnType.columnClassName()));
         }
         return new QueryResult(meta, data);
@@ -1061,7 +1062,7 @@ public class QuicksqlServerMeta implements ProtobufMeta {
         data.add(Arrays.asList(objects));
         List<ColumnMetaData> meta = new ArrayList<>();
         meta.add(new ColumnMetaData(0, false, true, false, false,
-            1, true, -1, null, "explain", null, -1, -1, null, null,
+            1, true, -1, "explain", "explain", null, -1, -1, null, null,
             ColumnMetaData.scalar(Types.VARCHAR, "varchar", Rep.STRING), true, false, false, ColumnMetaData.scalar(Types.VARCHAR, "varchar", Rep.STRING).columnClassName()));
         return new QueryResult(meta, data);
     }
@@ -1075,7 +1076,7 @@ public class QuicksqlServerMeta implements ProtobufMeta {
             startIndex = sql.indexOf("?", startIndex) + 1;
         }
         return new Signature(res.columnMeta, sql, params, Collections.<String, Object>emptyMap(), CursorFactory.ARRAY,
-            Meta.StatementType.SELECT);
+            StatementType.SELECT);
     }
 
     private ScalarType getColumnType(DataType dataType) {
@@ -1162,7 +1163,7 @@ public class QuicksqlServerMeta implements ProtobufMeta {
                 return Frame.EMPTY;
             } else {
                 return QuicksqlServerResultSet.frame(statementInfo, statementInfo.getResultSet(), offset,
-                    fetchMaxRowCount, calendar, Optional.<Meta.Signature>absent());
+                    fetchMaxRowCount, calendar, Optional.<Signature>absent());
             }
         } catch (SQLException e) {
             throw propagate(e);
