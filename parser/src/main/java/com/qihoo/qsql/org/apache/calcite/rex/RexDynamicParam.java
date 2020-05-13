@@ -40,7 +40,7 @@ public class RexDynamicParam extends RexVariable {
   public RexDynamicParam(
       RelDataType type,
       int index) {
-    super("?" + index, type);
+    super("?" + index, "",type);
     this.index = index;
   }
 

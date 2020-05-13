@@ -236,7 +236,7 @@ public class RelStructuredTypeFlattener implements ReflectiveVisitor {
         restructured = true;
         expr = restructure(fieldType);
       } else {
-        expr = new RexInputRef(iRestructureInput++, fieldType);
+        expr = new RexInputRef(iRestructureInput++, field.getName(), fieldType);
       }
       structuringExps.add(expr);
     }
@@ -811,7 +811,7 @@ public class RelStructuredTypeFlattener implements ReflectiveVisitor {
       // Use the actual flattened type, which may be different from the current
       // type.
       RelDataType fieldType = removeDistinct(field.e);
-      return new RexInputRef(field.i, fieldType);
+      return new RexInputRef(field.i, input.digest, fieldType);
     }
 
     private RelDataType removeDistinct(RelDataType type) {

@@ -3766,6 +3766,7 @@ public class SqlToRelConverter {
     if (field != null) {
       return rexBuilder.makeInputRef(
           field.getType(),
+          inputRef.digest,
           inputRef.getIndex());
     }
     return inputRef;
@@ -5193,7 +5194,8 @@ public class SqlToRelConverter {
               filterArg,
               collation,
               type,
-              nameMap.get(outerCall.toString()));
+              outerCall.toString()
+              );
       final AggregatingSelectScope.Resolved r =
           aggregatingSelectScope.resolved.get();
       RexNode rex =
@@ -5202,7 +5204,9 @@ public class SqlToRelConverter {
               groupExprs.size(),
               aggCalls,
               aggCallMapping,
-              argTypes);
+              argTypes,
+              outerCall.toString()
+              );
       aggMapping.put(outerCall, rex);
     }
 
