@@ -17,7 +17,10 @@ import com.qihoo.qsql.org.apache.calcite.rel.logical.LogicalProject;
 import com.qihoo.qsql.org.apache.calcite.rel.logical.LogicalSort;
 import com.qihoo.qsql.org.apache.calcite.rel.logical.LogicalUnion;
 import com.qihoo.qsql.org.apache.calcite.rel.logical.LogicalValues;
+import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataType;
+import com.qihoo.qsql.org.apache.calcite.util.Pair;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,12 +38,11 @@ public class LogicalViewShuttle implements RelViewShuttle {
         childList.add(child);
         result.setChild(childList);
         List<String> list = new ArrayList<>();
-        list.add(aggregate.getGroupType().toString());
+        list.add("aggregateType");
         Map<String, String> map = new HashMap<>();
-        map.put(aggregate.getRelTypeName(), aggregate.getChildExps().toString());
+        map.put("aggregateType", aggregate.getAggCallList().toString());
         result.setCommonMap(map);
         result.setName(aggregate.getRelTypeName());
-        result.setUniverse(aggregate.groupSets.toString());
         result.setKeySet(list);
         return result;
     }
@@ -64,7 +66,7 @@ public class LogicalViewShuttle implements RelViewShuttle {
 
     @Override
     public TreeNode visit(TableScan scan) {
-        TreeNode child = null;
+        TreeNode child;
         TreeNode result = new TreeNode();
         List<TreeNode> childList = new ArrayList<>();
         if (scan.getInputs().size() > 0) {
@@ -76,9 +78,10 @@ public class LogicalViewShuttle implements RelViewShuttle {
         }
         result.setChild(childList);
         Map<String, String> map = new HashMap<>();
-        map.put(scan.getRelTypeName(), StringUtils.join(scan.getTable().getQualifiedName(), "."));
+        map.put("tables",
+            Collections.singletonList(StringUtils.join(scan.getTable().getQualifiedName(), ".")).toString());
         List<String> list = new ArrayList<>();
-        list.add(scan.getRelTypeName());
+        list.add("tables");
         result.setKeySet(list);
         result.setName(scan.getRelTypeName());
         result.setCommonMap(map);
@@ -116,13 +119,15 @@ public class LogicalViewShuttle implements RelViewShuttle {
         TreeNode child = filter.getInput().accept(this);
         TreeNode result = new TreeNode();
         Map<String, String> map = new HashMap<>();
+        map.put("conditions", filter.getCondition().toString());
         List<TreeNode> childList = new ArrayList<>();
         childList.add(child);
         result.setChild(childList);
-        map.put(filter.getRelTypeName(), filter.getCondition().toString());
-        List<String> list = new ArrayList<>();
-        list.add(filter.getRelTypeName());
-        result.setKeySet(list);
+        result.setKeySet(new ArrayList<String>() {
+            {
+                add("conditions");
+            }
+        });
         result.setName(filter.getRelTypeName());
         result.setCommonMap(map);
 
@@ -137,12 +142,18 @@ public class LogicalViewShuttle implements RelViewShuttle {
         childList.add(child);
         result.setChild(childList);
         Map<String, String> map = new HashMap<>();
-        map.put(project.getRelTypeName(), project.getInputs().toString());
-        List<String> list = new ArrayList<>();
-        list.add(project.getRelTypeName());
-        result.setKeySet(list);
+        List<Pair<String, RelDataType>> fields = new ArrayList<>();
+        project.getRowType().getFieldList()
+            .forEach(list -> fields.add(new Pair<String, RelDataType>(list.getName(), list
+                .getType())));
+        map.put("fields", fields.toString());
         result.setName(project.getRelTypeName());
         result.setCommonMap(map);
+        result.setKeySet(new ArrayList<String>() {
+            {
+                add("fields");
+            }
+        });
         return result;
     }
 
@@ -156,10 +167,9 @@ public class LogicalViewShuttle implements RelViewShuttle {
         childList.add(leftNode);
         result.setChild(childList);
         Map<String, String> map = new HashMap<>();
-        map.put(join.getJoinType().toString(), join.getRight().toString() + join
-            .getRight().toString());
+        map.put(join.getJoinType().toString().toLowerCase(), join.getCondition().digest);
         List<String> list = new ArrayList<>();
-        list.add(join.getJoinType().toString());
+        list.add(join.getJoinType().toString().toLowerCase());
         result.setKeySet(list);
         result.setName(join.getRelTypeName());
         result.setCommonMap(map);
@@ -181,9 +191,8 @@ public class LogicalViewShuttle implements RelViewShuttle {
 
     @Override
     public TreeNode visit(LogicalUnion union) {
-        TreeNode child = null;
+        TreeNode child;
         TreeNode result = new TreeNode();
-        Map<String, String> map = new HashMap<>();
         List<TreeNode> childList = new ArrayList<>();
         if (union.getInputs().size() > 0) {
             for (RelNode relNode : union.getInputs()) {
@@ -192,9 +201,14 @@ public class LogicalViewShuttle implements RelViewShuttle {
             }
         }
         result.setChild(childList);
-        map.put(union.getRelTypeName(), union.getInputs().toString());
+        List<Pair<String, RelDataType>> unionFields = new ArrayList<>();
+        union.getRowType().getFieldList()
+            .forEach(list -> unionFields.add(new Pair<String, RelDataType>(list.getName(), list
+                .getType())));
+        Map<String, String> map = new HashMap<>();
+        map.put("unionFields", unionFields.toString());
         List<String> list = new ArrayList<>();
-        list.add(union.getRelTypeName());
+        list.add("unionFields");
         result.setKeySet(list);
         result.setName(union.getRelTypeName());
         result.setCommonMap(map);
@@ -235,11 +249,17 @@ public class LogicalViewShuttle implements RelViewShuttle {
         childList.add(child);
         result.setChild(childList);
         Map<String, String> map = new HashMap<>();
-        map.put(sort.getRelTypeName(), sort.getInputs().toString());
-        List<String> list = new ArrayList<>();
-        list.add(sort.getRelTypeName());
-        result.setKeySet(list);
-        result.setName(sort.getRelTypeName());
+        if (sort.getCollation().getFieldCollations().size() == 0) {
+            result.setName("LogicalSortAlias");
+        } else {
+            result.setName(sort.getRelTypeName());
+        }
+        map.put("order", sort.fieldExps.toString());
+        result.setKeySet(new ArrayList<String>() {
+            {
+                add("order");
+            }
+        });
         result.setCommonMap(map);
         return result;
     }

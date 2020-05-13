@@ -1,6 +1,7 @@
 package com.qihoo.qsql.api;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.qihoo.qsql.api.SqlRunner.Builder;
 import com.qihoo.qsql.api.SqlRunner.Builder.RunnerType;
 import com.qihoo.qsql.exec.JdbcPipeline;
@@ -75,7 +76,7 @@ public class SqlLogicalPlanView {
 
     private String getQueryProcedureLogicalView(QueryProcedure queryProcedure) {
         TreeNode treeNode = queryProcedure.getTreeNode();
-        Gson gson = new Gson();
+        Gson gson =  new GsonBuilder().disableHtmlEscaping().create();
         return gson.toJson(treeNode);
     }
 }

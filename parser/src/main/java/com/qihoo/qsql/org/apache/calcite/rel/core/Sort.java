@@ -46,7 +46,7 @@ public abstract class Sort extends SingleRel {
   //~ Instance fields --------------------------------------------------------
 
   public final RelCollation collation;
-  protected final ImmutableList<RexNode> fieldExps;
+  public final ImmutableList<RexNode> fieldExps;
   public final RexNode offset;
   public final RexNode fetch;
 

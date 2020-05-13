@@ -39,7 +39,7 @@ public abstract class RexNode {
   //~ Instance fields --------------------------------------------------------
 
   // Effectively final. Set in each sub-class constructor, and never re-set.
-  protected String digest;
+  public String digest;
 
   //~ Methods ----------------------------------------------------------------
 

@@ -99,10 +99,13 @@ public class RexCall extends RexNode {
    * @param sb destination
    * @return original StringBuilder for fluent API
    */
-  protected final StringBuilder appendOperands(StringBuilder sb) {
+  protected final StringBuilder appendOperands(StringBuilder sb, String op) {
+    if (operands.size() == 1) {
+      sb.append(op + " ");
+    }
     for (int i = 0; i < operands.size(); i++) {
       if (i > 0) {
-        sb.append(", ");
+        sb.append(" " + op + " ");
       }
       RexNode operand = operands.get(i);
       if (!(operand instanceof RexLiteral)) {
@@ -156,14 +159,15 @@ public class RexCall extends RexNode {
   }
 
   protected @Nonnull String computeDigest(boolean withType) {
-    final StringBuilder sb = new StringBuilder(op.getName());
+    final StringBuilder sb = new StringBuilder();
+    // final StringBuilder sb = new StringBuilder(op.getName());
     if ((operands.size() == 0)
         && (op.getSyntax() == SqlSyntax.FUNCTION_ID)) {
       // Don't print params for empty arg list. For example, we want
       // "SYSTEM_USER", not "SYSTEM_USER()".
     } else {
       sb.append("(");
-      appendOperands(sb);
+      appendOperands(sb, op.getName());
       sb.append(")");
     }
     if (withType) {

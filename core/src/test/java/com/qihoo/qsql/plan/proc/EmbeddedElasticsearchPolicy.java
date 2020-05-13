@@ -108,7 +108,7 @@ public class EmbeddedElasticsearchPolicy extends ExternalResource {
      * @param mapping field and field type mapping
      * @throws IOException if there is an error
      */
-    void createIndex(String index, Map<String, String> mapping) throws IOException {
+    public void createIndex(String index, Map<String, String> mapping) throws IOException {
         Objects.requireNonNull(index, "index");
         Objects.requireNonNull(mapping, "mapping");
 
@@ -156,7 +156,10 @@ public class EmbeddedElasticsearchPolicy extends ExternalResource {
             entity);
     }
 
-    void insertBulk(String index, List<ObjectNode> documents) throws IOException {
+    /**
+     *es insertBulk.
+     */
+    public void insertBulk(String index, List<ObjectNode> documents) throws IOException {
         Objects.requireNonNull(index, "index");
         Objects.requireNonNull(documents, "documents");
 
@@ -186,7 +189,7 @@ public class EmbeddedElasticsearchPolicy extends ExternalResource {
      *
      * @return existing instance of ObjectMapper
      */
-    ObjectMapper mapper() {
+    public ObjectMapper mapper() {
         return mapper;
     }
 

@@ -30,6 +30,7 @@ import com.qihoo.qsql.org.apache.calcite.util.mapping.Mappings;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -53,6 +54,7 @@ public class AggregateCall {
   private final ImmutableList<Integer> argList;
   public final int filterArg;
   public final RelCollation collation;
+  public final List<String> feildName;
 
   //~ Constructors -----------------------------------------------------------
 
@@ -102,6 +104,7 @@ public class AggregateCall {
     this.distinct = distinct;
     this.approximate = approximate;
     this.ignoreNulls = ignoreNulls;
+    this.feildName = Collections.singletonList(name);
     Preconditions.checkArgument(
         aggFunction.getDistinctOptionality() != Optionality.IGNORED || !distinct,
         "DISTINCT has no effect for this aggregate function, so must be false");
@@ -292,8 +295,9 @@ public class AggregateCall {
   }
 
   public String toString() {
-    StringBuilder buf = new StringBuilder(aggFunction.toString());
-    buf.append("(");
+    // StringBuilder buf = new StringBuilder(aggFunction.toString());
+    StringBuilder buf = new StringBuilder();
+    // buf.append("(");
     if (distinct) {
       buf.append((argList.size() == 0) ? "DISTINCT" : "DISTINCT ");
     }
@@ -302,10 +306,10 @@ public class AggregateCall {
       if (++i > 0) {
         buf.append(", ");
       }
-      buf.append("$");
-      buf.append(arg);
+      // buf.append("$");
+      buf.append(feildName.get(arg));
     }
-    buf.append(")");
+    // buf.append(")");
     if (!collation.equals(RelCollations.EMPTY)) {
       buf.append(" WITHIN GROUP (");
       buf.append(collation);

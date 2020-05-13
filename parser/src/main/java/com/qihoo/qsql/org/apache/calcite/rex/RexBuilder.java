@@ -130,7 +130,7 @@ public class RexBuilder {
    * projecting the fields of a given record type. */
   public List<? extends RexNode> identityProjects(final RelDataType rowType) {
     return Lists.transform(rowType.getFieldList(),
-        input -> new RexInputRef(input.getIndex(), input.getType()));
+        input -> new RexInputRef(input.getIndex(), input.getName(), input.getType()));
   }
 
   //~ Methods ----------------------------------------------------------------
@@ -221,7 +221,7 @@ public class RexBuilder {
                 makeLiteral(field.getName())));
       }
       return new RexInputRef(
-          range.getOffset() + field.getIndex(),
+          range.getOffset() + field.getIndex(), field.getName(),
           field.getType());
     }
     return new RexFieldAccess(expr, field);
@@ -295,7 +295,7 @@ public class RexBuilder {
   public RexNode addAggCall(AggregateCall aggCall, int groupCount,
       List<AggregateCall> aggCalls,
       Map<AggregateCall, RexNode> aggCallMapping,
-      final List<RelDataType> aggArgTypes) {
+      final List<RelDataType> aggArgTypes,String typeName) {
     if (aggCall.getAggregation() instanceof SqlCountAggFunction
         && !aggCall.isDistinct()) {
       final List<Integer> args = aggCall.getArgList();
@@ -309,7 +309,7 @@ public class RexBuilder {
     if (rex == null) {
       int index = aggCalls.size() + groupCount;
       aggCalls.add(aggCall);
-      rex = makeInputRef(aggCall.getType(), index);
+      rex = makeInputRef(aggCall.getType(), typeName,index);
       aggCallMapping.put(aggCall, rex);
     }
     return rex;
@@ -322,11 +322,11 @@ public class RexBuilder {
   public RexNode addAggCall(AggregateCall aggCall, int groupCount,
       boolean indicator, List<AggregateCall> aggCalls,
       Map<AggregateCall, RexNode> aggCallMapping,
-      final List<RelDataType> aggArgTypes) {
+      final List<RelDataType> aggArgTypes,String typeName) {
     Preconditions.checkArgument(!indicator,
         "indicator is deprecated, use GROUPING function instead");
     return addAggCall(aggCall, groupCount, aggCalls,
-        aggCallMapping, aggArgTypes);
+        aggCallMapping, aggArgTypes,typeName);
 
   }
 
@@ -846,6 +846,14 @@ public class RexBuilder {
     return new RexInputRef(i, type);
   }
 
+  public RexInputRef makeInputRef(
+      RelDataType type,
+      String name,
+      int i) {
+    type = SqlTypeUtil.addCharsetAndCollation(type, typeFactory);
+    return new RexInputRef(i, name, type);
+  }
+
   /**
    * Creates a reference to a given field of the input relational expression.
    *
@@ -856,7 +864,8 @@ public class RexBuilder {
    * @see #identityProjects(RelDataType)
    */
   public RexInputRef makeInputRef(RelNode input, int i) {
-    return makeInputRef(input.getRowType().getFieldList().get(i).getType(), i);
+    return makeInputRef(input.getRowType().getFieldList().get(i).getType(),
+        input.getRowType().getFieldList().get(i).getName(), i);
   }
 
   /**
