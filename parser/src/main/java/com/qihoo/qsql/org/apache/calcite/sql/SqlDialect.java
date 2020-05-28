@@ -1193,6 +1193,7 @@ public class SqlDialect {
     PARACCEL("Paraccel", "\"", NullCollation.HIGH),
     REDSHIFT("Redshift", "\"", NullCollation.HIGH),
     SNOWFLAKE("Snowflake", "\"", NullCollation.HIGH),
+    CLICKHOUSE("ClickHouse", "`", NullCollation.LOW),
 
     /**
      * Placeholder for the unknown database.

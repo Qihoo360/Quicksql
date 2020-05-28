@@ -109,6 +109,12 @@ $ ./memetadata-extract.sh -p "{\"jdbcDriver\": \"org.postgresql.Driver\", \"jdbc
  \"jdbcUser\": \"user\",\"jdbcPassword\": \"pass\"}" -d "postgresql" -r "my_table"
 ``````
 
+从**ClickHouse**数据库中采集元数据
+
+``````shell
+$ ./memetadata-extract.sh -p "{\"jdbcDriver\": \"ru.yandex.clickhouse.ClickHouseDriver\", \"jdbcUrl\": \"jdbc:clickhouse://localhost:8123/db\", \"jdbcUser\": \"default\",\"jdbcPassword\": \"\"}" -d "clickhouse" -r "my_table"
+``````
+
 采集成功后将返回
 
 ```shell
@@ -185,6 +191,13 @@ $ ./memetadata-extract.sh -p "{\"jdbcDriver\": \"org.postgresql.Driver\", \"jdbc
 	"jdbcUrl": "jdbc:postgresql://localhost:3306/testDb?currentSchema=testSchema",
 	"jdbcUser": "USER",
 	"jdbcPassword": "PASSWORD"
+}
+##ClickHouse
+{
+	"jdbcDriver": "ru.yandex.clickhouse.ClickHouseDriver",
+	"jdbcUrl": "jdbc:clickhouse://localhost:8123/db",
+	"jdbcUser": "default",
+	"jdbcPassword": ""
 }
 ``````
 
