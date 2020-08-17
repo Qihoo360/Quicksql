@@ -1104,7 +1104,7 @@ public class QuicksqlServerMeta implements ProtobufMeta {
             } else if (dataType.equals(DataTypes.LongType)) {
                 return ColumnMetaData.scalar(Types.BIGINT, "long", Rep.LONG);
             } else if (dataType.equals(DataTypes.ShortType)) {
-                return ColumnMetaData.scalar(Types.INTEGER, "integer", Rep.INTEGER);
+                return ColumnMetaData.scalar(Types.SMALLINT, "short", Rep.SHORT);
             } else if (dataType.equals(DataTypes.NullType)) {
                 return ColumnMetaData.scalar(Types.NULL, "null", Rep.OBJECT);
             }
@@ -1137,7 +1137,7 @@ public class QuicksqlServerMeta implements ProtobufMeta {
             } else if (dataType.equals(DataTypes.LongType)) {
                 return ColumnMetaData.scalar(Types.BIGINT, "long", Rep.LONG);
             } else if (dataType.equals(DataTypes.ShortType)) {
-                return ColumnMetaData.scalar(Types.INTEGER, "integer", Rep.INTEGER);
+                return ColumnMetaData.scalar(Types.SMALLINT, "short", Rep.SHORT);
             } else if (dataType.equals(DataTypes.NullType)) {
                 return ColumnMetaData.scalar(Types.NULL, "null", Rep.OBJECT);
             }
