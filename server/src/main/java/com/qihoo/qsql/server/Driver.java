@@ -1,9 +1,5 @@
 package com.qihoo.qsql.server;
 
-import com.qihoo.qsql.client.QuicksqlConnectionImpl;
-import com.qihoo.qsql.client.QuicksqlJdbc41Factory;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import org.apache.calcite.avatica.AvaticaConnection;
 import org.apache.calcite.avatica.DriverVersion;
 import org.apache.calcite.avatica.Meta;
@@ -17,11 +13,7 @@ public class Driver extends UnregisteredDriver {
   public static final String CONNECT_STRING_PREFIX = "jdbc:quicksql:server:";
 
   static {
-    try {
-      DriverManager.registerDriver(new Driver());
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
+      new Driver().register();
   }
 
   @Override protected String getConnectStringPrefix() {

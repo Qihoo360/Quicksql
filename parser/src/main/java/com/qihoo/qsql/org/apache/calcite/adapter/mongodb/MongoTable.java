@@ -40,6 +40,7 @@ import com.qihoo.qsql.org.apache.calcite.schema.SchemaPlus;
 import com.qihoo.qsql.org.apache.calcite.schema.TranslatableTable;
 import com.qihoo.qsql.org.apache.calcite.schema.impl.AbstractTableQueryable;
 import com.qihoo.qsql.org.apache.calcite.util.Util;
+import org.apache.commons.lang3.StringUtils;
 import org.bson.BsonDocument;
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -57,7 +58,25 @@ public class MongoTable extends AbstractQueryableTable
     private Map<String, Object> operand;
 
     public Properties getProperties() {
+        Properties properties = new Properties();
+        operand.forEach((key, value) -> properties.put(key, value.toString()));
+        properties.put("spark.mongodb.input.uri", constructMongoUrl(properties));
         return properties;
+    }
+
+    protected String constructMongoUrl(Properties properties) {
+        //mongodb url like "mongodb://user:pass@localhost:27017/dbName.collectionName")
+        StringBuilder mongoUrl = new StringBuilder();
+        mongoUrl.append("mongodb://")
+            .append(StringUtils.isNotEmpty(properties.getProperty("userName")) ? properties.getProperty("userName")
+                + ":" : "")
+            .append(StringUtils.isNotEmpty(properties.getProperty("password"))
+                ? properties.getProperty("password") : "")
+            .append("@" + properties.getProperty("host"))
+            .append(":" + properties.getProperty("port"))
+            .append("/" + properties.getProperty("dbName"))
+            .append("." + properties.getProperty("collectionName"));
+        return mongoUrl.toString();
     }
 
     /**

@@ -182,6 +182,7 @@ public abstract class QueryGenerator {
      * close each engine.
      */
     public static void close() {
+        mongo = null;
         elasticSearch = null;
         hive = null;
         jdbc = null;
