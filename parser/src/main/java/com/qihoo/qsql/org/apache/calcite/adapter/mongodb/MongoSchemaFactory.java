@@ -26,6 +26,7 @@ import com.qihoo.qsql.org.apache.calcite.schema.SchemaPlus;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Factory that creates a {@link MongoSchema}.
@@ -47,7 +48,7 @@ public class MongoSchemaFactory implements SchemaFactory {
     final MongoClientOptions.Builder options = MongoClientOptions.builder();
 
     final List<MongoCredential> credentials = new ArrayList<>();
-    if (authMechanismName != null) {
+    if (StringUtils.isNotBlank(authMechanismName)) {
       final MongoCredential credential = createCredentials(operand);
       credentials.add(credential);
     }

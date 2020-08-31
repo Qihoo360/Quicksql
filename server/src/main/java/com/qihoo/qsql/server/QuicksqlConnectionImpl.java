@@ -1,4 +1,4 @@
-package com.qihoo.qsql.client;
+package com.qihoo.qsql.server;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

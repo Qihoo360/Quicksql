@@ -1,4 +1,4 @@
-package com.qihoo.qsql.client;
+package com.qihoo.qsql.server;
 
 import org.apache.calcite.avatica.AvaticaStatement;
 import org.apache.calcite.avatica.Meta;
