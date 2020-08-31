@@ -125,6 +125,9 @@ public class JdbcPipeline extends AbstractPipeline {
                 case "csv":
                     LOGGER.debug("Connection to CSV server....");
                     return createCsvConnection(json);
+                case "mongo":
+                    LOGGER.debug("Connection to Mongo server....");
+                    return createMongoConnection(json);
                 default:
                     throw new RuntimeException("Not support");
             }
@@ -503,6 +506,9 @@ public class JdbcPipeline extends AbstractPipeline {
 
                     connectionInfo.put("type", "jdbc");
                     break;
+                case MONGO:
+                    connectionInfo.put("type", "mongo");
+                    break;
                 default:
                     throw new RuntimeException("Do not support this engine type: " + type);
             }
@@ -547,6 +553,8 @@ public class JdbcPipeline extends AbstractPipeline {
                     type = JdbcType.ELASTICSEARCH;
                 } else if (schema.factory.toLowerCase().contains("csv")) {
                     type = JdbcType.CSV;
+                } else if (schema.factory.toLowerCase().contains("mongo")) {
+                    type = JdbcType.MONGO;
                 }
                 return true;
             }

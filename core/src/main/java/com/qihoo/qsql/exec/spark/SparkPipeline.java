@@ -9,6 +9,11 @@ import com.qihoo.qsql.exec.result.JobPipelineResult;
 import com.qihoo.qsql.exec.result.PipelineResult;
 import com.qihoo.qsql.plan.proc.LoadProcedure;
 import com.qihoo.qsql.plan.proc.QueryProcedure;
+import com.qihoo.qsql.utils.PropertiesReader;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import org.apache.spark.SparkConf;
 import org.apache.spark.sql.SparkSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,30 +49,43 @@ public class SparkPipeline extends AbstractPipeline implements Compilable {
     }
 
     private SparkSession session() {
-        //TODO
         if (System.getenv("SPARK_HOME") != null) {
             SparkSession sc;
-            if (builder.getEnableHive()) {
+            if (this.builder.getEnableHive()) {
                 sc = SparkSession.builder()
-                    .appName(builder.getAppName())
-                    .master(builder.getMaster())
+                    .config(loadSparkConf())
+                    .appName(this.builder.getAppName())
+                    .master(this.builder.getMaster())
                     .enableHiveSupport()
                     .getOrCreate();
             } else {
                 sc = SparkSession.builder()
-                    .appName(builder.getAppName())
-                    .master(builder.getMaster())
+                    .config(loadSparkConf())
+                    .appName(this.builder.getAppName())
+                    .master(this.builder.getMaster())
                     .getOrCreate();
             }
             LOGGER
-                .debug("Initialize SparkContext successfully, App name: {}", builder.getAppName());
+                .debug("Initialize SparkContext successfully, App name: {}", this.builder.getAppName());
             return sc;
-
         } else {
             LOGGER.error(
                 "Initialize SparkContext failed, the reason for which is not find spark env");
             throw new RuntimeException("No available Spark to execute. Please deploy Spark and put SPARK_HOME in env");
         }
+    }
+
+    private SparkConf loadSparkConf() {
+        SparkConf conf = new SparkConf();
+        Properties properties =
+            PropertiesReader.readProperties("quicksql-runner.properties", this.getClass());
+        Map<String, String> map = new HashMap<String, String>((Map) properties);
+        map.forEach((key,value) -> {
+            if (key.startsWith("spark")) {
+                conf.set(key,value);
+            }
+        });
+        return conf;
     }
 
     @Override

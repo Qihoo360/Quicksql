@@ -216,7 +216,7 @@ public class SubtreeSyncopator extends RelShuttleImpl {
 
         RelOptTableImpl singleImpl = ((RelOptTableImpl) single.getTable());
         //TODO if runner is DEFAULT, it should be operated dynamically
-        if (runnerFuncTable.getRunner() == RunnerType.SPARK
+        if (builder.getRunner() == RunnerType.SPARK
             && singleImpl.getTable() instanceof ElasticsearchTranslatableTable) {
             pruneSubtree(parent, single, 0);
             return true;
@@ -235,7 +235,8 @@ public class SubtreeSyncopator extends RelShuttleImpl {
         }
 
         RelOptTableImpl singleImpl = ((RelOptTableImpl) single.getTable());
-        if (singleImpl.getTable() instanceof MongoTable) {
+        if (singleImpl.getTable() instanceof MongoTable
+            && builder.getRunner() == RunnerType.SPARK) {
             pruneSubtree(parent, single, 0);
             return true;
         }
@@ -273,7 +274,7 @@ public class SubtreeSyncopator extends RelShuttleImpl {
         Table leftTable = leftImpl.getTable();
         Table rightTable = rightImpl.getTable();
 
-        return notSupportedBinOp(leftTable, leftTable)
+        return notSupportedBinOp(leftTable, rightTable)
             || isDiffFromEachOther(leftTable, rightTable);
     }
 

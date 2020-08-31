@@ -1,5 +1,6 @@
-package com.qihoo.qsql.client;
+package com.qihoo.qsql.server;
 
+import com.qihoo.qsql.client.QuicksqlResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Properties;

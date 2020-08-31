@@ -11,7 +11,6 @@ import com.google.gson.JsonObject;
 import com.qihoo.qsql.api.SqlLogicalPlanView;
 import com.qihoo.qsql.api.SqlRunner;
 import com.qihoo.qsql.api.SqlRunner.Builder.RunnerType;
-import com.qihoo.qsql.client.QuicksqlConnectionImpl;
 import com.qihoo.qsql.client.QuicksqlResultSet;
 import com.qihoo.qsql.client.QuicksqlResultSet.QueryResult;
 import com.qihoo.qsql.org.apache.calcite.tools.YmlUtils;
@@ -977,8 +976,7 @@ public class QuicksqlServerMeta implements ProtobufMeta {
 
     protected QuicksqlServerResultSet getResultSet(StatementHandle h, String sql, int maxResNum, QueryResult result)
         throws Exception {
-        final List<ColumnMetaData> columnMetaDataList = new ArrayList<>();
-        columnMetaDataList.addAll(result.columnMeta);
+        final List<ColumnMetaData> columnMetaDataList = new ArrayList<>(result.columnMeta);
         final StatementInfo info = getStatementCache().getIfPresent(h.id);
         Signature signature = preparedSignature(result, sql);
         Cursor cursor = MetaImpl.createCursor(signature.cursorFactory, result.iterable);

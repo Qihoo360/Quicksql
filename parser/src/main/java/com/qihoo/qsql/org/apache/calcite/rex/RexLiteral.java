@@ -872,6 +872,11 @@ public class RexLiteral extends RexNode {
     case CHAR:
       return getValueAs(String.class);
     case DECIMAL:
+      if (new BigDecimal(((BigDecimal) value).intValue()).compareTo(((BigDecimal) value)) == 0) {
+        return getValueAs(Long.class);
+      } else {
+        return getValueAs(Double.class);
+      }
     case TIMESTAMP:
     case TIMESTAMP_WITH_LOCAL_TIME_ZONE:
       return getValueAs(Long.class);
@@ -971,7 +976,10 @@ public class RexLiteral extends RexNode {
       break;
     case DECIMAL:
       if (clazz == Long.class) {
-        return clazz.cast(((BigDecimal) value).unscaledValue().longValue());
+        return clazz.cast(((BigDecimal) value).toBigInteger().longValue());
+      }
+      if (clazz == Double.class) {
+        return clazz.cast(((BigDecimal) value).doubleValue());
       }
       // fall through
     case BIGINT:
