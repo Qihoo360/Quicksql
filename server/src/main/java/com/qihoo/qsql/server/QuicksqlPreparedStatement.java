@@ -12,9 +12,9 @@ import org.apache.calcite.avatica.Meta;
  * it is instantiated using
  * {@link org.apache.calcite.avatica.AvaticaFactory#newPreparedStatement}.
  */
-abstract class QuickSqlPreparedStatement extends AvaticaPreparedStatement {
+abstract class QuicksqlPreparedStatement extends AvaticaPreparedStatement {
   /**
-   * Creates a QuickSqlPreparedStatement.
+   * Creates a QuicksqlPreparedStatement.
    *
    * @param connection Connection
    * @param h Statement handle
@@ -24,7 +24,7 @@ abstract class QuickSqlPreparedStatement extends AvaticaPreparedStatement {
    * @param resultSetHoldability Result set holdability
    * @throws SQLException if database error occurs
    */
-  protected QuickSqlPreparedStatement(QuicksqlConnectionImpl connection,
+  protected QuicksqlPreparedStatement(QuicksqlConnectionImpl connection,
       Meta.StatementHandle h, Meta.Signature signature, int resultSetType,
       int resultSetConcurrency, int resultSetHoldability) throws SQLException {
     super(connection, h, signature, resultSetType, resultSetConcurrency,
@@ -36,4 +36,4 @@ abstract class QuickSqlPreparedStatement extends AvaticaPreparedStatement {
   }
 }
 
-// End QuickSqlPreparedStatement.java
+// End QuicksqlPreparedStatement.java

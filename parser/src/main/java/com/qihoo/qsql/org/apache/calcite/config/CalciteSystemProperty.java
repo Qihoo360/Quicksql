@@ -59,7 +59,6 @@ public final class CalciteSystemProperty<T> {
   /**
    * Whether to exploit join commutative property.
    */
-  // TODO review zabetak:
   // Does the property control join commutativity or rather join associativity? The property is
   // associated with {@link com.qihoo.qsql.org.apache.calcite.rel.rules.JoinAssociateRule} and not with
   // {@link com.qihoo.qsql.org.apache.calcite.rel.rules.JoinCommuteRule}.
@@ -104,7 +103,6 @@ public final class CalciteSystemProperty<T> {
   /**
    * Whether to run integration tests.
    */
-  // TODO review zabetak:
   // The property is used in only one place and it is associated with mongodb. Should we drop this
   // property and just use TEST_MONGODB?
   public static final CalciteSystemProperty<Boolean> INTEGRATION_TEST =
@@ -208,7 +206,6 @@ public final class CalciteSystemProperty<T> {
    * (from query.json in new.hydromatic:foodmart-queries:0.4.1)
    * that should be run as part of FoodmartTest.
    */
-  // TODO review zabetak:
   // The name of the property is not appropriate. A better alternative would be
   // calcite.test.foodmart.queries.ids. Moreover, I am not in favor of using system properties for
   // parameterized tests.
@@ -228,10 +225,10 @@ public final class CalciteSystemProperty<T> {
    *
    * <p>It is used by {@link com.qihoo.qsql.org.apache.calcite.sql.validate.SqlValidator}.
    */
-  // TODO review zabetak:
+  //Updated by qsql-team
   // What happens if a wrong value is specified?
   public static final CalciteSystemProperty<String> DEFAULT_CHARSET =
-      stringProperty("calcite.default.charset", "ISO-8859-1");
+      stringProperty("calcite.default.charset", "UTF-8");
 
   /**
    * The name of the default national character set.
@@ -240,10 +237,10 @@ public final class CalciteSystemProperty<T> {
    * {@link com.qihoo.qsql.org.apache.calcite.sql.SqlLiteral#SqlLiteral}
    * and may be different from the {@link #DEFAULT_CHARSET}.
    */
-  // TODO review zabetak:
+  //Updated by qsql-team
   // What happens if a wrong value is specified?
   public static final CalciteSystemProperty<String> DEFAULT_NATIONAL_CHARSET =
-      stringProperty("calcite.default.nationalcharset", "ISO-8859-1");
+      stringProperty("calcite.default.nationalcharset", "UTF-8");
 
   /**
    * The name of the default collation.
@@ -251,7 +248,6 @@ public final class CalciteSystemProperty<T> {
    * <p>It is used in {@link com.qihoo.qsql.org.apache.calcite.sql.SqlCollation} and
    * {@link com.qihoo.qsql.org.apache.calcite.sql.SqlLiteral#SqlLiteral}.
    */
-  // TODO review zabetak:
   // What happens if a wrong value is specified?
   public static final CalciteSystemProperty<String> DEFAULT_COLLATION =
       stringProperty("calcite.default.collation.name", "ISO-8859-1$en_US");
@@ -262,7 +258,6 @@ public final class CalciteSystemProperty<T> {
    * <p>It is used in {@link com.qihoo.qsql.org.apache.calcite.sql.SqlCollation} and
    * {@link com.qihoo.qsql.org.apache.calcite.sql.SqlLiteral#SqlLiteral}.</p>
    */
-  // TODO review zabetak:
   // What are the allowed values? What happens if a wrong value is specified?
   public static final CalciteSystemProperty<String> DEFAULT_COLLATION_STRENGTH =
       stringProperty("calcite.default.collation.strength", "primary");

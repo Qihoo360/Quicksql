@@ -1004,13 +1004,13 @@ public class QuicksqlServerMeta implements ProtobufMeta {
         if (CollectionUtils.isEmpty(sparkData.getKey())) {
             throw new SparkException("collect data error");
         }
-        List<Attribute> attributes = sparkData.getKey();
-        List<GenericRowWithSchema> value = sparkData.getValue();
         List<Object> data = new ArrayList<>();
         List<ColumnMetaData> meta = new ArrayList<>();
-        value.stream().forEach(column -> {
-            data.add(column.values());
-        });
+        if (CollectionUtils.isNotEmpty(sparkData.getValue())) {
+            sparkData.getValue().forEach(column -> {
+                data.add(column.values());
+            });
+        }
         for (int index = 0; index < sparkData.getKey().size(); index++) {
             Attribute attribute = sparkData.getKey().get(index);
             ScalarType columnType = getColumnType(attribute.dataType());
