@@ -43,6 +43,7 @@ public class SparkJdbcGenerator extends QueryGenerator {
             "import java.sql.DriverManager",
             "import java.util.ArrayList",
             "import java.util.List",
+            "import java.math.BigInteger",
             "import org.apache.hadoop.conf.Configuration",
             "import org.apache.hadoop.fs.FileSystem",
             "import org.apache.hadoop.fs.Path",
@@ -171,7 +172,7 @@ public class SparkJdbcGenerator extends QueryGenerator {
             + "            case Types.SMALLINT:\n"
             + "                return DataTypes.ShortType;\n"
             + "            case Types.TINYINT:\n"
-            + "                return DataTypes.ByteType;\n"
+            + "                return DataTypes.IntegerType;\n"
             + "            case Types.NULL:\n"
             + "                return DataTypes.NullType;\n"
             + "            case Types.VARCHAR:\n"
@@ -288,10 +289,15 @@ public class SparkJdbcGenerator extends QueryGenerator {
         return "            while (resultSet.next()) {\n"
             + "                Object[] rowValue = new Object[n];\n"
             + "\n"
-            + "                for (int index = 1; index <= n; index++)\n"
-            // + "                    rowValue[index - 1] = resultSet.getObject(index).toString();\n"
-            + "                    rowValue[index - 1] = resultSet.getObject(index);\n"
-            + "\n"
+            + "                for (int index = 1; index <= n; index++){\n"
+            // + "                    rowValue[index - 1] = resultSet.getObject(index);\n"
+            + "                    Object value = resultSet.getObject(index);\n"
+            + "                    if (value instanceof BigInteger) {\n"
+            + "                         rowValue[index - 1] = ((BigInteger) value).longValue();\n"
+            + "                    } else {\n"
+            + "                         rowValue[index - 1] = value;\n"
+            + "                    }\n"
+            + "                 }\n"
             + "                rows.add(rowValue);\n"
             + "                rowCount++;\n"
             + "\n"

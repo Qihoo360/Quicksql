@@ -41,7 +41,7 @@
 
         <!-- This list is in alphabetical order. -->
         <airlift-tpch.version>0.1</airlift-tpch.version>
-        <avatica.version>1.15.0</avatica.version>
+        <avatica.version>1.17.0</avatica.version>
         <build-helper-maven-plugin.version>3.0.0
         </build-helper-maven-plugin.version>
         <checksum-maven-plugin.version>1.2</checksum-maven-plugin.version>
