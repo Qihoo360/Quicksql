@@ -6,13 +6,19 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import org.apache.calcite.avatica.AvaticaConnection;
 import org.apache.calcite.avatica.AvaticaStatement;
 import org.apache.calcite.avatica.server.AvaticaJsonHandler;
 import org.apache.calcite.avatica.server.HttpServer;
 import org.apache.calcite.avatica.server.Main;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,9 +54,23 @@ public class JdbcRemoteTest {
             AvaticaConnection conn = getConnection();
             final AvaticaStatement statement = conn.createStatement();
             ResultSet rs = statement.executeQuery("select * from (values (1, 'a'), (2, 'b'))");
+            ResultSetMetaData metaData = rs.getMetaData();
+            int columnCount = metaData.getColumnCount();
+            Map<String,String> columnMap = new HashMap<>();
+            for (int i = 1; i <= columnCount; i++) {
+                columnMap.put(metaData.getColumnName(i),metaData.getColumnTypeName(i));
+            }
+            System.out.println("columnMap:" + columnMap.toString());
             while (rs.next()) {
-                System.out.println(rs.getString(1));
-                System.out.println(rs.getString(2));
+                List<Object> data = new ArrayList<>();
+                columnMap.forEach((key,value) -> {
+                    try {
+                        data.add(rs.getObject(key));
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                });
+                System.out.println(StringUtils.join(data,","));
             }
             close(rs, statement,conn);
         } catch (Exception e) {

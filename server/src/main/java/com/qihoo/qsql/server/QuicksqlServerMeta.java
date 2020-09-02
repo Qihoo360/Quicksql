@@ -761,47 +761,35 @@ public class QuicksqlServerMeta implements ProtobufMeta {
                 sql = sql.replaceFirst("\\?", "'" + value.value.toString() + "'");
             }
         }
-        ExecuteResult executeResult = null;
-        try {
-            QuicksqlConnectionImpl connection = (QuicksqlConnectionImpl) getConnection(h.connectionId);
-            String jdbcUrl = connection.getInfoByName("jdbcUrl");
-            if (StringUtils.isNotBlank(jdbcUrl)) {
-                executeResult = jdbcExecute(h, jdbcUrl, connection.getInfoByName("user"), connection
-                    .getInfoByName("password"), sql);
-            } else {
-                executeResult = getExecuteResultSet(h, connection, sql);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-        return executeResult;
+        return prepareAndExecute(h,sql);
     }
 
-    @SuppressWarnings("deprecation")
+    @Override
     public ExecuteResult prepareAndExecute(StatementHandle h, String sql,
         long maxRowCount, PrepareCallback callback) {
         return prepareAndExecute(h, sql, maxRowCount, AvaticaUtils.toSaturatedInt(maxRowCount),
             callback);
     }
 
+    @Override
     public ExecuteResult prepareAndExecute(StatementHandle h, String sql, long maxRowCount,
         int maxRowsInFirstFrame, PrepareCallback callback) {
-        ExecuteResult executeResult = null;
+        return prepareAndExecute(h,sql);
+    }
+
+    private ExecuteResult prepareAndExecute(StatementHandle h, String sql){
         try {
             QuicksqlConnectionImpl connection = (QuicksqlConnectionImpl) getConnection(h.connectionId);
             String jdbcUrl = connection.getInfoByName("jdbcUrl");
             if (StringUtils.isNotBlank(jdbcUrl)) {
-                executeResult = jdbcExecute(h, jdbcUrl, connection.getInfoByName("user"), connection
+                return jdbcExecute(h, jdbcUrl, connection.getInfoByName("user"), connection
                     .getInfoByName("password"), sql);
-            } else {
-                executeResult = getExecuteResultSet(h, connection, sql);
             }
+            return getExecuteResultSet(h, connection, sql);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-        return executeResult;
     }
 
     private ExecuteResult getExecuteResultSet(StatementHandle h, QuicksqlConnectionImpl connection, String sql) {
@@ -814,7 +802,6 @@ public class QuicksqlServerMeta implements ProtobufMeta {
                 resultSet = getResultSet(h, sql, 1, getExplainResult(logicalPlanView));
                 return new ExecuteResult(Collections.singletonList(resultSet));
             }
-
             int maxResNum = Integer
                 .parseInt(StringUtils.defaultIfBlank(connection.getInfoByName("acceptedResultsNum"), "100000"));
             responseUrl = connection.getInfoByName("responseUrl");
@@ -1004,13 +991,13 @@ public class QuicksqlServerMeta implements ProtobufMeta {
         if (CollectionUtils.isEmpty(sparkData.getKey())) {
             throw new SparkException("collect data error");
         }
-        List<Attribute> attributes = sparkData.getKey();
-        List<GenericRowWithSchema> value = sparkData.getValue();
         List<Object> data = new ArrayList<>();
         List<ColumnMetaData> meta = new ArrayList<>();
-        value.stream().forEach(column -> {
-            data.add(column.values());
-        });
+        if (CollectionUtils.isNotEmpty(sparkData.getValue())) {
+            sparkData.getValue().forEach(column -> {
+                data.add(column.values());
+            });
+        }
         for (int index = 0; index < sparkData.getKey().size(); index++) {
             Attribute attribute = sparkData.getKey().get(index);
             ScalarType columnType = getColumnType(attribute.dataType());

@@ -105,7 +105,7 @@ public class QuicksqlJdbc41Factory extends QuicksqlFactory {
 
   /** Implementation of prepared statement for JDBC 4.1. */
   private static class QuickSqlJdbc41PreparedStatement
-      extends QuickSqlPreparedStatement {
+      extends QuicksqlPreparedStatement {
     QuickSqlJdbc41PreparedStatement(QuicksqlConnectionImpl connection,
         Meta.StatementHandle h, Signature signature,
         int resultSetType, int resultSetConcurrency, int resultSetHoldability)

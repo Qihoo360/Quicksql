@@ -419,9 +419,6 @@ public class SqlDialect {
    */
   public void quoteStringLiteral(StringBuilder buf, String charsetName,
       String val) {
-    if (containsNonAscii(val) && charsetName == null) {
-      quoteStringLiteralUnicode(buf, val);
-    } else {
       if (charsetName != null) {
         buf.append("_");
         buf.append(charsetName);
@@ -429,7 +426,6 @@ public class SqlDialect {
       buf.append(literalQuoteString);
       buf.append(val.replace(literalEndQuoteString, literalEscapedQuote));
       buf.append(literalEndQuoteString);
-    }
   }
 
   public void unparseCall(SqlWriter writer, SqlCall call, int leftPrec,

@@ -30,3 +30,5 @@ nbdist/
 site/
 
 metastore_db/
+
+metastore/*.db
