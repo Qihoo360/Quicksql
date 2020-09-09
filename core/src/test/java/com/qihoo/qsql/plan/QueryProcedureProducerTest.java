@@ -1,5 +1,6 @@
 package com.qihoo.qsql.plan;
 
+import com.qihoo.qsql.api.SqlRunner;
 import com.qihoo.qsql.exception.ParseException;
 import com.qihoo.qsql.metadata.MetadataPostman;
 import com.qihoo.qsql.plan.proc.DataSetTransformProcedure;
@@ -111,7 +112,8 @@ public class QueryProcedureProducerTest {
         String sql = "SELECT dep_id, (SELECT COUNT(stu_id) FROM action_required.homework_content)"
             + " FROM edu_manage.department WHERE dep_id = 1";
         QueryProcedure queryProcedure =
-            new QueryProcedureProducer(getSchemaPath(Arrays.asList(MYSQL_TABLE_NAME, HIVE_TABLE_NAME)))
+            new QueryProcedureProducer(getSchemaPath(Arrays.asList(MYSQL_TABLE_NAME, HIVE_TABLE_NAME)),
+                SqlRunner.builder().setTransformRunner(SqlRunner.Builder.RunnerType.SPARK))
                 .createQueryProcedure(sql);
         List<Class> extractorList = getExtractorList(queryProcedure);
         if (extractorList.contains(HiveExtractor.class)
