@@ -110,7 +110,7 @@ public class AggregateReduceFunctionsRule extends RelOptRule {
    * @param relBuilderFactory builder for relational expressions
    */
   public AggregateReduceFunctionsRule(RelOptRuleOperand operand,
-      RelBuilderFactory relBuilderFactory) {
+                                      RelBuilderFactory relBuilderFactory) {
     super(operand, relBuilderFactory, null);
     functionsToReduce = EnumSet.noneOf(SqlKind.class);
     addDefaultSetOfFunctionsToReduce();
@@ -127,7 +127,7 @@ public class AggregateReduceFunctionsRule extends RelOptRule {
    *                          will be reduced by this rule
    */
   public AggregateReduceFunctionsRule(Class<? extends Aggregate> aggregateClass,
-      RelBuilderFactory relBuilderFactory, EnumSet<SqlKind> functionsToReduce) {
+                                      RelBuilderFactory relBuilderFactory, EnumSet<SqlKind> functionsToReduce) {
     super(operand(aggregateClass, any()), relBuilderFactory, null);
     Objects.requireNonNull(functionsToReduce,
         "Expecting a valid handle for AggregateFunctionsToReduce");
@@ -139,7 +139,7 @@ public class AggregateReduceFunctionsRule extends RelOptRule {
         this.functionsToReduce.add(function);
       } else {
         throw new IllegalArgumentException(
-          "AggregateReduceFunctionsRule doesn't support function: " + function.sql);
+            "AggregateReduceFunctionsRule doesn't support function: " + function.sql);
       }
     }
   }
@@ -253,72 +253,72 @@ public class AggregateReduceFunctionsRule extends RelOptRule {
       final Integer y;
       final Integer x;
       switch (kind) {
-      case SUM:
-        // replace original SUM(x) with
-        // case COUNT(x) when 0 then null else SUM0(x) end
-        return reduceSum(oldAggRel, oldCall, newCalls, aggCallMapping);
-      case AVG:
-        // replace original AVG(x) with SUM(x) / COUNT(x)
-        return reduceAvg(oldAggRel, oldCall, newCalls, aggCallMapping, inputExprs);
-      case COVAR_POP:
-        // replace original COVAR_POP(x, y) with
-        //     (SUM(x * y) - SUM(y) * SUM(y) / COUNT(x))
-        //     / COUNT(x))
-        return reduceCovariance(oldAggRel, oldCall, true, newCalls,
-            aggCallMapping, inputExprs);
-      case COVAR_SAMP:
-        // replace original COVAR_SAMP(x, y) with
-        //   SQRT(
-        //     (SUM(x * y) - SUM(x) * SUM(y) / COUNT(x))
-        //     / CASE COUNT(x) WHEN 1 THEN NULL ELSE COUNT(x) - 1 END)
-        return reduceCovariance(oldAggRel, oldCall, false, newCalls,
-            aggCallMapping, inputExprs);
-      case REGR_SXX:
-        // replace original REGR_SXX(x, y) with
-        // REGR_COUNT(x, y) * VAR_POP(y)
-        assert oldCall.getArgList().size() == 2 : oldCall.getArgList();
-        x = oldCall.getArgList().get(0);
-        y = oldCall.getArgList().get(1);
-        //noinspection SuspiciousNameCombination
-        return reduceRegrSzz(oldAggRel, oldCall, newCalls, aggCallMapping,
-            inputExprs, y, y, x);
-      case REGR_SYY:
-        // replace original REGR_SYY(x, y) with
-        // REGR_COUNT(x, y) * VAR_POP(x)
-        assert oldCall.getArgList().size() == 2 : oldCall.getArgList();
-        x = oldCall.getArgList().get(0);
-        y = oldCall.getArgList().get(1);
-        //noinspection SuspiciousNameCombination
-        return reduceRegrSzz(oldAggRel, oldCall, newCalls, aggCallMapping,
-            inputExprs, x, x, y);
-      case STDDEV_POP:
-        // replace original STDDEV_POP(x) with
-        //   SQRT(
-        //     (SUM(x * x) - SUM(x) * SUM(x) / COUNT(x))
-        //     / COUNT(x))
-        return reduceStddev(oldAggRel, oldCall, true, true, newCalls,
-            aggCallMapping, inputExprs);
-      case STDDEV_SAMP:
-        // replace original STDDEV_POP(x) with
-        //   SQRT(
-        //     (SUM(x * x) - SUM(x) * SUM(x) / COUNT(x))
-        //     / CASE COUNT(x) WHEN 1 THEN NULL ELSE COUNT(x) - 1 END)
-        return reduceStddev(oldAggRel, oldCall, false, true, newCalls,
-            aggCallMapping, inputExprs);
-      case VAR_POP:
-        // replace original VAR_POP(x) with
-        //     (SUM(x * x) - SUM(x) * SUM(x) / COUNT(x))
-        //     / COUNT(x)
-        return reduceStddev(oldAggRel, oldCall, true, false, newCalls,
-            aggCallMapping, inputExprs);
-      case VAR_SAMP:
-        // replace original VAR_POP(x) with
-        //     (SUM(x * x) - SUM(x) * SUM(x) / COUNT(x))
-        //     / CASE COUNT(x) WHEN 1 THEN NULL ELSE COUNT(x) - 1 END
-        return reduceStddev(oldAggRel, oldCall, false, false, newCalls,
-            aggCallMapping, inputExprs);
-      default:
-        throw Util.unexpected(kind);
+        case SUM:
+          // replace original SUM(x) with
+          // case COUNT(x) when 0 then null else SUM0(x) end
+          return reduceSum(oldAggRel, oldCall, newCalls, aggCallMapping);
+        case AVG:
+          // replace original AVG(x) with SUM(x) / COUNT(x)
+          return reduceAvg(oldAggRel, oldCall, newCalls, aggCallMapping, inputExprs);
+        case COVAR_POP:
+          // replace original COVAR_POP(x, y) with
+          //     (SUM(x * y) - SUM(y) * SUM(y) / COUNT(x))
+          //     / COUNT(x))
+          return reduceCovariance(oldAggRel, oldCall, true, newCalls,
+              aggCallMapping, inputExprs);
+        case COVAR_SAMP:
+          // replace original COVAR_SAMP(x, y) with
+          //   SQRT(
+          //     (SUM(x * y) - SUM(x) * SUM(y) / COUNT(x))
+          //     / CASE COUNT(x) WHEN 1 THEN NULL ELSE COUNT(x) - 1 END)
+          return reduceCovariance(oldAggRel, oldCall, false, newCalls,
+              aggCallMapping, inputExprs);
+        case REGR_SXX:
+          // replace original REGR_SXX(x, y) with
+          // REGR_COUNT(x, y) * VAR_POP(y)
+          assert oldCall.getArgList().size() == 2 : oldCall.getArgList();
+          x = oldCall.getArgList().get(0);
+          y = oldCall.getArgList().get(1);
+          //noinspection SuspiciousNameCombination
+          return reduceRegrSzz(oldAggRel, oldCall, newCalls, aggCallMapping,
+              inputExprs, y, y, x);
+        case REGR_SYY:
+          // replace original REGR_SYY(x, y) with
+          // REGR_COUNT(x, y) * VAR_POP(x)
+          assert oldCall.getArgList().size() == 2 : oldCall.getArgList();
+          x = oldCall.getArgList().get(0);
+          y = oldCall.getArgList().get(1);
+          //noinspection SuspiciousNameCombination
+          return reduceRegrSzz(oldAggRel, oldCall, newCalls, aggCallMapping,
+              inputExprs, x, x, y);
+        case STDDEV_POP:
+          // replace original STDDEV_POP(x) with
+          //   SQRT(
+          //     (SUM(x * x) - SUM(x) * SUM(x) / COUNT(x))
+          //     / COUNT(x))
+          return reduceStddev(oldAggRel, oldCall, true, true, newCalls,
+              aggCallMapping, inputExprs);
+        case STDDEV_SAMP:
+          // replace original STDDEV_POP(x) with
+          //   SQRT(
+          //     (SUM(x * x) - SUM(x) * SUM(x) / COUNT(x))
+          //     / CASE COUNT(x) WHEN 1 THEN NULL ELSE COUNT(x) - 1 END)
+          return reduceStddev(oldAggRel, oldCall, false, true, newCalls,
+              aggCallMapping, inputExprs);
+        case VAR_POP:
+          // replace original VAR_POP(x) with
+          //     (SUM(x * x) - SUM(x) * SUM(x) / COUNT(x))
+          //     / COUNT(x)
+          return reduceStddev(oldAggRel, oldCall, true, false, newCalls,
+              aggCallMapping, inputExprs);
+        case VAR_SAMP:
+          // replace original VAR_POP(x) with
+          //     (SUM(x * x) - SUM(x) * SUM(x) / COUNT(x))
+          //     / CASE COUNT(x) WHEN 1 THEN NULL ELSE COUNT(x) - 1 END
+          return reduceStddev(oldAggRel, oldCall, false, false, newCalls,
+              aggCallMapping, inputExprs);
+        default:
+          throw Util.unexpected(kind);
       }
     } else {
       // anything else:  preserve original call
@@ -331,9 +331,7 @@ public class AggregateReduceFunctionsRule extends RelOptRule {
           nGroups,
           newCalls,
           aggCallMapping,
-          oldArgTypes,
-          ""
-          );
+          oldArgTypes);
     }
   }
 
@@ -405,17 +403,13 @@ public class AggregateReduceFunctionsRule extends RelOptRule {
             nGroups,
             newCalls,
             aggCallMapping,
-            ImmutableList.of(avgInputType),
-            ""
-        );
+            ImmutableList.of(avgInputType));
     final RexNode denominatorRef =
         rexBuilder.addAggCall(countCall,
             nGroups,
             newCalls,
             aggCallMapping,
-            ImmutableList.of(avgInputType),
-            ""
-            );
+            ImmutableList.of(avgInputType));
 
     final RelDataTypeFactory typeFactory = oldAggRel.getCluster().getTypeFactory();
     final RelDataType avgType = typeFactory.createTypeWithNullability(
@@ -465,8 +459,7 @@ public class AggregateReduceFunctionsRule extends RelOptRule {
             nGroups,
             newCalls,
             aggCallMapping,
-            ImmutableList.of(argType),
-            "");
+            ImmutableList.of(argType));
     if (!oldCall.getType().isNullable()) {
       // If SUM(x) is not nullable, the validator must have determined that
       // nulls are impossible (because the group is never empty and x is never
@@ -478,8 +471,7 @@ public class AggregateReduceFunctionsRule extends RelOptRule {
             nGroups,
             newCalls,
             aggCallMapping,
-            ImmutableList.of(argType),
-            "");
+            ImmutableList.of(argType));
     return rexBuilder.makeCall(SqlStdOperatorTable.CASE,
         rexBuilder.makeCall(SqlStdOperatorTable.EQUALS,
             countRef, rexBuilder.makeExactLiteral(BigDecimal.ZERO)),
@@ -534,7 +526,7 @@ public class AggregateReduceFunctionsRule extends RelOptRule {
             nGroups,
             newCalls,
             aggCallMapping,
-            ImmutableList.of(sumArgSquaredAggCall.getType()),"");
+            ImmutableList.of(sumArgSquaredAggCall.getType()));
 
     final AggregateCall sumArgAggCall =
         AggregateCall.create(SqlStdOperatorTable.SUM,
@@ -554,7 +546,7 @@ public class AggregateReduceFunctionsRule extends RelOptRule {
             nGroups,
             newCalls,
             aggCallMapping,
-            ImmutableList.of(sumArgAggCall.getType()),"");
+            ImmutableList.of(sumArgAggCall.getType()));
     final RexNode sumArgCast = rexBuilder.ensureType(oldCallType, sumArg, true);
     final RexNode sumSquaredArg =
         rexBuilder.makeCall(
@@ -578,7 +570,7 @@ public class AggregateReduceFunctionsRule extends RelOptRule {
             nGroups,
             newCalls,
             aggCallMapping,
-            ImmutableList.of(argOrdinalType),"");
+            ImmutableList.of(argOrdinalType));
 
     final RexNode div = divide(biased, rexBuilder, sumArgSquared, sumSquaredArg,
         countArg);
@@ -599,12 +591,12 @@ public class AggregateReduceFunctionsRule extends RelOptRule {
   }
 
   private RexNode getSumAggregatedRexNode(Aggregate oldAggRel,
-      AggregateCall oldCall,
-      List<AggregateCall> newCalls,
-      Map<AggregateCall, RexNode> aggCallMapping,
-      RexBuilder rexBuilder,
-      int argOrdinal,
-      int filterArg) {
+                                          AggregateCall oldCall,
+                                          List<AggregateCall> newCalls,
+                                          Map<AggregateCall, RexNode> aggCallMapping,
+                                          RexBuilder rexBuilder,
+                                          int argOrdinal,
+                                          int filterArg) {
     final AggregateCall aggregateCall =
         AggregateCall.create(SqlStdOperatorTable.SUM,
             oldCall.isDistinct(),
@@ -621,16 +613,16 @@ public class AggregateReduceFunctionsRule extends RelOptRule {
         oldAggRel.getGroupCount(),
         newCalls,
         aggCallMapping,
-        ImmutableList.of(aggregateCall.getType()),"");
+        ImmutableList.of(aggregateCall.getType()));
   }
 
   private RexNode getSumAggregatedRexNodeWithBinding(Aggregate oldAggRel,
-      AggregateCall oldCall,
-      List<AggregateCall> newCalls,
-      Map<AggregateCall, RexNode> aggCallMapping,
-      RelDataType operandType,
-      int argOrdinal,
-      int filter) {
+                                                     AggregateCall oldCall,
+                                                     List<AggregateCall> newCalls,
+                                                     Map<AggregateCall, RexNode> aggCallMapping,
+                                                     RelDataType operandType,
+                                                     int argOrdinal,
+                                                     int filter) {
     RelOptCluster cluster = oldAggRel.getCluster();
     final AggregateCall sumArgSquaredAggCall =
         createAggregateCallWithBinding(cluster.getTypeFactory(),
@@ -640,16 +632,16 @@ public class AggregateReduceFunctionsRule extends RelOptRule {
         oldAggRel.getGroupCount(),
         newCalls,
         aggCallMapping,
-        ImmutableList.of(sumArgSquaredAggCall.getType()),"");
+        ImmutableList.of(sumArgSquaredAggCall.getType()));
   }
 
   private RexNode getRegrCountRexNode(Aggregate oldAggRel,
-      AggregateCall oldCall,
-      List<AggregateCall> newCalls,
-      Map<AggregateCall, RexNode> aggCallMapping,
-      ImmutableIntList argOrdinals,
-      ImmutableList<RelDataType> operandTypes,
-      int filterArg) {
+                                      AggregateCall oldCall,
+                                      List<AggregateCall> newCalls,
+                                      Map<AggregateCall, RexNode> aggCallMapping,
+                                      ImmutableIntList argOrdinals,
+                                      ImmutableList<RelDataType> operandTypes,
+                                      int filterArg) {
     final AggregateCall countArgAggCall =
         AggregateCall.create(SqlStdOperatorTable.REGR_COUNT,
             oldCall.isDistinct(),
@@ -667,7 +659,7 @@ public class AggregateReduceFunctionsRule extends RelOptRule {
         oldAggRel.getGroupCount(),
         newCalls,
         aggCallMapping,
-        operandTypes,"");
+        operandTypes);
   }
 
   private RexNode reduceRegrSzz(
@@ -722,7 +714,7 @@ public class AggregateReduceFunctionsRule extends RelOptRule {
     final RexNode sumY = xIndex == yIndex
         ? sumX
         : getSumAggregatedRexNode(oldAggRel, oldCall, newCalls,
-            aggCallMapping, rexBuilder, yIndex, argXAndYNotNullFilterOrdinal);
+        aggCallMapping, rexBuilder, yIndex, argXAndYNotNullFilterOrdinal);
 
     final RexNode sumXSumY = rexBuilder.makeCall(SqlStdOperatorTable.MULTIPLY, sumX, sumY);
 
@@ -733,7 +725,7 @@ public class AggregateReduceFunctionsRule extends RelOptRule {
     RexNode nul = rexBuilder.makeNullLiteral(zero.getType());
     final RexNode avgSumXSumY = rexBuilder.makeCall(SqlStdOperatorTable.CASE,
         rexBuilder.makeCall(SqlStdOperatorTable.EQUALS, countArg, zero), nul,
-            rexBuilder.makeCall(SqlStdOperatorTable.DIVIDE, sumXSumY, countArg));
+        rexBuilder.makeCall(SqlStdOperatorTable.DIVIDE, sumXSumY, countArg));
     final RexNode avgSumXSumYCast = rexBuilder.ensureType(oldCallType, avgSumXSumY, true);
     final RexNode result =
         rexBuilder.makeCall(SqlStdOperatorTable.MINUS, sumXYCast, avgSumXSumYCast);
@@ -788,9 +780,9 @@ public class AggregateReduceFunctionsRule extends RelOptRule {
   }
 
   private RexNode divide(boolean biased, RexBuilder rexBuilder, RexNode sumXY,
-      RexNode sumXSumY, RexNode countArg) {
+                         RexNode sumXSumY, RexNode countArg) {
     final RexNode avgSumSquaredArg =
-         rexBuilder.makeCall(SqlStdOperatorTable.DIVIDE, sumXSumY, countArg);
+        rexBuilder.makeCall(SqlStdOperatorTable.DIVIDE, sumXSumY, countArg);
     final RexNode diff =
         rexBuilder.makeCall(SqlStdOperatorTable.MINUS, sumXY, avgSumSquaredArg);
     final RexNode denominator;
@@ -837,8 +829,8 @@ public class AggregateReduceFunctionsRule extends RelOptRule {
    * @param newCalls  New list of AggregateCalls
    */
   protected void newAggregateRel(RelBuilder relBuilder,
-      Aggregate oldAggregate,
-      List<AggregateCall> newCalls) {
+                                 Aggregate oldAggregate,
+                                 List<AggregateCall> newCalls) {
     relBuilder.aggregate(
         relBuilder.groupKey(oldAggregate.getGroupSet(),
             oldAggregate.getGroupSets()),
@@ -855,8 +847,8 @@ public class AggregateReduceFunctionsRule extends RelOptRule {
    * @param exprs The expressions to compute the original agg calls.
    */
   protected void newCalcRel(RelBuilder relBuilder,
-      RelDataType rowType,
-      List<RexNode> exprs) {
+                            RelDataType rowType,
+                            List<RexNode> exprs) {
     relBuilder.project(exprs, rowType.getFieldNames());
   }
 

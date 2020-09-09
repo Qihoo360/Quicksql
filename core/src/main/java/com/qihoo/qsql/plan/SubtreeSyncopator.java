@@ -216,7 +216,7 @@ public class SubtreeSyncopator extends RelShuttleImpl {
 
         RelOptTableImpl singleImpl = ((RelOptTableImpl) single.getTable());
         //TODO if runner is DEFAULT, it should be operated dynamically
-        if (builder.getRunner() == RunnerType.SPARK
+        if (runnerFuncTable.getRunner() == RunnerType.SPARK
             && singleImpl.getTable() instanceof ElasticsearchTranslatableTable) {
             pruneSubtree(parent, single, 0);
             return true;
