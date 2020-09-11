@@ -16,6 +16,8 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class MetadataUtil {
 
+    private static final String META_STORE_PATH = "../metastore/schema.db";
+    private static final String META_STORE_MODE = "intern";
     /**
      * .
      */
@@ -56,11 +58,15 @@ public class MetadataUtil {
         Properties properties = new Properties();
         String home = System.getenv("QSQL_HOME");
         File metaProperties;
+
         if (! StringUtils.isEmpty(home)) {
             metaProperties = new File(home + "/conf/" + fileName);
         } else {
-            metaProperties = new File(MetadataUtil.class.getResource("/" + fileName).getFile());
+            properties.put(MetadataParams.META_STORAGE_MODE, META_STORE_MODE);
+            properties.put(MetadataParams.META_INTERN_SCHEMA_DIR, META_STORE_PATH);
+            return properties;
         }
+
         try (InputStream input = new FileInputStream(metaProperties)) {
             properties.load(input);
         } catch (IOException ioe) {

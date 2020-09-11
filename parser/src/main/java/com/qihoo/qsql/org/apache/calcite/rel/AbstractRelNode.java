@@ -108,8 +108,7 @@ public abstract class AbstractRelNode implements RelNode {
     this.cluster = cluster;
     this.traitSet = traitSet;
     this.id = NEXT_ID.getAndIncrement();
-    // this.digest = getRelTypeName() + "#" + id;
-    this.digest = getRelTypeName();
+    this.digest = getRelTypeName() + "#" + id;
     this.desc = digest;
     LOGGER.trace("new {}", digest);
   }
@@ -266,9 +265,6 @@ public abstract class AbstractRelNode implements RelNode {
       visitor.visit(inputs.get(i), i, this);
     }
   }
-  public TreeNode accept(RelViewShuttle shuttle){
-    return shuttle.visit(this);
-  }
 
   public RelNode accept(RelShuttle shuttle) {
     // Call fall-back method. Specific logical types (such as LogicalProject
@@ -286,7 +282,7 @@ public abstract class AbstractRelNode implements RelNode {
   }
 
   public RelOptCost computeSelfCost(RelOptPlanner planner,
-      RelMetadataQuery mq) {
+                                    RelMetadataQuery mq) {
     // by default, assume cost is proportional to number of rows
     double rowCount = mq.getRowCount(this);
     double bytesPerRow = 1;
@@ -294,7 +290,7 @@ public abstract class AbstractRelNode implements RelNode {
   }
 
   public final <M extends Metadata> M metadata(Class<M> metadataClass,
-      RelMetadataQuery mq) {
+                                               RelMetadataQuery mq) {
     final MetadataFactory factory = cluster.getMetadataFactory();
     final M metadata = factory.query(this, mq, metadataClass);
     assert metadata != null
@@ -355,7 +351,7 @@ public abstract class AbstractRelNode implements RelNode {
     String tempDigest = computeDigest();
     assert tempDigest != null : "computeDigest() should be non-null";
 
-    // this.desc = "rel#" + id + ":" + tempDigest;
+    this.desc = "rel#" + id + ":" + tempDigest;
     this.digest = tempDigest;
     return this.digest;
   }
@@ -413,6 +409,10 @@ public abstract class AbstractRelNode implements RelNode {
    */
   @Override public final int hashCode() {
     return super.hashCode();
+  }
+
+  public TreeNode accept(RelViewShuttle shuttle){
+    return shuttle.visit(this);
   }
 
   /**

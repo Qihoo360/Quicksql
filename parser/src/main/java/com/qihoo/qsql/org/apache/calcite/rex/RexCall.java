@@ -99,13 +99,10 @@ public class RexCall extends RexNode {
    * @param sb destination
    * @return original StringBuilder for fluent API
    */
-  protected final StringBuilder appendOperands(StringBuilder sb, String op) {
-    if (operands.size() == 1) {
-      sb.append(op + " ");
-    }
+  protected final StringBuilder appendOperands(StringBuilder sb) {
     for (int i = 0; i < operands.size(); i++) {
       if (i > 0) {
-        sb.append(" " + op + " ");
+        sb.append(", ");
       }
       RexNode operand = operands.get(i);
       if (!(operand instanceof RexLiteral)) {
@@ -159,15 +156,14 @@ public class RexCall extends RexNode {
   }
 
   protected @Nonnull String computeDigest(boolean withType) {
-    final StringBuilder sb = new StringBuilder();
-    // final StringBuilder sb = new StringBuilder(op.getName());
+    final StringBuilder sb = new StringBuilder(op.getName());
     if ((operands.size() == 0)
         && (op.getSyntax() == SqlSyntax.FUNCTION_ID)) {
       // Don't print params for empty arg list. For example, we want
       // "SYSTEM_USER", not "SYSTEM_USER()".
     } else {
       sb.append("(");
-      appendOperands(sb, op.getName());
+      appendOperands(sb);
       sb.append(")");
     }
     if (withType) {
@@ -207,35 +203,35 @@ public class RexCall extends RexNode {
     // "c IS NOT NULL" occurs when we expand EXISTS.
     // This reduction allows us to convert it to a semi-join.
     switch (getKind()) {
-    case IS_NOT_NULL:
-      return !operands.get(0).getType().isNullable();
-    case IS_NOT_TRUE:
-    case IS_FALSE:
-    case NOT:
-      return operands.get(0).isAlwaysFalse();
-    case IS_NOT_FALSE:
-    case IS_TRUE:
-    case CAST:
-      return operands.get(0).isAlwaysTrue();
-    default:
-      return false;
+      case IS_NOT_NULL:
+        return !operands.get(0).getType().isNullable();
+      case IS_NOT_TRUE:
+      case IS_FALSE:
+      case NOT:
+        return operands.get(0).isAlwaysFalse();
+      case IS_NOT_FALSE:
+      case IS_TRUE:
+      case CAST:
+        return operands.get(0).isAlwaysTrue();
+      default:
+        return false;
     }
   }
 
   @Override public boolean isAlwaysFalse() {
     switch (getKind()) {
-    case IS_NULL:
-      return !operands.get(0).getType().isNullable();
-    case IS_NOT_TRUE:
-    case IS_FALSE:
-    case NOT:
-      return operands.get(0).isAlwaysTrue();
-    case IS_NOT_FALSE:
-    case IS_TRUE:
-    case CAST:
-      return operands.get(0).isAlwaysFalse();
-    default:
-      return false;
+      case IS_NULL:
+        return !operands.get(0).getType().isNullable();
+      case IS_NOT_TRUE:
+      case IS_FALSE:
+      case NOT:
+        return operands.get(0).isAlwaysTrue();
+      case IS_NOT_FALSE:
+      case IS_TRUE:
+      case CAST:
+        return operands.get(0).isAlwaysFalse();
+      default:
+        return false;
     }
   }
 
