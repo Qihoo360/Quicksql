@@ -173,14 +173,11 @@ public class QueryProcedureProducer {
         try {
             SqlNode parsed = planner.parse(sql);
             if (parsed instanceof SqlInsertOutput) {
-                output = (SqlInsertOutput) parsed;
                 parsed = ((SqlInsertOutput) parsed).getSelect();
-            } else {
-                output = parsed;
             }
-
-            SqlNode validated = planner.validate(parsed);
-            return planner.rel(validated).rel;
+            parsed = planner.validate(parsed);
+            output = parsed;
+            return planner.rel(parsed).rel;
         } catch (SqlParseException ex) {
             throw new ParseException("Error When Parsing Origin SQL: " + ex.getMessage(), ex);
         } catch (ValidationException | RelConversionException ev) {

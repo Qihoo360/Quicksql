@@ -110,17 +110,16 @@ public abstract class MetadataCollector {
                 LOGGER.info("Reuse database {}!!", dbValue);
             }
             List<String> tableNames = getTableNameList();
-            for (String table : tableNames) {
+            tableNames.forEach(tableName -> {
                 Long tbId;
-                List<TableValue> originTable = client.getTableSchema(table);
-
+                List<TableValue> originTable = client.getTableSchema(tableName);
                 if (originTable.stream().noneMatch(val -> val.getDbId().equals(dbId))) {
-                    TableValue tableValue = convertTableValue(dbId, table);
+                    TableValue tableValue = convertTableValue(dbId, tableName);
                     tbId = client.insertTableSchema(tableValue);
                     LOGGER.info("Insert table {} successfully!!", tableValue.getTblName());
-                    List<ColumnValue> cols = convertColumnValue(tbId, table, dbValue.getName());
+                    List<ColumnValue> cols = convertColumnValue(tbId, tableName, dbValue.getName());
                     if (cols.size() == 0) {
-                        throw new RuntimeException("No column found in table '" + table + "'.");
+                        throw new RuntimeException("No column found in table '" + tableName + "'.");
                     }
                     client.insertFieldsSchema(cols);
                 } else {
@@ -131,10 +130,10 @@ public abstract class MetadataCollector {
                     LOGGER.info("Reuse table {}!!", shoot.getTblName());
                     client.deleteFieldsSchema(tbId);
                     LOGGER.info("Delete fields of table {}!!", shoot.getTblName());
-                    List<ColumnValue> cols = convertColumnValue(tbId, table, dbValue.getName());
+                    List<ColumnValue> cols = convertColumnValue(tbId, tableName, dbValue.getName());
                     client.insertFieldsSchema(cols);
                 }
-            }
+            });
             client.commit();
             LOGGER.info("Successfully collected metadata for {} tables!!", tableNames.size());
             LOGGER.info(tableNames.stream().reduce((x, y) -> x + "\n" + y).orElse(""));

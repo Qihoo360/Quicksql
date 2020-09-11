@@ -71,7 +71,7 @@ public class ElasticsearchCustomSchemaFactory extends ElasticsearchSchemaFactory
         return RestClient.builder(set.toArray(new HttpHost[0]))
             .setHttpClientConfigCallback(httpClientBuilder ->
                 httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider))
-            .setMaxRetryTimeoutMillis(300000).build();
+            .build();
     }
 
 }

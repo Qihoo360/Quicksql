@@ -13,8 +13,8 @@ public class ElasticsearchTranslatableTable extends ElasticsearchTable {
     private Map<String, Object> operand;
 
     ElasticsearchTranslatableTable(RestClient client, ObjectMapper mapper,
-                                   String indexName, String typeName, Map<String, Object> operand) {
-        super(client, mapper, indexName, typeName);
+                                   String indexName, Map<String, Object> operand) {
+        super(client, mapper, indexName);
         this.operand = operand;
     }
 

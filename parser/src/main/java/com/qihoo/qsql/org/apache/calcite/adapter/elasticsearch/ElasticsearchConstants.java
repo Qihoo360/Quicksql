@@ -26,14 +26,13 @@ import java.util.Set;
 interface ElasticsearchConstants {
 
   String INDEX = "_index";
-  String TYPE = "_type";
   String FIELDS = "fields";
   String SOURCE_PAINLESS = "params._source";
   String SOURCE_GROOVY = "_source";
   String ID = "_id";
   String UID = "_uid";
 
-  Set<String> META_COLUMNS = ImmutableSet.of(UID, ID, TYPE, INDEX);
+  Set<String> META_COLUMNS = ImmutableSet.of(UID, ID, INDEX);
 
 }
 

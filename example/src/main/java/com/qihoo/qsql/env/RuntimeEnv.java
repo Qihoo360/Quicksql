@@ -31,7 +31,6 @@ public class RuntimeEnv {
         Resources.readLines(CsvJoinWithEsExample.class.getResource("/student.json"),
             StandardCharsets.UTF_8, new LineProcessor<Void>() {
                 @Override public boolean processLine(String line) throws IOException {
-                    line = line.replaceAll("_id", "id");
                     bulk.add((ObjectNode) NODE.mapper().readTree(line));
                     return true;
                 }
@@ -80,7 +79,7 @@ public class RuntimeEnv {
         + "    },\n"
         + "    {\n"
         + "      \"type\": \"custom\",\n"
-        + "      \"name\": \"student_profile\",\n"
+        + "      \"name\": \"esTest\",\n"
         + "      \"factory\": \"com.qihoo.qsql.org.apache.calcite.adapter.elasticsearch.ElasticsearchCustomSchemaFactory\",\n"
         + "      \"operand\": {\n"
         + "        \"coordinates\": \"{'localhost': 9025}\",\n"
@@ -92,14 +91,14 @@ public class RuntimeEnv {
         + "        \"name\": \"student\",\n"
         + "        \"factory\": \"com.qihoo.qsql.org.apache.calcite.adapter.elasticsearch.ElasticsearchTableFactory\",\n"
         + "        \"operand\": {\n"
-        + "          \"dbName\": \"student_profile\",\n"
+        + "          \"dbName\": \"esTest\",\n"
         + "          \"tableName\": \"student\",\n"
         + "          \"esNodes\": \"localhost\",\n"
         + "          \"esPort\": \"9025\",\n"
         + "          \"esUser\": \"username\",\n"
         + "          \"esPass\": \"password\",\n"
-        + "          \"esScrollNum\": \"246\",\n"
-        + "          \"esIndex\": \"student\"\n"
+        + "          \"esScrollNum\": \"1\",\n"
+        + "          \"esName\": \"esTest\"\n"
         + "        },\n"
         + "        \"columns\": [{\n"
         + "            \"name\": \"city:string\"\n"
@@ -114,7 +113,7 @@ public class RuntimeEnv {
         + "            \"name\": \"type:string\"\n"
         + "          },\n"
         + "          {\n"
-        + "            \"name\": \"stuid:string\"\n"
+        + "            \"name\": \"stu_id:string\"\n"
         + "          }\n"
         + "        ]\n"
         + "      }]\n"

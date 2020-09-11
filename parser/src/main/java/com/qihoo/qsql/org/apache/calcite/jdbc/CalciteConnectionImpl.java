@@ -414,7 +414,7 @@ abstract class CalciteConnectionImpl
       final TimeZone timeZone = connection.getTimeZone();
       final long localOffset = timeZone.getOffset(time);
       final long currentOffset = localOffset;
-      final String user = "sa";
+      final String user = "quicksql";
       final String systemUser = System.getProperty("user.name");
       final String localeName = connection.config().locale();
       final Locale locale = localeName != null

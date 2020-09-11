@@ -140,8 +140,6 @@ public class MetadataPostman {
                 calciteProperties.put("tableName", tbName);
                 calciteProperties.put("dbType", dbType);
                 MetadataMapping calciteMeta = MetadataMapping.convertToAdapter(dbType);
-                calciteMeta.completeComponentProperties(calciteProperties);
-
                 return new SchemaAssembler(dbName, tbName, calciteMeta, calciteProperties, columnValues);
             } catch (SQLException se) {
                 throw new RuntimeException(se);

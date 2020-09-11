@@ -7,7 +7,7 @@ import org.apache.calcite.avatica.UnregisteredDriver;
 
 
 /**
- * Calcite JDBC driver.
+ * Quicksql JDBC driver.
  */
 public class Driver extends UnregisteredDriver {
   public static final String CONNECT_STRING_PREFIX = "jdbc:quicksql:server:";

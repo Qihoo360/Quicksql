@@ -20,7 +20,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -30,6 +29,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.elasticsearch.client.Request;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.common.transport.TransportAddress;
 
@@ -78,7 +78,7 @@ public class EmbeddedElasticsearchPolicy {
 
     ObjectNode mappings = mapper().createObjectNode();
 
-    ObjectNode properties = mappings.with("mappings").with(index).with("properties");
+    ObjectNode properties = mappings.with("mappings").with("properties");
     for (Map.Entry<String, String> entry: mapping.entrySet()) {
       applyMapping(properties, entry.getKey(), entry.getValue());
     }
@@ -86,7 +86,9 @@ public class EmbeddedElasticsearchPolicy {
     // create index and mapping
     final HttpEntity entity = new StringEntity(mapper().writeValueAsString(mappings),
         ContentType.APPLICATION_JSON);
-    restClient().performRequest("PUT", "/" + index, Collections.emptyMap(), entity);
+    Request request = new Request("PUT", "/" + index);
+    request.setEntity(entity);
+    restClient().performRequest(request);
   }
 
   /**
@@ -115,9 +117,9 @@ public class EmbeddedElasticsearchPolicy {
     StringEntity entity = new StringEntity(mapper().writeValueAsString(document),
         ContentType.APPLICATION_JSON);
 
-    restClient().performRequest("POST", uri,
-        Collections.emptyMap(),
-        entity);
+    Request request = new Request("POST", uri);
+    request.setEntity(entity);
+    restClient().performRequest(request);
   }
 
   public void insertBulk(String index, List<ObjectNode> documents) throws IOException {
@@ -131,18 +133,16 @@ public class EmbeddedElasticsearchPolicy {
 
     List<String> bulk = new ArrayList<>(documents.size() * 2);
     for (ObjectNode doc: documents) {
-      bulk.add("{\"index\": {} }"); // index/type will be derived from _bulk URI
+      bulk.add(String.format(Locale.ROOT, "{\"index\": {\"_index\":\"%s\"}}", index));
       bulk.add(mapper().writeValueAsString(doc));
     }
 
     final StringEntity entity = new StringEntity(String.join("\n", bulk) + "\n",
         ContentType.APPLICATION_JSON);
 
-    final String uri = String.format(Locale.ROOT, "/%s/%s/_bulk?refresh", index, index);
-
-    restClient().performRequest("POST", uri,
-        Collections.emptyMap(),
-        entity);
+    final Request r = new Request("POST", "/_bulk?refresh");
+    r.setEntity(entity);
+    restClient().performRequest(r);
   }
 
   /**
@@ -161,14 +161,16 @@ public class EmbeddedElasticsearchPolicy {
     if (client != null) {
       return client;
     }
-    TransportAddress address = httpAddress();
-    RestClient client = RestClient.builder(new HttpHost(address.getAddress(), address.getPort()))
-            .build();
+    final RestClient client = RestClient.builder(httpHost()).build();
     closer.add(client);
     this.client = client;
     return client;
   }
 
+  HttpHost httpHost() {
+    final TransportAddress address = httpAddress();
+    return new HttpHost(address.getAddress(), address.getPort());
+  }
   /**
    * HTTP address for rest clients (can be ES native or any other).
    * @return http address to connect to

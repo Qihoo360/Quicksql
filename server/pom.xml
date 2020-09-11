@@ -19,11 +19,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.calcite.avatica</groupId>
-            <artifactId>avatica</artifactId>
-            <version>${avatica.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.qihoo.qsql</groupId>
             <artifactId>qsql-core</artifactId>
             <version>${project.parent.version}</version>

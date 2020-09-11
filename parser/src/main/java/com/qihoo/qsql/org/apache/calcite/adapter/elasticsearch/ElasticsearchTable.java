@@ -39,7 +39,7 @@ import com.qihoo.qsql.org.apache.calcite.sql.type.SqlTypeName;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
+import org.apache.http.nio.entity.NStringEntity;
 import org.apache.http.util.EntityUtils;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -47,6 +47,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import org.elasticsearch.client.Request;
 import org.elasticsearch.client.Response;
 import org.elasticsearch.client.RestClient;
 import org.slf4j.Logger;
@@ -60,7 +61,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
- * Table based on an Elasticsearch type.
+ * Table based on an Elasticsearch index.
  */
 public class ElasticsearchTable extends AbstractQueryableTable implements TranslatableTable {
 
@@ -74,7 +75,6 @@ public class ElasticsearchTable extends AbstractQueryableTable implements Transl
   private final RestClient restClient;
   private final ElasticsearchVersion version;
   private final String indexName;
-  private final String typeName;
   final ObjectMapper mapper;
 
   @Override
@@ -87,20 +87,17 @@ public class ElasticsearchTable extends AbstractQueryableTable implements Transl
    * @param client low-level ES rest client
    * @param mapper Jackson API
    * @param indexName elastic search index
-   * @param typeName elastic searh index type
    */
-  ElasticsearchTable(RestClient client, ObjectMapper mapper, String indexName, String typeName) {
+  ElasticsearchTable(RestClient client, ObjectMapper mapper, String indexName) {
     super(Object[].class);
     this.restClient = Objects.requireNonNull(client, "client");
     try {
       this.version = detectVersion(client, mapper);
     } catch (IOException e) {
-      final String message = String.format(Locale.ROOT, "Couldn't detect ES version "
-          + "for %s/%s", indexName, typeName);
+      final String message = String.format(Locale.ROOT, "Couldn't detect ES version for %s", indexName);
       throw new UncheckedIOException(message, e);
     }
     this.indexName = Objects.requireNonNull(indexName, "indexName");
-    this.typeName = Objects.requireNonNull(typeName, "typeName");
     this.mapper = Objects.requireNonNull(mapper, "mapper");
 
   }
@@ -117,7 +114,7 @@ public class ElasticsearchTable extends AbstractQueryableTable implements Transl
    */
   private static ElasticsearchVersion detectVersion(RestClient client, ObjectMapper mapper)
       throws IOException {
-    HttpEntity entity = client.performRequest("GET", "/").getEntity();
+    HttpEntity entity = client.performRequest(new Request("GET", "/")).getEntity();
     JsonNode node = mapper.readTree(EntityUtils.toString(entity));
     return ElasticsearchVersion.fromString(node.get("version").get("number").asText());
   }
@@ -142,7 +139,7 @@ public class ElasticsearchTable extends AbstractQueryableTable implements Transl
    * Executes a "find" operation on the underlying type.
    *
    * <p>For example,
-   * <code>client.prepareSearch(index).setTypes(type)
+   * <code>client.prepareSearch(index)
    * .setSource("{\"fields\" : [\"state\"]}")</code></p>
    *
    * @param ops List of operations represented as Json strings.
@@ -304,7 +301,7 @@ public class ElasticsearchTable extends AbstractQueryableTable implements Transl
 
     // elastic exposes total number of documents matching a query in "/hits/total" path
     // this can be used for simple "select count(*) from table"
-    final long total = res.searchHits().total();
+    ElasticsearchJson.SearchTotal total = res.searchHits().total();
 
     if (groupBy.isEmpty()) {
       // put totals automatically for count(*) expression(s), unless they contain group by
@@ -326,15 +323,17 @@ public class ElasticsearchTable extends AbstractQueryableTable implements Transl
 
   private ElasticsearchJson.Result httpRequest(ObjectNode query) throws IOException {
     Objects.requireNonNull(query, "query");
-    String uri = String.format(Locale.ROOT, "/%s/%s/_search", indexName, typeName);
+    String uri = String.format(Locale.ROOT, "/%s/_search", indexName);
 
     Hook.QUERY_PLAN.run(query);
     final String json = mapper.writeValueAsString(query);
 
     LOGGER.debug("Elasticsearch Query: {}", json);
 
-    HttpEntity entity = new StringEntity(json, ContentType.APPLICATION_JSON);
-    Response response = restClient.performRequest("POST", uri, Collections.emptyMap(), entity);
+    NStringEntity entity = new NStringEntity(json, ContentType.APPLICATION_JSON);
+    Request request = new Request("POST",uri);
+    request.setEntity(entity);
+    Response response = restClient.performRequest(request);
     if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
       final String error = EntityUtils.toString(response.getEntity());
       final String message = String.format(Locale.ROOT,
@@ -358,7 +357,7 @@ public class ElasticsearchTable extends AbstractQueryableTable implements Transl
   }
 
   @Override public String toString() {
-    return "ElasticsearchTable{" + indexName + "/" + typeName + "}";
+    return "ElasticsearchTable{" + indexName + "}";
   }
 
   @Override public <T> Queryable<T> asQueryable(QueryProvider queryProvider, SchemaPlus schema,

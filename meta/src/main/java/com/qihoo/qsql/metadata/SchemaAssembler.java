@@ -122,8 +122,7 @@ public class SchemaAssembler {
         return Stream.of(
             formatPlainProperty("coordinates", coordinates),
             formatPlainProperty("userConfig", userConfig),
-            formatPlainProperty("index", connProperties.getOrDefault("esIndex", "")
-                .split("/")[0])
+            formatPlainProperty("index", connProperties.getOrDefault("tableName", ""))
         ).reduce((x, y) -> x + ",\n" + y).orElse("");
     }
 

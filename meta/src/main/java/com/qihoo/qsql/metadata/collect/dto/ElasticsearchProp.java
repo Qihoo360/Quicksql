@@ -12,7 +12,7 @@ public class ElasticsearchProp {
     @NotNull
     private String esPass;
     @NotNull
-    private String esIndex;
+    private String esName;
 
     public String getEsNodes() {
         return esNodes;
@@ -46,11 +46,11 @@ public class ElasticsearchProp {
         this.esPass = esPass;
     }
 
-    public String getEsIndex() {
-        return esIndex;
+    public String getEsName() {
+        return esName;
     }
 
-    public void setEsIndex(String esIndex) {
-        this.esIndex = esIndex;
+    public void setEsName(String esName) {
+        this.esName = esName;
     }
 }

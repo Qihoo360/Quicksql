@@ -16,6 +16,9 @@
  */
 package com.qihoo.qsql.org.apache.calcite.adapter.elasticsearch;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import org.apache.calcite.avatica.util.DateTimeUtils;
 import com.qihoo.qsql.org.apache.calcite.linq4j.function.Function1;
 import com.qihoo.qsql.org.apache.calcite.linq4j.tree.Primitive;
@@ -30,6 +33,7 @@ import java.util.Map;
  * into calcite specific return type (map, object[], list etc.)
  */
 class ElasticsearchEnumerators {
+  private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
 
   private ElasticsearchEnumerators() {}
 
@@ -101,6 +105,20 @@ class ElasticsearchEnumerators {
     if (clazz.isInstance(o)) {
       return o;
     }
+    //TODO es date type format needs to be supported
+    if (java.sql.Date.class.equals(clazz)) {
+      if (o instanceof Long) {
+        o = new java.sql.Date((long)o);
+      } else if (o instanceof String) {
+        try {
+          Date date = df.parse((String) o);
+          o = new java.sql.Date(date.getTime());
+        } catch (ParseException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+
     if (o instanceof Date && primitive != null) {
       o = ((Date) o).getTime() / DateTimeUtils.MILLIS_PER_DAY;
     }

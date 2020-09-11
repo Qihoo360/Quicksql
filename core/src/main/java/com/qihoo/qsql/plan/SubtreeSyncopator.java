@@ -155,7 +155,13 @@ public class SubtreeSyncopator extends RelShuttleImpl {
 
     @Override
     public RelNode visit(LogicalSort sort) {
-        return sort.getInput().accept(this);
+        RelNode scan = sort.getInput().accept(this);
+        //change to rule
+        if (!isValues(scan)) {
+            return neededToSyncopate(sort, castTableScan(scan))
+                ? new MixedTableScan(castTableScan(scan)) : scan;
+        }
+        return scan;
     }
 
     public RelNode visit(DruidQuery druidQuery) {
@@ -236,7 +242,7 @@ public class SubtreeSyncopator extends RelShuttleImpl {
 
         RelOptTableImpl singleImpl = ((RelOptTableImpl) single.getTable());
         if (singleImpl.getTable() instanceof MongoTable
-            && builder.getRunner() == RunnerType.SPARK) {
+            && runnerFuncTable.getRunner() == RunnerType.SPARK) {
             pruneSubtree(parent, single, 0);
             return true;
         }

@@ -1,10 +1,7 @@
 package com.qihoo.qsql.metadata;
 
 import com.qihoo.qsql.org.apache.calcite.tools.YmlUtils;
-import java.util.AbstractMap;
-import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -16,8 +13,8 @@ public enum MetadataMapping {
         "com.qihoo.qsql.org.apache.calcite.adapter.elasticsearch.ElasticsearchTableFactory",
         Arrays.asList(
             "dbName", "tableName", "esNodes", "esPort",
-            "esUser", "esPass", "esIndex", "esScrollNum"),
-        Collections.singletonList(new SimpleImmutableEntry<>("esIndex", "dbName%/%tableName"))),
+            "esUser", "esPass", "esName", "esScrollNum")
+    ),
     /**
      * use '%' and literal 'value' to complete mapping.
      */
@@ -25,23 +22,21 @@ public enum MetadataMapping {
         "com.qihoo.qsql.org.apache.calcite.adapter.mongodb.MongoTableFactory",
         Arrays.asList(
             "dbName", "collectionName", "dbType", "host",
-            "port", "userName", "password","authMechanism"),
-        Collections.emptyList()
+            "port", "userName", "password","authMechanism")
     ),
 
     JDBC("com.qihoo.qsql.org.apache.calcite.adapter.custom.JdbcSchemaFactory",
         "com.qihoo.qsql.org.apache.calcite.adapter.custom.JdbcTableFactory",
         Arrays.asList(
             "dbName", "tableName", "dbType", "jdbcDriver",
-            "jdbcUrl", "jdbcUser", "jdbcPassword"),
-        Collections.emptyList()
+            "jdbcUrl", "jdbcUser", "jdbcPassword")
         ),
 
     Hive("com.qihoo.qsql.org.apache.calcite.adapter.hive.HiveSchemaFactory",
         "com.qihoo.qsql.org.apache.calcite.adapter.hive.HiveTableFactory",
         Arrays.asList(
-            "dbName", "tableName", "cluster"),
-        Collections.emptyList());
+            "dbName", "tableName", "cluster")
+    );
 
     public static final String HIVE = "hive";
     public static final String MONGO = "mongo";
@@ -51,14 +46,12 @@ public enum MetadataMapping {
     String schemaClass;
     String tableClass;
     List<String> calciteProperties;
-    List<AbstractMap.SimpleImmutableEntry<String, String>> componentProperties;
 
     MetadataMapping(String schemaClass, String tableClass,
-        List<String> calciteProperties, List<AbstractMap.SimpleImmutableEntry<String, String>> componentProperties) {
+        List<String> calciteProperties) {
         this.schemaClass = schemaClass;
         this.tableClass = tableClass;
         this.calciteProperties = calciteProperties;
-        this.componentProperties = componentProperties;
     }
 
     static MetadataMapping convertToAdapter(String name) {
@@ -76,24 +69,5 @@ public enum MetadataMapping {
             default:
                 throw new RuntimeException("Not support given adapter name!!");
         }
-    }
-
-    void completeComponentProperties(Map<String, String> properties) {
-        componentProperties.forEach(entry -> properties.put(entry.getKey(),
-            extractAssetMetadata(entry.getValue(), properties)));
-        String dbValue = properties.getOrDefault(calciteProperties.get(0), "");
-        String tableValue = properties.getOrDefault(calciteProperties.get(1), "");
-        properties.put(calciteProperties.get(0), dbValue);
-        properties.put(calciteProperties.get(1), tableValue);
-    }
-
-    private String extractAssetMetadata(String key, Map<String, String> parameters) {
-        if (!key.contains(JOINT_FLAG)) {
-            return parameters.getOrDefault(key, "");
-        }
-
-        String[] arr = key.split(JOINT_FLAG);
-        return Arrays.stream(arr).map(param -> parameters.getOrDefault(param, param))
-            .reduce((left, right) -> left + right).orElse("");
     }
 }

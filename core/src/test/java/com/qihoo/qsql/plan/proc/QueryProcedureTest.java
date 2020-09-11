@@ -92,12 +92,12 @@ public class QueryProcedureTest {
             + "    INNER JOIN student\n"
             + "        ON department.times = student.city LIMIT 10)";
         prepareForChecking(sql)
-            .checkExtra("{\"_source\":[\"city\",\"province\",\"digest\",\"type\",\"stu_id\"],\"size\":30}",
+            .checkExtra("{\"_source\":[\"city\",\"province\",\"digest\",\"type\",\"stu_id\"]}",
             "select times from edu_manage.department group by times")
-            .checkTrans("SELECT edu_manage_department_1.times, t.city, t.province, t.digest, t.type, t.stu_id "
-                + "FROM edu_manage_department_1 INNER JOIN (SELECT city, province, digest, type, stu_id, "
-                + "CAST(city AS INTEGER) AS city0 FROM student_profile_student_0) "
-                + "AS t ON edu_manage_department_1.times = t.city0 LIMIT 10");
+            .checkTrans("SELECT edu_manage_department_1.times, t0.city, t0.province, t0.digest, t0.type, t0.stu_id "
+                + "FROM edu_manage_department_1 INNER JOIN (SELECT city, province, digest, type, stu_id,"
+                + " CAST(city AS INTEGER) AS city0 FROM (SELECT * FROM student_profile_student_0 LIMIT 30) AS t)"
+                + " AS t0 ON edu_manage_department_1.times = t0.city0 LIMIT 10");
     }
 
     @Test
@@ -311,7 +311,7 @@ public class QueryProcedureTest {
             + "FROM `action_required`.`homework_content` AS `test` "
             + "WHERE `test`.`date_time` = '20180820' "
             + "GROUP BY `test`.`course_type` HAVING COUNT(*) > 100 AND 1 = 2 "
-            + "ORDER BY `course_type` ORDER BY `course_type`");
+            + "ORDER BY `course_type`");
     }
 
     @Test

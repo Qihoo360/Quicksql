@@ -53,7 +53,7 @@ public class SparkElasticsearchGenerator extends QueryGenerator {
         properties.put("esQuery", StringEscapeUtils.escapeJava(properties.getProperty("esQuery")));
         Invoker config = Invoker.registerMethod("SparkElasticsearchGenerator.config");
         String invokeWrap = config.invoke(convertProperties("esNodes", "esPort", "esUser",
-            "esPass", "esIndex", "esQuery", "esScrollNum"));
+            "esPass", "tableName", "esQuery", "esScrollNum"));
         String configure = String.format("Map<String, String> config = %s;", invokeWrap);
         composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE, configure);
         composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE, dataSet);
@@ -118,14 +118,13 @@ public class SparkElasticsearchGenerator extends QueryGenerator {
         while (matcher.find()) {
             esFields = matcher.group(1).replace("\"", "");
         }
-        int esLimit = 1;
         Map<String, String> config = new HashMap<>();
         config.put("es.nodes", nodes);
         config.put("es.port", port);
         config.put("es.query", json);
         config.put("es.mapping.date.rich", "false");
-        config.put("es.scroll.size", "20");
-        config.put("es.scroll.limit", esLimit + "");
+        config.put("es.scroll.size", "50");
+        config.put("es.scroll.limit", "-1");
         config.put("es.net.http.auth.user", user);
         config.put("es.net.http.auth.pass", password);
         config.put("es.resource.read", index);

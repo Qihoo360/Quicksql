@@ -17,6 +17,7 @@
 package com.qihoo.qsql.org.apache.calcite.jdbc;
 
 import com.qihoo.qsql.org.apache.calcite.adapter.java.JavaTypeFactory;
+import java.sql.Date;
 import org.apache.calcite.avatica.util.ByteString;
 import com.qihoo.qsql.org.apache.calcite.linq4j.Ord;
 import com.qihoo.qsql.org.apache.calcite.linq4j.tree.Primitive;
@@ -159,6 +160,7 @@ public class JavaTypeFactoryImpl
     }
   }
 
+  //Updated by qsql-team
   public Type getJavaClass(RelDataType type) {
     if (type instanceof JavaType) {
       JavaType javaType = (JavaType) type;
@@ -170,6 +172,7 @@ public class JavaTypeFactoryImpl
       case CHAR:
         return String.class;
       case DATE:
+        return Date.class;
       case TIME:
       case TIME_WITH_LOCAL_TIME_ZONE:
       case INTEGER:

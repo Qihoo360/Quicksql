@@ -50,7 +50,7 @@
         <commons-dbcp2.version>2.6.0</commons-dbcp2.version>
         <commons-lang3.version>3.8</commons-lang3.version>
         <commons-pool2.version>2.6.2</commons-pool2.version>
-        <elasticsearch.version>6.2.4</elasticsearch.version>
+        <elasticsearch.version>7.0.1</elasticsearch.version>
         <esri-geometry-api.version>2.2.0</esri-geometry-api.version>
         <findbugs.version>3.0.1</findbugs.version>
         <drill-fmpp-maven-plugin.version>1.14.0
@@ -142,10 +142,8 @@
         <maven-javadoc-plugin.link>https://docs.oracle.com/javase/9/docs/api/
         </maven-javadoc-plugin.link>
 
-        <elasticsearch5-java-driver.version>5.5.2
-        </elasticsearch5-java-driver.version>
         <calcite.version>1.17.0</calcite.version>
-        <elasticsearch-hadoop.version>6.2.4</elasticsearch-hadoop.version>
+        <elasticsearch-hadoop.version>7.0.1</elasticsearch-hadoop.version>
         <flink.version>1.9.1</flink.version>
         <commons-csv.version>1.5</commons-csv.version>
         <hppc.version>0.7.1</hppc.version>

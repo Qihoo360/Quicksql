@@ -3,7 +3,7 @@ package com.qihoo.qsql.metadata.entity;
 import java.util.Objects;
 
 /**
- * Database params related information. <p> dbTd, database id paramKey, param key for database, such as esIndex.
+ * Database params related information. <p> dbTd, database id paramKey, param key for database.
  * paramValue, param value for database, such as 127.0.0.1. </p>
  */
 public class DatabaseParamValue {
