@@ -236,7 +236,7 @@ public class RelStructuredTypeFlattener implements ReflectiveVisitor {
         restructured = true;
         expr = restructure(fieldType);
       } else {
-        expr = new RexInputRef(iRestructureInput++, field.getName(), fieldType);
+        expr = new RexInputRef(iRestructureInput++, fieldType);
       }
       structuringExps.add(expr);
     }
@@ -304,11 +304,11 @@ public class RelStructuredTypeFlattener implements ReflectiveVisitor {
 
   private RelDataTypeField getNewInputFieldByNewOrdinal(int newOrdinal) {
     return currentRel.getInputs().stream()
-          .map(this::getNewForOldRel)
-          .flatMap(node -> node.getRowType().getFieldList().stream())
-          .skip(newOrdinal)
-          .findFirst()
-          .orElseThrow(NoSuchElementException::new);
+        .map(this::getNewForOldRel)
+        .flatMap(node -> node.getRowType().getFieldList().stream())
+        .skip(newOrdinal)
+        .findFirst()
+        .orElseThrow(NoSuchElementException::new);
   }
 
   /**
@@ -555,10 +555,10 @@ public class RelStructuredTypeFlattener implements ReflectiveVisitor {
   }
 
   private void flattenProjections(RewriteRexShuttle shuttle,
-      List<? extends RexNode> exps,
-      List<String> fieldNames,
-      String prefix,
-      List<Pair<RexNode, String>> flattenedExps) {
+                                  List<? extends RexNode> exps,
+                                  List<String> fieldNames,
+                                  String prefix,
+                                  List<Pair<RexNode, String>> flattenedExps) {
     for (int i = 0; i < exps.size(); ++i) {
       RexNode exp = exps.get(i);
       String fieldName = extractName(fieldNames, prefix, i);
@@ -577,9 +577,9 @@ public class RelStructuredTypeFlattener implements ReflectiveVisitor {
   }
 
   private void flattenProjection(RewriteRexShuttle shuttle,
-      RexNode exp,
-      String fieldName,
-      List<Pair<RexNode, String>> flattenedExps) {
+                                 RexNode exp,
+                                 String fieldName,
+                                 List<Pair<RexNode, String>> flattenedExps) {
     if (exp.getType().isStruct()) {
       if (exp instanceof RexInputRef) {
         final int oldOrdinal = ((RexInputRef) exp).getIndex();
@@ -669,8 +669,8 @@ public class RelStructuredTypeFlattener implements ReflectiveVisitor {
   }
 
   private void flattenResultTypeOfRexCall(RexNode newExp,
-      String fieldName,
-      List<Pair<RexNode, String>> flattenedExps) {
+                                          String fieldName,
+                                          List<Pair<RexNode, String>> flattenedExps) {
     int nameIdx = 0;
     for (RelDataTypeField field : newExp.getType().getFieldList()) {
       RexNode fieldRef = rexBuilder.makeFieldAccess(newExp, field.getIndex());
@@ -746,7 +746,7 @@ public class RelStructuredTypeFlattener implements ReflectiveVisitor {
   /** Generates expressions that reference the flattened input fields from
    * a given row type. */
   private void flattenInputs(List<RelDataTypeField> fieldList, RexNode prefix,
-      List<Pair<RexNode, String>> flattenedExpList) {
+                             List<Pair<RexNode, String>> flattenedExpList) {
     for (RelDataTypeField field : fieldList) {
       final RexNode ref =
           rexBuilder.makeFieldAccess(prefix, field.getIndex());
@@ -772,7 +772,7 @@ public class RelStructuredTypeFlattener implements ReflectiveVisitor {
   /** Visitor that flattens each relational expression in a tree. */
   private class RewriteRelVisitor extends RelVisitor {
     private final ReflectiveVisitDispatcher<RelStructuredTypeFlattener,
-            RelNode> dispatcher =
+        RelNode> dispatcher =
         ReflectUtil.createDispatcher(
             RelStructuredTypeFlattener.class,
             RelNode.class);
@@ -811,7 +811,7 @@ public class RelStructuredTypeFlattener implements ReflectiveVisitor {
       // Use the actual flattened type, which may be different from the current
       // type.
       RelDataType fieldType = removeDistinct(field.e);
-      return new RexInputRef(field.i, input.digest, fieldType);
+      return new RexInputRef(field.i, fieldType);
     }
 
     private RelDataType removeDistinct(RelDataType type) {

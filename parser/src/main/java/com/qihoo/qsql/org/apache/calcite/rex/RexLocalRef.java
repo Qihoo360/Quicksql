@@ -49,7 +49,7 @@ public class RexLocalRef extends RexSlot {
    * @param type  Type of the column
    */
   public RexLocalRef(int index, RelDataType type) {
-    super(createName(index), "", index, type);
+    super(createName(index), index, type);
     assert type != null;
     assert index >= 0;
   }
