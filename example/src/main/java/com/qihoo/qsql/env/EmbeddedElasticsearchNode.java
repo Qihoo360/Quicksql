@@ -21,6 +21,7 @@ import com.google.common.io.Files;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Objects;
 import org.elasticsearch.action.admin.cluster.node.info.NodeInfo;
 import org.elasticsearch.action.admin.cluster.node.info.NodesInfoResponse;
@@ -149,11 +150,11 @@ public class EmbeddedElasticsearchNode implements AutoCloseable {
    */
   private static class LocalNode extends Node {
 
-    private LocalNode(Settings settings, Collection<Class<? extends Plugin>> classpathPlugins) {
-      super(InternalSettingsPreparer.prepareEnvironment(settings, null),
-          classpathPlugins);
+        private LocalNode(Settings settings, Collection<Class<? extends Plugin>> classpathPlugins) {
+            super(InternalSettingsPreparer.prepareEnvironment(settings, new HashMap<>(), null, null), classpathPlugins,
+                true);
+        }
     }
-  }
 }
 
 // End EmbeddedElasticsearchNode.java

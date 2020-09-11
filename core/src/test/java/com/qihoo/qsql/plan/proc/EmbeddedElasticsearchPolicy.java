@@ -21,7 +21,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -31,6 +30,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.elasticsearch.client.Request;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.common.transport.TransportAddress;
 import org.junit.rules.ExternalResource;
@@ -114,7 +114,7 @@ public class EmbeddedElasticsearchPolicy extends ExternalResource {
 
         ObjectNode mappings = mapper().createObjectNode();
 
-        ObjectNode properties = mappings.with("mappings").with(index).with("properties");
+        ObjectNode properties = mappings.with("mappings").with("properties");
         for (Map.Entry<String, String> entry : mapping.entrySet()) {
             applyMapping(properties, entry.getKey(), entry.getValue());
         }
@@ -122,7 +122,9 @@ public class EmbeddedElasticsearchPolicy extends ExternalResource {
         // create index and mapping
         final HttpEntity entity = new StringEntity(mapper().writeValueAsString(mappings),
             ContentType.APPLICATION_JSON);
-        restClient().performRequest("PUT", "/" + index, Collections.emptyMap(), entity);
+        Request request = new Request("PUT", "/" + index);
+        request.setEntity(entity);
+        restClient().performRequest(request);
     }
 
     /**
@@ -150,10 +152,9 @@ public class EmbeddedElasticsearchPolicy extends ExternalResource {
             "/%s/%s/?refresh", index, index);
         StringEntity entity = new StringEntity(mapper().writeValueAsString(document),
             ContentType.APPLICATION_JSON);
-
-        restClient().performRequest("POST", uri,
-            Collections.emptyMap(),
-            entity);
+        Request request = new Request("POST", uri);
+        request.setEntity(entity);
+        restClient().performRequest(request);
     }
 
     /**
@@ -179,9 +180,10 @@ public class EmbeddedElasticsearchPolicy extends ExternalResource {
 
         final String uri = String.format(Locale.ROOT, "/%s/%s/_bulk?refresh", index, index);
 
-        restClient().performRequest("POST", uri,
-            Collections.emptyMap(),
-            entity);
+
+        Request request = new Request("POST", uri);
+        request.setEntity(entity);
+        restClient().performRequest(request);
     }
 
     /**

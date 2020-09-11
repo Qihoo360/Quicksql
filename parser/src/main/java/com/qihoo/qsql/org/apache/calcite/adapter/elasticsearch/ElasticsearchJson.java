@@ -200,16 +200,65 @@ class ElasticsearchJson {
   }
 
   /**
+   * Allows to de-serialize total hits structures.
+   */
+  static class SearchTotalDeserializer extends StdDeserializer<SearchTotal> {
+
+    SearchTotalDeserializer() {
+      super(SearchTotal.class);
+    }
+
+    @Override public SearchTotal deserialize(final JsonParser parser,
+        final DeserializationContext ctxt)
+        throws IOException  {
+
+      JsonNode node = parser.getCodec().readTree(parser);
+      return parseSearchTotal(node);
+    }
+
+    private static SearchTotal parseSearchTotal(JsonNode node) {
+
+      final Number value;
+      if (node.isNumber()) {
+        value = node.numberValue();
+      } else {
+        value = node.get("value").numberValue();
+      }
+
+      return new SearchTotal(value.longValue());
+    }
+
+  }
+
+  /**
+   * Container for total hits
+   */
+  @JsonDeserialize(using = SearchTotalDeserializer.class)
+  static class SearchTotal {
+
+    private final long value;
+
+    SearchTotal(final long value) {
+      this.value = value;
+    }
+
+    public long value() {
+      return value;
+    }
+
+  }
+
+  /**
    * Similar to {@code SearchHits} in ES. Container for {@link SearchHit}
    */
   @JsonIgnoreProperties(ignoreUnknown = true)
   static class SearchHits {
 
-    private final long total;
+    private final SearchTotal total;
     private final List<SearchHit> hits;
 
     @JsonCreator
-    SearchHits(@JsonProperty("total")final long total,
+    SearchHits(@JsonProperty("total")final SearchTotal total,
                @JsonProperty("hits") final List<SearchHit> hits) {
       this.total = total;
       this.hits = Objects.requireNonNull(hits, "hits");
@@ -219,7 +268,7 @@ class ElasticsearchJson {
       return this.hits;
     }
 
-    public long total() {
+    public SearchTotal total() {
       return total;
     }
 

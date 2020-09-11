@@ -311,7 +311,7 @@ public class QueryProcedureTest {
             + "FROM `action_required`.`homework_content` AS `test` "
             + "WHERE `test`.`date_time` = '20180820' "
             + "GROUP BY `test`.`course_type` HAVING COUNT(*) > 100 AND 1 = 2 "
-            + "ORDER BY `course_type` ORDER BY `course_type`");
+            + "ORDER BY `course_type`");
     }
 
     @Test

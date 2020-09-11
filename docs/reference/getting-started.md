@@ -92,7 +92,8 @@ $ ./memetadata-extract.sh -p "{\"jdbcDriver\": \"com.mysql.jdbc.Driver\", \"jdbc
 从**Elasticsearch**存储中采集元数据
 
 ``````shell
-$ ./metadata-extract.sh -p "{\"esNodes\": \"192.168.1.1\",\"esPort\": \"9090\",\"esUser\": \"user\",\"esPass\": \"pass\",\"esIndex\": \"index/type\"}" -d "es" -r "%"
+（esName为逻辑名称，是某个es的唯一标识，作为库名, index作为表名）
+$ ./metadata-extract.sh -p "{\"esNodes\": \"192.168.1.1\",\"esPort\": \"9090\",\"esUser\": \"user\",\"esPass\": \"pass\",\"esName\": \"esTest\"}" -d "es" -r "testIndex"
 ``````
 
 从**Mongodb**存储中采集元数据
@@ -149,7 +150,7 @@ $ ./memetadata-extract.sh -p "{\"jdbcDriver\": \"ru.yandex.clickhouse.ClickHouse
 	"esPort": "9000",
 	"esUser": "USER",
 	"esPass": "PASSWORD",
-	"esIndex": "index/type"
+	"esName": "esTest"
 }
 ##Hive(Hive元数据存在MySQL中)
 {
@@ -403,7 +404,7 @@ Java代码示例：
          				"esPort": "9200",
          				"esUser": "test",
          				"esPass": "test",
-         				"esIndex": "test/test_table",
+         				"esNames": "test",
          				"esScrollNum": "1"
          			},
          			"columns": [{

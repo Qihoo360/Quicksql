@@ -11,8 +11,7 @@ import com.google.gson.JsonObject;
 import com.qihoo.qsql.api.SqlLogicalPlanView;
 import com.qihoo.qsql.api.SqlRunner;
 import com.qihoo.qsql.api.SqlRunner.Builder.RunnerType;
-import com.qihoo.qsql.client.QuicksqlResultSet;
-import com.qihoo.qsql.client.QuicksqlResultSet.QueryResult;
+import com.qihoo.qsql.server.QuicksqlResultSet.QueryResult;
 import com.qihoo.qsql.org.apache.calcite.tools.YmlUtils;
 import com.qihoo.qsql.utils.HttpUtils;
 import com.qihoo.qsql.utils.SqlUtil;
@@ -32,7 +31,8 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.calcite.avatica.AvaticaParameter;
 import org.apache.calcite.avatica.AvaticaPreparedStatement;
 import org.apache.calcite.avatica.AvaticaResultSetMetaData;
@@ -80,6 +80,8 @@ public class QuicksqlServerMeta implements ProtobufMeta {
     private static final String CONN_CACHE_KEY_BASE = "avatica.connectioncache";
 
     private static final String STMT_CACHE_KEY_BASE = "avatica.statementcache";
+
+    private static final Pattern DISK_LOAD_PATTERN  = Pattern.compile("^INSERT INTO");
 
     /**
      * Special value for {@code Statement#getLargeMaxRows()} that means fetch an unlimited number of rows in a single
@@ -276,6 +278,11 @@ public class QuicksqlServerMeta implements ProtobufMeta {
             columns.add(md);
         }
         return columns;
+    }
+
+    private boolean isDiskLoad(String sql){
+        Matcher matcher = DISK_LOAD_PATTERN.matcher(sql.toUpperCase());
+        return matcher.find();
     }
 
     /**
@@ -813,28 +820,29 @@ public class QuicksqlServerMeta implements ProtobufMeta {
                 .setAppName(StringUtils.defaultIfBlank(connection.getInfoByName("appName"), ""))
                 .setAcceptedResultsNum(maxResNum)
                 .ok();
-            if (sql.contains("HDFS")) {
+
+            if (isDiskLoad(sql)) {
                 insertResult(sql, runner, connection);
                 resultSet = getResultSet(h, sql, 0, new QueryResult(new ArrayList<>(), new ArrayList<>()));
-            } else {
-                RunnerType runnerType = RunnerType.value(connection.getInfoByName("runner"));
-                Object collect = runner.sql(sql).collect();
-                switch (runnerType) {
-                    case JDBC:
-                        resultSet = getJDBCResultSet(h, collect, maxResNum);
-                        break;
-                    case SPARK:
-                        Entry<List<Attribute>, List<GenericRowWithSchema>> sparkData = (Entry<List<Attribute>, List<GenericRowWithSchema>>) collect;
-                        resultSet = getResultSet(h, sql, maxResNum, getSparkQueryResult(sparkData));
-                        break;
-                    case FLINK:
-                        Entry<TableSchema, List<Row>> flinkData = (Entry<TableSchema, List<Row>>) collect;
-                        resultSet = getResultSet(h, sql, maxResNum, getFlinkQueryResult(flinkData));
-                        break;
-                    case DEFAULT:
-                        resultSet = getResultSet(h, runner, sql, maxResNum, collect);
-                        break;
-                }
+                return new ExecuteResult(Collections.singletonList(resultSet));
+            }
+            RunnerType runnerType = RunnerType.value(connection.getInfoByName("runner"));
+            Object collect = runner.sql(sql).collect();
+            switch (runnerType) {
+                case JDBC:
+                    resultSet = getJDBCResultSet(h, collect, maxResNum);
+                    break;
+                case SPARK:
+                    Entry<List<Attribute>, List<GenericRowWithSchema>> sparkData = (Entry<List<Attribute>, List<GenericRowWithSchema>>) collect;
+                    resultSet = getResultSet(h, sql, maxResNum, getSparkQueryResult(sparkData));
+                    break;
+                case FLINK:
+                    Entry<TableSchema, List<Row>> flinkData = (Entry<TableSchema, List<Row>>) collect;
+                    resultSet = getResultSet(h, sql, maxResNum, getFlinkQueryResult(flinkData));
+                    break;
+                case DEFAULT:
+                    resultSet = getResultSet(h, runner, sql, maxResNum, collect);
+                    break;
             }
         } catch (Exception e) {
             e.printStackTrace();

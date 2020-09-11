@@ -45,7 +45,7 @@ public class SparkBodyWrapper extends IntegratedQueryWrapper {
     @Override
     public IntegratedQueryWrapper show() {
         composer.handleComposition(ClassBodyComposer.CodeCategory.SENTENCE,
-            "tmp.show();\n");
+            "tmp.show(200);\n");
         getReturnNll();
         return this;
     }

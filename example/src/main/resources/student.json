@@ -1,20 +1,20 @@
-{ "_id" : "01701", "stu_id" : "01701", "type": "Scholar", "city" : "FRAMINGHAM",  "digest" : 65046, "province" : "MA" }
-{ "_id" : "02154", "stu_id" : "02154", "type": "Scholar", "city" : "NORTH WALTHAM",  "digest" : 57871, "province" : "MA" }
-{ "_id" : "02401", "stu_id" : "02401", "type": "Scholar", "city" : "BROCKTON",  "digest" : 59498, "province" : "MA" }
-{ "_id" : "02840", "stu_id" : "02840", "type": "Scholar", "city" : "MIDDLETOWN",  "digest" : 47687, "province" : "RI" }
-{ "_id" : "02860", "stu_id" : "02860", "type": "Scholar", "city" : "PAWTUCKET",  "digest" : 45442, "province" : "RI" }
-{ "_id" : "02895", "stu_id" : "02895", "type": "Scholar", "city" : "NORTH SMITHFIELD",  "digest" : 53733, "province" : "RI" }
-{ "_id" : "03060", "stu_id" : "03060", "type": "Scholar", "city" : "NASHUA",  "digest" : 41438, "province" : "NH" }
-{ "_id" : "03103", "stu_id" : "03103", "type": "Master", "city" : "MANCHESTER",  "digest" : 36613, "province" : "NH" }
-{ "_id" : "03301", "stu_id" : "03301", "type": "Master", "city" : "CONCORD",  "digest" : 34035, "province" : "NH" }
-{ "_id" : "04240", "stu_id" : "04240", "type": "Scholar", "city" : "LEWISTON",  "digest" : 40173, "province" : "ME" }
-{ "_id" : "04401", "stu_id" : "04401", "type": "Scholar", "city" : "BANGOR",  "digest" : 40434, "province" : "ME" }
-{ "_id" : "05301", "stu_id" : "05301", "type": "Scholar", "city" : "BRATTLEBORO",  "digest" : 17522, "province" : "VT" }
-{ "_id" : "05401", "stu_id" : "05401", "type": "Scholar", "city" : "BURLINGTON",  "digest" : 39127, "province" : "VT" }
-{ "_id" : "05701", "stu_id" : "05701", "type": "Scholar", "city" : "RUTLAND",  "digest" : 22576, "province" : "VT" }
-{ "_id" : "06010", "stu_id" : "06010", "type": "Scholar", "city" : "BRISTOL",  "digest" : 60670, "province" : "CT" }
-{ "_id" : "06450", "stu_id" : "06450", "type": "Scholar", "city" : "MERIDEN",  "digest" : 59441, "province" : "CT" }
-{ "_id" : "06902", "stu_id" : "06902", "type": "Scholar", "city" : "STAMFORD",  "digest" : 54605, "province" : "CT" }
-{ "_id" : "07002", "stu_id" : "07002", "type": "Scholar", "city" : "BAYONNE",  "digest" : 61444, "province" : "NJ" }
-{ "_id" : "07087", "stu_id" : "07087", "type": "Scholar", "city" : "WEEHAWKEN",  "digest" : 69646, "province" : "NJ" }
-{ "_id" : "07111", "stu_id" : "07111", "type": "Scholar", "city" : "IRVINGTON",  "digest" : 60986, "province" : "NJ" }
+{ "stu_id" : "01701", "type": "Scholar", "city" : "FRAMINGHAM",  "digest" : 65046, "province" : "MA" }
+{ "stu_id" : "02154", "type": "Scholar", "city" : "NORTH WALTHAM",  "digest" : 57871, "province" : "MA" }
+{ "stu_id" : "02401", "type": "Scholar", "city" : "BROCKTON",  "digest" : 59498, "province" : "MA" }
+{ "stu_id" : "02840", "type": "Scholar", "city" : "MIDDLETOWN",  "digest" : 47687, "province" : "RI" }
+{ "stu_id" : "02860", "type": "Scholar", "city" : "PAWTUCKET",  "digest" : 45442, "province" : "RI" }
+{ "stu_id" : "02895", "type": "Scholar", "city" : "NORTH SMITHFIELD",  "digest" : 53733, "province" : "RI" }
+{ "stu_id" : "03060", "type": "Scholar", "city" : "NASHUA",  "digest" : 41438, "province" : "NH" }
+{ "stu_id" : "03103", "type": "Master", "city" : "MANCHESTER",  "digest" : 36613, "province" : "NH" }
+{ "stu_id" : "03301", "type": "Master", "city" : "CONCORD",  "digest" : 34035, "province" : "NH" }
+{ "stu_id" : "04240", "type": "Scholar", "city" : "LEWISTON",  "digest" : 40173, "province" : "ME" }
+{ "stu_id" : "04401", "type": "Scholar", "city" : "BANGOR",  "digest" : 40434, "province" : "ME" }
+{ "stu_id" : "05301", "type": "Scholar", "city" : "BRATTLEBORO",  "digest" : 17522, "province" : "VT" }
+{ "stu_id" : "05401", "type": "Scholar", "city" : "BURLINGTON",  "digest" : 39127, "province" : "VT" }
+{ "stu_id" : "05701", "type": "Scholar", "city" : "RUTLAND",  "digest" : 22576, "province" : "VT" }
+{ "stu_id" : "06010", "type": "Scholar", "city" : "BRISTOL",  "digest" : 60670, "province" : "CT" }
+{ "stu_id" : "06450", "type": "Scholar", "city" : "MERIDEN",  "digest" : 59441, "province" : "CT" }
+{ "stu_id" : "06902", "type": "Scholar", "city" : "STAMFORD",  "digest" : 54605, "province" : "CT" }
+{ "stu_id" : "07002", "type": "Scholar", "city" : "BAYONNE",  "digest" : 61444, "province" : "NJ" }
+{ "stu_id" : "07087", "type": "Scholar", "city" : "WEEHAWKEN",  "digest" : 69646, "province" : "NJ" }
+{ "stu_id" : "07111", "type": "Scholar", "city" : "IRVINGTON",  "digest" : 60986, "province" : "NJ" }

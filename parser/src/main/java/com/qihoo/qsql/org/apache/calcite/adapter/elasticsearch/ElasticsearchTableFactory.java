@@ -9,13 +9,12 @@ import java.util.Map;
 
 public class ElasticsearchTableFactory implements TableFactory<ElasticsearchTable> {
     @Override
-    public ElasticsearchTable create(SchemaPlus schema, String name,
+    public ElasticsearchTable create(SchemaPlus schema, String tableName,
                                      Map<String, Object> operand, RelDataType rowType) {
         final ElasticsearchSchema esSchema = schema.unwrap(ElasticsearchSchema.class);
-        String type = operand.getOrDefault("tableName", "").toString();
         ElasticsearchTable table = new ElasticsearchTranslatableTable(esSchema.getClient(), new ObjectMapper(),
-                esSchema.getIndex(), type, operand);
-        esSchema.addTable(type, table);
+                esSchema.getIndex(), operand);
+        esSchema.addTable(tableName, table);
         return table;
     }
 }
