@@ -63,11 +63,11 @@ public class RexInputRef extends RexSlot {
    * @param type  Type of the column
    */
   public RexInputRef(int index, RelDataType type) {
-    super(createName(index), "", index, type);
+    super(createName(index), index, type);
   }
 
   public RexInputRef(int index, String originName, RelDataType type) {
-    super(createName(index), originName, index, type);
+    super(createName(index), index, type);
   }
 
   //~ Methods ----------------------------------------------------------------

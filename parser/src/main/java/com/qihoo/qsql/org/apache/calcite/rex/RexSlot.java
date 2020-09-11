@@ -39,10 +39,9 @@ public abstract class RexSlot extends RexVariable {
    */
   protected RexSlot(
       String name,
-      String originName,
       int index,
       RelDataType type) {
-    super(name, originName, type);
+    super(name, type);
     assert index >= 0;
     this.index = index;
   }
