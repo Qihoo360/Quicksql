@@ -62,6 +62,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.flink.table.api.TableSchema;
 import org.apache.flink.types.Row;
+import org.apache.hive.jdbc.HiveResultSetMetaData;
 import org.apache.spark.SparkException;
 import org.apache.spark.sql.catalyst.expressions.Attribute;
 import org.apache.spark.sql.catalyst.expressions.GenericRowWithSchema;
@@ -235,8 +236,7 @@ public class QuicksqlServerMeta implements ProtobufMeta {
     /**
      * Converts from JDBC metadata to Avatica columns.
      */
-    protected static List<ColumnMetaData>
-    columns(ResultSetMetaData metaData) throws SQLException {
+    protected static List<ColumnMetaData> columns(ResultSetMetaData metaData) throws SQLException {
         if (metaData == null) {
             return Collections.emptyList();
         }
@@ -264,8 +264,21 @@ public class QuicksqlServerMeta implements ProtobufMeta {
             } else {
                 t = ColumnMetaData.scalar(typeId, metaData.getColumnTypeName(i), rep);
             }
-            ColumnMetaData md =
-                new ColumnMetaData(i - 1, metaData.isAutoIncrement(i),
+            ColumnMetaData md;
+            // Some methods of HiveResultSetMetaData are not supported. Avoid throwing care
+            if (metaData instanceof HiveResultSetMetaData) {
+                md = new ColumnMetaData(i - 1, metaData.isAutoIncrement(i),
+                    metaData.isCaseSensitive(i), false,
+                    metaData.isCurrency(i), metaData.isNullable(i),
+                    false, metaData.getColumnDisplaySize(i),
+                    metaData.getColumnLabel(i), metaData.getColumnName(i),
+                    null, metaData.getPrecision(i),
+                    metaData.getScale(i), null,
+                    null, t, metaData.isReadOnly(i),
+                    false, false,
+                    columnClassName);
+            } else {
+                md = new ColumnMetaData(i - 1, metaData.isAutoIncrement(i),
                     metaData.isCaseSensitive(i), metaData.isSearchable(i),
                     metaData.isCurrency(i), metaData.isNullable(i),
                     metaData.isSigned(i), metaData.getColumnDisplaySize(i),
@@ -275,6 +288,7 @@ public class QuicksqlServerMeta implements ProtobufMeta {
                     metaData.getCatalogName(i), t, metaData.isReadOnly(i),
                     metaData.isWritable(i), metaData.isDefinitelyWritable(i),
                     columnClassName);
+            }
             columns.add(md);
         }
         return columns;
@@ -805,7 +819,7 @@ public class QuicksqlServerMeta implements ProtobufMeta {
         System.out.println("sql:" + sql);
         try {
             if (sql.toLowerCase().startsWith("explain")) {
-                String logicalPlanView = new SqlLogicalPlanView().getLogicalPlanView(sql.replaceAll("explain ",""));
+                String logicalPlanView = new SqlLogicalPlanView().getLogicalPlanView(sql.replaceAll("explain ", ""));
                 resultSet = getResultSet(h, sql, 1, getExplainResult(logicalPlanView));
                 return new ExecuteResult(Collections.singletonList(resultSet));
             }
@@ -937,7 +951,7 @@ public class QuicksqlServerMeta implements ProtobufMeta {
     /**
      * Sets the provided maximum number of rows on the given statement.
      *
-     * @param statement The JDBC Statement to operate on
+     * @param statement   The JDBC Statement to operate on
      * @param maxRowCount The maximum number of rows which should be returned for the query
      */
     void setMaxRows(Statement statement, long maxRowCount) throws SQLException {
@@ -986,7 +1000,7 @@ public class QuicksqlServerMeta implements ProtobufMeta {
     private QuicksqlServerResultSet getJDBCResultSet(StatementHandle h, Object collect, int maxResNum) {
         final StatementInfo info = getStatementCache().getIfPresent(h.id);
         if (info != null) {
-            info.setResultSet((ResultSet)collect);
+            info.setResultSet((ResultSet) collect);
         }
         return QuicksqlServerResultSet.create(h.connectionId, h.id, (ResultSet) collect, maxResNum);
     }
@@ -1056,7 +1070,8 @@ public class QuicksqlServerMeta implements ProtobufMeta {
         List<ColumnMetaData> meta = new ArrayList<>();
         meta.add(new ColumnMetaData(0, false, true, false, false,
             1, true, -1, "explain", "explain", null, -1, -1, null, null,
-            ColumnMetaData.scalar(Types.VARCHAR, "varchar", Rep.STRING), true, false, false, ColumnMetaData.scalar(Types.VARCHAR, "varchar", Rep.STRING).columnClassName()));
+            ColumnMetaData.scalar(Types.VARCHAR, "varchar", Rep.STRING), true, false, false,
+            ColumnMetaData.scalar(Types.VARCHAR, "varchar", Rep.STRING).columnClassName()));
         return new QueryResult(meta, data);
     }
 

@@ -55,10 +55,6 @@ public enum MetadataMapping {
     }
 
     static MetadataMapping convertToAdapter(String name) {
-        Map<String, Map<String,String>> sourceMap = YmlUtils.getSourceMap();
-        if (sourceMap.containsKey(name.toLowerCase())) {
-            return MetadataMapping.JDBC;
-        }
         switch (name.toLowerCase()) {
             case ELASTICSEARCH:
                 return MetadataMapping.Elasticsearch;
@@ -66,8 +62,11 @@ public enum MetadataMapping {
                 return MetadataMapping.Hive;
             case MONGO:
                 return MetadataMapping.MONGODB;
-            default:
-                throw new RuntimeException("Not support given adapter name!!");
         }
+        Map<String, Map<String,String>> sourceMap = YmlUtils.getSourceMap();
+        if (sourceMap.containsKey(name.toLowerCase())) {
+            return MetadataMapping.JDBC;
+        }
+        throw new RuntimeException("Not support given adapter name!!");
     }
 }

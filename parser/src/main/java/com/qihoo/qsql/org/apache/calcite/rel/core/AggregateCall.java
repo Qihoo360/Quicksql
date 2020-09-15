@@ -30,6 +30,7 @@ import com.qihoo.qsql.org.apache.calcite.util.mapping.Mappings;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -53,6 +54,7 @@ public class AggregateCall {
   private final ImmutableList<Integer> argList;
   public final int filterArg;
   public final RelCollation collation;
+  public final List<String> fieldName;
 
   //~ Constructors -----------------------------------------------------------
 
@@ -102,6 +104,7 @@ public class AggregateCall {
     this.distinct = distinct;
     this.approximate = approximate;
     this.ignoreNulls = ignoreNulls;
+    this.fieldName = Collections.singletonList(name);
     Preconditions.checkArgument(
         aggFunction.getDistinctOptionality() != Optionality.IGNORED || !distinct,
         "DISTINCT has no effect for this aggregate function, so must be false");

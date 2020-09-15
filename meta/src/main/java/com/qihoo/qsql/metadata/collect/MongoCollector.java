@@ -3,6 +3,7 @@ package com.qihoo.qsql.metadata.collect;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
@@ -104,10 +105,13 @@ public class MongoCollector extends MetadataCollector {
     private static MongoDatabase getDataBase(MongoPro mongoPro) {
         MongoClient mongoClient = null;
         if (StringUtils.isNotEmpty(mongoPro.getAuthMechanism())) {
+            MongoClientOptions options = MongoClientOptions.builder()
+                .connectTimeout(10)
+                .build();
             MongoCredential credentialOne = MongoCredential.createScramSha1Credential(mongoPro.getUserName(), mongoPro
                 .getDataBaseName(), mongoPro.getPassword().toCharArray());
-            mongoClient = new MongoClient(new ServerAddress(mongoPro.getHost(), mongoPro.getPort()),
-                Arrays.asList(credentialOne));
+            mongoClient = new MongoClient(new ServerAddress(mongoPro.getHost(), mongoPro.getPort()), credentialOne,
+                options);
         } else {
             mongoClient = new MongoClient(new ServerAddress(mongoPro.getHost(), mongoPro.getPort()));
         }
