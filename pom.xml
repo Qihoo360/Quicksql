@@ -339,7 +339,7 @@
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-client</artifactId>
                 <version>${hadoop.version}</version>
-                <scope>provided</scope>
+                <scope>${dependency.scope}</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
@@ -513,7 +513,7 @@
                 <groupId>org.apache.spark</groupId>
                 <artifactId>spark-core_${scala.version}</artifactId>
                 <version>${spark.version}</version>
-                <scope>provided</scope>
+                <scope>${dependency.scope}</scope>
                 <exclusions>
                     <exclusion>
                         <artifactId>io.netty</artifactId>
@@ -525,19 +525,19 @@
                 <groupId>org.apache.spark</groupId>
                 <artifactId>spark-sql_${scala.version}</artifactId>
                 <version>${spark.version}</version>
-                <scope>provided</scope>
+                <scope>${dependency.scope}</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.spark</groupId>
                 <artifactId>spark-streaming_${scala.version}</artifactId>
                 <version>${spark.version}</version>
-                <scope>provided</scope>
+                <scope>${dependency.scope}</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.spark</groupId>
                 <artifactId>spark-hive_${scala.version}</artifactId>
                 <version>${spark.version}</version>
-                <scope>provided</scope>
+                <scope>${dependency.scope}</scope>
                 <exclusions>
                     <exclusion>
                         <artifactId>calcite-avatica</artifactId>
@@ -555,63 +555,63 @@
                 <groupId>org.apache.flink</groupId>
                 <artifactId>flink-java</artifactId>
                 <version>${flink.version}</version>
-                <scope>provided</scope>
+                <scope>${dependency.scope}</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.flink</groupId>
                 <artifactId>flink-streaming-java_${scala.version}</artifactId>
                 <version>${flink.version}</version>
-                <scope>provided</scope>
+                <scope>${dependency.scope}</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.flink</groupId>
                 <artifactId>flink-streaming-scala_${scala.version}</artifactId>
                 <version>${flink.version}</version>
-                <scope>provided</scope>
+                <scope>${dependency.scope}</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.flink</groupId>
                 <artifactId>flink-table-api-java-bridge_${scala.version}</artifactId>
                 <version>${flink.version}</version>
-                <scope>provided</scope>
+                <scope>${dependency.scope}</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.flink</groupId>
                 <artifactId>flink-table-planner_${scala.version}</artifactId>
                 <version>${flink.version}</version>
-                <scope>provided</scope>
+                <scope>${dependency.scope}</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.flink</groupId>
                 <artifactId>flink-table-api-scala-bridge_${scala.version}</artifactId>
                 <version>${flink.version}</version>
-                <scope>provided</scope>
+                <scope>${dependency.scope}</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.flink</groupId>
                 <artifactId>flink-table-common</artifactId>
                 <version>${flink.version}</version>
-                <scope>provided</scope>
+                <scope>${dependency.scope}</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.flink</groupId>
                 <artifactId>flink-clients_${scala.version}</artifactId>
                 <version>${flink.version}</version>
-                <scope>provided</scope>
+                <scope>${dependency.scope}</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.flink</groupId>
                 <artifactId>flink-connector-elasticsearch5_2.11</artifactId>
                 <version>${flink.version}</version>
-                <scope>provided</scope>
+                <scope>${dependency.scope}</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.flink</groupId>
                 <artifactId>flink-connector-hive_${scala.version}</artifactId>
                 <version>${flink.version}</version>
-                <scope>provided</scope>
+                <scope>${dependency.scope}</scope>
             </dependency>
-	        <dependency>
+            <dependency>
                 <groupId>org.mongodb</groupId>
                 <artifactId>mongo-java-driver</artifactId>
                 <version>${mongo.version}</version>
@@ -641,6 +641,15 @@
     </dependencyManagement>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources/</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>*.properties</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -700,6 +709,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
+                <version>${maven-dependency-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>analyze</id>
@@ -707,7 +717,7 @@
                             <goal>analyze-only</goal>
                         </goals>
                         <configuration>
-                            <failOnWarning>true</failOnWarning>
+                            <failOnWarning>${force.dependency.analyze}</failOnWarning>
                         </configuration>
                     </execution>
                 </executions>
@@ -834,6 +844,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>3.0.0-M5</version>
                     <executions>
                         <execution>
                             <id>failsafe-integration-test</id>
@@ -863,6 +874,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>3.2.0</version>
                     <!-- This is the configuration used by "mvn javadoc:javadoc". It is
                          configured strict, so that it shows errors such as broken links in
                          javadoc on private methods. The configuration for "mvn site" is
@@ -873,7 +885,7 @@
                             </additionalOption>
                         </additionalOptions>
                         <doclint>all,-missing</doclint>
-                        <failOnWarnings>true</failOnWarnings>
+                        <failOnWarnings>${force.dependency.analyze}</failOnWarnings>
                         <links>
                             <link>${maven-javadoc-plugin.link}</link>
                         </links>
@@ -889,6 +901,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.2.0</version>
                     <configuration>
                         <archive>
                             <manifest>
@@ -906,7 +919,13 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-remote-resources-plugin</artifactId>
+                    <version>1.7.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.0.0-M5</version>
                     <configuration>
                         <threadCount>${surefire.threadCount}</threadCount>
                         <perCoreThreadCount>${surefire.perCoreThreadCount}
@@ -980,6 +999,19 @@
     </repositories>
 
     <profiles>
+        <profile>
+            <!-- pick this profile when publishing -->
+            <id>release</id>
+            <activation>
+                <jdk>1.8</jdk>
+            </activation>
+            <properties>
+                <log.level>ERROR</log.level>
+                <profiles.active>release</profiles.active>
+                <dependency.scope>provided</dependency.scope>
+                <force.dependency.analyze>false</force.dependency.analyze>
+            </properties>
+        </profile>
         <profile>
             <!-- This profile adds/overrides few features of the 'apache-release'
                  profile in the parent pom. -->
@@ -1085,6 +1117,16 @@
             <properties>
                 <!-- Java 1.8 does not support -html5, so we pass another harmles option -->
                 <maven-javadoc-html5>-notimestamp</maven-javadoc-html5>
+            </properties>
+        </profile>
+        <profile>
+            <!-- pick this profile when developing -->
+            <id>local-development</id>
+            <properties>
+                <log.level>INFO</log.level>
+                <profiles.active>local-development</profiles.active>
+                <dependency.scope>compile</dependency.scope>
+                <force.dependency.analyze>false</force.dependency.analyze>
             </properties>
         </profile>
     </profiles>

@@ -22,7 +22,7 @@
     Quicksql suport JDBC,Apache Spark,Apache Flink,etc.
 
 !!! Info "Which data sources does quicksql support?"
-    Quicksql suport Mysql,Elasticsearch,Apache Hive,Apache Druid,Apache Kylin,MangoDB,etc.
+    Quicksql suport Mysql,Elasticsearch,Apache Hive,Apache Druid,Apache Kylin,MongoDB,etc.
 
 !!! Info "How do I contribute to the projects?"
     [Contributing code](https://quicksql.readthedocs.io/en/latest/community/contribution-code/)  |

@@ -4,6 +4,7 @@ import com.qihoo.qsql.metadata.entity.DatabaseParamValue;
 import com.qihoo.qsql.metadata.entity.DatabaseValue;
 import com.qihoo.qsql.metadata.entity.TableValue;
 import com.qihoo.qsql.metadata.utils.MetadataUtil;
+
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,6 +14,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
