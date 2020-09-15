@@ -11,11 +11,13 @@ import com.qihoo.qsql.metadata.entity.DatabaseParamValue;
 import com.qihoo.qsql.metadata.entity.DatabaseValue;
 import com.qihoo.qsql.metadata.entity.TableValue;
 import com.qihoo.qsql.org.apache.calcite.tools.YmlUtils;
+
 import java.io.File;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
 import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,16 +53,13 @@ public abstract class MetadataCollector {
             if (sourceMap.containsKey(dataSource)) {
                 String collectorClassName = sourceMap.get(dataSource).get("collectorClass");
                 if ("hive".equals(collectorClassName)) {
-                    return new HIveJdbcCollector(mapper.readValue(json, HiveProp.class),regexp,dataSource);
-                }else {
-                    return new JdbcCollector(mapper.readValue(json, JdbcProp.class),regexp, sourceMap.get(dataSource),
+                    return new HiveJdbcCollector(mapper.readValue(json, HiveProp.class), regexp);
+                } else {
+                    return new JdbcCollector(mapper.readValue(json, JdbcProp.class), regexp, sourceMap.get(dataSource),
                         dataSource);
                 }
             }
             switch (dataSource.toLowerCase()) {
-                case "hive":
-                    return new HiveCollector(
-                        mapper.readValue(json, HiveProp.class), regexp);
                 case "es":
                 case "elasticsearch":
                     return new ElasticsearchCollector(
@@ -109,11 +108,14 @@ public abstract class MetadataCollector {
                 dbId = origin.getDbId();
                 LOGGER.info("Reuse database {}!!", dbValue);
             }
+            /// Query tableNames from schema
             List<String> tableNames = getTableNameList();
             tableNames.forEach(tableName -> {
                 Long tbId;
+                /// Tables already exist in schema, queried by matching tableName.
                 List<TableValue> originTable = client.getTableSchema(tableName);
                 if (originTable.stream().noneMatch(val -> val.getDbId().equals(dbId))) {
+                    // any table is not related to ${dbId}
                     TableValue tableValue = convertTableValue(dbId, tableName);
                     tbId = client.insertTableSchema(tableValue);
                     LOGGER.info("Insert table {} successfully!!", tableValue.getTblName());
@@ -123,6 +125,7 @@ public abstract class MetadataCollector {
                     }
                     client.insertFieldsSchema(cols);
                 } else {
+                    // some tables related to ${dbId}
                     TableValue shoot = originTable.stream()
                         .filter(val -> val.getDbId().equals(dbId)).findFirst()
                         .orElseThrow(() -> new RuntimeException("Query table error."));

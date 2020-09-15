@@ -154,7 +154,7 @@ limitations under the License.
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-shaded-hadoop2-uber</artifactId>
             <version>${flink-shaded-hadoop2-uber.version}</version>
-            <scope>provided</scope>
+            <scope>${dependency.scope}</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.hive</groupId>
@@ -419,11 +419,11 @@ limitations under the License.
 
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.1.1</version>
+                <version>${maven-dependency-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>copy-deps</id>
-                        <phase>process-sources</phase>
+                        <phase>prepare-package</phase>
                         <goals>
                             <goal>copy-dependencies</goal>
                         </goals>

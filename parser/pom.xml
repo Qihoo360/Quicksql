@@ -371,7 +371,7 @@ limitations under the License.
                             <goal>analyze-only</goal>
                         </goals>
                         <configuration>
-                            <failOnWarning>true</failOnWarning>
+                            <failOnWarning>${force.dependency.analyze}</failOnWarning>
                             <!-- ignore "unused but declared" warnings -->
                             <ignoredUnusedDeclaredDependencies>
                                 <ignoredUnusedDeclaredDependency>

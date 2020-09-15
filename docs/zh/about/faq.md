@@ -15,7 +15,7 @@
     目前支持 JDBC，Apache Spark，Apache Flink 等。
 
 !!! Info "Quicksql 支持哪些数据源？"
-    目前支持 Mysql、Elasticsearch、Apache Hive、Apache Druid、Apache Kylin、MangoDB 等。
+    目前支持 Mysql、Elasticsearch、Apache Hive、Apache Druid、Apache Kylin、MongoDB 等。
 
 !!! Info "如何贡献代码或文档？"
     [贡献代码](https://quicksql.readthedocs.io/en/latest/zh/community/contribution-code/) |
