@@ -10,7 +10,7 @@ import com.qihoo.qsql.metadata.collect.dto.MongoPro;
 import com.qihoo.qsql.metadata.entity.DatabaseParamValue;
 import com.qihoo.qsql.metadata.entity.DatabaseValue;
 import com.qihoo.qsql.metadata.entity.TableValue;
-import com.qihoo.qsql.org.apache.calcite.tools.YmlUtils;
+import com.qihoo.qsql.org.apache.calcite.tools.JdbcSourceInfo;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.List;
@@ -47,7 +47,7 @@ public abstract class MetadataCollector {
         try {
             LOGGER.info("Connecting server.....");
             dataSource = dataSource.toLowerCase();
-            Map<String, Map<String, String>> sourceMap = YmlUtils.getSourceMap();
+            Map<String, Map<String, String>> sourceMap = JdbcSourceInfo.getSourceMap();
             if (sourceMap.containsKey(dataSource)) {
                 String collectorClassName = sourceMap.get(dataSource).get("collectorClass");
                 if ("hive".equals(collectorClassName)) {
