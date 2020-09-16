@@ -212,13 +212,10 @@ public class JdbcPipeline extends AbstractPipeline {
         if (! conn.containsKey("jdbcDriver")) {
             throw new RuntimeException("The `jdbcDriver` property needed to be set.");
         }
-        Class.forName(conn.get("jdbcDriver"));
-        // String ip = conn.getOrDefault("jdbcNode", "");
-        // String port = conn.getOrDefault("jdbcPort", "");
-        // String db = conn.getOrDefault("dbName", "");
         if (! conn.containsKey("jdbcUrl")) {
             throw new RuntimeException("The `jdbcUrl` property needed to be set.");
         }
+        Class.forName(conn.get("jdbcDriver"));
         String url = conn.get("jdbcUrl");
         String user = conn.getOrDefault("jdbcUser", "");
         String password = conn.getOrDefault("jdbcPassword", "");

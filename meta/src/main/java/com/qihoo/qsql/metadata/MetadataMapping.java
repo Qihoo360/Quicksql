@@ -1,6 +1,6 @@
 package com.qihoo.qsql.metadata;
 
-import com.qihoo.qsql.org.apache.calcite.tools.YmlUtils;
+import com.qihoo.qsql.org.apache.calcite.tools.JdbcSourceInfo;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +55,7 @@ public enum MetadataMapping {
     }
 
     static MetadataMapping convertToAdapter(String name) {
-        Map<String, Map<String,String>> sourceMap = YmlUtils.getSourceMap();
+        Map<String, Map<String,String>> sourceMap = JdbcSourceInfo.getSourceMap();
         if (sourceMap.containsKey(name.toLowerCase())) {
             return MetadataMapping.JDBC;
         }

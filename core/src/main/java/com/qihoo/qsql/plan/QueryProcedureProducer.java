@@ -5,7 +5,7 @@ import com.qihoo.qsql.api.SqlRunner.Builder.RunnerType;
 import com.qihoo.qsql.exception.ParseException;
 import com.qihoo.qsql.org.apache.calcite.adapter.mongodb.MongoTable;
 import com.qihoo.qsql.org.apache.calcite.rel.TreeNode;
-import com.qihoo.qsql.org.apache.calcite.tools.YmlUtils;
+import com.qihoo.qsql.org.apache.calcite.tools.JdbcSourceInfo;
 import com.qihoo.qsql.plan.func.SqlRunnerFuncTable;
 import com.qihoo.qsql.plan.proc.DataSetTransformProcedure;
 import com.qihoo.qsql.plan.proc.DiskLoadProcedure;
@@ -112,7 +112,7 @@ public class QueryProcedureProducer {
                 config, entry.getKey(),
                 entry.getValue().getKey(),
                 (output instanceof SqlInsertOutput)
-                    ? ((SqlInsertOutput) output).getSelect() : output, YmlUtils.getSourceMap()));
+                    ? ((SqlInsertOutput) output).getSelect() : output, JdbcSourceInfo.getSourceMap()));
             //if table is mongo table and set connection information properties to builder object so as to set
             // parameters when do spark-submit job
             if (((RelOptTableImpl) entry.getValue().getValue()).getTable() instanceof MongoTable) {
