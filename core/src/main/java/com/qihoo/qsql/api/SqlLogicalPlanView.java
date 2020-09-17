@@ -2,12 +2,8 @@ package com.qihoo.qsql.api;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.qihoo.qsql.api.SqlRunner.Builder;
 import com.qihoo.qsql.api.SqlRunner.Builder.RunnerType;
-import com.qihoo.qsql.exec.JdbcPipeline;
-import com.qihoo.qsql.metadata.MetadataPostman;
 import com.qihoo.qsql.org.apache.calcite.rel.TreeNode;
-import com.qihoo.qsql.plan.QueryProcedureProducer;
 import com.qihoo.qsql.plan.QueryTables;
 import com.qihoo.qsql.plan.proc.QueryProcedure;
 import com.qihoo.qsql.utils.PropertiesReader;

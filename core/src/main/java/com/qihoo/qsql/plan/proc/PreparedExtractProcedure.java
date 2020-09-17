@@ -34,6 +34,7 @@ import com.qihoo.qsql.org.apache.calcite.rel.RelVisitor;
 import com.qihoo.qsql.org.apache.calcite.rel.core.TableScan;
 import com.qihoo.qsql.org.apache.calcite.rel.rel2sql.RelToSqlConverter;
 import com.qihoo.qsql.org.apache.calcite.rel.type.RelDataType;
+import com.qihoo.qsql.org.apache.calcite.schema.Table;
 import com.qihoo.qsql.org.apache.calcite.sql.SqlDialect;
 import com.qihoo.qsql.org.apache.calcite.sql.SqlDialect.Context;
 import com.qihoo.qsql.org.apache.calcite.sql.SqlNode;
@@ -100,22 +101,23 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
         SqlNode sqlNode,
         Map<String, Map<String,String>> jdbcSources) {
         //rewrite this paragraph
-        if (relOptTable.getTable() instanceof ElasticsearchTable) {
+        Table table = relOptTable.getTable();
+        if (table instanceof ElasticsearchTable) {
             String newSql = Util.toLinux(sqlNode.toSqlString(CalciteSqlDialect.DEFAULT).getSql());
             return new ElasticsearchExtractor(next,
-                ((ElasticsearchTranslatableTable) relOptTable.getTable()).getProperties(),
+                ((ElasticsearchTranslatableTable) table).getProperties(),
                 config, relNode, tableName, newSql);
-        } else if (relOptTable.getTable() instanceof HiveTable) {
+        } else if (table instanceof HiveTable) {
             return new HiveExtractor(next,
-                ((HiveTable) relOptTable.getTable()).getProperties(),
+                ((HiveTable) table).getProperties(),
                 config, relNode, tableName);
-        } else if (relOptTable.getTable() instanceof MongoTable) {
+        } else if (table instanceof MongoTable) {
             String newSql = Util.toLinux(sqlNode.toSqlString(CalciteSqlDialect.DEFAULT).getSql());
-            return new MongoExtractor(next, ((MongoTable) relOptTable.getTable())
+            return new MongoExtractor(next, ((MongoTable) table)
                 .getProperties(), config, relNode, tableName, newSql);
-        } else if (relOptTable.getTable() instanceof JdbcTable) {
+        } else if (table instanceof JdbcTable) {
             //TODO add more jdbc type
-            String dbType = ((JdbcTable) relOptTable.getTable())
+            String dbType = ((JdbcTable) table)
                 .getProperties().getProperty("dbType", "unknown");
 
             if (!jdbcSources.keySet().contains(dbType)) {
@@ -124,18 +126,18 @@ public abstract class PreparedExtractProcedure extends ExtractProcedure {
             if (MapUtils.isEmpty(jdbcSources.get(dbType))) {
                 throw new RuntimeException("Not found params");
             }
-            return new JdbcExtractor(next, ((JdbcTable) relOptTable.getTable())
+            return new JdbcExtractor(next, ((JdbcTable) table)
                 .getProperties(), config, relNode, tableName,dbType, jdbcSources.get(dbType));
 
-        } else if (relOptTable.getTable() instanceof VirtualTable) {
+        } else if (table instanceof VirtualTable) {
             String newSql = Util.toLinux(sqlNode.toSqlString(CalciteSqlDialect.DEFAULT).getSql());
             return new VirtualExtractor(next,
-                ((VirtualTable) relOptTable.getTable()).getProperties(),
+                ((VirtualTable) table).getProperties(),
                 config, relNode, tableName, newSql);
-        } else if (relOptTable.getTable() instanceof CsvTable) {
+        } else if (table instanceof CsvTable) {
             String newSql = Util.toLinux(sqlNode.toSqlString(CalciteSqlDialect.DEFAULT).getSql());
             return new CsvExtractor(next,
-                ((CsvTable) relOptTable.getTable()).getProperties(),
+                ((CsvTable) table).getProperties(),
                 config, relNode, tableName, newSql);
         } else {
             throw new RuntimeException("Unsupported metadata type");
