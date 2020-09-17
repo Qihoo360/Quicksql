@@ -107,10 +107,10 @@ public class ExecutionDispatcher {
             QueryProcedure procedure = new QueryProcedureProducer(schema, builder).createQueryProcedure(sql);
 
             AbstractPipeline pipeline = ((DynamicSqlRunner) builder.ok()).chooseAdaptPipeline(procedure);
-            Date sqlPased = new Date();
-            LOGGER.info("SQL.parsed:" + SDF.format(sqlPased));
+            Date sqlParsed = new Date();
+            LOGGER.info("SQL.parsed:" + SDF.format(sqlParsed));
             if (pipeline instanceof JdbcPipeline && isPointedToExecuteByJdbc(runner)) {
-                jdbcExecuter(sql, tableNames, procedure, sqlPased, start);
+                jdbcExecuter(sql, tableNames, procedure, sqlParsed, start);
                 return;
             }
             LOGGER.info("It's a complex query, we need to setup computing engine, waiting...");
@@ -119,8 +119,8 @@ public class ExecutionDispatcher {
             ProcessExecClient.createProcessClient(pipeline, parser, builder).exec();
             Date executed = new Date();
             LOGGER.info("job.execute.final:" + SDF.format(executed));
-            LOGGER.info("SQL.parsed.time:" + String.valueOf(sqlPased.getTime() - start.getTime()));
-            LOGGER.info("resource.apply.time:" + String.valueOf(apply.getTime() - sqlPased.getTime()));
+            LOGGER.info("SQL.parsed.time:" + String.valueOf(sqlParsed.getTime() - start.getTime()));
+            LOGGER.info("resource.apply.time:" + String.valueOf(apply.getTime() - sqlParsed.getTime()));
             LOGGER.info("job.query.time:" + String.valueOf(executed.getTime() - apply.getTime()));
             System.exit(0);
         } catch (Exception ex) {
