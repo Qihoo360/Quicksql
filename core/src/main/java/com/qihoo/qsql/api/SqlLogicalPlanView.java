@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 /**
  * sql logical plan view.
  */
-public class SqlLogicalPlanView extends DynamicSqlRunner{
+public class SqlLogicalPlanView extends DynamicSqlRunner {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SqlLogicalPlanView.class);
 
@@ -25,7 +25,7 @@ public class SqlLogicalPlanView extends DynamicSqlRunner{
     }
 
     public static SqlLogicalPlanView getInstance() {
-       return VIEW;
+        return VIEW;
     }
 
     static {
@@ -45,7 +45,7 @@ public class SqlLogicalPlanView extends DynamicSqlRunner{
         return getQueryProcedureLogicalView(procedure);
     }
 
-    public static boolean isPlanView(String sql){
+    public static boolean isPlanView(String sql) {
         return sql.toLowerCase().startsWith("explain");
     }
 

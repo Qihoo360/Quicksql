@@ -116,7 +116,7 @@ public class JdbcPipeline extends AbstractPipeline {
                     return createJdbcConnection(jsonVisitor.jdbcConnectInfo);
                 case Elasticsearch:
                 case MONGODB:
-                // case CSV:
+                    // case CSV:
                     return createCalciteConnection(json);
                 default:
                     throw new RuntimeException("Not support");
