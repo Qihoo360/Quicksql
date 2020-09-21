@@ -268,7 +268,7 @@ Quicksql支持使用Client/Server模式的JDBC连接进行查询，用户的应�
 **启动Server**
 
 ``````shell
-$ ./bin/quicksql-server.sh start -P 5888 -R spark -M yarn-client
+$ ./bin/quicksql-server.sh start -p 5888 -r spark -m yarn-client
 ``````
 
 启动参数包括start|stop|restart|status，-P/-R/-M为可选项，分别对应端口号，执行引擎和任务调度方式，
