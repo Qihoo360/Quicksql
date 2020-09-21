@@ -47,8 +47,6 @@ public class QuicksqlMetaImpl extends MetaImpl {
         try {
             synchronized (callback.getMonitor()) {
                 callback.clear();
-                final QuicksqlConnectionImpl connection = getConnection();
-                // h.signature = connection.mockPreparedSignature(sql);
                 callback.assign(h.signature, null, -1);
             }
             callback.execute();

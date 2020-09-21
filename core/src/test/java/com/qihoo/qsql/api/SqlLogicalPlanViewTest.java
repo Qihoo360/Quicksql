@@ -21,9 +21,6 @@ import org.junit.Test;
 
 public class SqlLogicalPlanViewTest {
 
-    private SqlLogicalPlanView sqlLogicalPlanView = new SqlLogicalPlanView();
-
-
     @ClassRule
     public static final EmbeddedElasticsearchPolicy NODE = EmbeddedElasticsearchPolicy.create();
 
@@ -76,8 +73,8 @@ public class SqlLogicalPlanViewTest {
 
     @Test
     public void getLogicalPlanView() {
-        String onlyValueSql = "SELECT 'Hello World' AS col1, 1010 AS col2";
-        Assert.assertEquals(sqlLogicalPlanView.getLogicalPlanView(onlyValueSql),
+        String onlyValueSql = "explain SELECT 'Hello World' AS col1, 1010 AS col2";
+        Assert.assertEquals( SqlLogicalPlanView.getInstance().getLogicalPlanView(onlyValueSql),
             "{\"child\":[null],\"name\":\"LogicalProject\",\"keySet\":[\"fields\"],"
                 + "\"commonMap\":{\"fields\":\"[<col1, CHAR(11)>, <col2, INTEGER>]\"}}");
 
