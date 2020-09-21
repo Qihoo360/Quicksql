@@ -19,35 +19,37 @@ import org.slf4j.LoggerFactory;
 /**
  * sql logical plan view.
  */
-public class SqlLogicalPlanView {
+public class SqlLogicalPlanView  {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SqlLogicalPlanView.class);
     private List<String> tableNames;
     protected Builder environment;
 
+    public static final SqlLogicalPlanView VIEW = new SqlLogicalPlanView();
 
-    public SqlLogicalPlanView() {
+    private SqlLogicalPlanView() {
         this.environment = SqlRunner.builder();
+    }
+
+    public static SqlLogicalPlanView getInstance() {
+        return VIEW;
     }
 
     static {
         PropertiesReader.configLogger();
     }
 
-    private static final String TEST_DATA_URL = PropertiesReader.getTestDataFilePath();
-
     /**
      * method of logical plan view.
      */
     public String getLogicalPlanView(String sql) {
-        LOGGER.info("The sql being parser: \n" + sql);
+        sql = sql.replace("explain ","").replace("EXPLAIN ","");
         QueryTables tables = SqlUtil.parseTableName(sql);
         tableNames = tables.tableNames;
         environment.setTransformRunner(RunnerType.JDBC);
 
         LOGGER.debug("Parsed table names for upper SQL are: {}", tableNames);
         QueryProcedure procedure = createQueryPlan(sql);
-
         return getQueryProcedureLogicalView(procedure);
     }
 
@@ -72,6 +74,10 @@ public class SqlLogicalPlanView {
 
     private String getFullSchemaFromAssetDataSource() {
         return "inline: " + MetadataPostman.getCalciteModelSchema(tableNames);
+    }
+
+    public static boolean isPlanView(String sql) {
+        return sql.toLowerCase().startsWith("explain");
     }
 
     private String getQueryProcedureLogicalView(QueryProcedure queryProcedure) {

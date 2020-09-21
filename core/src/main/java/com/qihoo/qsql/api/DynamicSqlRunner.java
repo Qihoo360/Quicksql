@@ -42,11 +42,11 @@ public class DynamicSqlRunner extends SqlRunner {
         super(builder);
     }
 
-    private String getFullSchemaFromAssetDataSource() {
+    String getFullSchemaFromAssetDataSource() {
         return "inline: " + MetadataPostman.getCalciteModelSchema(tableNames);
     }
 
-    private QueryProcedure createQueryPlan(String sql) {
+    QueryProcedure createQueryPlan(String sql) {
         String schema = environment.getSchemaPath();
 
         if (schema.isEmpty()) {
@@ -82,6 +82,10 @@ public class DynamicSqlRunner extends SqlRunner {
             procedure.digest(new StringBuilder(), new ArrayList<>()));
 
         return chooseAdaptPipeline(procedure);
+    }
+
+    public void setTableNames(List<String> tableNames) {
+        this.tableNames = tableNames;
     }
 
     /**
