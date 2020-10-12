@@ -4,7 +4,7 @@ about: Create a report to help us improve
 ---
 
 ## Versions
-eg: 0.7.0
+eg: 0.7.1
 
 ## Describe the bug
 A clear and concise description of what the bug is.

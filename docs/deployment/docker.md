@@ -16,9 +16,9 @@
 
 - Run example: `quicksql-example.sh --class com.qihoo.qsql.CsvJoinWithEsExample`
 
-## Start version 0.7.0
+## Start version 0.7.1
 
-- `docker run -it --name quicksql francisdu/quicksql:0.7.0 /bin/bash`
+- `docker run -it --name quicksql francisdu/quicksql:0.7.1 /bin/bash`
 
 - Run example: `quicksql-example.sh --class com.qihoo.qsql.CsvJoinWithEsExample`
 

@@ -16,9 +16,9 @@
 
 - Run example: `quicksql-example.sh --class com.qihoo.qsql.CsvJoinWithEsExample --runner spark`
 
-## 体验 0.7.0 版本
+## 体验 0.7.1 版本
 
-- `docker run -it --name quicksql francisdu/quicksql:0.7.0 /bin/bash`
+- `docker run -it --name quicksql francisdu/quicksql:0.7.1 /bin/bash`
 
 - Run example: `quicksql-example.sh --class com.qihoo.qsql.CsvJoinWithEsExample --runner spark`
 

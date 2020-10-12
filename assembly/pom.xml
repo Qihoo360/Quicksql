@@ -5,7 +5,7 @@
     <parent>
         <artifactId>qsql</artifactId>
         <groupId>com.qihoo.qsql</groupId>
-        <version>0.7.0</version>
+        <version>0.7.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>

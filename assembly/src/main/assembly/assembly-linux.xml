@@ -35,7 +35,7 @@
             <outputDirectory>/${qsql.release}/lib/flink</outputDirectory>
             <fileMode>0755</fileMode>
             <includes>
-                <include>**/qsql-core-0.7.0-fat.jar</include>
+                <include>**/qsql-core-0.7.1-fat.jar</include>
             </includes>
         </fileSet>
         <fileSet>

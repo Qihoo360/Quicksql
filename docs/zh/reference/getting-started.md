@@ -10,7 +10,7 @@
 
 · Java >= 1.8
 
-· Spark > 2.2 (必选，未来作为可选)
+· Spark >= 2.3 (必选，未来作为可选)
 
 · Flink >= 1.9 (可选)
 
@@ -19,7 +19,7 @@
 
 ``````shell
 $ tar -zxvf ./quicksql-release-bin.tar.gz
-$ cd quicksql-realease-0.7.0
+$ cd quicksql-realease-0.7.1
 $ vim ./conf/quicksql-env.sh #Set Your Basic Environment.
 ``````
 
@@ -283,7 +283,7 @@ $ ./bin/quicksql-server.sh start -P 5888 -R spark -M yarn-client
 
 **应用接入**
 
-项目手动加入Quicksql driver包 qsql-client-0.7.0.jar，下载地址：<https://github.com/Qihoo360/Quicksql/releases>；
+项目手动加入Quicksql driver包 qsql-client-0.7.1.jar，下载地址：<https://github.com/Qihoo360/Quicksql/releases>；
 
 Java代码示例：
 

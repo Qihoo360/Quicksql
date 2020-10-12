@@ -8,7 +8,7 @@
     <groupId>com.qihoo.qsql</groupId>
     <artifactId>qsql</artifactId>
     <packaging>pom</packaging>
-    <version>0.7.0</version>
+    <version>0.7.1</version>
     <name>qsql</name>
 
     <modules>
@@ -109,7 +109,7 @@
         <servlet.version>3.0.1</servlet.version>
         <slf4j.version>1.7.13</slf4j.version>
         <log4j2.version>2.11.0</log4j2.version>
-        <spark.version>2.2.0</spark.version>
+        <spark.version>2.3.0</spark.version>
         <sqlline.version>1.5.0</sqlline.version>
         <tpcds.version>1.2</tpcds.version>
         <xalan.version>2.7.1</xalan.version>
@@ -143,13 +143,13 @@
         <maven-javadoc-plugin.link>https://docs.oracle.com/javase/9/docs/api/
         </maven-javadoc-plugin.link>
 
-        <calcite.version>1.17.0</calcite.version>
+        <calcite.version>1.19.0</calcite.version>
         <elasticsearch-hadoop.version>7.0.1</elasticsearch-hadoop.version>
         <flink.version>1.9.1</flink.version>
         <commons-csv.version>1.5</commons-csv.version>
         <hppc.version>0.7.1</hppc.version>
         <dom4j.version>1.6.1</dom4j.version>
-        <qsql.release>qsql-0.7.0</qsql.release>
+        <qsql.release>qsql-0.7.1</qsql.release>
         <output.directory>/${qsql.release}/lib/flink</output.directory>
         <snakeyaml-version>1.17</snakeyaml-version>
     </properties>
