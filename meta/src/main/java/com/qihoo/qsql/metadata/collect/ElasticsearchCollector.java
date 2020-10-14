@@ -9,7 +9,6 @@ import com.qihoo.qsql.metadata.ColumnValue;
 import com.qihoo.qsql.metadata.entity.DatabaseParamValue;
 import com.qihoo.qsql.metadata.entity.DatabaseValue;
 import com.qihoo.qsql.metadata.entity.TableValue;
-import com.sun.tools.javac.util.Assert;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
@@ -140,7 +139,9 @@ public class ElasticsearchCollector extends MetadataCollector {
         Set<String> indexSet = new HashSet<>();
         try (InputStream is = response.getEntity().getContent()) {
             JsonNode root = mapper.readTree(is);
-            Assert.check(root != null && root.size() > 0,"not found index");
+            if (root == null || root.size() == 0) {
+                throw new RuntimeException("not found index");
+            }
             root.forEach(jsonNode -> {
                 if (jsonNode.get("index") != null) {
                     indexSet.add(jsonNode.get("index").asText());
