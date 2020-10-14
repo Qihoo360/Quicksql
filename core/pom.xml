@@ -22,17 +22,17 @@ limitations under the License.
     <parent>
         <groupId>com.qihoo.qsql</groupId>
         <artifactId>qsql</artifactId>
-        <version>0.7.0</version>
+        <version>0.7.1</version>
     </parent>
 
     <artifactId>qsql-core</artifactId>
     <packaging>jar</packaging>
-    <version>0.7.0</version>
+    <version>0.7.1</version>
     <name>qsql-core</name>
 
     <properties>
         <top.dir>${project.basedir}/..</top.dir>
-        <qsql.release>qsql-0.7.0</qsql.release>
+        <qsql.release>qsql-0.7.1</qsql.release>
         <output.directory>/${qsql.release}/lib/flink</output.directory>
     </properties>
 
@@ -55,6 +55,10 @@ limitations under the License.
                 <exclusion>
                     <artifactId>asm</artifactId>
                     <groupId>asm</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>protobuf-java</artifactId>
+                    <groupId>com.google.protobuf</groupId>
                 </exclusion>
             </exclusions>
         </dependency>

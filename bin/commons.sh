@@ -2,7 +2,7 @@
 unset QSQL_JARS
 unset PROJECT_VERSION
 
-PROJECT_VERSION="0.7.0"
+PROJECT_VERSION="0.7.1"
 
 if [ -z "${QSQL_HOME}" ]
 then

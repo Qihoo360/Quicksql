@@ -34,7 +34,7 @@ public class ExecutionDispatcherTest {
         args.add("--jar");
         args.add("test.jar");
         args.add("--jar_name");
-        args.add("./target/qsql-core-0.7.0.jar");
+        args.add("./target/qsql-core-0.7.1.jar");
     }
 
     @Test
