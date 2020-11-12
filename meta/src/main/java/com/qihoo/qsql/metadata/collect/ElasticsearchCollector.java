@@ -1,27 +1,18 @@
 package com.qihoo.qsql.metadata.collect;
 
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Preconditions;
 import com.qihoo.qsql.metadata.collect.dto.ElasticsearchProp;
 import com.qihoo.qsql.metadata.ColumnValue;
 import com.qihoo.qsql.metadata.entity.DatabaseParamValue;
 import com.qihoo.qsql.metadata.entity.DatabaseValue;
 import com.qihoo.qsql.metadata.entity.TableValue;
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.http.HttpHost;
@@ -29,28 +20,41 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.elasticsearch.client.Request;
-import org.elasticsearch.client.Response;
+import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
+import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
+import org.elasticsearch.client.GetAliasesResponse;
+import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestClientBuilder;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.indices.GetMappingsRequest;
+import org.elasticsearch.client.indices.GetMappingsResponse;
+import org.elasticsearch.cluster.metadata.AliasMetaData;
+import org.elasticsearch.cluster.metadata.MappingMetaData;
 
 public class ElasticsearchCollector extends MetadataCollector {
 
     private ElasticsearchProp prop;
-    private RestClient restClient;
-    private ObjectMapper mapper = new ObjectMapper();
+    private RestHighLevelClient highLevelClient;
 
-    /**
-     * .
-     */
     public ElasticsearchCollector(ElasticsearchProp prop, String filter) throws SQLException {
         super(filter);
         this.prop = prop;
-        Map<String, Integer> coordinates = new HashMap<>();
-        coordinates.put(prop.getEsNodes(), prop.getEsPort());
-        Map<String, String> userConfig = new HashMap<>();
-        userConfig.put("esUser", prop.getEsUser());
-        userConfig.put("esPass", prop.getEsPass());
-        this.restClient = connect(coordinates, userConfig);
+        connect(prop);
+    }
+
+    private void connect(ElasticsearchProp prop) {
+        final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+        credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(prop.getEsUser(), prop.getEsPass()));
+        RestClientBuilder builder = RestClient.builder(new HttpHost(prop.getEsNodes(), prop.getEsPort()))
+            .setHttpClientConfigCallback(new RestClientBuilder.HttpClientConfigCallback() {
+                @Override
+                public HttpAsyncClientBuilder customizeHttpClient(HttpAsyncClientBuilder httpClientBuilder) {
+                    return httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+                }
+            });
+
+        highLevelClient = new RestHighLevelClient(builder);
     }
 
     @Override
@@ -92,7 +96,6 @@ public class ElasticsearchCollector extends MetadataCollector {
             List<ColumnValue> columns = listFieldTypesFroElastic(tableName);
             for (int i = 0; i < columns.size(); i++) {
                 columns.get(i).setIntegerIdx(i + 1);
-                columns.get(i).setComment("Who am I? 24601!!");
                 columns.get(i).setCdId(tbId);
             }
             return columns;
@@ -113,100 +116,30 @@ public class ElasticsearchCollector extends MetadataCollector {
         }
     }
 
-    private static RestClient connect(Map<String, Integer> coordinates,
-        Map<String, String> userConfig) {
-        Objects.requireNonNull(coordinates, "coordinates");
-        Preconditions.checkArgument(! coordinates.isEmpty(), "no ES coordinates specified");
-        final Set<HttpHost> set = new LinkedHashSet<>();
-        for (Map.Entry<String, Integer> entry : coordinates.entrySet()) {
-            set.add(new HttpHost(entry.getKey(), entry.getValue()));
-        }
-
-        final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-        credentialsProvider.setCredentials(AuthScope.ANY,
-            new UsernamePasswordCredentials(userConfig.getOrDefault("esUser", "none"),
-                userConfig.getOrDefault("esPass", "none")));
-
-        return RestClient.builder(set.toArray(new HttpHost[0]))
-            .setHttpClientConfigCallback(httpClientBuilder ->
-                httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider))
-            .build();
-    }
-
     private Set<String> listIndexFromElastic(String regexp) throws IOException {
-        final String endpoint = String.format("/_cat/indices?format=json&index=%s",regexp);
-        final Response response = restClient.performRequest(new Request("GET", endpoint));
-        Set<String> indexSet = new HashSet<>();
-        try (InputStream is = response.getEntity().getContent()) {
-            JsonNode root = mapper.readTree(is);
-            if (root == null || root.size() == 0) {
-                throw new RuntimeException("not found index");
-            }
-            root.forEach(jsonNode -> {
-                if (jsonNode.get("index") != null) {
-                    indexSet.add(jsonNode.get("index").asText());
-                }
-            });
-            return indexSet;
-        }
+        GetAliasesRequest request = new GetAliasesRequest();
+        request.indices(regexp);
+        GetAliasesResponse getAliasesResponse =  highLevelClient.indices().getAlias(request,RequestOptions.DEFAULT);
+        Map<String, Set<AliasMetaData>> map = getAliasesResponse.getAliases();
+        return map.keySet();
     }
 
     private List<ColumnValue> listFieldTypesFroElastic(String index) throws IOException {
-        final String endpoint = "/" + index + "/_mapping";
-        final Response response = restClient.performRequest(new Request("GET", endpoint));
-        try (InputStream is = response.getEntity().getContent()) {
-            JsonNode root = mapper.readTree(is);
-            if (! root.isObject() || root.size() != 1) {
-                final String message = String.format(Locale.ROOT, "Invalid response for %s/%s "
-                        + "Expected object of size 1 got %s (of size %d)", response.getHost(),
-                    response.getRequestLine(), root.getNodeType(), root.size());
-                throw new IllegalStateException(message);
-            }
-
-            JsonNode mappings = root.iterator().next().get("mappings");
-            JsonNode typeObject = mappings.get("_doc");
-            JsonNode properties = typeObject.get("properties");
-            List<ColumnValue> columnValues = new ArrayList<>();
-            properties.fieldNames().forEachRemaining(name -> {
-                ColumnValue value = new ColumnValue();
-                value.setComment("Who am I?");
-                value.setColumnName(name);
-                JsonNode node = properties.get(name).get("type");
-                value.setTypeName(convertDataType(properties.get(name).has("type") ? node.asText() : "keyword"));
-                columnValues.add(value);
-            });
-            return columnValues;
-        }
-    }
-
-    private String convertDataType(String esType) {
-        String type = esType.toLowerCase();
-        switch (type) {
-            case "integer":
-            case "double":
-            case "date":
-            case "boolean":
-            case "float":
-                return type;
-            case "text":
-            case "keyword":
-            case "ip":
-                return "string";
-            case "long":
-                return "bigint";
-            case "short":
-                return "smallint";
-            case "byte":
-                return "tinyint";
-            case "half_float":
-            case "scaled_float":
-                return "float";
-            case "binary":
-            case "object":
-            case "nested":
-                throw new RuntimeException("The current version does not support complex types");
-            default:
-                throw new IllegalStateException("Unknown type");
-        }
+        GetMappingsRequest getMappings = new GetMappingsRequest().indices(index);
+        GetMappingsResponse getMappingResponse = highLevelClient.indices().getMapping(getMappings, RequestOptions.DEFAULT);
+        Map<String, MappingMetaData> allMappings = getMappingResponse.mappings();
+        assert allMappings.size() != 0;
+        MappingMetaData indexMapping = allMappings.get(index);
+        Map<String, Object> mappings = indexMapping.sourceAsMap();
+        Map<String, Object> fields = (Map<String, Object>) mappings.get("properties");
+        List<ColumnValue> columnValues = new ArrayList<>();
+        fields.forEach((key,value) -> {
+            ColumnValue columnValue = new ColumnValue();
+            columnValue.setColumnName(key);
+            Map<String,String> field = (Map<String,String>) value;
+            columnValue.setTypeName(field.containsKey("type") ? field.get("type") : "keyword");
+            columnValues.add(columnValue);
+        });
+        return columnValues;
     }
 }

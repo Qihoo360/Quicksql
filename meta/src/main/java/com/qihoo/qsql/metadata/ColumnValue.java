@@ -15,7 +15,7 @@ import java.util.Objects;
 public class ColumnValue {
 
     private Long cdId;
-    private String comment;
+    private String comment = "Who am I?";
     private String columnName;
     private String typeName;
     private Integer integerIdx;
