@@ -1,7 +1,6 @@
 package com.qihoo.qsql.metadata.collect;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
@@ -27,7 +26,6 @@ public class MongoCollector extends MetadataCollector {
 
     private MongoPro prop;
     private MongoDatabase mongoDatabase;
-    private ObjectMapper mapper = new ObjectMapper();
 
     /**
      * .
@@ -78,7 +76,6 @@ public class MongoCollector extends MetadataCollector {
             List<ColumnValue> columns = getCollectionFields(tableName);
             for (int i = 0; i < columns.size(); i++) {
                 columns.get(i).setIntegerIdx(i + 1);
-                columns.get(i).setComment("Who am I");
                 columns.get(i).setCdId(tbId);
             }
             return columns;
@@ -122,7 +119,6 @@ public class MongoCollector extends MetadataCollector {
         fields.stream().forEach(field -> {
             if (!field.equalsIgnoreCase("_id")) {
                 ColumnValue value = new ColumnValue();
-                value.setComment("Who am I?");
                 value.setColumnName(field);
                 Object obj = collection.find().first().get(field);
                 String typeString = obj == null ? "Undefined" : obj.getClass().toString();

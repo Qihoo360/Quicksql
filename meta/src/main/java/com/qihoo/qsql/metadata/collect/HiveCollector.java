@@ -141,7 +141,6 @@ public class HiveCollector extends MetadataCollector {
                 value.setTypeName(resultSet.getString(4));
                 value.setCdId(tbId);
                 value.setIntegerIdx(resultSet.getInt(5));
-                value.setComment("Who am I");
                 columns.add(value);
             }
         } catch (SQLException ex) {
