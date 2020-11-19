@@ -398,11 +398,19 @@ limitations under the License.
                                 <ignoredUnusedDeclaredDependency>
                                     org.slf4j:slf4j-log4j12
                                 </ignoredUnusedDeclaredDependency>
+                                <ignoredUnusedDeclaredDependency>org.elasticsearch:elasticsearch</ignoredUnusedDeclaredDependency>
+                                <ignoredUnusedDeclaredDependency>net.jpountz.lz4:lz4:</ignoredUnusedDeclaredDependency>
+                                <ignoredUnusedDeclaredDependency>ru.yandex.clickhouse:clickhouse-jdbc</ignoredUnusedDeclaredDependency>
                             </ignoredUnusedDeclaredDependencies>
                             <ignoredUsedUndeclaredDependencies>
                                 <ignoredUsedUndeclaredDependency>
                                     org.eclipse.jetty:jetty-server
                                 </ignoredUsedUndeclaredDependency>
+                                <ignoredUsedUndeclaredDependency>org.apache.httpcomponents:httpcore-nio</ignoredUsedUndeclaredDependency>
+                                <ignoredUsedUndeclaredDependency>joda-time:joda-time</ignoredUsedUndeclaredDependency>
+                                <ignoredUsedUndeclaredDependency>org.apache.httpcomponents:httpasyncclient</ignoredUsedUndeclaredDependency>
+                                <ignoredUsedUndeclaredDependency>org.apache.httpcomponents:httpclient</ignoredUsedUndeclaredDependency>
+                                <ignoredUsedUndeclaredDependency>commons-codec:commons-codec</ignoredUsedUndeclaredDependency>
                             </ignoredUsedUndeclaredDependencies>
                         </configuration>
                     </execution>
