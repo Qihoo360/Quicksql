@@ -1,5 +1,5 @@
 package com.qihoo.qsql.server;
-
+import com.qihoo.qsql.utils.PropertiesReader;
 import com.qihoo.qsql.launcher.OptionsParser;
 import com.qihoo.qsql.launcher.OptionsParser.SubmitOption;
 import java.net.InetAddress;
@@ -12,6 +12,10 @@ import org.apache.calcite.avatica.server.Main;
 import org.apache.commons.lang3.StringUtils;
 
 public class JdbcServer {
+
+    static {
+        PropertiesReader.configLogger();
+    }
 
     public static void main(String[] args) throws Exception {
         OptionsParser parser = new OptionsParser(args);
