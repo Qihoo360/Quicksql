@@ -36,6 +36,6 @@ kylin:
 clickhouse:
     driver : ru.yandex.clickhouse.ClickHouseDriver
     dialect : ClickHouseSqlDialect
-    showDatabaseSql : show databases
-    columnValueSql : select name as COLUMN_NAME,type DATA_TYPE,0 ORDINAL_POSITION from system.columns where table='%s' and database='%s'
+    showDatabaseSql : SELECT DATABASE()
+    columnValueSql : select name as COLUMN_NAME, type as DATA_TYPE, position as ORDINAL_POSITION from system.columns where table='%s' and database='%s'
     showTableSql : SHOW TABLES LIKE '%s'
