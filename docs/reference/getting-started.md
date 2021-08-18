@@ -86,7 +86,7 @@ $ ./bin/metadata-extract.sh -p "<SCHEMA-JSON>" -d "<DATA-SOURCE>" -r "<TABLE-NAM
 从**MySQL**数据库中采集元数据
 
 ``````shell
-$ ./memetadata-extract.sh -p "{\"jdbcDriver\": \"com.mysql.jdbc.Driver\", \"jdbcUrl\": \"jdbc:mysql://localhost:3306/db\", \"jdbcUser\": \"user\",\"jdbcPassword\": \"pass\"}" -d "mysql" -r "my_table"
+$ ./metadata-extract.sh -p "{\"jdbcDriver\": \"com.mysql.jdbc.Driver\", \"jdbcUrl\": \"jdbc:mysql://localhost:3306/db\", \"jdbcUser\": \"user\",\"jdbcPassword\": \"pass\"}" -d "mysql" -r "my_table"
 ``````
 
 从**Elasticsearch**存储中采集元数据
@@ -106,14 +106,14 @@ $ ./metadata-extract.sh -p "{\"host\": \"192.168.1.1\", \"port\": \"27017\", \"a
 从**PostgreSQL**存储中采集元数据
 
 ``````shell
-$ ./memetadata-extract.sh -p "{\"jdbcDriver\": \"org.postgresql.Driver\", \"jdbcUrl\": \"jdbc:postgresql://localhost:5432/testDb/qsql_test?currentSchema=testSchema\",
+$ ./metadata-extract.sh -p "{\"jdbcDriver\": \"org.postgresql.Driver\", \"jdbcUrl\": \"jdbc:postgresql://localhost:5432/testDb/qsql_test?currentSchema=testSchema\",
  \"jdbcUser\": \"user\",\"jdbcPassword\": \"pass\"}" -d "postgresql" -r "my_table"
 ``````
 
 从**ClickHouse**数据库中采集元数据
 
 ``````shell
-$ ./memetadata-extract.sh -p "{\"jdbcDriver\": \"ru.yandex.clickhouse.ClickHouseDriver\", \"jdbcUrl\": \"jdbc:clickhouse://localhost:8123/db\", \"jdbcUser\": \"default\",\"jdbcPassword\": \"\"}" -d "clickhouse" -r "my_table"
+$ ./metadata-extract.sh -p "{\"jdbcDriver\": \"ru.yandex.clickhouse.ClickHouseDriver\", \"jdbcUrl\": \"jdbc:clickhouse://localhost:8123/db\", \"jdbcUser\": \"default\",\"jdbcPassword\": \"\"}" -d "clickhouse" -r "my_table"
 ``````
 
 采集成功后将返回
