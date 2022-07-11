@@ -190,7 +190,7 @@ public class TableNameCollector implements SqlVisitor<QueryTables> {
 
     private QueryTables validateTableName(QueryTables tableNames) {
         for (String tableName : tableNames.tableNames) {
-            if (tableName.split("\\.", -1).length > 3) {
+            if (tableName.split("\\.", -1).length > 2) {
                 throw new ParseException("Qsql only support structure like dbName.tableName,"
                     + " and there is a unsupported tableName here: " + tableName);
             }
