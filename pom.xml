@@ -87,7 +87,7 @@
         <jetty.version>9.2.19.v20160908</jetty.version>
         <jmh.version>1.12</jmh.version>
         <jsoup.version>1.15.3</jsoup.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
         <kotlin.version>1.2.71</kotlin.version>
         <checkstyle.version>8.12</checkstyle.version>
         <maven-checkstyle-plugin.version>3.0.0</maven-checkstyle-plugin.version>
