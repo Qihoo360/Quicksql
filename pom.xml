@@ -151,7 +151,7 @@
         <dom4j.version>1.6.1</dom4j.version>
         <qsql.release>qsql-0.7.1</qsql.release>
         <output.directory>/${qsql.release}/lib/flink</output.directory>
-        <snakeyaml-version>1.17</snakeyaml-version>
+        <snakeyaml-version>1.26</snakeyaml-version>
     </properties>
 
     <dependencyManagement>
