@@ -113,7 +113,7 @@
         <sqlline.version>1.5.0</sqlline.version>
         <tpcds.version>1.2</tpcds.version>
         <xalan.version>2.7.1</xalan.version>
-        <xerces.version>2.9.1</xerces.version>
+        <xerces.version>2.12.2</xerces.version>
         <sketches.version>0.9.0</sketches.version>
         <fmpp.version>0.9.16</fmpp.version>
         <ibatis.version>3.0</ibatis.version>
