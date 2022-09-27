@@ -78,7 +78,7 @@
         <hydromatic-resource.version>0.6</hydromatic-resource.version>
         <hydromatic-toolbox.version>0.3</hydromatic-toolbox.version>
         <hydromatic-tpcds.version>0.4</hydromatic-tpcds.version>
-        <jackson.version>2.6.5</jackson.version>
+        <jackson.version>2.12.6.1</jackson.version>
         <jackson.core.version>2.10.0</jackson.core.version>
         <janino.version>3.0.11</janino.version>
         <java-diff.version>1.1.2</java-diff.version>
