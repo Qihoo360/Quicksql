@@ -288,7 +288,7 @@ limitations under the License.
         <dependency>
             <groupId>org.apache.derby</groupId>
             <artifactId>derby</artifactId>
-            <version>10.10.2.0</version>
+            <version>10.14.2.0</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.ibatis/ibatis-core -->
