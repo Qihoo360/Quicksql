@@ -68,7 +68,7 @@
              19.0 and 23.0. Default is 19.0 due to Cassandra adapter. -->
         <guava.version>19.0</guava.version>
         <joda.version>2.8.1</joda.version>
-        <h2.version>1.4.197</h2.version>
+        <h2.version>2.1.210</h2.version>
         <!-- Require Hadoop 2.7.4+ due to HADOOP-14586 -->
         <hadoop.version>2.7.5</hadoop.version>
         <hamcrest.version>1.3</hamcrest.version>
